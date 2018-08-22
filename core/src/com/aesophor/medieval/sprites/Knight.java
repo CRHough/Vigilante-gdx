@@ -18,10 +18,10 @@ public class Knight extends Enemy {
     
     private TextureRegion knightStand;
     private Animation<TextureRegion> knightWalk;
+    private Animation<TextureRegion> knightKilled;
     
     private float stateTimer;
-    private boolean setToKill;
-    private boolean killed;
+    
     
     public Knight(World world, GameScreen screen, float x, float y) {
         super(world, screen, x, y);
@@ -45,6 +45,14 @@ public class Knight extends Enemy {
         knightWalk = new Animation<>(12f / Medieval.PPM, frames);
         frames.clear();
         
+        // Knight killed animation.
+        for (int i = 12; i <= 20; i++) {
+            frames.add(new TextureRegion(atlasRegion, i * 42, 0 * 42, 42, 42));
+        }
+        knightKilled = new Animation<>(12f / Medieval.PPM, frames);
+        frames.clear();
+        
+        
         // Knight stand animation.
         knightStand = new TextureRegion(atlasRegion, 8 * 42, 0 * 42, 42, 42);
         
@@ -58,9 +66,18 @@ public class Knight extends Enemy {
         stateTimer += dt;
         
         if (setToKill && !killed) {
-            world.destroyBody(b2body);
-            killed = true;
-            //setRegion(knightKilled);
+            setRegion(knightKilled.getKeyFrame(stateTimer, false));
+            
+            // Only destroy the body when animation has finished playing.
+            if (knightKilled.isAnimationFinished(stateTimer)) {
+                System.out.println("You have killed an enemy.");
+                
+                deathSound.play();
+                world.destroyBody(b2body);
+                killed = true;
+                
+                stateTimer = 0;
+            }
             
         } else if (!killed) {
             setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y + 5 / Medieval.PPM - getHeight() / 2);
@@ -89,10 +106,10 @@ public class Knight extends Enemy {
         //shape.setRadius(12 / Medieval.PPM);
         
         fdef.filter.categoryBits = Medieval.ENEMY_BIT;
-        fdef.filter.maskBits = Medieval.GROUND_BIT | Medieval.PLAYER_BIT | Medieval.COIN_BIT | Medieval.BRICK_BIT; // What player can collide with.
+        fdef.filter.maskBits = Medieval.GROUND_BIT | Medieval.PLAYER_BIT | Medieval.MELEE_WEAPON_BIT; // What it can collide with.
         
         fdef.shape = body;
-        b2body.createFixture(fdef).setUserData("body");;
+        b2body.createFixture(fdef).setUserData(this);;
     }
 
 }

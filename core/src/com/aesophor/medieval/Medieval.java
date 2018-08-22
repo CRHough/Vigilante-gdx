@@ -21,6 +21,7 @@ public class Medieval extends Game {
     public static final short DESTROYED_BIT = 16;
     public static final short OBJECT_BIT = 32;
     public static final short ENEMY_BIT = 64;
+    public static final short MELEE_WEAPON_BIT = 128;
     
 	public SpriteBatch batch;
 	public static AssetManager manager;
@@ -33,7 +34,9 @@ public class Medieval extends Game {
 		manager.load("Character/Bandit/Bandit.pack", TextureAtlas.class);
 		manager.load("Character/Knight/Knight.pack", TextureAtlas.class);
 		manager.load("Sound/Music/village01.mp3", Music.class);
-		manager.load("Sound/FX/default-walk.ogg", Music.class);
+        manager.load("Sound/FX/Player/hurt.wav", Sound.class);
+        manager.load("Sound/FX/Player/death.mp3", Sound.class);
+		manager.load("Sound/FX/Player/footstep.mp3", Music.class);
 		manager.load("Sound/FX/knife-slash.mp3", Sound.class);
 		manager.finishLoading();
 		

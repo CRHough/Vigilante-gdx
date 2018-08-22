@@ -3,7 +3,9 @@ package com.aesophor.medieval.sprites;
 import com.aesophor.medieval.Medieval;
 import com.aesophor.medieval.game.characters.Character;
 import com.aesophor.medieval.screens.GameScreen;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -11,7 +13,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -38,10 +39,15 @@ public class Player extends Sprite {
     private boolean isJumping;
     private boolean isAttacking;
     
+    private Enemy targetEnemy;
+    private int weaponDamage = 25;
+    
     private boolean setToKill;
     private boolean killed;
     
     private Music footstepSound;
+    private Sound hurtSound;
+    private Sound deathSound;
     
     public Player(World world, GameScreen screen) {
         super(screen.getAtlas().findRegion("bandit"));
@@ -87,9 +93,10 @@ public class Player extends Sprite {
         frames.clear();
         
         
-        // Footstep sound.
-        footstepSound = Medieval.manager.get("Sound/FX/default-walk.ogg");
-        
+        // Sounds.
+        footstepSound = Medieval.manager.get("Sound/FX/Player/footstep.mp3");
+        hurtSound = Medieval.manager.get("Sound/FX/Player/hurt.wav");
+        deathSound = Medieval.manager.get("Sound/FX/Player/death.mp3");
         
         playerStand = new TextureRegion(getTexture(), 7 * 80, 2 * 80, 80, 80);
         
@@ -108,8 +115,12 @@ public class Player extends Sprite {
             // Only destroy the body when animation has finished playing.
             if (playerKilled.isAnimationFinished(stateTimer)) {
                 System.out.println("player died.");
+                deathSound.play();
+                
                 world.destroyBody(b2body);
                 killed = true;
+                
+                stateTimer = 0;
             }
             
             stateTimer += dt; // clean up this pile of shit...
@@ -210,6 +221,18 @@ public class Player extends Sprite {
         
         b2body.createFixture(fdef).setUserData("head");
         */
+        
+        
+        CircleShape weapon = new CircleShape();
+        weapon.setRadius(15 / Medieval.PPM);
+        
+        fdef.filter.categoryBits = Medieval.MELEE_WEAPON_BIT;
+        fdef.filter.maskBits = Medieval.ENEMY_BIT | Medieval.OBJECT_BIT; // What player can collide with.
+        
+        fdef.shape = weapon;
+        fdef.isSensor = true; // a sensor won't collide with the world. 
+        
+        b2body.createFixture(fdef).setUserData(this);
     }
     
     
@@ -219,10 +242,16 @@ public class Player extends Sprite {
         if (health <= 0) {
             setToKill = true;
         }
+        
+        hurtSound.play();
     }
     
     public int getHealth() {
         return health;
+    }
+    
+    public boolean killed() {
+        return killed;
     }
     
     public boolean isJumping() {
@@ -239,6 +268,24 @@ public class Player extends Sprite {
     
     public void setIsAttacking(boolean isAttacking) {
         this.isAttacking = isAttacking;
+    }
+
+
+    public boolean hasTargetEnemy() {
+        return !(targetEnemy == null);
+    }
+    
+    public Enemy getTargetEnemy() {
+        return targetEnemy;
+    }
+    
+    public void setTargetEnemy(Enemy enemy) {
+        targetEnemy = enemy;
+    }
+    
+    public void attack(Enemy enemy) {
+        Gdx.app.log("Player", String.format("deals %d damage to %s", weaponDamage, "knight"));
+        enemy.inflictDamage(weaponDamage);
     }
 
 }

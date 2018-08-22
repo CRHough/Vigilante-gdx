@@ -68,7 +68,7 @@ public class GameScreen implements Screen {
         player = new Player(world, this);
         
         // Spawn an enemy.
-        enemy = new Knight(world, this, 100 / Medieval.PPM, 150 / Medieval.PPM);
+        enemy = new Knight(world, this, 450 / Medieval.PPM, 150 / Medieval.PPM);
         
         world.setContactListener(new WorldContactListener(player));
         
@@ -77,7 +77,7 @@ public class GameScreen implements Screen {
         // Play background music.
         backgroundMusic = Medieval.manager.get("Sound/Music/village01.mp3");
         backgroundMusic.setLooping(true);
-        backgroundMusic.play();
+        //backgroundMusic.play();
     }
 
     
@@ -90,6 +90,10 @@ public class GameScreen implements Screen {
     public void handleInput(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT) && !player.isAttacking()) {
             player.setIsAttacking(true);
+            
+            if (player.hasTargetEnemy()) {
+                player.attack(player.getTargetEnemy());
+            }
             return;
         }
         
@@ -149,6 +153,11 @@ public class GameScreen implements Screen {
         // Set our batch to now draw what the Hud camera sees.
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
+        
+        if (player.killed()) {
+            game.setScreen(new GameOverScreen(game));
+            dispose();
+        }
     }
 
     @Override

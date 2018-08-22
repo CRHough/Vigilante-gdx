@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoa
 
 public class Font {
     
-    private static final String FONT_FILE = "Font/Vormgevers.ttf";
+    private static final String FONT_FILE = "Interface/Font/Vormgevers.ttf";
     private static BitmapFont defaultFont;
     
     static {

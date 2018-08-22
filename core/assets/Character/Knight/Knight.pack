@@ -6,7 +6,7 @@ repeat: none
 knight
   rotate: false
   xy: 0, 0
-  size: 504, 42
-  orig: 504, 42
+  size: 882, 42
+  orig: 882, 42
   offset: 0, 0
   index: -1

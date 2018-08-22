@@ -46,7 +46,7 @@ public class Hud implements Disposable {
         
         
         playerNameLabel = new Label("PLAYER", new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
-        healthLabel = new Label(String.format("%03d", player.getHealth()), new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
+        healthLabel = new Label(String.format("HEALTH: %03d", player.getHealth()), new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
         
         worldLabel = new Label(" ", new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
         levelLabel = new Label(" ", new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
@@ -69,7 +69,7 @@ public class Hud implements Disposable {
     
     
     public void update(float dt) {
-        healthLabel.setText(Integer.toString(player.getHealth()));
+        healthLabel.setText("HEALTH: " + Integer.toString(player.getHealth()));
     }
 
     @Override
