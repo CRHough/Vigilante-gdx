@@ -14,6 +14,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -88,6 +89,7 @@ public class GameScreen implements Screen {
         // Play background music.
         backgroundMusic = Medieval.manager.get("Sound/Music/village01.mp3");
         backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(.6f);
         //backgroundMusic.play();
     }
 
@@ -111,6 +113,7 @@ public class GameScreen implements Screen {
         // When player is attacking, movement is disabled.
         if (!player.isAttacking()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT) && !player.isJumping()) {
+                player.setIsJumping(true);
                 player.b2body.applyLinearImpulse(new Vector2(0, 3f), player.b2body.getWorldCenter(), true);
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 0.5) {
                 player.b2body.applyLinearImpulse(new Vector2(0.08f, 0), player.b2body.getWorldCenter(), true);
@@ -134,9 +137,9 @@ public class GameScreen implements Screen {
         
         float startX = gameCamera.viewportWidth / 2;
         float startY = gameCamera.viewportHeight / 2;
-        float width =  (mapWidth * 16) / Medieval.PPM - gameCamera.viewportWidth / 2;
-        float height = (mapHeight * 16) / Medieval.PPM - gameCamera.viewportHeight / 2;
-        boundCamera(gameCamera, startX, startY, width, height);
+        float endX =  (mapWidth * 16) / Medieval.PPM - gameCamera.viewportWidth / 2;
+        float endY = (mapHeight * 16) / Medieval.PPM - gameCamera.viewportHeight / 2;
+        boundCamera(gameCamera, startX, startY, endX, endY);
         
         // Update our camera with correct coordinates after changes.
         gameCamera.update();
@@ -242,6 +245,10 @@ public class GameScreen implements Screen {
         position.y = camera.position.y + (target.y - camera.position.y) * .1f;
         camera.position.set(position);
         camera.update();
+    }
+    
+    public SpriteBatch getBatch() {
+        return game.batch;
     }
 
 }

@@ -2,7 +2,6 @@ package com.aesophor.medieval.sprites;
 
 import com.aesophor.medieval.Medieval;
 import com.aesophor.medieval.screens.GameScreen;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -15,6 +14,7 @@ public abstract class Enemy extends Sprite {
     
     public Body b2body;
     
+    protected boolean aggresive;
     protected int health;
     
     protected boolean setToKill;
@@ -24,7 +24,6 @@ public abstract class Enemy extends Sprite {
     protected Sound deathSound;
     
     public Enemy(World world, GameScreen screen, float x, float y) {
-        
         this.world = world;
         this.screen = screen;
         setPosition(x, y);
@@ -41,7 +40,6 @@ public abstract class Enemy extends Sprite {
     protected abstract void defineEnemy();
     
     public abstract void update(float dt);
-
 
     public void inflictDamage(int damage) {
         health -= damage;

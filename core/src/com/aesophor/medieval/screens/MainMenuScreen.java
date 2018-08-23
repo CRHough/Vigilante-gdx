@@ -38,7 +38,7 @@ private Game game;
         
         table.add(gameOverLabel).expandX();
         table.row();
-        table.add(retryLabel).expandX().padTop(10);
+        table.add(retryLabel).expandX().padTop(10f);
         
         stage.addActor(table);
     }

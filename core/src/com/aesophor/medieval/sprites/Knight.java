@@ -1,14 +1,14 @@
 package com.aesophor.medieval.sprites;
 
 import com.aesophor.medieval.Medieval;
+import com.aesophor.medieval.misc.Font;
 import com.aesophor.medieval.screens.GameScreen;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -73,10 +73,11 @@ public class Knight extends Enemy {
                 System.out.println("You have killed an enemy.");
                 
                 deathSound.play();
-                world.destroyBody(b2body);
+                
                 killed = true;
                 
                 stateTimer = 0;
+                world.destroyBody(b2body);
             }
             
         } else if (!killed) {

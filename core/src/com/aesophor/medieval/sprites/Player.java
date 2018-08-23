@@ -48,6 +48,9 @@ public class Player extends Sprite {
     private Music footstepSound;
     private Sound hurtSound;
     private Sound deathSound;
+    private Sound weaponSwingSound;
+    private Sound weaponHitSound;
+    private Sound jumpSound;
     
     public Player(World world, GameScreen screen) {
         super(screen.getAtlas().findRegion("bandit"));
@@ -97,6 +100,9 @@ public class Player extends Sprite {
         footstepSound = Medieval.manager.get("Sound/FX/Player/footstep.mp3");
         hurtSound = Medieval.manager.get("Sound/FX/Player/hurt.wav");
         deathSound = Medieval.manager.get("Sound/FX/Player/death.mp3");
+        weaponSwingSound = Medieval.manager.get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
+        weaponHitSound = Medieval.manager.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
+        jumpSound = Medieval.manager.get("Sound/FX/Player/jump.wav", Sound.class);
         
         playerStand = new TextureRegion(getTexture(), 7 * 80, 2 * 80, 80, 80);
         
@@ -260,6 +266,7 @@ public class Player extends Sprite {
     
     public void setIsJumping(boolean isJumping) {
         this.isJumping = isJumping;
+        jumpSound.play();
     }
     
     public boolean isAttacking() {
@@ -267,6 +274,7 @@ public class Player extends Sprite {
     }
     
     public void setIsAttacking(boolean isAttacking) {
+        weaponSwingSound.play();
         this.isAttacking = isAttacking;
     }
 
@@ -286,6 +294,8 @@ public class Player extends Sprite {
     public void attack(Enemy enemy) {
         Gdx.app.log("Player", String.format("deals %d damage to %s", weaponDamage, "knight"));
         enemy.inflictDamage(weaponDamage);
+        
+        weaponHitSound.play();
         
         float force = (facingRight) ? .6f : -.6f;
         enemy.b2body.applyLinearImpulse(new Vector2(force, 0), enemy.b2body.getWorldCenter(), true);

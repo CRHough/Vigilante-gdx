@@ -5,6 +5,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
@@ -31,11 +32,15 @@ public class Medieval extends Game {
 		batch = new SpriteBatch();
 		
 		manager = new AssetManager();
+		manager.load("Interface/HUD/hud.png", Texture.class);
 		manager.load("Character/Bandit/Bandit.pack", TextureAtlas.class);
 		manager.load("Character/Knight/Knight.pack", TextureAtlas.class);
 		manager.load("Sound/Music/village01.mp3", Music.class);
         manager.load("Sound/FX/Player/hurt.wav", Sound.class);
         manager.load("Sound/FX/Player/death.mp3", Sound.class);
+        manager.load("Sound/FX/Player/weapon_swing.ogg", Sound.class);
+        manager.load("Sound/FX/Player/weapon_hit.ogg", Sound.class);
+        manager.load("Sound/FX/Player/jump.wav", Sound.class);
 		manager.load("Sound/FX/Player/footstep.mp3", Music.class);
 		manager.load("Sound/FX/knife-slash.mp3", Sound.class);
 		manager.finishLoading();
