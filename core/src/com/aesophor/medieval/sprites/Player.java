@@ -163,7 +163,7 @@ public class Player extends Sprite {
             facingRight = true;
         }
         
-        if (isAttacking() && stateTimer >= 1) {
+        if (isAttacking() && playerAttack.isAnimationFinished(stateTimer) && stateTimer >= 1) {
             isAttacking = false;
         }
         
@@ -224,7 +224,7 @@ public class Player extends Sprite {
         
         
         CircleShape weapon = new CircleShape();
-        weapon.setRadius(15 / Medieval.PPM);
+        weapon.setRadius(16 / Medieval.PPM);
         
         fdef.filter.categoryBits = Medieval.MELEE_WEAPON_BIT;
         fdef.filter.maskBits = Medieval.ENEMY_BIT | Medieval.OBJECT_BIT; // What player can collide with.
@@ -286,6 +286,13 @@ public class Player extends Sprite {
     public void attack(Enemy enemy) {
         Gdx.app.log("Player", String.format("deals %d damage to %s", weaponDamage, "knight"));
         enemy.inflictDamage(weaponDamage);
+        
+        float force = (facingRight) ? .6f : -.6f;
+        enemy.b2body.applyLinearImpulse(new Vector2(force, 0), enemy.b2body.getWorldCenter(), true);
+    }
+    
+    public boolean facingRight() {
+        return facingRight;
     }
 
 }

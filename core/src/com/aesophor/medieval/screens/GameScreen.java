@@ -11,13 +11,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -42,6 +45,9 @@ public class GameScreen implements Screen {
     private Player player;
     private Enemy enemy;
     
+    private int mapWidth;
+    private int mapHeight;
+    
     private Music backgroundMusic;
     
     public GameScreen(Medieval game) {
@@ -55,6 +61,11 @@ public class GameScreen implements Screen {
         
         maploader = new TmxMapLoader();
         map = maploader.load("Map/starting_point.tmx");
+        MapProperties prop = map.getProperties();
+        mapWidth = prop.get("width", Integer.class);
+        mapHeight = prop.get("height", Integer.class);
+        
+        
         renderer = new OrthogonalTiledMapRenderer(map, 1 / Medieval.PPM);
         
         gameCamera.position.set(gameViewport.getWorldWidth() / 2, gameViewport.getWorldHeight() / 2, 0);
@@ -102,9 +113,9 @@ public class GameScreen implements Screen {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT) && !player.isJumping()) {
                 player.b2body.applyLinearImpulse(new Vector2(0, 3f), player.b2body.getWorldCenter(), true);
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 0.5) {
-                player.b2body.applyLinearImpulse(new Vector2(0.07f, 0), player.b2body.getWorldCenter(), true);
+                player.b2body.applyLinearImpulse(new Vector2(0.08f, 0), player.b2body.getWorldCenter(), true);
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -0.5) {
-                player.b2body.applyLinearImpulse(new Vector2(-0.07f, 0), player.b2body.getWorldCenter(), true);
+                player.b2body.applyLinearImpulse(new Vector2(-0.08f, 0), player.b2body.getWorldCenter(), true);
             }
         }
     }
@@ -118,7 +129,14 @@ public class GameScreen implements Screen {
         player.update(dt);
         hud.update(dt);
         
-        gameCamera.position.x = player.b2body.getPosition().x + 100 / Medieval.PPM;
+        //gameCamera.position.x = player.b2body.getPosition().x;
+        lerpToTarget(gameCamera, player.b2body.getPosition());
+        
+        float startX = gameCamera.viewportWidth / 2;
+        float startY = gameCamera.viewportHeight / 2;
+        float width =  (mapWidth * 16) / Medieval.PPM - gameCamera.viewportWidth / 2;
+        float height = (mapHeight * 16) / Medieval.PPM - gameCamera.viewportHeight / 2;
+        boundCamera(gameCamera, startX, startY, width, height);
         
         // Update our camera with correct coordinates after changes.
         gameCamera.update();
@@ -195,6 +213,35 @@ public class GameScreen implements Screen {
     
     public TextureAtlas getAtlas() {
         return atlas;
+    }
+    
+    public static void boundCamera(Camera camera, float startX, float startY, float endX, float endY) {
+        Vector3 position = camera.position;
+        
+        if (position.x < startX) {
+            position.x = startX;
+        }
+        if (position.y < startY) {
+            position.y = startY;
+        }
+        
+        if (position.x > endX) {
+            position.x = endX;
+        }
+        if (position.y > endY) {
+            position.y = endY;
+        }
+        
+        camera.position.set(position);
+        camera.update();
+    }
+    
+    public static void lerpToTarget(Camera camera, Vector2 target) {
+        Vector3 position = camera.position;
+        position.x = camera.position.x + (target.x - camera.position.x) * .1f;
+        position.y = camera.position.y + (target.y - camera.position.y) * .1f;
+        camera.position.set(position);
+        camera.update();
     }
 
 }

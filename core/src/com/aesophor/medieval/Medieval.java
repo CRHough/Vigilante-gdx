@@ -1,6 +1,6 @@
 package com.aesophor.medieval;
 
-import com.aesophor.medieval.screens.GameScreen;
+import com.aesophor.medieval.screens.MainMenuScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -40,7 +40,7 @@ public class Medieval extends Game {
 		manager.load("Sound/FX/knife-slash.mp3", Sound.class);
 		manager.finishLoading();
 		
-		setScreen(new GameScreen(this));
+		setScreen(new MainMenuScreen(this));
 	}
 
 	@Override

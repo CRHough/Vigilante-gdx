@@ -89,7 +89,7 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             case Medieval.MELEE_WEAPON_BIT | Medieval.ENEMY_BIT:
                 Player player;
-                // Set enemy as player's current target (so he can inflict damage to it).
+                // Unset player's current target when contact ends.
                 if (fixtureA.getFilterData().categoryBits == Medieval.ENEMY_BIT) {
                     player = (Player) (fixtureB.getUserData());
                     player.setTargetEnemy(null);
