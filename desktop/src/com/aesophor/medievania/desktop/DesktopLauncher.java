@@ -8,7 +8,7 @@ public class DesktopLauncher {
     
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new Medievania(), config);
+		new LwjglApplication(Medievania.getInstance(), config);
 	}
 	
 }

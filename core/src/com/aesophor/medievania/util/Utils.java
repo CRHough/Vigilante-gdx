@@ -1,4 +1,4 @@
-package com.aesophor.medievania.utils;
+package com.aesophor.medievania.util;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -36,10 +36,7 @@ public class Utils {
             frames.add(new TextureRegion(texture, i * width + offsetX, offsetY, width, height));
         }
         
-        Animation<TextureRegion> animation = new Animation<>(frameDuration, frames);
-        frames.clear();
-        
-        return animation;
+        return new Animation<>(frameDuration, frames);
     }
     
 }

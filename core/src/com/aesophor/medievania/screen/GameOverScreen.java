@@ -1,10 +1,10 @@
-package com.aesophor.medievania.screens;
+package com.aesophor.medievania.screen;
 
 import com.aesophor.medievania.Medievania;
-import com.aesophor.medievania.utils.Font;
+import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.util.Font;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,16 +15,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class MainMenuScreen implements Screen {
+public class GameOverScreen implements Screen {
     
-private Game game;
+    private Game game;
     
     private Stage stage;
     private Viewport viewport;
     
-    public MainMenuScreen(Game game) {
+    public GameOverScreen(Game game) {
         this.game = game;
-        viewport = new FitViewport(Medievania.V_WIDTH, Medievania.V_HEIGHT, new OrthographicCamera());
+        viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, ((Medievania) game).batch);
         
         Label.LabelStyle font = new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE);
@@ -33,8 +33,8 @@ private Game game;
         table.center();
         table.setFillParent(true);
         
-        Label gameOverLabel = new Label("", font);
-        Label retryLabel = new Label("Press SPACE to start", font);
+        Label gameOverLabel = new Label("GAME OVER", font);
+        Label retryLabel = new Label("Click to retry", font);
         
         table.add(gameOverLabel).expandX();
         table.row();
@@ -51,7 +51,7 @@ private Game game;
     }
 
     public void handleInput(float dt) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        if (Gdx.input.justTouched()) {
             game.setScreen(new GameScreen((Medievania) game));
             dispose();
         }

@@ -1,7 +1,7 @@
-package com.aesophor.medievania.resources;
+package com.aesophor.medievania.resource;
 
-import com.aesophor.medievania.Medievania;
-import com.aesophor.medievania.world.objects.InteractiveTileObject;
+import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.world.object.InteractiveTileObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
@@ -12,14 +12,14 @@ public class Brick extends InteractiveTileObject {
     public Brick(World world, TiledMap map, Rectangle bounds) {
         super(world, map, bounds);
         fixture.setUserData(this);
-        setCategoryFilter(Medievania.BRICK_BIT);
+        setCategoryFilter(Constants.BRICK_BIT);
     }
 
     
     @Override
     public void onHeadHit() {
         Gdx.app.log("Brick", "collision");
-        setCategoryFilter(Medievania.DESTROYED_BIT);
+        setCategoryFilter(Constants.DESTROYED_BIT);
         getCell().setTile(null);
     }
     

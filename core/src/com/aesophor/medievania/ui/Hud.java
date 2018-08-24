@@ -1,7 +1,8 @@
 package com.aesophor.medievania.ui;
 
 import com.aesophor.medievania.Medievania;
-import com.aesophor.medievania.world.objects.characters.humanoid.Player;
+import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.world.object.character.Player;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -34,7 +35,7 @@ public class Hud implements Disposable {
     public Hud(Player player, SpriteBatch sb) {
         this.player = player;
         
-        viewport = new FitViewport(Medievania.V_WIDTH, Medievania.V_HEIGHT);
+        viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT);
         stage = new Stage(viewport, sb);
         
         // Initializes player hud Texture and TextureRegions.
@@ -70,28 +71,6 @@ public class Hud implements Disposable {
         barTable.add(staminaBarImage);
         barTable.row().padTop(6f);
         barTable.add(magickaBarImage);
-        
-        
-        /*
-        playerNameLabel = new Label("PLAYER", new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
-        healthLabel = new Label(String.format("HEALTH: %03d", player.getHealth()), new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
-        
-        worldLabel = new Label(" ", new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
-        levelLabel = new Label(" ", new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
-        
-        timeLabel = new Label("STARTING POINT", new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
-        //countdownLabel = new Label(String.format("%03d", worldTimer), new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
-        */
-        
-        /*
-        table.add(playerNameLabel).expandX().pad(10);
-        table.add(worldLabel).expandX().pad(10);
-        table.add(timeLabel).expandX().pad(10);
-        table.row();
-        table.add(healthLabel).expandX();
-        table.add(levelLabel).expandX();
-        //table.add(countdownLabel).expandX();
-        */
         
         stage.addActor(hudTable);
         stage.addActor(barTable);

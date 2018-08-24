@@ -1,4 +1,4 @@
-package com.aesophor.medievania.utils;
+package com.aesophor.medievania.util;
 
 import com.aesophor.medievania.Medievania;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;

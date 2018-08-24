@@ -1,7 +1,9 @@
-package com.aesophor.medievania.world.objects.characters;
+package com.aesophor.medievania.world.object.character;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,13 +15,11 @@ public abstract class Character extends Sprite {
     public enum State { IDLE, RUNNING, JUMPING, FALLING, ATTACKING };
     
     
-    protected int health;
-    
     protected Character.State currentState;
     protected Character.State previousState;
     
     protected World currentWorld; // The world in which the character is spawned.
-    public Body b2body; // Character's body. temporarily set to public.
+    protected Body b2body;
     
     protected TextureRegion idleAnimation; // Change to Animation later.
     protected Animation<TextureRegion> runAnimation;
@@ -27,7 +27,7 @@ public abstract class Character extends Sprite {
     protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> killedAnimation;
     
-    protected Music footstepSound;
+    protected Music footstepSound; // dispose() these sound later.
     protected Sound hurtSound;
     protected Sound deathSound;
     protected Sound weaponSwingSound;
@@ -43,8 +43,12 @@ public abstract class Character extends Sprite {
     protected float stateTimer;
     protected Character targetEnemy;
     
-    public Character(TextureRegion textureRegion, float x, float y) {
-        super(textureRegion);
+    protected int health;
+    protected int attackRange;
+    
+    public Character(Texture texture, World currentWorld, float x, float y) {
+        super(texture);
+        this.currentWorld = currentWorld;
         setPosition(x, y);
         
         currentState = Character.State.IDLE;
@@ -116,9 +120,17 @@ public abstract class Character extends Sprite {
         if (health <= 0) {
             setToKill = true;
         }
+        
+        hurtSound.play();
     }
     
+    
+    
     // Review the code below.
+    public Body getB2Body() {
+        return b2body;
+    }
+    
     public boolean isAttacking() {
         return isAttacking;
     }
@@ -138,6 +150,38 @@ public abstract class Character extends Sprite {
     public void setIsJumping(boolean isJumping) {
         this.isJumping = isJumping;
         jumpSound.play();
+    }
+    
+    public void setIsAttacking(boolean isAttacking) {
+        weaponSwingSound.play();
+        this.isAttacking = isAttacking;
+    }
+
+
+    public boolean hasTargetEnemy() {
+        return !(targetEnemy == null);
+    }
+    
+    public Character getTargetEnemy() {
+        return targetEnemy;
+    }
+    
+    public void setTargetEnemy(Character enemy) {
+        targetEnemy = enemy;
+    }
+    
+    public void attack(Character c) {
+        Gdx.app.log("Player", String.format("deals %d damage to %s", 25, "knight"));
+        c.receiveDamage(25);
+        
+        weaponHitSound.play();
+        
+        float force = (facingRight) ? .6f : -.6f;
+        //c.b2body.applyLinearImpulse(new Vector2(force, 0), enemy.b2body.getWorldCenter(), true);
+    }
+    
+    public boolean facingRight() {
+        return facingRight;
     }
     
 }

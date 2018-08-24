@@ -1,6 +1,6 @@
 package com.aesophor.medievania;
 
-import com.aesophor.medievania.screens.MainMenuScreen;
+import com.aesophor.medievania.screen.MainMenuScreen;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -11,30 +11,28 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class Medievania extends Game {
     
-    public static final float PPM = 100; // Pixels per meter.
-    public static final int V_WIDTH = 500;
-    public static final int V_HEIGHT = 250;
+    private static final Medievania INSTANCE = new Medievania();
+    public static SpriteBatch batch;
+    public static AssetManager manager;
     
-    public static final short GROUND_BIT = 1;
-    public static final short PLAYER_BIT = 2;
-    public static final short BRICK_BIT = 4;
-    public static final short COIN_BIT = 8;
-    public static final short DESTROYED_BIT = 16;
-    public static final short OBJECT_BIT = 32;
-    public static final short ENEMY_BIT = 64;
-    public static final short MELEE_WEAPON_BIT = 128;
+    private Medievania() {
+        
+    }
     
-	public SpriteBatch batch;
-	public static AssetManager manager;
+    public static Medievania getInstance() {
+        return INSTANCE;
+    }
+    
+	
 	
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		
-		manager = new AssetManager();
+	    batch = new SpriteBatch();
+        manager = new AssetManager();
+        
 		manager.load("Interface/HUD/hud.png", Texture.class);
-		manager.load("Character/Bandit/Bandit.pack", TextureAtlas.class);
-		manager.load("Character/Knight/Knight.pack", TextureAtlas.class);
+		manager.load("Character/Bandit/Bandit.png", Texture.class);
+		manager.load("Character/Knight/Knight.png", Texture.class);
 		manager.load("Sound/Music/village01.mp3", Music.class);
         manager.load("Sound/FX/Player/hurt.wav", Sound.class);
         manager.load("Sound/FX/Player/death.mp3", Sound.class);

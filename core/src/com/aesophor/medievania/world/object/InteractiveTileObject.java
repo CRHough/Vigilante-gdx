@@ -1,6 +1,6 @@
-package com.aesophor.medievania.world.objects;
+package com.aesophor.medievania.world.object;
 
-import com.aesophor.medievania.Medievania;
+import com.aesophor.medievania.constant.Constants;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -34,11 +34,11 @@ public abstract class InteractiveTileObject {
         FixtureDef fdef = new FixtureDef();
         
         bdef.type = BodyDef.BodyType.StaticBody;
-        bdef.position.set((bounds.getX() + bounds.getWidth() / 2) / Medievania.PPM, (bounds.getY() + bounds.getHeight() / 2) / Medievania.PPM);
+        bdef.position.set((bounds.getX() + bounds.getWidth() / 2) / Constants.PPM, (bounds.getY() + bounds.getHeight() / 2) / Constants.PPM);
         
         body = world.createBody(bdef);
         
-        shape.setAsBox(bounds.getWidth() / 2 / Medievania.PPM, bounds.getHeight() / 2 / Medievania.PPM);
+        shape.setAsBox(bounds.getWidth() / 2 / Constants.PPM, bounds.getHeight() / 2 / Constants.PPM);
         fdef.shape = shape;
         fixture = body.createFixture(fdef);
     }
@@ -54,8 +54,8 @@ public abstract class InteractiveTileObject {
     
     public TiledMapTileLayer.Cell getCell() {
         TiledMapTileLayer layer = (TiledMapTileLayer) map.getLayers().get(1);
-        return layer.getCell((int) (body.getPosition().x * Medievania.PPM / 16),
-                (int) (body.getPosition().y * Medievania.PPM / 16));
+        return layer.getCell((int) (body.getPosition().x * Constants.PPM / 16),
+                (int) (body.getPosition().y * Constants.PPM / 16));
     }
     
 }

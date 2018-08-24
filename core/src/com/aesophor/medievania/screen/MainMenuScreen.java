@@ -1,9 +1,11 @@
-package com.aesophor.medievania.screens;
+package com.aesophor.medievania.screen;
 
 import com.aesophor.medievania.Medievania;
-import com.aesophor.medievania.utils.Font;
+import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.util.Font;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,16 +16,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class GameOverScreen implements Screen {
+public class MainMenuScreen implements Screen {
     
-    private Game game;
+private Game game;
     
     private Stage stage;
     private Viewport viewport;
     
-    public GameOverScreen(Game game) {
+    public MainMenuScreen(Game game) {
         this.game = game;
-        viewport = new FitViewport(Medievania.V_WIDTH, Medievania.V_HEIGHT, new OrthographicCamera());
+        viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, ((Medievania) game).batch);
         
         Label.LabelStyle font = new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE);
@@ -32,8 +34,8 @@ public class GameOverScreen implements Screen {
         table.center();
         table.setFillParent(true);
         
-        Label gameOverLabel = new Label("GAME OVER", font);
-        Label retryLabel = new Label("Click to retry", font);
+        Label gameOverLabel = new Label("", font);
+        Label retryLabel = new Label("Press SPACE to start", font);
         
         table.add(gameOverLabel).expandX();
         table.row();
@@ -50,7 +52,7 @@ public class GameOverScreen implements Screen {
     }
 
     public void handleInput(float dt) {
-        if (Gdx.input.justTouched()) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             game.setScreen(new GameScreen((Medievania) game));
             dispose();
         }

@@ -1,6 +1,6 @@
-package com.aesophor.medievania.resources;
+package com.aesophor.medievania.resource;
 
-import com.aesophor.medievania.world.objects.InteractiveTileObject;
+import com.aesophor.medievania.world.object.InteractiveTileObject;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;

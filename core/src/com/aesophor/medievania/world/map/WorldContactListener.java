@@ -1,8 +1,8 @@
-package com.aesophor.medievania.utils;
+package com.aesophor.medievania.world.map;
 
-import com.aesophor.medievania.Medievania;
-import com.aesophor.medievania.world.objects.characters.Enemy;
-import com.aesophor.medievania.world.objects.characters.humanoid.Player;
+import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.world.object.character.Character;
+import com.aesophor.medievania.world.object.character.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
@@ -43,8 +43,8 @@ public class WorldContactListener implements ContactListener {
         
         
         switch (cDef) {
-            case Medievania.PLAYER_BIT | Medievania.ENEMY_BIT:
-                if (fixtureA.getFilterData().categoryBits == Medievania.PLAYER_BIT) {
+            case Constants.PLAYER_BIT | Constants.ENEMY_BIT:
+                if (fixtureA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     ((Player) fixtureA.getUserData()).receiveDamage(25);
                 } else {
                     ((Player) fixtureB.getUserData()).receiveDamage(25);
@@ -52,20 +52,20 @@ public class WorldContactListener implements ContactListener {
                 Gdx.app.log("Player", "received 25 damage.");
                 break;
                 
-            case Medievania.MELEE_WEAPON_BIT | Medievania.ENEMY_BIT:
+            case Constants.MELEE_WEAPON_BIT | Constants.ENEMY_BIT:
                 Player player;
-                Enemy enemy;
+                Character target;
                 // Set enemy as player's current target (so he can inflict damage to it).
-                if (fixtureA.getFilterData().categoryBits == Medievania.ENEMY_BIT) {
-                    enemy = (Enemy) (fixtureA.getUserData());
+                if (fixtureA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
+                    target = (Character) (fixtureA.getUserData());
                     player = (Player) (fixtureB.getUserData());
                     
-                    player.setTargetEnemy(enemy);
+                    player.setTargetEnemy(target);
                 } else {
-                    enemy = (Enemy) (fixtureB.getUserData());
+                    target = (Character) (fixtureB.getUserData());
                     player = (Player) (fixtureA.getUserData());
                     
-                    player.setTargetEnemy(enemy);
+                    player.setTargetEnemy(target);
                 }
                 break;
                 
@@ -87,10 +87,10 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
         switch (cDef) {
-            case Medievania.MELEE_WEAPON_BIT | Medievania.ENEMY_BIT:
+            case Constants.MELEE_WEAPON_BIT | Constants.ENEMY_BIT:
                 Player player;
                 // Unset player's current target when contact ends.
-                if (fixtureA.getFilterData().categoryBits == Medievania.ENEMY_BIT) {
+                if (fixtureA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
                     player = (Player) (fixtureB.getUserData());
                     player.setTargetEnemy(null);
                 } else {
