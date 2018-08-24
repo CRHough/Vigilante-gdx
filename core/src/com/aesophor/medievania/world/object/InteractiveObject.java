@@ -13,7 +13,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public abstract class InteractiveTileObject {
+public abstract class InteractiveObject {
 
     protected World world;
     protected TiledMap map;
@@ -23,7 +23,7 @@ public abstract class InteractiveTileObject {
     
     protected Fixture fixture;
     
-    public InteractiveTileObject(World world, TiledMap map, Rectangle bounds) {
+    public InteractiveObject(World world, TiledMap map, Rectangle bounds) {
         this.world = world;
         this.map = map;
         this.bounds = bounds;

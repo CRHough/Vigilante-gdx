@@ -1,5 +1,6 @@
 package com.aesophor.medievania.world.object.character;
 
+import com.aesophor.medievania.constant.Constants;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -7,7 +8,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Character extends Sprite {
@@ -20,6 +25,7 @@ public abstract class Character extends Sprite {
     
     protected World currentWorld; // The world in which the character is spawned.
     protected Body b2body;
+    protected Fixture meleeAttackFixture;
     
     protected TextureRegion idleAnimation; // Change to Animation later.
     protected Animation<TextureRegion> runAnimation;
@@ -44,7 +50,10 @@ public abstract class Character extends Sprite {
     protected Character targetEnemy;
     
     protected int health;
-    protected int attackRange;
+    protected int stamina;
+    protected int magicka;
+    
+    protected int attackRange = 14;
     
     public Character(Texture texture, World currentWorld, float x, float y) {
         super(texture);
@@ -64,29 +73,33 @@ public abstract class Character extends Sprite {
     public TextureRegion getFrame(float dt) {
         currentState = getState();
         
-        TextureRegion region;
+        TextureRegion textureRegion;
         switch (currentState) {
             case JUMPING:
-                region = (TextureRegion) jumpAnimation.getKeyFrame(stateTimer, false);
+                textureRegion = (TextureRegion) jumpAnimation.getKeyFrame(stateTimer, false);
                 break;
             case RUNNING:
-                region = (TextureRegion) runAnimation.getKeyFrame(stateTimer, true);
+                textureRegion = (TextureRegion) runAnimation.getKeyFrame(stateTimer, true);
                 break;
             case ATTACKING:
-                region = (TextureRegion) attackAnimation.getKeyFrame(stateTimer, false);
+                textureRegion = (TextureRegion) attackAnimation.getKeyFrame(stateTimer, false);
                 break;
             case FALLING:
             case IDLE:
             default:
-                region = idleAnimation;
+                textureRegion = idleAnimation;
                 break;
         }
         
-        if ((b2body.getLinearVelocity().x < 0 || !facingRight) && !region.isFlipX()) {
-            region.flip(true, false); // flip x, flip y.
+        if ((b2body.getLinearVelocity().x < 0 || !facingRight) && !textureRegion.isFlipX()) {
+            textureRegion.flip(true, false); // flip x, flip y.
+            CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
+            shape.setPosition(new Vector2((getX() - 8) / Constants.PPM, getY() / Constants.PPM));
             facingRight = false;
-        } else if ((b2body.getLinearVelocity().x > 0 || facingRight) && region.isFlipX()) {
-            region.flip(true, false);
+        } else if ((b2body.getLinearVelocity().x > 0 || facingRight) && textureRegion.isFlipX()) {
+            textureRegion.flip(true, false);
+            CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
+            shape.setPosition(new Vector2((getX() + 8) / Constants.PPM, getY() / Constants.PPM));
             facingRight = true;
         }
         
@@ -97,7 +110,7 @@ public abstract class Character extends Sprite {
         stateTimer = (currentState == previousState) ? stateTimer + dt : 0;
         previousState = currentState;
         
-        return region;
+        return textureRegion;
     }
     
     public Character.State getState() {
@@ -177,7 +190,7 @@ public abstract class Character extends Sprite {
         weaponHitSound.play();
         
         float force = (facingRight) ? .6f : -.6f;
-        //c.b2body.applyLinearImpulse(new Vector2(force, 0), enemy.b2body.getWorldCenter(), true);
+        c.getB2Body().applyLinearImpulse(new Vector2(force, 0), c.getB2Body().getWorldCenter(), true);
     }
     
     public boolean facingRight() {

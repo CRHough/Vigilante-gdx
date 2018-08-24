@@ -3,21 +3,18 @@ package com.aesophor.medievania.screen;
 import com.aesophor.medievania.Medievania;
 import com.aesophor.medievania.constant.Constants;
 import com.aesophor.medievania.ui.Hud;
-import com.aesophor.medievania.util.CameraHelper;
-import com.aesophor.medievania.world.map.Map;
+import com.aesophor.medievania.util.CameraUtils;
+import com.aesophor.medievania.world.map.GameMap;
 import com.aesophor.medievania.world.map.WorldContactListener;
 import com.aesophor.medievania.world.object.character.Enemy;
 import com.aesophor.medievania.world.object.character.Player;
 import com.aesophor.medievania.world.object.character.humanoid.Knight;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
@@ -34,9 +31,9 @@ public class GameScreen implements Screen {
     private Viewport gameViewport;
     private Hud hud;
     
-    private TmxMapLoader maploader;
-    private TiledMap map;
     private OrthogonalTiledMapRenderer renderer;
+    private TmxMapLoader maploader;
+    private GameMap currentMap;
     
     private World world;
     private Box2DDebugRenderer b2dr;
@@ -51,26 +48,18 @@ public class GameScreen implements Screen {
         
         gameCamera = new OrthographicCamera();
         gameViewport = new FitViewport(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM, gameCamera);
-        
-        
-        maploader = new TmxMapLoader();
-        map = maploader.load("Map/starting_point.tmx");
-        
-        
-        renderer = new OrthogonalTiledMapRenderer(map, 1 / Constants.PPM);
-        
         gameCamera.position.set(gameViewport.getWorldWidth() / 2, gameViewport.getWorldHeight() / 2, 0);
         
-        world = new World(new Vector2(0, -10), true); // -10 is the gravity
+        world = new World(new Vector2(0, Constants.GRAVITY), true); // -10 is the gravity
         b2dr = new Box2DDebugRenderer();
         
-        new Map(world, map);
-        Map.parseTiledObjects(world, map.getLayers().get(Constants.GROUND_LAYER).getObjects());
+        maploader = new TmxMapLoader();
+        currentMap = new GameMap(world, maploader.load("Map/starting_point.tmx"));
+        renderer = new OrthogonalTiledMapRenderer(currentMap.getTiledMap(), 1 / Constants.PPM);
         
-        // Spawn the player.
+        
+        // Spawn the player and an enemy.
         player = new Player(this, 32 / Constants.PPM, 200 / Constants.PPM);
-        
-        // Spawn an enemy.
         enemy = new Knight(this, 300 / Constants.PPM, 100 / Constants.PPM);
         
         world.setContactListener(new WorldContactListener(player));
@@ -82,36 +71,25 @@ public class GameScreen implements Screen {
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(.6f);
         //backgroundMusic.play();
-        
-        
-        
     }
 
     
     @Override
     public void show() {
         // TODO Auto-generated method stub
-        
     }
     
-    public void handleInput(float delta) {
+    public void update(float delta) {
         player.handleInput(delta);
-    }
-    
-    public void update(float dt) {
-        handleInput(dt);
         
         world.step(1/60f, 6, 2);
         
-        enemy.update(dt);
-        player.update(dt);
-        hud.update(dt);
+        hud.update(delta);
+        enemy.update(delta);
+        player.update(delta);
         
-        CameraHelper.lerpToTarget(gameCamera, player.getB2Body().getPosition());
-        CameraHelper.boundCamera(gameCamera, map);
-        
-        // Update our camera with correct coordinates after changes.
-        //gameCamera.update();
+        CameraUtils.lockOnTarget(gameCamera, player.getB2Body().getPosition());
+        CameraUtils.boundCamera(gameCamera, currentMap);
         
         // Tell our renderer to draw only what our camera can see.
         renderer.setView(gameCamera);
@@ -157,25 +135,22 @@ public class GameScreen implements Screen {
 
     @Override
     public void pause() {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void resume() {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void hide() {
-        // TODO Auto-generated method stub
         
     }
 
     @Override
     public void dispose() {
-        map.dispose();
+        currentMap.getTiledMap().dispose();
         renderer.dispose();
         world.dispose();
         b2dr.dispose();

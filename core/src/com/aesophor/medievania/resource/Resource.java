@@ -2,9 +2,9 @@ package com.aesophor.medievania.resource;
 
 import com.badlogic.gdx.utils.Disposable;
 
-public class Resources implements Disposable {
+public class Resource implements Disposable {
     
-    private static final Resources INSTANCE = new Resources();
+    private static final Resource INSTANCE = new Resource();
     
     // HUD
     
@@ -14,11 +14,11 @@ public class Resources implements Disposable {
     
     // Sound Effects
     
-    private Resources() {
+    private Resource() {
         
     }
     
-    public static Resources getInstance() {
+    public static Resource getInstance() {
         return INSTANCE;
     }
 

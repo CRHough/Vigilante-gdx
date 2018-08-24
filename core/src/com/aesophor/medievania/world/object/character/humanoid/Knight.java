@@ -67,7 +67,6 @@ public class Knight extends Enemy implements Humanoid {
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
-        
         b2body = currentWorld.createBody(bdef);
         
         FixtureDef fdef = new FixtureDef();
@@ -79,11 +78,9 @@ public class Knight extends Enemy implements Humanoid {
         vertices[3] = new Vector2(7, -15).scl(1 / Constants.PPM);
         body.set(vertices);
         
-        
+        fdef.shape = body;
         fdef.filter.categoryBits = Constants.ENEMY_BIT;
         fdef.filter.maskBits = Constants.GROUND_BIT | Constants.PLAYER_BIT | Constants.MELEE_WEAPON_BIT; // What it can collide with.
-        
-        fdef.shape = body;
         b2body.createFixture(fdef).setUserData(this);;
     }
 

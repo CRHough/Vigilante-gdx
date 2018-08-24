@@ -47,38 +47,12 @@ public class Player extends Character implements Controllable, Humanoid {
         setRegion(idleAnimation);
     }
     
-    @Override
-    public void update(float dt) {
-        if (setToKill && !killed) {
-            setRegion(killedAnimation.getKeyFrame(stateTimer, false));
-            
-            // Only destroy the body when animation has finished playing.
-            if (killedAnimation.isAnimationFinished(stateTimer)) {
-                System.out.println("player died.");
-                deathSound.play();
-                
-                currentWorld.destroyBody(b2body);
-                killed = true;
-                
-                stateTimer = 0;
-            }
-            
-            stateTimer += dt; // clean up this pile of shit...
-            
-        } else if (!killed) {
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y + 10 / Constants.PPM - getHeight() / 2);
-            setRegion(getFrame(dt));
-        }
-    }
-    
-    
     
     @Override
     public void defineCharacter() {
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
-        
         b2body = currentWorld.createBody(bdef);
         
         FixtureDef fdef = new FixtureDef();
@@ -90,29 +64,29 @@ public class Player extends Character implements Controllable, Humanoid {
         vertices[3] = new Vector2(5, -14).scl(1 / Constants.PPM);
         body.set(vertices);
         
+        fdef.shape = body;
         fdef.filter.categoryBits = Constants.PLAYER_BIT;
         fdef.filter.maskBits = Constants.GROUND_BIT | Constants.COIN_BIT | Constants.BRICK_BIT | Constants.ENEMY_BIT; // What player can collide with.
-        
-        fdef.shape = body;
         b2body.createFixture(fdef).setUserData(this);
-        
         
         
         CircleShape weapon = new CircleShape();
         weapon.setPosition(new Vector2((getX() + 8) / Constants.PPM, getY() / Constants.PPM));
         weapon.setRadius(attackRange / Constants.PPM);
         
+        fdef.shape = weapon;
+        fdef.isSensor = true; // a sensor won't collide with the world.
         fdef.filter.categoryBits = Constants.MELEE_WEAPON_BIT;
         fdef.filter.maskBits = Constants.ENEMY_BIT | Constants.OBJECT_BIT; // What player can collide with.
         
-        fdef.shape = weapon;
-        fdef.isSensor = true; // a sensor won't collide with the world.
-        
-        b2body.createFixture(fdef).setUserData(this);
+        meleeAttackFixture = b2body.createFixture(fdef);
+        meleeAttackFixture.setUserData(this);
     }
-
+    
     @Override
     public void handleInput(float delta) {
+        if (setToKill) return;
+        
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT) && !isAttacking()) {
             setIsAttacking(true);
             
@@ -128,13 +102,34 @@ public class Player extends Character implements Controllable, Humanoid {
                 setIsJumping(true);
                 getB2Body().applyLinearImpulse(new Vector2(0, 3f), getB2Body().getWorldCenter(), true);
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && getB2Body().getLinearVelocity().x <= 0.5) {
-                getB2Body().applyLinearImpulse(new Vector2(0.15f, 0), getB2Body().getWorldCenter(), true);
+                getB2Body().applyLinearImpulse(new Vector2(0.25f, 0), getB2Body().getWorldCenter(), true);
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && getB2Body().getLinearVelocity().x >= -0.5) {
-                getB2Body().applyLinearImpulse(new Vector2(-0.15f, 0), getB2Body().getWorldCenter(), true);
+                getB2Body().applyLinearImpulse(new Vector2(-0.25f, 0), getB2Body().getWorldCenter(), true);
             }
         }
         
     }
     
+    @Override
+    public void update(float delta) {
+        if (setToKill && !killed) {
+            setRegion(killedAnimation.getKeyFrame(stateTimer, false));
+            
+            // Only destroy the body when animation has finished playing.
+            if (killedAnimation.isAnimationFinished(stateTimer)) {
+                currentWorld.destroyBody(b2body);
+                killed = true;
+                
+                stateTimer = 0;
+                deathSound.play();
+            }
+            
+            stateTimer += delta; // clean up this pile of shit...
+            
+        } else if (!killed) {
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y + 10 / Constants.PPM - getHeight() / 2);
+            setRegion(getFrame(delta));
+        }
+    }
 
 }
