@@ -168,5 +168,4 @@ public class GameScreen implements Screen {
         return game.batch;
     }
     
-
 }

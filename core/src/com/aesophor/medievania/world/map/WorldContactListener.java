@@ -69,6 +69,24 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
                 
+            case Constants.MELEE_WEAPON_BIT | Constants.PLAYER_BIT:
+                Player p;
+                Character t;
+                System.out.println("enemy got a target");
+                // Set enemy as player's current target (so he can inflict damage to it).
+                if (fixtureA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
+                    p = (Player) (fixtureA.getUserData());
+                    t = (Character) (fixtureB.getUserData());
+                    
+                    t.setTargetEnemy(p);
+                } else {
+                    p = (Player) (fixtureB.getUserData());
+                    t = (Character) (fixtureA.getUserData());
+                    
+                    t.setTargetEnemy(p);
+                }
+                break;
+                
             default:
                 break;
         }
@@ -97,6 +115,26 @@ public class WorldContactListener implements ContactListener {
                     player = (Player) (fixtureA.getUserData());
                     player.setTargetEnemy(null);
                 }
+                break;
+                
+            case Constants.MELEE_WEAPON_BIT | Constants.PLAYER_BIT:
+                Player p;
+                Character t;
+                // Set enemy as player's current target (so he can inflict damage to it).
+                if (fixtureA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
+                    p = (Player) (fixtureA.getUserData());
+                    t = (Character) (fixtureB.getUserData());
+                    
+                    t.setTargetEnemy(null);
+                } else {
+                    p = (Player) (fixtureB.getUserData());
+                    t = (Character) (fixtureA.getUserData());
+                    
+                    t.setTargetEnemy(null);
+                }
+                break;
+                
+            default:
                 break;
         }
     }

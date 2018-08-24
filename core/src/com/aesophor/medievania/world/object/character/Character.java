@@ -12,7 +12,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Transform;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Character extends Sprite {
@@ -184,7 +183,7 @@ public abstract class Character extends Sprite {
     }
     
     public void attack(Character c) {
-        Gdx.app.log("Player", String.format("deals %d damage to %s", 25, "knight"));
+        setIsAttacking(true);
         c.receiveDamage(25);
         
         weaponHitSound.play();

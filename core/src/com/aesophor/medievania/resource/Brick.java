@@ -12,7 +12,7 @@ public class Brick extends InteractiveObject {
     public Brick(World world, TiledMap map, Rectangle bounds) {
         super(world, map, bounds);
         fixture.setUserData(this);
-        setCategoryFilter(Constants.BRICK_BIT);
+        //setCategoryFilter(Constants.BRICK_BIT);
     }
 
     

@@ -66,7 +66,7 @@ public class Player extends Character implements Controllable, Humanoid {
         
         fdef.shape = body;
         fdef.filter.categoryBits = Constants.PLAYER_BIT;
-        fdef.filter.maskBits = Constants.GROUND_BIT | Constants.COIN_BIT | Constants.BRICK_BIT | Constants.ENEMY_BIT; // What player can collide with.
+        fdef.filter.maskBits = Constants.GROUND_BIT | Constants.ENEMY_BIT | Constants.MELEE_WEAPON_BIT; // What player can collide with.
         b2body.createFixture(fdef).setUserData(this);
         
         
@@ -107,7 +107,6 @@ public class Player extends Character implements Controllable, Humanoid {
                 getB2Body().applyLinearImpulse(new Vector2(-0.25f, 0), getB2Body().getWorldCenter(), true);
             }
         }
-        
     }
     
     @Override
