@@ -39,7 +39,7 @@ public abstract class Enemy extends Character {
                 if (getDistanceBetween(b2body.getPosition().x, lockedOnTarget.b2body.getPosition().x) >= attackRange / Constants.PPM) {
                     moveTowardTarget(lockedOnTarget);
                     
-                    if (calulateDistanceTimer > 2f) {
+                    if (calulateDistanceTimer > 7f / Constants.PPM) {
                         lastTraveledDistance = getDistanceBetween(b2body.getPosition().x, lastStoppedPosition.x);
                         lastStoppedPosition.set(b2body.getPosition());
                         

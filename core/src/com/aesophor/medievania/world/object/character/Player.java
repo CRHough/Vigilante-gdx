@@ -79,7 +79,7 @@ public class Player extends Character implements Controllable, Humanoid {
         
         
         CircleShape weapon = new CircleShape();
-        weapon.setPosition(new Vector2((getX() + attackRange) / Constants.PPM, getY() / Constants.PPM));
+        weapon.setPosition(new Vector2((b2body.getPosition().x + attackRange) / Constants.PPM, getY() / Constants.PPM));
         weapon.setRadius(attackRange / Constants.PPM);
         
         fdef.shape = weapon;

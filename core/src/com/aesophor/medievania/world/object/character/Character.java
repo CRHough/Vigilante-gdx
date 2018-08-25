@@ -147,11 +147,11 @@ public abstract class Character extends Sprite {
         if (!facingRight && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false); // flip x, flip y.
             CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
-            shape.setPosition(new Vector2((getX() - attackRange) / Constants.PPM, getY() / Constants.PPM));
+            shape.setPosition(new Vector2((b2body.getPosition().x - attackRange) / Constants.PPM, getY() / Constants.PPM));
         } else if (facingRight && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
             CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
-            shape.setPosition(new Vector2((getX() + attackRange) / Constants.PPM, getY() / Constants.PPM));
+            shape.setPosition(new Vector2((b2body.getPosition().x + attackRange) / Constants.PPM, getY() / Constants.PPM));
         }
         
         stateTimer = (currentState != previousState) ? 0 : stateTimer + delta;
@@ -163,13 +163,13 @@ public abstract class Character extends Sprite {
             return Character.State.KILLED;
         } else if (isAttacking) {
             return Character.State.ATTACKING;
-        } else if (b2body.getLinearVelocity().y > 0) {
+        } else if (b2body.getLinearVelocity().y > .5f) {
             return Character.State.JUMPING;
-        } else if (b2body.getLinearVelocity().y < 0) {
+        } else if (b2body.getLinearVelocity().y < -.5f) {
             return Character.State.FALLING;
         } else if (isCrouching()) {
             return Character.State.CROUCHING;
-        } else if (b2body.getLinearVelocity().x != 0) {
+        } else if (b2body.getLinearVelocity().x > .01f || b2body.getLinearVelocity().x < -.01f) {
             return Character.State.RUNNING;
         } else {
             return Character.State.IDLE;
@@ -296,7 +296,7 @@ public abstract class Character extends Sprite {
     }
     
     public boolean isOnGround() {
-        return b2body.getLinearVelocity().y == 0;
+        return b2body.getLinearVelocity().y > -.5f && b2body.getLinearVelocity().y < .5f;
     }
     
     public void setIsAttacking(boolean isAttacking) {

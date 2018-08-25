@@ -74,6 +74,7 @@ public class GameMap {
             body = world.createBody(bdef);
             
             fdef.shape = chainShape;
+            fdef.friction = Constants.GROUND_FRICTION;
             fdef.filter.categoryBits = Constants.GROUND_BIT;
             body.createFixture(fdef);
             

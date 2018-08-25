@@ -11,6 +11,7 @@ public final class Constants {
     
     // Physics constants
     public static final int GRAVITY = -10;
+    public static final int GROUND_FRICTION = 1;
     
     // CollisionBit constants
     public static final short GROUND_BIT = 1;
