@@ -25,23 +25,6 @@ public class WorldContactListener implements ContactListener {
         
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
-        /*
-        if ("head".equals(fixtureA.getUserData()) || "head".equals(fixtureB.getUserData())) {
-            Fixture head = (fixtureA.getUserData().equals("head")) ? fixtureA : fixtureB;
-            Fixture object = (fixtureA.getUserData().equals("head")) ? fixtureB : fixtureA;
-            
-            if (object.getUserData() instanceof InteractiveTileObject) {
-                ((InteractiveTileObject) object.getUserData()).onHeadHit();
-            }
-        }
-        */
-        
-        if ("body".equals(fixtureA.getUserData()) || "body".equals(fixtureB.getUserData())) {
-            Fixture body = ("body".equals(fixtureA.getUserData())) ? fixtureA : fixtureB;
-            player.setIsJumping(false);
-        }
-        
-        
         switch (cDef) {
             case Constants.PLAYER_BIT | Constants.ENEMY_BIT:
                 if (fixtureA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
@@ -49,7 +32,6 @@ public class WorldContactListener implements ContactListener {
                 } else {
                     ((Player) fixtureB.getUserData()).receiveDamage(25);
                 }
-                Gdx.app.log("Player", "received 25 damage.");
                 break;
                 
             case Constants.MELEE_WEAPON_BIT | Constants.ENEMY_BIT:
@@ -72,7 +54,6 @@ public class WorldContactListener implements ContactListener {
             case Constants.MELEE_WEAPON_BIT | Constants.PLAYER_BIT:
                 Player p;
                 Character t;
-                System.out.println("enemy got a target");
                 // Set enemy as player's current target (so he can inflict damage to it).
                 if (fixtureA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     p = (Player) (fixtureA.getUserData());
@@ -96,11 +77,6 @@ public class WorldContactListener implements ContactListener {
     public void endContact(Contact contact) {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
-        
-        if ("body".equals(fixtureA.getUserData()) || "body".equals(fixtureB.getUserData())) {
-            Fixture body = ("body".equals(fixtureA.getUserData())) ? fixtureA : fixtureB;
-            player.setIsJumping(true);
-        }
         
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         

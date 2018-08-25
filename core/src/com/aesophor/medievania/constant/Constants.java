@@ -1,6 +1,8 @@
 package com.aesophor.medievania.constant;
 
 public final class Constants {
+    
+    public static final boolean DEBUG = true;
 
     // Graphics constants
     public static final float PPM = 100;

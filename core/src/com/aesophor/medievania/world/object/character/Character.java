@@ -1,7 +1,6 @@
 package com.aesophor.medievania.world.object.character;
 
 import com.aesophor.medievania.constant.Constants;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -16,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Character extends Sprite {
 
-    public enum State { IDLE, RUNNING, JUMPING, FALLING, ATTACKING };
+    public enum State { IDLE, RUNNING, JUMPING, FALLING, ATTACKING, KILLED };
     
     
     protected Character.State currentState;
@@ -39,23 +38,31 @@ public abstract class Character extends Sprite {
     protected Sound weaponHitSound;
     protected Sound jumpSound;
     
+    protected float stateTimer;
     protected boolean facingRight;
-    protected boolean isJumping;
     protected boolean isAttacking;
     protected boolean setToKill;
     protected boolean killed;
     
-    protected float stateTimer;
-    protected Character targetEnemy;
-    
+    protected String name;
+    protected int level;
     protected int health;
     protected int stamina;
     protected int magicka;
     
-    protected int attackRange = 14;
+    protected float movementSpeed;
+    protected float jumpHeight;
+    
+    protected float attackForce;
+    protected float attackTime;
+    protected int attackRange;
+    protected int attackDamage;
+    
+    protected Character targetEnemy;
     
     public Character(Texture texture, World currentWorld, float x, float y) {
         super(texture);
+        
         this.currentWorld = currentWorld;
         setPosition(x, y);
         
@@ -66,10 +73,43 @@ public abstract class Character extends Sprite {
         facingRight = true;
     }
     
-    protected abstract void defineCharacter();
-    public abstract void update(float dt);
     
-    public TextureRegion getFrame(float dt) {
+    protected abstract void defineBody();
+    
+    protected void defineMeleeFixture() {
+        
+    }
+    
+    public void update(float delta) {
+        if (!killed) {
+            // If the character's health has reached zero but hasn't die yet,
+            // it means that the killedAnimation is not fully played.
+            // So here we'll play it until it's finished.
+            if (setToKill) {
+                //stateTimer += delta;
+                //setRegion(killedAnimation.getKeyFrame(stateTimer, false));
+                setRegion(getFrame(delta));
+                
+                if (killedAnimation.isAnimationFinished(stateTimer)) {
+                    killed = true;
+                    deathSound.play();
+                    currentWorld.destroyBody(b2body);
+                }
+            } else {
+                setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y + 10 / Constants.PPM - getHeight() / 2);
+                setRegion(getFrame(delta));
+                
+                // Set isAttacking back to false, implying attack has complete.
+                if (isAttacking() && stateTimer >= attackTime) {
+                    isAttacking = false;
+                    stateTimer = 0;
+                }
+            }
+        }
+    }
+    
+    public TextureRegion getFrame(float delta) {
+        previousState = currentState;
         currentState = getState();
         
         TextureRegion textureRegion;
@@ -83,6 +123,9 @@ public abstract class Character extends Sprite {
             case ATTACKING:
                 textureRegion = (TextureRegion) attackAnimation.getKeyFrame(stateTimer, false);
                 break;
+            case KILLED:
+                textureRegion = (TextureRegion) killedAnimation.getKeyFrame(stateTimer, false);
+                break;
             case FALLING:
             case IDLE:
             default:
@@ -90,31 +133,25 @@ public abstract class Character extends Sprite {
                 break;
         }
         
-        if ((b2body.getLinearVelocity().x < 0 || !facingRight) && !textureRegion.isFlipX()) {
+        if (!facingRight && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false); // flip x, flip y.
             CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
-            shape.setPosition(new Vector2((getX() - 8) / Constants.PPM, getY() / Constants.PPM));
-            facingRight = false;
-        } else if ((b2body.getLinearVelocity().x > 0 || facingRight) && textureRegion.isFlipX()) {
+            shape.setPosition(new Vector2((getX() - attackRange) / Constants.PPM, getY() / Constants.PPM));
+        } else if (facingRight && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
             CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
-            shape.setPosition(new Vector2((getX() + 8) / Constants.PPM, getY() / Constants.PPM));
-            facingRight = true;
+            shape.setPosition(new Vector2((getX() + attackRange) / Constants.PPM, getY() / Constants.PPM));
         }
         
-        if (isAttacking() && attackAnimation.isAnimationFinished(stateTimer) && stateTimer >= 1) {
-            isAttacking = false;
-        }
-        
-        stateTimer = (currentState == previousState) ? stateTimer + dt : 0;
-        previousState = currentState;
-        
+        stateTimer = (currentState != previousState) ? 0 : stateTimer + delta;
         return textureRegion;
     }
     
     public Character.State getState() {
-        if (isAttacking()) {
+        if (isAttacking) {
             return Character.State.ATTACKING;
+        } else if (setToKill) {
+            return Character.State.KILLED;
         } else if (b2body.getLinearVelocity().y > 0 || (b2body.getLinearVelocity().y < 0 && previousState == Character.State.JUMPING)) {
             return Character.State.JUMPING;
         } else if (b2body.getLinearVelocity().y < 0) {
@@ -137,6 +174,53 @@ public abstract class Character extends Sprite {
     }
     
     
+    // Movement controls
+    public void walkRight() {
+        facingRight = true;
+        
+        if (getB2Body().getLinearVelocity().x <= movementSpeed * 2) {
+            getB2Body().applyLinearImpulse(new Vector2(movementSpeed, 0), getB2Body().getWorldCenter(), true);
+        }
+    }
+    
+    public void walkLeft() {
+        facingRight = false;
+        
+        if (getB2Body().getLinearVelocity().x >= -movementSpeed * 2) {
+            getB2Body().applyLinearImpulse(new Vector2(-movementSpeed, 0), getB2Body().getWorldCenter(), true);
+        }
+    }
+    
+    public void jump() {
+        if (isOnGround()) {
+            getB2Body().applyLinearImpulse(new Vector2(0, jumpHeight), getB2Body().getWorldCenter(), true);
+            jumpSound.play();
+        }
+    }
+    
+    // Use stateTimer.
+    public void swingWeapon() {
+        if (!isAttacking()) {
+            setIsAttacking(true);
+            
+            if (hasTargetEnemy() && !targetEnemy.isSetToKill()) {
+                inflictDamage(getTargetEnemy(), attackDamage);
+                weaponHitSound.play();
+                
+                float force = (facingRight) ? attackForce : -attackForce;
+                getTargetEnemy().getB2Body().applyLinearImpulse(new Vector2(force, 0), getTargetEnemy().getB2Body().getWorldCenter(), true);
+            }
+            
+            weaponSwingSound.play();
+            return;
+        }
+    }
+    
+    public void inflictDamage(Character c, int damage) {
+        c.receiveDamage(damage);
+    }
+    
+    
     
     // Review the code below.
     public Body getB2Body() {
@@ -151,27 +235,25 @@ public abstract class Character extends Sprite {
         return health;
     }
     
-    public boolean killed() {
+    public boolean isSetToKill() {
+        return setToKill;
+    }
+    
+    public boolean isKilled() {
         return killed;
     }
     
-    public boolean isJumping() {
-        return b2body.getLinearVelocity().y != 0;
-    }
-    
-    public void setIsJumping(boolean isJumping) {
-        this.isJumping = isJumping;
-        jumpSound.play();
+    public boolean isOnGround() {
+        return b2body.getLinearVelocity().y == 0;
     }
     
     public void setIsAttacking(boolean isAttacking) {
-        weaponSwingSound.play();
         this.isAttacking = isAttacking;
     }
 
 
     public boolean hasTargetEnemy() {
-        return !(targetEnemy == null);
+        return targetEnemy != null;
     }
     
     public Character getTargetEnemy() {
@@ -182,15 +264,6 @@ public abstract class Character extends Sprite {
         targetEnemy = enemy;
     }
     
-    public void attack(Character c) {
-        setIsAttacking(true);
-        c.receiveDamage(25);
-        
-        weaponHitSound.play();
-        
-        float force = (facingRight) ? .6f : -.6f;
-        c.getB2Body().applyLinearImpulse(new Vector2(force, 0), c.getB2Body().getWorldCenter(), true);
-    }
     
     public boolean facingRight() {
         return facingRight;

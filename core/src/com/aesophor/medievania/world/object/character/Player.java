@@ -24,7 +24,12 @@ public class Player extends Character implements Controllable, Humanoid {
         
         this.currentWorld = screen.getWorld();
         health = 100;
+        movementSpeed = .25f;
+        jumpHeight = 3f;
+        attackForce = .6f;
+        attackTime = 1f;
         attackRange = 14;
+        attackDamage = 25;
         
         // Create animations by extracting frames from the spritesheet.
         idleAnimation = new TextureRegion(getTexture(), 7 * 80, 2 * 80, 80, 80);
@@ -41,7 +46,7 @@ public class Player extends Character implements Controllable, Humanoid {
         weaponHitSound = Medievania.manager.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
         jumpSound = Medievania.manager.get("Sound/FX/Player/jump.wav", Sound.class);
         
-        defineCharacter();
+        defineBody();
         
         setBounds(0, 0, 120 / Constants.PPM, 120 / Constants.PPM);
         setRegion(idleAnimation);
@@ -49,7 +54,7 @@ public class Player extends Character implements Controllable, Humanoid {
     
     
     @Override
-    public void defineCharacter() {
+    public void defineBody() {
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
@@ -71,7 +76,7 @@ public class Player extends Character implements Controllable, Humanoid {
         
         
         CircleShape weapon = new CircleShape();
-        weapon.setPosition(new Vector2((getX() + 8) / Constants.PPM, getY() / Constants.PPM));
+        weapon.setPosition(new Vector2((getX() + attackRange) / Constants.PPM, getY() / Constants.PPM));
         weapon.setRadius(attackRange / Constants.PPM);
         
         fdef.shape = weapon;
@@ -85,49 +90,24 @@ public class Player extends Character implements Controllable, Humanoid {
     
     @Override
     public void handleInput(float delta) {
-        if (setToKill) return;
-        
-        if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT) && !isAttacking()) {
-            setIsAttacking(true);
-            
-            if (hasTargetEnemy()) {
-                attack(getTargetEnemy());
-            }
+        if (setToKill) {
             return;
+        }
+        
+        
+        if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
+            swingWeapon();
         }
         
         // When player is attacking, movement is disabled.
         if (!isAttacking()) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT) && !isJumping()) {
-                setIsJumping(true);
-                getB2Body().applyLinearImpulse(new Vector2(0, 3f), getB2Body().getWorldCenter(), true);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && getB2Body().getLinearVelocity().x <= 0.5) {
-                getB2Body().applyLinearImpulse(new Vector2(0.25f, 0), getB2Body().getWorldCenter(), true);
-            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && getB2Body().getLinearVelocity().x >= -0.5) {
-                getB2Body().applyLinearImpulse(new Vector2(-0.25f, 0), getB2Body().getWorldCenter(), true);
+            if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
+                jump();
+            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                walkRight();
+            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                walkLeft();
             }
-        }
-    }
-    
-    @Override
-    public void update(float delta) {
-        if (setToKill && !killed) {
-            setRegion(killedAnimation.getKeyFrame(stateTimer, false));
-            
-            // Only destroy the body when animation has finished playing.
-            if (killedAnimation.isAnimationFinished(stateTimer)) {
-                currentWorld.destroyBody(b2body);
-                killed = true;
-                
-                stateTimer = 0;
-                deathSound.play();
-            }
-            
-            stateTimer += delta; // clean up this pile of shit...
-            
-        } else if (!killed) {
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y + 10 / Constants.PPM - getHeight() / 2);
-            setRegion(getFrame(delta));
         }
     }
 

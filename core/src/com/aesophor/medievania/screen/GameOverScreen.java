@@ -70,8 +70,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        // TODO Auto-generated method stub
-        
+        viewport.update(width, height);
     }
 
     @Override

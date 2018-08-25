@@ -107,7 +107,9 @@ public class GameScreen implements Screen {
         renderer.render();
         
         // Render our Box2DDebugLines.
-        b2dr.render(world, gameCamera.combined);
+        if (Constants.DEBUG == true) {
+            b2dr.render(world, gameCamera.combined);
+        }
         
         // Render our player.
         game.batch.setProjectionMatrix(gameCamera.combined);
@@ -122,10 +124,12 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
         
-        if (player.killed()) {
+        /*
+        if (player.isKilled()) {
             game.setScreen(new GameOverScreen(game));
             dispose();
         }
+        */
     }
 
     @Override

@@ -21,12 +21,18 @@ public class Knight extends Enemy implements Humanoid {
         super(Medievania.manager.get(TEXTURE_FILE), screen.getWorld(), x, y);
         
         health = 100;
+        movementSpeed = .25f;
+        jumpHeight = 3f;
+        attackForce = .6f;
+        attackTime = 1.3f;
+        attackRange = 14;
+        attackDamage = 25;
         
         // Knight stand animation.
         idleAnimation = new TextureRegion(getTexture(), 8 * 42, 1 * 42, 42, 42);
         runAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
         jumpAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        attackAnimation = Utils.createAnimation(getTexture(), 2f / Constants.PPM, 0, 9, 0, 0, 42, 42);
+        attackAnimation = Utils.createAnimation(getTexture(), 7f / Constants.PPM, 0, 9, 0, 0, 42, 42);
         killedAnimation = Utils.createAnimation(getTexture(), 24f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
         
         // Sounds.
@@ -37,7 +43,7 @@ public class Knight extends Enemy implements Humanoid {
         weaponHitSound = Medievania.manager.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
         jumpSound = Medievania.manager.get("Sound/FX/Player/jump.wav", Sound.class);
         
-        defineCharacter();
+        defineBody();
         
         setBounds(0, 0, 50 / Constants.PPM, 50 / Constants.PPM);
         setRegion(idleAnimation);
@@ -47,35 +53,16 @@ public class Knight extends Enemy implements Humanoid {
     
     @Override
     public void update(float delta) {
-        if (setToKill && !killed) {
-            setRegion(killedAnimation.getKeyFrame(stateTimer, false));
-            
-            // Only destroy the body when animation has finished playing.
-            if (killedAnimation.isAnimationFinished(stateTimer)) {
-                System.out.println("You have killed an enemy.");
-                
-                deathSound.play();
-                
-                killed = true;
-                
-                stateTimer = 0;
-                currentWorld.destroyBody(b2body);
-            }
-            
-            stateTimer += delta;
-            
-        } else if (!killed) {
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y + 5 / Constants.PPM - getHeight() / 2);
-            setRegion(getFrame(delta));
-        } 
+        super.update(delta);
         
-        if (!isAttacking() && hasTargetEnemy() && !targetEnemy.killed()) {
-            attack(targetEnemy);
+        if (hasTargetEnemy()) {
+            swingWeapon();
         }
     }
 
+    // Refactor this part into Enemy class.
     @Override
-    protected void defineCharacter() {
+    protected void defineBody() {
         BodyDef bdef = new BodyDef();
         bdef.position.set(getX(), getY());
         bdef.type = BodyDef.BodyType.DynamicBody;
@@ -97,7 +84,7 @@ public class Knight extends Enemy implements Humanoid {
         
         
         CircleShape weapon = new CircleShape();
-        weapon.setPosition(new Vector2((getX() + 8) / Constants.PPM, getY() / Constants.PPM));
+        weapon.setPosition(new Vector2((getX() + attackRange) / Constants.PPM, getY() / Constants.PPM));
         weapon.setRadius(attackRange / Constants.PPM);
         
         fdef.shape = weapon;

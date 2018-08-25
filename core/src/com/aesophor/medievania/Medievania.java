@@ -7,7 +7,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class Medievania extends Game {
     
@@ -30,6 +29,7 @@ public class Medievania extends Game {
 	    batch = new SpriteBatch();
         manager = new AssetManager();
         
+        manager.load("Interface/titlescreen.png", Texture.class);
 		manager.load("Interface/HUD/hud.png", Texture.class);
 		manager.load("Character/Bandit/Bandit.png", Texture.class);
 		manager.load("Character/Knight/Knight.png", Texture.class);
