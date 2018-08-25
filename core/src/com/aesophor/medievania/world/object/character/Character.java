@@ -46,8 +46,9 @@ public abstract class Character extends Sprite {
     protected boolean facingRight;
     protected boolean isAttacking;
     protected boolean isCrouching;
+    protected boolean isStunned;
+    protected boolean isKilled;
     protected boolean setToKill;
-    protected boolean killed;
     
     protected String name;
     protected int level;
@@ -87,7 +88,7 @@ public abstract class Character extends Sprite {
     }
     
     public void update(float delta) {
-        if (!killed) {
+        if (!isKilled) {
             // If the character's health has reached zero but hasn't die yet,
             // it means that the killedAnimation is not fully played.
             // So here we'll play it until it's finished.
@@ -97,13 +98,13 @@ public abstract class Character extends Sprite {
                 // Set killed to true to prevent further rendering updates.
                 if (killedAnimation.isAnimationFinished(stateTimer)) {
                     currentWorld.destroyBody(b2body);
-                    killed = true;
+                    isKilled = true;
                 }
             } else {
                 setRegion(getFrame(delta));
                 
                 // Set isAttacking back to false, implying attack has complete.
-                if (isAttacking() && stateTimer >= attackTime) {
+                if (isAttacking && stateTimer >= attackTime) {
                     isAttacking = false;
                     stateTimer = 0;
                 }
@@ -291,7 +292,7 @@ public abstract class Character extends Sprite {
     }
     
     public boolean isKilled() {
-        return killed;
+        return isKilled;
     }
     
     public boolean isOnGround() {

@@ -11,7 +11,7 @@ public abstract class Enemy extends Character {
     
     protected Vector2 lastStoppedPosition;
     protected float lastTraveledDistance;
-    protected float stuckedTimer;
+    protected float calulateDistanceTimer;
     
     public Enemy(Texture texture, World world, float x, float y) {
         super(texture, world, x, y);
@@ -23,7 +23,7 @@ public abstract class Enemy extends Character {
         super.update(delta);
         
         if (lastStoppedPosition == null) {
-            lastStoppedPosition = b2body.getPosition();
+            lastStoppedPosition = new Vector2();
         }
         
         if (aggressive && hasLockedOnTarget() && !isSetToKill()) {
@@ -39,20 +39,17 @@ public abstract class Enemy extends Character {
                 if (getDistanceBetween(b2body.getPosition().x, lockedOnTarget.b2body.getPosition().x) >= attackRange / Constants.PPM) {
                     moveTowardTarget(lockedOnTarget);
                     
-                    if (lastTraveledDistance == 0) {
+                    if (calulateDistanceTimer > 2f) {
+                        lastTraveledDistance = getDistanceBetween(b2body.getPosition().x, lastStoppedPosition.x);
+                        lastStoppedPosition.set(b2body.getPosition());
                         
-                        if (stuckedTimer > 2f) {
-                            stuckedTimer = 0;
-                            lastTraveledDistance = 0;
+                        if (lastTraveledDistance == 0) {
                             jump();
-                        } else {
-                            stuckedTimer += delta;
-                            float dist = b2body.getPosition().x - lastStoppedPosition.x;
-                            dist = (dist > 0) ? dist : -dist;
-                            System.out.println(dist);
-                            lastTraveledDistance += dist;
-                            lastStoppedPosition = b2body.getPosition();
                         }
+                        
+                        calulateDistanceTimer = 0;
+                    } else {
+                        calulateDistanceTimer += delta;
                     }
                 }
                 
@@ -61,9 +58,9 @@ public abstract class Enemy extends Character {
         
     }
     
-    public static double getDistanceBetween(float x1, float x2) {
-        double distance = x1 - x2;
-        return (distance > 0) ? distance : -distance;
+    public static float getDistanceBetween(float x1, float x2) {
+        float distance = x1 - x2;
+        return (distance > 0) ? distance : -distance; 
     }
     
     @Override
