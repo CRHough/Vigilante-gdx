@@ -10,12 +10,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Character extends Sprite {
 
-    public enum State { IDLE, RUNNING, JUMPING, FALLING, ATTACKING, KILLED };
+    public enum State { IDLE, RUNNING, JUMPING, FALLING, CROUCHING, ATTACKING, KILLED };
     
     
     protected Character.State currentState;
@@ -23,11 +24,14 @@ public abstract class Character extends Sprite {
     
     protected World currentWorld; // The world in which the character is spawned.
     protected Body b2body;
+    protected Fixture bodyFixture;
     protected Fixture meleeAttackFixture;
     
     protected TextureRegion idleAnimation; // Change to Animation later.
     protected Animation<TextureRegion> runAnimation;
     protected Animation<TextureRegion> jumpAnimation;
+    protected Animation<TextureRegion> fallAnimation;
+    protected Animation<TextureRegion> crouchAnimation;
     protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> killedAnimation;
     
@@ -41,6 +45,7 @@ public abstract class Character extends Sprite {
     protected float stateTimer;
     protected boolean facingRight;
     protected boolean isAttacking;
+    protected boolean isCrouching;
     protected boolean setToKill;
     protected boolean killed;
     
@@ -58,7 +63,8 @@ public abstract class Character extends Sprite {
     protected int attackRange;
     protected int attackDamage;
     
-    protected Character targetEnemy;
+    protected Character lockedOnTarget;
+    protected Character inRangeTarget;
     
     public Character(Texture texture, World currentWorld, float x, float y) {
         super(texture);
@@ -86,17 +92,14 @@ public abstract class Character extends Sprite {
             // it means that the killedAnimation is not fully played.
             // So here we'll play it until it's finished.
             if (setToKill) {
-                //stateTimer += delta;
-                //setRegion(killedAnimation.getKeyFrame(stateTimer, false));
                 setRegion(getFrame(delta));
                 
+                // Set killed to true to prevent further rendering updates.
                 if (killedAnimation.isAnimationFinished(stateTimer)) {
-                    killed = true;
-                    deathSound.play();
                     currentWorld.destroyBody(b2body);
+                    killed = true;
                 }
             } else {
-                setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y + 10 / Constants.PPM - getHeight() / 2);
                 setRegion(getFrame(delta));
                 
                 // Set isAttacking back to false, implying attack has complete.
@@ -105,6 +108,8 @@ public abstract class Character extends Sprite {
                     stateTimer = 0;
                 }
             }
+            
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y + 10 / Constants.PPM - getHeight() / 2);
         }
     }
     
@@ -114,11 +119,17 @@ public abstract class Character extends Sprite {
         
         TextureRegion textureRegion;
         switch (currentState) {
+            case RUNNING:
+                textureRegion = (TextureRegion) runAnimation.getKeyFrame(stateTimer, true);
+                break;
             case JUMPING:
                 textureRegion = (TextureRegion) jumpAnimation.getKeyFrame(stateTimer, false);
                 break;
-            case RUNNING:
-                textureRegion = (TextureRegion) runAnimation.getKeyFrame(stateTimer, true);
+            case FALLING:
+                textureRegion = (TextureRegion) fallAnimation.getKeyFrame(stateTimer, false);
+                break;
+            case CROUCHING:
+                textureRegion = (TextureRegion) crouchAnimation.getKeyFrame(stateTimer, false);
                 break;
             case ATTACKING:
                 textureRegion = (TextureRegion) attackAnimation.getKeyFrame(stateTimer, false);
@@ -126,7 +137,6 @@ public abstract class Character extends Sprite {
             case KILLED:
                 textureRegion = (TextureRegion) killedAnimation.getKeyFrame(stateTimer, false);
                 break;
-            case FALLING:
             case IDLE:
             default:
                 textureRegion = idleAnimation;
@@ -148,14 +158,16 @@ public abstract class Character extends Sprite {
     }
     
     public Character.State getState() {
-        if (isAttacking) {
-            return Character.State.ATTACKING;
-        } else if (setToKill) {
+        if (setToKill) {
             return Character.State.KILLED;
-        } else if (b2body.getLinearVelocity().y > 0 || (b2body.getLinearVelocity().y < 0 && previousState == Character.State.JUMPING)) {
+        } else if (isAttacking) {
+            return Character.State.ATTACKING;
+        } else if (b2body.getLinearVelocity().y > 0) {
             return Character.State.JUMPING;
         } else if (b2body.getLinearVelocity().y < 0) {
             return Character.State.FALLING;
+        } else if (isCrouching()) {
+            return Character.State.CROUCHING;
         } else if (b2body.getLinearVelocity().x != 0) {
             return Character.State.RUNNING;
         } else {
@@ -163,52 +175,54 @@ public abstract class Character extends Sprite {
         }
     }
     
-    public void receiveDamage(int damage) {
-        health -= damage;
-        
-        if (health <= 0) {
-            setToKill = true;
-        }
-        
-        hurtSound.play();
-    }
-    
     
     // Movement controls
-    public void walkRight() {
+    public void moveRight() {
         facingRight = true;
         
-        if (getB2Body().getLinearVelocity().x <= movementSpeed * 2) {
-            getB2Body().applyLinearImpulse(new Vector2(movementSpeed, 0), getB2Body().getWorldCenter(), true);
+        if (b2body.getLinearVelocity().x <= movementSpeed * 2) {
+            b2body.applyLinearImpulse(new Vector2(movementSpeed, 0), b2body.getWorldCenter(), true);
         }
     }
     
-    public void walkLeft() {
+    public void moveLeft() {
         facingRight = false;
         
-        if (getB2Body().getLinearVelocity().x >= -movementSpeed * 2) {
-            getB2Body().applyLinearImpulse(new Vector2(-movementSpeed, 0), getB2Body().getWorldCenter(), true);
+        if (b2body.getLinearVelocity().x >= -movementSpeed * 2) {
+            b2body.applyLinearImpulse(new Vector2(-movementSpeed, 0), b2body.getWorldCenter(), true);
         }
     }
     
     public void jump() {
         if (isOnGround()) {
-            getB2Body().applyLinearImpulse(new Vector2(0, jumpHeight), getB2Body().getWorldCenter(), true);
+            getB2Body().applyLinearImpulse(new Vector2(0, jumpHeight), b2body.getWorldCenter(), true);
             jumpSound.play();
         }
     }
     
-    // Use stateTimer.
+    public void crouch() {
+        if (!isCrouching) {
+            isCrouching = true;
+        }
+    }
+    
+    public void getUp() {
+        if (isCrouching) {
+            isCrouching = false;
+        }
+    }
+    
+    
     public void swingWeapon() {
         if (!isAttacking()) {
             setIsAttacking(true);
             
-            if (hasTargetEnemy() && !targetEnemy.isSetToKill()) {
-                inflictDamage(getTargetEnemy(), attackDamage);
-                weaponHitSound.play();
-                
+            if (isTargetInRange() && !inRangeTarget.isSetToKill()) {
                 float force = (facingRight) ? attackForce : -attackForce;
-                getTargetEnemy().getB2Body().applyLinearImpulse(new Vector2(force, 0), getTargetEnemy().getB2Body().getWorldCenter(), true);
+                inRangeTarget.getB2Body().applyLinearImpulse(new Vector2(force, 0), inRangeTarget.getB2Body().getWorldCenter(), true);
+                
+                inflictDamage(inRangeTarget, attackDamage);
+                weaponHitSound.play();
             }
             
             weaponSwingSound.play();
@@ -218,7 +232,35 @@ public abstract class Character extends Sprite {
     
     public void inflictDamage(Character c, int damage) {
         c.receiveDamage(damage);
+        c.setLockedOnTarget(this);
     }
+    
+    public void receiveDamage(int damage) {
+        health -= damage;
+        
+        if (health <= 0) {
+            Filter filter = new Filter();
+            filter.categoryBits = Constants.DESTROYED_BIT;
+            bodyFixture.setFilterData(filter);
+            
+            setToKill = true;
+            deathSound.play();
+        } else {
+            hurtSound.play();
+        }
+    }
+    
+    
+    protected void moveTowardTarget(Character c) {
+        if (this.b2body.getPosition().x > c.getB2Body().getPosition().x) {
+            moveLeft();
+        } else {
+            moveRight();
+        }
+    }
+    
+    
+    
     
     
     
@@ -227,8 +269,17 @@ public abstract class Character extends Sprite {
         return b2body;
     }
     
+    public Fixture getBodyFixture() {
+        return bodyFixture;
+    }
+    
+    
     public boolean isAttacking() {
         return isAttacking;
+    }
+    
+    public boolean isCrouching() {
+        return isCrouching;
     }
     
     public int getHealth() {
@@ -252,16 +303,28 @@ public abstract class Character extends Sprite {
     }
 
 
-    public boolean hasTargetEnemy() {
-        return targetEnemy != null;
+    public boolean hasLockedOnTarget() {
+        return lockedOnTarget != null;
     }
     
-    public Character getTargetEnemy() {
-        return targetEnemy;
+    public boolean isTargetInRange() {
+        return inRangeTarget != null;
     }
     
-    public void setTargetEnemy(Character enemy) {
-        targetEnemy = enemy;
+    public Character getLockedOnTarget() {
+        return lockedOnTarget;
+    }
+    
+    public Character getInRangeTarget() {
+        return inRangeTarget;
+    }
+    
+    public void setLockedOnTarget(Character enemy) {
+        lockedOnTarget = enemy;
+    }
+    
+    public void setInRangeTarget(Character enemy) {
+        inRangeTarget = enemy;
     }
     
     

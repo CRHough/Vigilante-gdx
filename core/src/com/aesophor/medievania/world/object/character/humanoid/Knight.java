@@ -32,6 +32,8 @@ public class Knight extends Enemy implements Humanoid {
         idleAnimation = new TextureRegion(getTexture(), 8 * 42, 1 * 42, 42, 42);
         runAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
         jumpAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        fallAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        crouchAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
         attackAnimation = Utils.createAnimation(getTexture(), 7f / Constants.PPM, 0, 9, 0, 0, 42, 42);
         killedAnimation = Utils.createAnimation(getTexture(), 24f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
         
@@ -51,14 +53,7 @@ public class Knight extends Enemy implements Humanoid {
         facingRight = false;
     }
     
-    @Override
-    public void update(float delta) {
-        super.update(delta);
-        
-        if (hasTargetEnemy()) {
-            swingWeapon();
-        }
-    }
+    
 
     // Refactor this part into Enemy class.
     @Override
@@ -71,16 +66,17 @@ public class Knight extends Enemy implements Humanoid {
         FixtureDef fdef = new FixtureDef();
         PolygonShape body = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-8, 25).scl(1 / Constants.PPM);
-        vertices[1] = new Vector2(8, 25).scl(1 / Constants.PPM);
-        vertices[2] = new Vector2(-8, -15).scl(1 / Constants.PPM);
-        vertices[3] = new Vector2(7, -15).scl(1 / Constants.PPM);
+        vertices[0] = new Vector2(-5, 20).scl(1 / Constants.PPM);
+        vertices[1] = new Vector2(5, 20).scl(1 / Constants.PPM);
+        vertices[2] = new Vector2(-5, -14).scl(1 / Constants.PPM);
+        vertices[3] = new Vector2(5, -14).scl(1 / Constants.PPM);
         body.set(vertices);
         
         fdef.shape = body;
         fdef.filter.categoryBits = Constants.ENEMY_BIT;
         fdef.filter.maskBits = Constants.GROUND_BIT | Constants.PLAYER_BIT | Constants.MELEE_WEAPON_BIT; // What it can collide with.
-        b2body.createFixture(fdef).setUserData(this);;
+        bodyFixture = b2body.createFixture(fdef);
+        bodyFixture.setUserData(this);
         
         
         CircleShape weapon = new CircleShape();

@@ -33,8 +33,10 @@ public class Player extends Character implements Controllable, Humanoid {
         
         // Create animations by extracting frames from the spritesheet.
         idleAnimation = new TextureRegion(getTexture(), 7 * 80, 2 * 80, 80, 80);
-        runAnimation = Utils.createAnimation(getTexture(), 8f / Constants.PPM,      0, 7,  0, 3 * 80,  80, 80);
-        jumpAnimation = Utils.createAnimation(getTexture(), 5f / Constants.PPM,     0, 5,  0, 1 * 80,  80, 80);
+        runAnimation = Utils.createAnimation(getTexture(), 10f / Constants.PPM,      0, 7,  0, 3 * 80,  80, 80);
+        jumpAnimation = Utils.createAnimation(getTexture(), 3f / Constants.PPM,     0, 3,  0, 1 * 80,  80, 80);
+        fallAnimation = Utils.createAnimation(getTexture(), 10f / Constants.PPM,    4, 4,  0, 1 * 80,  80, 80);
+        crouchAnimation = Utils.createAnimation(getTexture(), 10f / Constants.PPM,  5, 5,  0, 1 * 80,  80, 80);
         attackAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM,  1, 6,  0, 2 * 80,  80, 80);
         killedAnimation = Utils.createAnimation(getTexture(), 24f / Constants.PPM,  0, 5,  0,      0,  80, 80);
         
@@ -72,7 +74,8 @@ public class Player extends Character implements Controllable, Humanoid {
         fdef.shape = body;
         fdef.filter.categoryBits = Constants.PLAYER_BIT;
         fdef.filter.maskBits = Constants.GROUND_BIT | Constants.ENEMY_BIT | Constants.MELEE_WEAPON_BIT; // What player can collide with.
-        b2body.createFixture(fdef).setUserData(this);
+        bodyFixture = b2body.createFixture(fdef);
+        bodyFixture.setUserData(this);
         
         
         CircleShape weapon = new CircleShape();
@@ -103,10 +106,13 @@ public class Player extends Character implements Controllable, Humanoid {
         if (!isAttacking()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
                 jump();
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
+                // if (!isCrouching) crouch();
+                // else getUp();
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                walkRight();
+                moveRight();
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                walkLeft();
+                moveLeft();
             }
         }
     }

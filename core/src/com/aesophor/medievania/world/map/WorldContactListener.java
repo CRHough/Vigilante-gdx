@@ -3,7 +3,6 @@ package com.aesophor.medievania.world.map;
 import com.aesophor.medievania.constant.Constants;
 import com.aesophor.medievania.world.object.character.Character;
 import com.aesophor.medievania.world.object.character.Player;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -42,12 +41,12 @@ public class WorldContactListener implements ContactListener {
                     target = (Character) (fixtureA.getUserData());
                     player = (Player) (fixtureB.getUserData());
                     
-                    player.setTargetEnemy(target);
+                    player.setInRangeTarget(target);
                 } else {
                     target = (Character) (fixtureB.getUserData());
                     player = (Player) (fixtureA.getUserData());
                     
-                    player.setTargetEnemy(target);
+                    player.setInRangeTarget(target);
                 }
                 break;
                 
@@ -59,12 +58,12 @@ public class WorldContactListener implements ContactListener {
                     p = (Player) (fixtureA.getUserData());
                     t = (Character) (fixtureB.getUserData());
                     
-                    t.setTargetEnemy(p);
+                    t.setInRangeTarget(p);
                 } else {
                     p = (Player) (fixtureB.getUserData());
                     t = (Character) (fixtureA.getUserData());
                     
-                    t.setTargetEnemy(p);
+                    t.setInRangeTarget(p);
                 }
                 break;
                 
@@ -86,10 +85,10 @@ public class WorldContactListener implements ContactListener {
                 // Unset player's current target when contact ends.
                 if (fixtureA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
                     player = (Player) (fixtureB.getUserData());
-                    player.setTargetEnemy(null);
+                    player.setInRangeTarget(null);
                 } else {
                     player = (Player) (fixtureA.getUserData());
-                    player.setTargetEnemy(null);
+                    player.setInRangeTarget(null);
                 }
                 break;
                 
@@ -101,12 +100,12 @@ public class WorldContactListener implements ContactListener {
                     p = (Player) (fixtureA.getUserData());
                     t = (Character) (fixtureB.getUserData());
                     
-                    t.setTargetEnemy(null);
+                    t.setInRangeTarget(null);
                 } else {
                     p = (Player) (fixtureB.getUserData());
                     t = (Character) (fixtureA.getUserData());
                     
-                    t.setTargetEnemy(null);
+                    t.setInRangeTarget(null);
                 }
                 break;
                 
