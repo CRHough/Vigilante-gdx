@@ -77,6 +77,7 @@ public class Knight extends Enemy implements Humanoid {
         fdef.filter.maskBits = Constants.GROUND_BIT | Constants.PLAYER_BIT | Constants.MELEE_WEAPON_BIT; // What it can collide with.
         bodyFixture = b2body.createFixture(fdef);
         bodyFixture.setUserData(this);
+        body.dispose();
         
         
         CircleShape weapon = new CircleShape();
@@ -90,6 +91,7 @@ public class Knight extends Enemy implements Humanoid {
         
         meleeAttackFixture = b2body.createFixture(fdef);
         meleeAttackFixture.setUserData(this);
+        weapon.dispose();
     }
 
 }

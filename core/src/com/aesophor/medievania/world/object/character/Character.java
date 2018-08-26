@@ -1,5 +1,7 @@
 package com.aesophor.medievania.world.object.character;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import com.aesophor.medievania.constant.Constants;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -66,6 +68,16 @@ public abstract class Character extends Sprite {
     
     protected Character lockedOnTarget;
     protected Character inRangeTarget;
+    
+    protected int moveDirection;
+    protected float moveDuration;
+    protected float sleepDuration;
+    protected float moveDurationTimer; // oh god, refactor this part later.
+    protected float sleepDurationTimer;
+    
+    protected Vector2 lastStoppedPosition;
+    protected float lastTraveledDistance;
+    protected float calulateDistanceTimer;
     
     public Character(Texture texture, World currentWorld, float x, float y) {
         super(texture);
@@ -147,11 +159,11 @@ public abstract class Character extends Sprite {
         if (!facingRight && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false); // flip x, flip y.
             CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
-            shape.setPosition(new Vector2((b2body.getLocalCenter().x - attackRange) / Constants.PPM, getY() / Constants.PPM));
+            shape.setPosition(new Vector2(-attackRange / Constants.PPM, 0));
         } else if (facingRight && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
             CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
-            shape.setPosition(new Vector2((b2body.getLocalCenter().x + attackRange) / Constants.PPM, getY() / Constants.PPM));
+            shape.setPosition(new Vector2(attackRange / Constants.PPM, 0));
         }
         
         stateTimer = (currentState != previousState) ? 0 : stateTimer + delta;
@@ -260,6 +272,66 @@ public abstract class Character extends Sprite {
         }
     }
     
+    protected void moveRandomly(float delta) {
+        
+        if (sleepDurationTimer >= sleepDuration) {
+            moveDirection = ThreadLocalRandom.current().nextInt(0, 1 + 1);
+            moveDuration = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+            sleepDuration = ThreadLocalRandom.current().nextInt(0, 5 + 1);
+            
+            moveDurationTimer = 0;
+            sleepDurationTimer = 0;
+        }
+        
+        switch (moveDirection) {
+            case 0:
+                if (moveDurationTimer < moveDuration) {
+                    moveLeft();
+                    jumpIfStucked(delta);
+                    moveDurationTimer += delta;
+                } else {
+                    if (sleepDurationTimer < sleepDuration) {
+                        sleepDurationTimer += delta;
+                    }
+                }
+                break;
+                
+            case 1:
+                if (moveDurationTimer < moveDuration) {
+                    moveRight();
+                    jumpIfStucked(delta);
+                    moveDurationTimer += delta;
+                } else {
+                    if (sleepDurationTimer < sleepDuration) {
+                        sleepDurationTimer += delta;
+                    }
+                }
+                break;
+                
+            default:
+                break;
+        }
+    }
+    
+    protected void jumpIfStucked(float delta) {
+        if (calulateDistanceTimer > 7f / Constants.PPM) {
+            lastTraveledDistance = getDistanceBetween(b2body.getPosition().x, lastStoppedPosition.x);
+            lastStoppedPosition.set(b2body.getPosition());
+            
+            if (lastTraveledDistance == 0) {
+                jump();
+            }
+            
+            calulateDistanceTimer = 0;
+        } else {
+            calulateDistanceTimer += delta;
+        }
+    }
+    
+    public static float getDistanceBetween(float x1, float x2) {
+        float distance = x1 - x2;
+        return (distance > 0) ? distance : -distance; 
+    }
     
     
     

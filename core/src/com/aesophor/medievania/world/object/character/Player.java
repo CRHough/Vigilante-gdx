@@ -76,10 +76,12 @@ public class Player extends Character implements Controllable, Humanoid {
         fdef.filter.maskBits = Constants.GROUND_BIT | Constants.ENEMY_BIT | Constants.MELEE_WEAPON_BIT; // What player can collide with.
         bodyFixture = b2body.createFixture(fdef);
         bodyFixture.setUserData(this);
+        body.dispose();
         
         
+        // Fixture position in box2d is in relation to the body position.
         CircleShape weapon = new CircleShape();
-        weapon.setPosition(new Vector2(((b2body.getLocalCenter().x + attackRange) / Constants.PPM + attackRange) / Constants.PPM, getY() / Constants.PPM));
+        weapon.setPosition(new Vector2(attackRange / Constants.PPM, 0));
         weapon.setRadius(attackRange / Constants.PPM);
         
         fdef.shape = weapon;
@@ -89,6 +91,7 @@ public class Player extends Character implements Controllable, Humanoid {
         
         meleeAttackFixture = b2body.createFixture(fdef);
         meleeAttackFixture.setUserData(this);
+        weapon.dispose();
     }
     
     @Override
@@ -97,6 +100,9 @@ public class Player extends Character implements Controllable, Humanoid {
             return;
         }
         
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
+            Constants.DEBUG = (Constants.DEBUG == true) ? false : true;
+        }
         
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             swingWeapon();

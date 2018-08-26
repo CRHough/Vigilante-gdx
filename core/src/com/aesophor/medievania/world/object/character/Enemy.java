@@ -9,9 +9,7 @@ public abstract class Enemy extends Character {
     
     protected boolean aggressive;
     
-    protected Vector2 lastStoppedPosition;
-    protected float lastTraveledDistance;
-    protected float calulateDistanceTimer;
+    
     
     public Enemy(Texture texture, World world, float x, float y) {
         super(texture, world, x, y);
@@ -38,30 +36,17 @@ public abstract class Enemy extends Character {
                 // Track down the lockOnTarget until it is within melee attack range.
                 if (getDistanceBetween(b2body.getPosition().x, lockedOnTarget.b2body.getPosition().x) >= attackRange / Constants.PPM) {
                     moveTowardTarget(lockedOnTarget);
-                    
-                    if (calulateDistanceTimer > 7f / Constants.PPM) {
-                        lastTraveledDistance = getDistanceBetween(b2body.getPosition().x, lastStoppedPosition.x);
-                        lastStoppedPosition.set(b2body.getPosition());
-                        
-                        if (lastTraveledDistance == 0) {
-                            jump();
-                        }
-                        
-                        calulateDistanceTimer = 0;
-                    } else {
-                        calulateDistanceTimer += delta;
-                    }
+                    jumpIfStucked(delta);
                 }
                 
             }
+        } else {
+            moveRandomly(delta);
         }
         
     }
     
-    public static float getDistanceBetween(float x1, float x2) {
-        float distance = x1 - x2;
-        return (distance > 0) ? distance : -distance; 
-    }
+    
     
     @Override
     public void receiveDamage(int damage) {
