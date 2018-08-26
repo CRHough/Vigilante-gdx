@@ -147,11 +147,11 @@ public abstract class Character extends Sprite {
         if (!facingRight && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false); // flip x, flip y.
             CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
-            shape.setPosition(new Vector2((b2body.getPosition().x - attackRange) / Constants.PPM, getY() / Constants.PPM));
+            shape.setPosition(new Vector2((b2body.getLocalCenter().x - attackRange) / Constants.PPM, getY() / Constants.PPM));
         } else if (facingRight && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
             CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
-            shape.setPosition(new Vector2((b2body.getPosition().x + attackRange) / Constants.PPM, getY() / Constants.PPM));
+            shape.setPosition(new Vector2((b2body.getLocalCenter().x + attackRange) / Constants.PPM, getY() / Constants.PPM));
         }
         
         stateTimer = (currentState != previousState) ? 0 : stateTimer + delta;
@@ -163,7 +163,7 @@ public abstract class Character extends Sprite {
             return Character.State.KILLED;
         } else if (isAttacking) {
             return Character.State.ATTACKING;
-        } else if (b2body.getLinearVelocity().y > .5f) {
+        } else if (b2body.getLinearVelocity().y > .5f || (b2body.getLinearVelocity().y > -.5f && previousState == Character.State.JUMPING)) {
             return Character.State.JUMPING;
         } else if (b2body.getLinearVelocity().y < -.5f) {
             return Character.State.FALLING;

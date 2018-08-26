@@ -59,7 +59,7 @@ public class GameScreen implements Screen {
         
         
         // Spawn the player and an enemy.
-        player = new Player(this, 30 / Constants.PPM, 200 / Constants.PPM);
+        player = new Player(this, 900 / Constants.PPM, 200 / Constants.PPM);
         enemy = new Knight(this, 300 / Constants.PPM, 100 / Constants.PPM);
         
         world.setContactListener(new WorldContactListener(player));
