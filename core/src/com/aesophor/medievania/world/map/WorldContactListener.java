@@ -33,6 +33,15 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
                 
+            case Constants.ENEMY_BIT | Constants.CLIFF_MARKER_BIT:
+                System.out.println("contact!");
+                if (fixtureA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
+                    ((Character) fixtureA.getUserData()).jump();
+                } else {
+                    ((Character) fixtureB.getUserData()).jump();
+                }
+                break;
+                
             case Constants.MELEE_WEAPON_BIT | Constants.ENEMY_BIT:
                 Player player;
                 Character target;

@@ -41,9 +41,11 @@ public abstract class Enemy extends Character {
                 
             }
         } else {
-            moveRandomly(delta);
+            //moveRandomly(delta);
+            if (Constants.TEMP == true) {
+            moveRight();
+            }
         }
-        
     }
     
     

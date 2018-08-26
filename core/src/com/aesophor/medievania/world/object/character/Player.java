@@ -100,9 +100,15 @@ public class Player extends Character implements Controllable, Humanoid {
             return;
         }
         
+        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
+            Constants.TEMP = (Constants.TEMP == true) ? false : true;
+        }
+        
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
             Constants.DEBUG = (Constants.DEBUG == true) ? false : true;
         }
+        
+        
         
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             swingWeapon();
