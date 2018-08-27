@@ -1,6 +1,7 @@
 package com.aesophor.medievania.util;
 
 import com.aesophor.medievania.Medievania;
+import com.aesophor.medievania.screen.ScreenManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,17 +17,17 @@ public class Font {
     
     static {
         FileHandleResolver resolver = new InternalFileHandleResolver();
-        Medievania.manager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-        Medievania.manager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
+        ScreenManager.getInstance().getAssets().setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
+        ScreenManager.getInstance().getAssets().setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
         
         // Next, let's define the params and then load our bigger font
         FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
         font.fontFileName = FONT_FILE;
         font.fontParameters.size = 20;
-        Medievania.manager.load(FONT_FILE, BitmapFont.class, font);
-        Medievania.manager.finishLoading();
+        ScreenManager.getInstance().getAssets().load(FONT_FILE, BitmapFont.class, font);
+        ScreenManager.getInstance().getAssets().finishLoading();
         
-        defaultFont = Medievania.manager.get(FONT_FILE, BitmapFont.class);
+        defaultFont = ScreenManager.getInstance().getAssets().get(FONT_FILE, BitmapFont.class);
     }
     
     

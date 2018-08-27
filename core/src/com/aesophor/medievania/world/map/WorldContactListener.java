@@ -1,6 +1,6 @@
 package com.aesophor.medievania.world.map;
 
-import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.world.object.character.Character;
 import com.aesophor.medievania.world.object.character.Player;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -28,13 +28,14 @@ public class WorldContactListener implements ContactListener {
             case Constants.PLAYER_BIT | Constants.ENEMY_BIT:
                 if (fixtureA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
                     ((Player) fixtureA.getUserData()).receiveDamage(25);
+                    ((Player) fixtureA.getUserData()).pushedBackward(1f);
                 } else {
                     ((Player) fixtureB.getUserData()).receiveDamage(25);
+                    ((Player) fixtureB.getUserData()).pushedBackward(1f);
                 }
                 break;
                 
             case Constants.ENEMY_BIT | Constants.CLIFF_MARKER_BIT:
-                System.out.println("contact!");
                 if (fixtureA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
                     ((Character) fixtureA.getUserData()).jump();
                 } else {

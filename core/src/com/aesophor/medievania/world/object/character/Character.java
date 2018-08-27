@@ -2,7 +2,7 @@ package com.aesophor.medievania.world.object.character;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.constants.Constants;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -48,7 +48,7 @@ public abstract class Character extends Sprite {
     protected boolean facingRight;
     protected boolean isAttacking;
     protected boolean isCrouching;
-    protected boolean isStunned;
+    protected boolean isInvincible;
     protected boolean isKilled;
     protected boolean setToKill;
     
@@ -231,10 +231,8 @@ public abstract class Character extends Sprite {
             setIsAttacking(true);
             
             if (isTargetInRange() && !inRangeTarget.isSetToKill()) {
-                float force = (facingRight) ? attackForce : -attackForce;
-                inRangeTarget.getB2Body().applyLinearImpulse(new Vector2(force, 0), inRangeTarget.getB2Body().getWorldCenter(), true);
-                
                 inflictDamage(inRangeTarget, attackDamage);
+                inRangeTarget.setLockedOnTarget(this);
                 weaponHitSound.play();
             }
             
@@ -245,22 +243,33 @@ public abstract class Character extends Sprite {
     
     public void inflictDamage(Character c, int damage) {
         c.receiveDamage(damage);
-        c.setLockedOnTarget(this);
+        c.pushedBackward((facingRight) ? damage : -damage);
     }
     
     public void receiveDamage(int damage) {
+        if (isInvincible) return;
+        
         health -= damage;
         
         if (health <= 0) {
-            Filter filter = new Filter();
-            filter.categoryBits = Constants.DESTROYED_BIT;
-            bodyFixture.setFilterData(filter);
-            
+            setCategoryBits(bodyFixture, Constants.DESTROYED_BIT);
+
             setToKill = true;
             deathSound.play();
         } else {
             hurtSound.play();
         }
+    }
+    
+    public void pushedBackward(float force) {
+        force = (facingRight) ? -attackForce : attackForce;
+        b2body.applyLinearImpulse(new Vector2(force, 1f), b2body.getWorldCenter(), true);
+    }
+    
+    public static void setCategoryBits(Fixture f, short bits) {
+        Filter filter = new Filter();
+        filter.categoryBits = bits;
+        f.setFilterData(filter);
     }
     
     
@@ -353,6 +362,10 @@ public abstract class Character extends Sprite {
     
     public boolean isCrouching() {
         return isCrouching;
+    }
+    
+    public boolean isInvincible() {
+        return isInvincible;
     }
     
     public int getHealth() {

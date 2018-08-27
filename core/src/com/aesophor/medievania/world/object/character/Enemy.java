@@ -1,6 +1,6 @@
 package com.aesophor.medievania.world.object.character;
 
-import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.constants.Constants;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -8,8 +8,6 @@ import com.badlogic.gdx.physics.box2d.World;
 public abstract class Enemy extends Character {
     
     protected boolean aggressive;
-    
-    
     
     public Enemy(Texture texture, World world, float x, float y) {
         super(texture, world, x, y);
@@ -43,7 +41,7 @@ public abstract class Enemy extends Character {
         } else {
             //moveRandomly(delta);
             if (Constants.TEMP == true) {
-            moveRight();
+                moveRight();
             }
         }
     }

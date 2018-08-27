@@ -8,7 +8,11 @@ public class DesktopLauncher {
     
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(Medievania.getInstance(), config);
+		config.title = "Medievania";
+		config.width = 1280;
+		config.height = 800;
+		//config.fullscreen = true;
+		new LwjglApplication(new Medievania(), config);
 	}
 	
 }

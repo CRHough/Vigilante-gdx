@@ -1,8 +1,10 @@
 package com.aesophor.medievania.util;
 
-import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.world.map.GameMap;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
@@ -12,6 +14,15 @@ public class CameraUtils {
         
     }
 
+    
+    /**
+     * Clears the screen with pure black.
+     */
+    public static void clearScreen() {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
+    
     /**
      * Bounds the Camera within the specified TiledMap.
      * @param camera The Camera which renders the TiledMap

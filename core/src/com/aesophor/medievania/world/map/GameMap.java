@@ -1,6 +1,6 @@
 package com.aesophor.medievania.world.map;
 
-import com.aesophor.medievania.constant.Constants;
+import com.aesophor.medievania.constants.Constants;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;

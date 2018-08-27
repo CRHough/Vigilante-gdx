@@ -1,12 +1,13 @@
 package com.aesophor.medievania.world.object.character;
 
-import com.aesophor.medievania.Medievania;
-import com.aesophor.medievania.constant.Constants;
-import com.aesophor.medievania.screen.GameScreen;
+import com.aesophor.medievania.constants.Constants;
+import com.aesophor.medievania.screen.PlayScreen;
+import com.aesophor.medievania.screen.ScreenManager;
 import com.aesophor.medievania.util.Utils;
 import com.aesophor.medievania.world.object.character.humanoid.Humanoid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -19,14 +20,17 @@ public class Player extends Character implements Controllable, Humanoid {
     
     private static final String TEXTURE_FILE = "Character/Bandit/Bandit.png";
     
-    public Player(GameScreen screen, float x, float y) {
-        super(Medievania.manager.get(TEXTURE_FILE), screen.getWorld(), x, y);
+    private AssetManager assets;
+    
+    public Player(PlayScreen screen, float x, float y) {
+        super(ScreenManager.getInstance().getAssets().get(TEXTURE_FILE), screen.getWorld(), x, y);
         
-        this.currentWorld = screen.getWorld();
+        assets = ScreenManager.getInstance().getAssets();
+        
         health = 100;
         movementSpeed = .25f;
         jumpHeight = 3f;
-        attackForce = .6f;
+        attackForce = 1f;
         attackTime = 1f;
         attackRange = 14;
         attackDamage = 25;
@@ -41,12 +45,12 @@ public class Player extends Character implements Controllable, Humanoid {
         killedAnimation = Utils.createAnimation(getTexture(), 24f / Constants.PPM,  0, 5,  0,      0,  80, 80);
         
         // Sounds.
-        footstepSound = Medievania.manager.get("Sound/FX/Player/footstep.mp3");
-        hurtSound = Medievania.manager.get("Sound/FX/Player/hurt.wav");
-        deathSound = Medievania.manager.get("Sound/FX/Player/death.mp3");
-        weaponSwingSound = Medievania.manager.get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
-        weaponHitSound = Medievania.manager.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
-        jumpSound = Medievania.manager.get("Sound/FX/Player/jump.wav", Sound.class);
+        footstepSound = assets.get("Sound/FX/Player/footstep.mp3");
+        hurtSound = assets.get("Sound/FX/Player/hurt.wav");
+        deathSound = assets.get("Sound/FX/Player/death.mp3");
+        weaponSwingSound = assets.get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
+        weaponHitSound = assets.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
+        jumpSound = assets.get("Sound/FX/Player/jump.wav", Sound.class);
         
         defineBody();
         
@@ -110,7 +114,7 @@ public class Player extends Character implements Controllable, Humanoid {
         
         
         
-        if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             swingWeapon();
         }
         
@@ -127,6 +131,29 @@ public class Player extends Character implements Controllable, Humanoid {
                 moveLeft();
             }
         }
+    }
+    
+    @Override
+    public void receiveDamage(int damage) {
+        super.receiveDamage(damage);
+        
+        /*
+        // Sets the player to be untouchable for a while.
+        if (!isInvincible) {
+            Character.setCategoryBits(bodyFixture, Constants.INVINCIBLE_BIT);
+            isInvincible = true;
+            
+            Timer.schedule(new Task(){
+                @Override
+                public void run() {
+                    if (!setToKill) {
+                        Character.setCategoryBits(bodyFixture, Constants.PLAYER_BIT);
+                        isInvincible = false;
+                    }
+                    
+                }
+            }, 3f);
+        }*/
     }
 
 }

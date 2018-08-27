@@ -1,58 +1,57 @@
 package com.aesophor.medievania.screen;
 
-import com.aesophor.medievania.Medievania;
-import com.aesophor.medievania.constant.Constants;
-import com.aesophor.medievania.util.Font;
+import com.aesophor.medievania.constants.Constants;
+import com.aesophor.medievania.util.CameraUtils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 
-public class MainMenuScreen implements Screen {
+public class MainMenuScreen extends AbstractScreen {
     
-    private Medievania game;
-    
-    private Stage stage;
-    private Viewport viewport;
-    
+    private Skin skin;
     private Texture titlescreenTexture;
     
-    public MainMenuScreen(Medievania game) {
-        this.game = game;
-        viewport = new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT);
-        stage = new Stage(viewport, ((Medievania) game).batch);
+    public MainMenuScreen() {
+        skin = screenMgr.getAssets().get("Interface/Skin/medievania_skin.json");
+        titlescreenTexture = screenMgr.getAssets().get("Interface/titlescreen.png");
         
-        titlescreenTexture = Medievania.manager.get("Interface/titlescreen.png");
+        Table labelTable = new Table();
+        labelTable.bottom().right().padRight(30f).padBottom(30f);
+        labelTable.setFillParent(true);
         
-        Table table = new Table();
-        table.center();
-        table.setFillParent(true);
+        Label newGameLabel = new Label("New Game", skin);
+        Label loadGameLabel = new Label("Load Game", skin);
+        Label creditLabel = new Label("Credits", skin);
+        Label exitLabel = new Label("Quit", skin);
         
-        Label.LabelStyle font = new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE);
-        Label retryLabel = new Label("Press SPACE to start", font);
+        newGameLabel.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("daaaaamn");
+            }
+        });
         
-        table.add(retryLabel).expandX().padTop(50f);
+        labelTable.add(newGameLabel).padTop(5f).align(Align.right);
+        labelTable.row();
+        labelTable.add(loadGameLabel).padTop(5f).align(Align.right);
+        labelTable.row();
+        labelTable.add(creditLabel).padTop(5f).align(Align.right);
+        labelTable.row();
+        labelTable.add(exitLabel).padTop(5f).align(Align.right);
         
-        stage.addActor(table);
+        addActor(labelTable);
     }
     
-
-    @Override
-    public void show() {
-        // TODO Auto-generated method stub
-        
-    }
 
     public void handleInput(float dt) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            game.setScreen(new GameScreen((Medievania) game));
+            screenMgr.showScreen(GameScreen.GAME);
             dispose();
         }
     }
@@ -61,43 +60,13 @@ public class MainMenuScreen implements Screen {
     public void render(float delta) {
         handleInput(delta);
         
-        // Clear the game screen with pure black.
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        CameraUtils.clearScreen();
         
-        //game.batch.begin();
-        //game.batch.draw(titlescreenTexture, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
-        //game.batch.end();
+        screenMgr.getBatch().begin();
+        screenMgr.getBatch().draw(titlescreenTexture, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
+        screenMgr.getBatch().end();
         
-        stage.draw();
-    }
-
-    @Override
-    public void resize(int width, int height) {
-        viewport.update(width, height);
-    }
-
-    @Override
-    public void pause() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void resume() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void hide() {
-        // TODO Auto-generated method stub
-        
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
+        draw();
     }
 
 }

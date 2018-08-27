@@ -1,10 +1,12 @@
 package com.aesophor.medievania.world.object.character.humanoid;
 
 import com.aesophor.medievania.Medievania;
-import com.aesophor.medievania.constant.Constants;
-import com.aesophor.medievania.screen.GameScreen;
+import com.aesophor.medievania.constants.Constants;
+import com.aesophor.medievania.screen.PlayScreen;
+import com.aesophor.medievania.screen.ScreenManager;
 import com.aesophor.medievania.util.Utils;
 import com.aesophor.medievania.world.object.character.Enemy;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -17,14 +19,18 @@ public class Knight extends Enemy implements Humanoid {
     
     private static final String TEXTURE_FILE = "Character/Knight/Knight.png";
     
-    public Knight(GameScreen screen, float x, float y) {
-        super(Medievania.manager.get(TEXTURE_FILE), screen.getWorld(), x, y);
+    private AssetManager assets;
+    
+    public Knight(PlayScreen screen, float x, float y) {
+        super(ScreenManager.getInstance().getAssets().get(TEXTURE_FILE), screen.getWorld(), x, y);
+        
+        assets = ScreenManager.getInstance().getAssets();
         
         health = 100;
         movementSpeed = .25f;
         jumpHeight = 3f;
         attackForce = .6f;
-        attackTime = 1.3f;
+        attackTime = 1.5f;
         attackRange = 14;
         attackDamage = 25;
         
@@ -38,12 +44,12 @@ public class Knight extends Enemy implements Humanoid {
         killedAnimation = Utils.createAnimation(getTexture(), 24f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
         
         // Sounds.
-        footstepSound = Medievania.manager.get("Sound/FX/Player/footstep.mp3");
-        hurtSound = Medievania.manager.get("Sound/FX/Player/hurt.wav");
-        deathSound = Medievania.manager.get("Sound/FX/Player/death.mp3");
-        weaponSwingSound = Medievania.manager.get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
-        weaponHitSound = Medievania.manager.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
-        jumpSound = Medievania.manager.get("Sound/FX/Player/jump.wav", Sound.class);
+        footstepSound = assets.get("Sound/FX/Player/footstep.mp3");
+        hurtSound = assets.get("Sound/FX/Player/hurt.wav");
+        deathSound = assets.get("Sound/FX/Player/death.mp3");
+        weaponSwingSound = assets.get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
+        weaponHitSound = assets.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
+        jumpSound = assets.get("Sound/FX/Player/jump.wav", Sound.class);
         
         defineBody();
         
