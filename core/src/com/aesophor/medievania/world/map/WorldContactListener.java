@@ -27,7 +27,7 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             case CategoryBits.PLAYER | CategoryBits.GROUND:
                 System.out.println("Player touched the ground.");
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     ((Player) fixtureA.getUserData()).setIsJumping(false);
                 } else {
                     ((Player) fixtureB.getUserData()).setIsJumping(false);
@@ -36,7 +36,7 @@ public class WorldContactListener implements ContactListener {
                 
             case CategoryBits.PLAYER | CategoryBits.PLATFORM:
                 System.out.println("Player touched the platform.");
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     ((Player) fixtureA.getUserData()).setIsJumping(false);
                 } else {
                     ((Player) fixtureB.getUserData()).setIsJumping(false);
@@ -110,19 +110,27 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             case CategoryBits.PLAYER | CategoryBits.GROUND:
                 System.out.println("player took off from the ground.");
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
-                    ((Player) fixtureA.getUserData()).setIsJumping(true);
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
+                    if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Player) fixtureA.getUserData()).setIsJumping(true);
+                    }
                 } else {
-                    ((Player) fixtureB.getUserData()).setIsJumping(true);
+                    if (((Player) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Player) fixtureB.getUserData()).setIsJumping(true);
+                    }
                 }
                 break;
                 
             case CategoryBits.PLAYER | CategoryBits.PLATFORM:
                 System.out.println("player took off from the platform.");
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
-                    ((Player) fixtureA.getUserData()).setIsJumping(true);
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
+                    if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Player) fixtureA.getUserData()).setIsJumping(true);
+                    }
                 } else {
-                    ((Player) fixtureB.getUserData()).setIsJumping(true);
+                    if (((Player) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Player) fixtureB.getUserData()).setIsJumping(true);
+                    }
                 }
                 break;
                 

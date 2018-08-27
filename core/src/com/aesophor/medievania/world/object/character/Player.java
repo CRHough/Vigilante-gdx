@@ -122,6 +122,8 @@ public class Player extends Character implements Controllable, Humanoid {
         if (!isAttacking()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
                 jump();
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
+                
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
                 // if (!isCrouching) crouch();
                 // else getUp();

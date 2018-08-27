@@ -46,7 +46,7 @@ public class PlayScreen extends AbstractScreen {
         
         // Spawn the player and an enemy.
         player = new Player(this, 30 / Constants.PPM, 200 / Constants.PPM);
-        //enemy = new Knight(this, 300 / Constants.PPM, 100 / Constants.PPM);
+        enemy = new Knight(this, 300 / Constants.PPM, 100 / Constants.PPM);
         
         world.setContactListener(new WorldContactListener(player));
         
@@ -66,7 +66,7 @@ public class PlayScreen extends AbstractScreen {
         world.step(1/60f, 6, 2);
         
         hud.update(delta);
-        //enemy.update(delta);
+        enemy.update(delta);
         player.update(delta);
         
         CameraUtils.lockOnTarget(getCamera(), player.getB2Body().getPosition());
@@ -93,7 +93,7 @@ public class PlayScreen extends AbstractScreen {
         // Render characters.
         getBatch().setProjectionMatrix(getCamera().combined);
         getBatch().begin();
-        //enemy.draw(getBatch());
+        enemy.draw(getBatch());
         player.draw(getBatch());
         getBatch().end();
         

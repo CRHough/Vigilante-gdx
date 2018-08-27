@@ -178,7 +178,7 @@ public abstract class Character extends Sprite {
             return Character.State.KILLED;
         } else if (isAttacking) {
             return Character.State.ATTACKING;
-        } else if (b2body.getLinearVelocity().y > -.5f && previousState == Character.State.JUMPING) {
+        } else if (b2body.getLinearVelocity().y >= -.5f && previousState == Character.State.JUMPING) {
             return Character.State.JUMPING;
         } else if (b2body.getLinearVelocity().y < -.5f) {
             return Character.State.FALLING;
@@ -211,6 +211,8 @@ public abstract class Character extends Sprite {
     
     public void jump() {
         if (!isJumping) {
+            isJumping = true;
+            
             getB2Body().applyLinearImpulse(new Vector2(0, jumpHeight), b2body.getWorldCenter(), true);
             jumpSound.play();
         }
