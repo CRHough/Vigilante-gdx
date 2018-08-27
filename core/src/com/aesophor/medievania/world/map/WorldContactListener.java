@@ -41,6 +41,23 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
                 
+            case CategoryBits.ENEMY | CategoryBits.GROUND:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
+                    ((Character) fixtureA.getUserData()).setIsJumping(false);
+                } else {
+                    ((Character) fixtureB.getUserData()).setIsJumping(false);
+                }
+                break;
+                
+            case CategoryBits.ENEMY | CategoryBits.PLATFORM:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
+                    ((Character) fixtureA.getUserData()).setIsJumping(false);
+                } else {
+                    ((Character) fixtureB.getUserData()).setIsJumping(false);
+                }
+                break;
+                
+                
             case CategoryBits.PLAYER | CategoryBits.ENEMY:
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     ((Player) fixtureA.getUserData()).receiveDamage(25);
@@ -53,10 +70,11 @@ public class WorldContactListener implements ContactListener {
                 
             case CategoryBits.ENEMY | CategoryBits.CLIFF_MARKER:
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
-                    ((Character) fixtureA.getUserData()).jump();
+                    ((Character) fixtureA.getUserData()).reverseMovement();
                 } else {
-                    ((Character) fixtureB.getUserData()).jump();
+                    ((Character) fixtureB.getUserData()).reverseMovement();
                 }
+                System.out.println("hit!");
                 break;
                 
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
@@ -130,9 +148,25 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
                 
+            case CategoryBits.ENEMY | CategoryBits.GROUND:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
+                    ((Character) fixtureA.getUserData()).setIsJumping(true);
+                } else {
+                    ((Character) fixtureB.getUserData()).setIsJumping(true);
+                }
+                break;
+                
+            case CategoryBits.ENEMY | CategoryBits.PLATFORM:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
+                    ((Character) fixtureA.getUserData()).setIsJumping(true);
+                } else {
+                    ((Character) fixtureB.getUserData()).setIsJumping(true);
+                }
+                break;
+                
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 Player player;
-                // Unset player's current target when contact ends.
+                // Clear player's in range target when contact ends.
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
                     player = (Player) (fixtureB.getUserData());
                     player.setInRangeTarget(null);
@@ -143,18 +177,13 @@ public class WorldContactListener implements ContactListener {
                 break;
                 
             case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
-                Player p;
                 Character t;
-                // Set enemy as player's current target (so he can inflict damage to it).
+                // Clear target's in range target when contact ends.
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    p = (Player) (fixtureA.getUserData());
                     t = (Character) (fixtureB.getUserData());
-                    
                     t.setInRangeTarget(null);
                 } else {
-                    p = (Player) (fixtureB.getUserData());
                     t = (Character) (fixtureA.getUserData());
-                    
                     t.setInRangeTarget(null);
                 }
                 break;

@@ -35,7 +35,7 @@ public class Player extends Character implements Controllable, Humanoid {
         jumpHeight = 3f;
         attackForce = 1f;
         attackTime = 1f;
-        attackRange = 14;
+        attackRange = 15;
         attackDamage = 25;
         
         // Create animations by extracting frames from the spritesheet.
@@ -123,7 +123,7 @@ public class Player extends Character implements Controllable, Humanoid {
         if (!isAttacking()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
                 jump();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
+            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
                 // if (!isCrouching) crouch();
@@ -143,6 +143,10 @@ public class Player extends Character implements Controllable, Humanoid {
         
         // Sets the player to be untouchable for a while.
         if (!isUntouchable) {
+            if (hasLockedOnTarget()) {
+                getLockedOnTarget().setInRangeTarget(null);
+            }
+            
             Character.setCategoryBits(bodyFixture, CategoryBits.UNTOUCHABLE);
             isUntouchable = true;
             

@@ -1,8 +1,6 @@
 package com.aesophor.medievania.world.object.character;
 
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collector.Characteristics;
-
 import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
 import com.badlogic.gdx.audio.Music;
@@ -236,9 +234,13 @@ public abstract class Character extends Sprite {
             setIsAttacking(true);
             
             if (isTargetInRange() &&!inRangeTarget.isUntouchable() && !inRangeTarget.isSetToKill()) {
+                setLockedOnTarget(inRangeTarget);
                 inflictDamage(inRangeTarget, attackDamage);
-                inRangeTarget.setLockedOnTarget(this);
-                weaponHitSound.play();
+                
+                if (isTargetInRange()) {
+                    inRangeTarget.setLockedOnTarget(this);
+                    weaponHitSound.play();
+                }
             }
             
             weaponSwingSound.play();
@@ -248,7 +250,7 @@ public abstract class Character extends Sprite {
     
     public void inflictDamage(Character c, int damage) {
         c.receiveDamage(damage);
-        c.pushedBackward((facingRight) ? 1f : -1f);
+        c.pushedBackward((facingRight) ? attackForce : -attackForce);
     }
     
     public void receiveDamage(int damage) {
@@ -277,6 +279,7 @@ public abstract class Character extends Sprite {
     
     
     protected void moveTowardTarget(Character c) {
+        // add response to cliff.
         if (this.b2body.getPosition().x > c.getB2Body().getPosition().x) {
             moveLeft();
         } else {
@@ -324,12 +327,18 @@ public abstract class Character extends Sprite {
         }
     }
     
+    public void reverseMovement() { // rename this perhaps?
+        moveDirection = (moveDirection == 0) ? 1 : 0;
+    }
+    
+    
     protected void jumpIfStucked(float delta) {
-        if (calulateDistanceTimer > 7f / Constants.PPM) {
+        if (calulateDistanceTimer > 5f / Constants.PPM) {
             lastTraveledDistance = getDistanceBetween(b2body.getPosition().x, lastStoppedPosition.x);
             lastStoppedPosition.set(b2body.getPosition());
             
             if (lastTraveledDistance == 0) {
+                //isJumping = false; // will this help? is it necessary?
                 jump();
             }
             

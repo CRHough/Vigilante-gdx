@@ -38,7 +38,6 @@ public abstract class Enemy extends Character {
                     moveTowardTarget(lockedOnTarget);
                     jumpIfStucked(delta);
                 }
-                
             }
         } else {
             moveRandomly(delta);

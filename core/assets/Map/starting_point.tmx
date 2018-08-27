@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="16" tileheight="16" infinite="0" nextobjectid="59">
+<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="16" tileheight="16" infinite="0" nextobjectid="60">
  <tileset firstgid="1" name="GothicVaniaTown" tilewidth="16" tileheight="16" tilecount="3111" columns="61">
   <image source="Resources/GothicVania-town-files/GothicVaniaTown.png" width="991" height="830"/>
  </tileset>
@@ -73,11 +73,14 @@
   </object>
  </objectgroup>
  <objectgroup name="CliffMarker">
-  <object id="37" x="602.364" y="284.545">
+  <object id="37" x="575.879" y="281.667">
    <polyline points="0,0 0,7.09091"/>
   </object>
-  <object id="38" x="629.091" y="284.545">
+  <object id="38" x="655.969" y="282.696">
    <polyline points="0,0 0,6.72727"/>
+  </object>
+  <object id="59" x="111.091" y="280.878">
+   <polyline points="0,0 0,7.09091"/>
   </object>
  </objectgroup>
  <layer name="Background" width="60" height="20">
