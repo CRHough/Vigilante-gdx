@@ -79,8 +79,7 @@ public class PlayScreen extends AbstractScreen {
     public void render(float delta) {
         update(delta);
         
-        // Clear game screen with pure black.
-        CameraUtils.clearScreen();
+        screenMgr.clearScreen();
         
         // Render game map.
         renderer.render();

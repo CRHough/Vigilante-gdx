@@ -1,6 +1,5 @@
 package com.aesophor.medievania.screen;
 
-import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Font;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -36,7 +35,7 @@ public class GameOverScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         handleInput(delta);
-        CameraUtils.clearScreen();
+        screenMgr.clearScreen();
         draw();
     }
 

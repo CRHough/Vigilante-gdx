@@ -1,5 +1,6 @@
 package com.aesophor.medievania.world.map;
 
+import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.world.object.character.Character;
 import com.aesophor.medievania.world.object.character.Player;
@@ -25,8 +26,8 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
         switch (cDef) {
-            case Constants.PLAYER_BIT | Constants.ENEMY_BIT:
-                if (fixtureA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
+            case CategoryBits.PLAYER | CategoryBits.ENEMY:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     ((Player) fixtureA.getUserData()).receiveDamage(25);
                     ((Player) fixtureA.getUserData()).pushedBackward(1f);
                 } else {
@@ -35,19 +36,19 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
                 
-            case Constants.ENEMY_BIT | Constants.CLIFF_MARKER_BIT:
-                if (fixtureA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
+            case CategoryBits.ENEMY | CategoryBits.CLIFF_MARKER:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
                     ((Character) fixtureA.getUserData()).jump();
                 } else {
                     ((Character) fixtureB.getUserData()).jump();
                 }
                 break;
                 
-            case Constants.MELEE_WEAPON_BIT | Constants.ENEMY_BIT:
+            case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 Player player;
                 Character target;
                 // Set enemy as player's current target (so he can inflict damage to it).
-                if (fixtureA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
                     target = (Character) (fixtureA.getUserData());
                     player = (Player) (fixtureB.getUserData());
                     
@@ -60,11 +61,11 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
                 
-            case Constants.MELEE_WEAPON_BIT | Constants.PLAYER_BIT:
+            case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
                 Player p;
                 Character t;
                 // Set enemy as player's current target (so he can inflict damage to it).
-                if (fixtureA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     p = (Player) (fixtureA.getUserData());
                     t = (Character) (fixtureB.getUserData());
                     
@@ -90,10 +91,10 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
         switch (cDef) {
-            case Constants.MELEE_WEAPON_BIT | Constants.ENEMY_BIT:
+            case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 Player player;
                 // Unset player's current target when contact ends.
-                if (fixtureA.getFilterData().categoryBits == Constants.ENEMY_BIT) {
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
                     player = (Player) (fixtureB.getUserData());
                     player.setInRangeTarget(null);
                 } else {
@@ -102,11 +103,11 @@ public class WorldContactListener implements ContactListener {
                 }
                 break;
                 
-            case Constants.MELEE_WEAPON_BIT | Constants.PLAYER_BIT:
+            case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
                 Player p;
                 Character t;
                 // Set enemy as player's current target (so he can inflict damage to it).
-                if (fixtureA.getFilterData().categoryBits == Constants.PLAYER_BIT) {
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     p = (Player) (fixtureA.getUserData());
                     t = (Character) (fixtureB.getUserData());
                     

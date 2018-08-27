@@ -1,5 +1,6 @@
 package com.aesophor.medievania.world.object.character;
 
+import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.screen.PlayScreen;
 import com.aesophor.medievania.screen.ScreenManager;
@@ -76,8 +77,8 @@ public class Player extends Character implements Controllable, Humanoid {
         body.set(vertices);
         
         fdef.shape = body;
-        fdef.filter.categoryBits = Constants.PLAYER_BIT;
-        fdef.filter.maskBits = Constants.GROUND_BIT | Constants.ENEMY_BIT | Constants.MELEE_WEAPON_BIT; // What player can collide with.
+        fdef.filter.categoryBits = CategoryBits.PLAYER;
+        fdef.filter.maskBits = CategoryBits.GROUND | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON; // What player can collide with.
         bodyFixture = b2body.createFixture(fdef);
         bodyFixture.setUserData(this);
         body.dispose();
@@ -90,8 +91,8 @@ public class Player extends Character implements Controllable, Humanoid {
         
         fdef.shape = weapon;
         fdef.isSensor = true; // a sensor won't collide with the world.
-        fdef.filter.categoryBits = Constants.MELEE_WEAPON_BIT;
-        fdef.filter.maskBits = Constants.ENEMY_BIT | Constants.OBJECT_BIT; // What player can collide with.
+        fdef.filter.categoryBits = CategoryBits.MELEE_WEAPON;
+        fdef.filter.maskBits = CategoryBits.ENEMY | CategoryBits.OBJECT; // What player can collide with.
         
         meleeAttackFixture = b2body.createFixture(fdef);
         meleeAttackFixture.setUserData(this);
@@ -102,10 +103,6 @@ public class Player extends Character implements Controllable, Humanoid {
     public void handleInput(float delta) {
         if (setToKill) {
             return;
-        }
-        
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) {
-            Constants.TEMP = (Constants.TEMP == true) ? false : true;
         }
         
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {

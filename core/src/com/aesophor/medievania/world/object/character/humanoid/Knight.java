@@ -1,6 +1,6 @@
 package com.aesophor.medievania.world.object.character.humanoid;
 
-import com.aesophor.medievania.Medievania;
+import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.screen.PlayScreen;
 import com.aesophor.medievania.screen.ScreenManager;
@@ -79,8 +79,8 @@ public class Knight extends Enemy implements Humanoid {
         body.set(vertices);
         
         fdef.shape = body;
-        fdef.filter.categoryBits = Constants.ENEMY_BIT;
-        fdef.filter.maskBits = Constants.GROUND_BIT | Constants.PLAYER_BIT | Constants.MELEE_WEAPON_BIT | Constants.CLIFF_MARKER_BIT; // What it can collide with.
+        fdef.filter.categoryBits = CategoryBits.ENEMY;
+        fdef.filter.maskBits = CategoryBits.GROUND | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER; // What it can collide with.
         bodyFixture = b2body.createFixture(fdef);
         bodyFixture.setUserData(this);
         body.dispose();
@@ -92,8 +92,8 @@ public class Knight extends Enemy implements Humanoid {
         
         fdef.shape = weapon;
         fdef.isSensor = true; // a sensor won't collide with the world.
-        fdef.filter.categoryBits = Constants.MELEE_WEAPON_BIT;
-        fdef.filter.maskBits = Constants.PLAYER_BIT | Constants.OBJECT_BIT;
+        fdef.filter.categoryBits = CategoryBits.MELEE_WEAPON;
+        fdef.filter.maskBits = CategoryBits.PLAYER | CategoryBits.OBJECT;
         
         meleeAttackFixture = b2body.createFixture(fdef);
         meleeAttackFixture.setUserData(this);

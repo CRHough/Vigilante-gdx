@@ -1,22 +1,15 @@
 package com.aesophor.medievania.ui;
 
-import com.aesophor.medievania.Medievania;
-import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.screen.AbstractScreen;
-import com.aesophor.medievania.util.CameraUtils;
+import com.aesophor.medievania.util.Utils;
 import com.aesophor.medievania.world.object.character.Player;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class GUI extends AbstractScreen {
     
@@ -93,8 +86,6 @@ public class GUI extends AbstractScreen {
     @Override
     public void render(float delta) {
         update(delta);
-        
-        CameraUtils.clearScreen();
         
         getBatch().begin();
         //game.batch.draw(titlescreenTexture, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);

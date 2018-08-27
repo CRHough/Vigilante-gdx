@@ -30,6 +30,11 @@ public abstract class AbstractScreen extends Stage implements Screen {
     public void resize(int width, int height) {
         getViewport().update(width, height, true);
     }
+    
+    @Override
+    public void dispose() {
+        super.dispose();
+    }
  
     @Override public void hide() {}
     @Override public void pause() {}

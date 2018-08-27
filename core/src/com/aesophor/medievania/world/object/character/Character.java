@@ -2,6 +2,7 @@ package com.aesophor.medievania.world.object.character;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -252,7 +253,7 @@ public abstract class Character extends Sprite {
         health -= damage;
         
         if (health <= 0) {
-            setCategoryBits(bodyFixture, Constants.DESTROYED_BIT);
+            setCategoryBits(bodyFixture, CategoryBits.DESTROYED);
 
             setToKill = true;
             deathSound.play();

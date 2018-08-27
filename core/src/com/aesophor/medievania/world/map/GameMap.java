@@ -1,6 +1,8 @@
 package com.aesophor.medievania.world.map;
 
+import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
+import com.aesophor.medievania.constants.GameMapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -39,7 +41,7 @@ public class GameMap {
         FixtureDef fdef = new FixtureDef();
         
         // Create rectangular ground bodies/fixtures.
-        for (MapObject object : tiledMap.getLayers().get(Constants.GROUND_LAYER).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.GROUND.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             
             bdef.type = BodyDef.BodyType.StaticBody;
@@ -49,14 +51,14 @@ public class GameMap {
             PolygonShape polygonShape = new PolygonShape();
             polygonShape.setAsBox(rect.getWidth() / 2 / Constants.PPM, rect.getHeight() / 2 / Constants.PPM);
             fdef.shape = polygonShape;
-            fdef.filter.categoryBits = Constants.GROUND_BIT;
+            fdef.filter.categoryBits = CategoryBits.GROUND;
             body.createFixture(fdef);
             
             polygonShape.dispose();
         }
         
         // Create polylinear ground bodies/fixtures.
-        for (MapObject object : tiledMap.getLayers().get(Constants.GROUND_LAYER).getObjects().getByType(PolylineMapObject.class)) {
+        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.GROUND.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
             float[] vertices = ((PolylineMapObject) object).getPolyline().getTransformedVertices();
             Vector2[] worldVertices = new Vector2[vertices.length / 2];
             
@@ -75,14 +77,14 @@ public class GameMap {
             
             fdef.shape = chainShape;
             fdef.friction = Constants.GROUND_FRICTION;
-            fdef.filter.categoryBits = Constants.GROUND_BIT;
+            fdef.filter.categoryBits = CategoryBits.GROUND;
             body.createFixture(fdef);
             
             chainShape.dispose();
         }
         
         // Create cliff marker bodies/fixtures.
-        for (MapObject object : tiledMap.getLayers().get(Constants.CLIFF_MARKER_LAYER).getObjects().getByType(PolylineMapObject.class)) {
+        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.CLIFF_MARKER.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
             float[] vertices = ((PolylineMapObject) object).getPolyline().getTransformedVertices();
             Vector2[] worldVertices = new Vector2[vertices.length / 2];
             
@@ -102,7 +104,7 @@ public class GameMap {
             fdef.shape = chainShape;
             fdef.isSensor = true;
             fdef.friction = Constants.GROUND_FRICTION;
-            fdef.filter.categoryBits = Constants.CLIFF_MARKER_BIT;
+            fdef.filter.categoryBits = CategoryBits.CLIFF_MARKER;
             body.createFixture(fdef);
             
             chainShape.dispose();
