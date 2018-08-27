@@ -51,7 +51,7 @@ public abstract class Character extends Sprite {
     protected boolean isJumping;
     protected boolean isAttacking;
     protected boolean isCrouching;
-    protected boolean isInvincible;
+    protected boolean isUntouchable;
     protected boolean isKilled;
     protected boolean setToKill;
     
@@ -235,7 +235,7 @@ public abstract class Character extends Sprite {
         if (!isAttacking()) {
             setIsAttacking(true);
             
-            if (isTargetInRange() && !inRangeTarget.isSetToKill()) {
+            if (isTargetInRange() &&!inRangeTarget.isUntouchable() && !inRangeTarget.isSetToKill()) {
                 inflictDamage(inRangeTarget, attackDamage);
                 inRangeTarget.setLockedOnTarget(this);
                 weaponHitSound.play();
@@ -248,17 +248,16 @@ public abstract class Character extends Sprite {
     
     public void inflictDamage(Character c, int damage) {
         c.receiveDamage(damage);
-        c.pushedBackward((facingRight) ? damage : -damage);
+        c.pushedBackward((facingRight) ? 1f : -1f);
     }
     
     public void receiveDamage(int damage) {
-        if (isInvincible) return;
+        if (isUntouchable) return;
         
         health -= damage;
         
         if (health <= 0) {
             setCategoryBits(bodyFixture, CategoryBits.UNTOUCHABLE);
-
             setToKill = true;
             deathSound.play();
         } else {
@@ -267,7 +266,6 @@ public abstract class Character extends Sprite {
     }
     
     public void pushedBackward(float force) {
-        force = (facingRight) ? -attackForce : attackForce;
         b2body.applyLinearImpulse(new Vector2(force, 1f), b2body.getWorldCenter(), true);
     }
     
@@ -368,8 +366,8 @@ public abstract class Character extends Sprite {
         return isCrouching;
     }
     
-    public boolean isInvincible() {
-        return isInvincible;
+    public boolean isUntouchable() {
+        return isUntouchable;
     }
     
     public int getHealth() {

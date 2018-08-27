@@ -26,7 +26,6 @@ public class WorldContactListener implements ContactListener {
         
         switch (cDef) {
             case CategoryBits.PLAYER | CategoryBits.GROUND:
-                System.out.println("Player touched the ground.");
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     ((Player) fixtureA.getUserData()).setIsJumping(false);
                 } else {
@@ -35,7 +34,6 @@ public class WorldContactListener implements ContactListener {
                 break;
                 
             case CategoryBits.PLAYER | CategoryBits.PLATFORM:
-                System.out.println("Player touched the platform.");
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     ((Player) fixtureA.getUserData()).setIsJumping(false);
                 } else {
@@ -109,7 +107,6 @@ public class WorldContactListener implements ContactListener {
         
         switch (cDef) {
             case CategoryBits.PLAYER | CategoryBits.GROUND:
-                System.out.println("player took off from the ground.");
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
                         ((Player) fixtureA.getUserData()).setIsJumping(true);
@@ -122,7 +119,6 @@ public class WorldContactListener implements ContactListener {
                 break;
                 
             case CategoryBits.PLAYER | CategoryBits.PLATFORM:
-                System.out.println("player took off from the platform.");
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
                         ((Player) fixtureA.getUserData()).setIsJumping(true);

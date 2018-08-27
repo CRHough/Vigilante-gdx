@@ -22,7 +22,9 @@ public abstract class Enemy extends Character {
             lastStoppedPosition = new Vector2();
         }
         
-        if (aggressive && hasLockedOnTarget() && !isSetToKill()) {
+        if (isSetToKill()) return;
+        
+        if (aggressive && hasLockedOnTarget()) {
             // Swing his weapon if lockedOnTarget is in melee attack range.
             if (isTargetInRange()) {
                 swingWeapon();

@@ -14,9 +14,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 
 public class Player extends Character implements Controllable, Humanoid {
     
@@ -139,23 +140,23 @@ public class Player extends Character implements Controllable, Humanoid {
     public void receiveDamage(int damage) {
         super.receiveDamage(damage);
         
-        /*
+        
         // Sets the player to be untouchable for a while.
-        if (!isInvincible) {
-            Character.setCategoryBits(bodyFixture, Constants.INVINCIBLE_BIT);
-            isInvincible = true;
+        if (!isUntouchable) {
+            Character.setCategoryBits(bodyFixture, CategoryBits.UNTOUCHABLE);
+            isUntouchable = true;
             
             Timer.schedule(new Task(){
                 @Override
                 public void run() {
                     if (!setToKill) {
-                        Character.setCategoryBits(bodyFixture, Constants.PLAYER_BIT);
-                        isInvincible = false;
+                        Character.setCategoryBits(bodyFixture, CategoryBits.PLAYER);
+                        isUntouchable = false;
                     }
                     
                 }
             }, 3f);
-        }*/
+        }
     }
 
 }
