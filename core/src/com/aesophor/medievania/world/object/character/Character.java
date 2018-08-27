@@ -1,6 +1,7 @@
 package com.aesophor.medievania.world.object.character;
 
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collector.Characteristics;
 
 import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
@@ -47,6 +48,7 @@ public abstract class Character extends Sprite {
     
     protected float stateTimer;
     protected boolean facingRight;
+    protected boolean isJumping;
     protected boolean isAttacking;
     protected boolean isCrouching;
     protected boolean isInvincible;
@@ -176,7 +178,7 @@ public abstract class Character extends Sprite {
             return Character.State.KILLED;
         } else if (isAttacking) {
             return Character.State.ATTACKING;
-        } else if (b2body.getLinearVelocity().y > .5f || (b2body.getLinearVelocity().y > -.5f && previousState == Character.State.JUMPING)) {
+        } else if (b2body.getLinearVelocity().y > -.5f && previousState == Character.State.JUMPING) {
             return Character.State.JUMPING;
         } else if (b2body.getLinearVelocity().y < -.5f) {
             return Character.State.FALLING;
@@ -191,14 +193,6 @@ public abstract class Character extends Sprite {
     
     
     // Movement controls
-    public void moveRight() {
-        facingRight = true;
-        
-        if (b2body.getLinearVelocity().x <= movementSpeed * 2) {
-            b2body.applyLinearImpulse(new Vector2(movementSpeed, 0), b2body.getWorldCenter(), true);
-        }
-    }
-    
     public void moveLeft() {
         facingRight = false;
         
@@ -207,8 +201,16 @@ public abstract class Character extends Sprite {
         }
     }
     
+    public void moveRight() {
+        facingRight = true;
+        
+        if (b2body.getLinearVelocity().x <= movementSpeed * 2) {
+            b2body.applyLinearImpulse(new Vector2(movementSpeed, 0), b2body.getWorldCenter(), true);
+        }
+    }
+    
     public void jump() {
-        if (isOnGround()) {
+        if (!isJumping) {
             getB2Body().applyLinearImpulse(new Vector2(0, jumpHeight), b2body.getWorldCenter(), true);
             jumpSound.play();
         }
@@ -253,7 +255,7 @@ public abstract class Character extends Sprite {
         health -= damage;
         
         if (health <= 0) {
-            setCategoryBits(bodyFixture, CategoryBits.DESTROYED);
+            setCategoryBits(bodyFixture, CategoryBits.UNTOUCHABLE);
 
             setToKill = true;
             deathSound.play();
@@ -283,7 +285,6 @@ public abstract class Character extends Sprite {
     }
     
     protected void moveRandomly(float delta) {
-        
         if (sleepDurationTimer >= sleepDuration) {
             moveDirection = ThreadLocalRandom.current().nextInt(0, 1 + 1);
             moveDuration = ThreadLocalRandom.current().nextInt(0, 5 + 1);
@@ -381,8 +382,12 @@ public abstract class Character extends Sprite {
         return isKilled;
     }
     
-    public boolean isOnGround() {
-        return b2body.getLinearVelocity().y > -.5f && b2body.getLinearVelocity().y < .5f;
+    public boolean isJumping() {
+        return isJumping;
+    }
+    
+    public void setIsJumping(boolean isJumping) {
+        this.isJumping = isJumping;
     }
     
     public void setIsAttacking(boolean isAttacking) {

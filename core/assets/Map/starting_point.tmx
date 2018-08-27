@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="16" tileheight="16" infinite="0" nextobjectid="39">
+<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="16" tileheight="16" infinite="0" nextobjectid="59">
  <tileset firstgid="1" name="GothicVaniaTown" tilewidth="16" tileheight="16" tilecount="3111" columns="61">
   <image source="Resources/GothicVania-town-files/GothicVaniaTown.png" width="991" height="830"/>
  </tileset>
@@ -13,23 +13,63 @@
   <image source="Resources/ gothicvania patreon collection/Old-dark-Castle-tileset-Files/PNG/starting-point-background.png" width="960" height="304"/>
  </tileset>
  <objectgroup name="Ground">
+  <object id="41" x="0" y="288">
+   <polyline points="0,0 208,0"/>
+  </object>
+  <object id="42" x="208" y="256">
+   <polyline points="0,0 256,0"/>
+  </object>
+  <object id="43" x="464" y="288">
+   <polyline points="0,0 128,0"/>
+  </object>
+  <object id="44" x="641" y="288">
+   <polyline points="0,0 95,0 239,-64 319,-64"/>
+  </object>
+  <object id="50" x="0" y="142">
+   <polyline points="0,0 96,0"/>
+  </object>
+  <object id="51" x="96" y="173">
+   <polyline points="0,0 16,0"/>
+  </object>
+  <object id="52" x="112" y="189">
+   <polyline points="0,0 16,0"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="Platform">
   <object id="3" x="5.5" y="220.5" width="32" height="29"/>
   <object id="7" x="27" y="250" width="32" height="31.5"/>
-  <object id="11" x="0.75" y="142.5" width="93" height="31.5"/>
-  <object id="12" x="96.75" y="173.5" width="14.5" height="16"/>
-  <object id="13" x="112.25" y="189.5" width="15.5" height="15.5"/>
   <object id="14" x="128.25" y="221.5" width="48" height="14.5"/>
+ </objectgroup>
+ <objectgroup name="Walls">
   <object id="28" x="208" y="0">
    <polyline points="0,0 0,160 256,160 256,80 416,80 416,0"/>
-  </object>
-  <object id="30" x="640" y="320">
-   <polyline points="0,0 0,-32 96,-32 241.333,-96.3333 320,-96"/>
   </object>
   <object id="31" x="960" y="320">
    <polyline points="0,0 0,-320"/>
   </object>
-  <object id="34" x="0" y="0">
-   <polyline points="0,0 0,288 208,288 208,256 464,256 464,288 592,288 592,320"/>
+  <object id="45" x="0" y="320">
+   <polyline points="0,0 0,-320"/>
+  </object>
+  <object id="46" x="208" y="288">
+   <polyline points="0,0 0,-32"/>
+  </object>
+  <object id="47" x="464" y="288">
+   <polyline points="0,0 0,-32"/>
+  </object>
+  <object id="48" x="592" y="288">
+   <polyline points="0,0 0,32"/>
+  </object>
+  <object id="49" x="640" y="288">
+   <polyline points="0,0 0,32"/>
+  </object>
+  <object id="55" x="96.3333" y="142.333">
+   <polyline points="0,0 0,32 -96,32 -96,0"/>
+  </object>
+  <object id="56" x="96" y="173.333">
+   <polyline points="0,0 0,16 16,16 16,0"/>
+  </object>
+  <object id="57" x="112.333" y="189.667">
+   <polyline points="0,0 0,16 16,16 16,0"/>
   </object>
  </objectgroup>
  <objectgroup name="CliffMarker">
@@ -40,27 +80,27 @@
    <polyline points="0,0 0,6.72727"/>
   </object>
  </objectgroup>
- <layer name="Background" width="60" height="20">
+ <layer name="Background" width="60" height="20" visible="0">
   <data encoding="base64" compression="zlib">
    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
   </data>
  </layer>
- <layer name="Wall" width="60" height="20">
+ <layer name="Wall" width="60" height="20" visible="0">
   <data encoding="base64" compression="zlib">
    eJztlW0KgzAMhnOA9hBOdhzFMbfhcZTKPsSjbmM32FtQjMXtpy4zDzw0pX/ykkKIFEVR5HA3RA/4NEt3Mg+RJdrA2C7dyTwckPMITyvJe0XOG2xWklf5ToJ/kEIH686XGepP7mEu8A+V6Llief25De4Z3HW1E56Xz7fPVdjxXuM5/3G+rR3vNTcxZ6l5+Xy5fK+Fb5LzTs3Xn3yvueDde4YXgXkVRfkN3j9oN/0=
   </data>
  </layer>
- <layer name="Ground - back" width="60" height="20">
+ <layer name="Ground - back" width="60" height="20" visible="0">
   <data encoding="base64" compression="zlib">
    eJxjYBgFo2AUjIJRMApGAb2BGB8DgzgQSwKxFBCrArEa30C7inbAC+g3byD2BWI/II4E4qhh7N8MXgaG+bwQGoZBfBPegXYZfUHGCPXzSAMGQD8bArHRCPF7CtCfqUCcNkL8iw0IA8tvET5EXSYPxApIdRqMlgFi2WFQ17kD3ezBh6jLgoE4BKlOg9EBQBw4yOo6ST7MNgeMhomjx1M1ENcA8V0gvgfELUDcCsR1QFyPRRzG7wXivgH2ry8fZpsDRsPE0eNpPRBvQPLHDiDeicTHJX4QiA8NsH/rsMQXOo0u/xiInyDx3wDxWyz60MW/AvG3AfYvALTIStk=
   </data>
  </layer>
- <layer name="Ground - upper" width="60" height="20">
+ <layer name="Ground - upper" width="60" height="20" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt1N9KAkEUx/G9b3fTlKIo6KZeozRNKYqCbuoxMk1T6qYu6yUyV02rt8k0zd6kr+DgMjXiH8Id8cAHncXB89thjmEMX++mYdTwhAIcFE318xLK+EIbj8j3+V3AMoygNUJj/1Rz9GJav/tVPZdziPfygToa+EQTLdd78UqNe77ivViwMQ8f/Fiwpu98t7CNEMLYQQRR7CKGuIfyjnu+CbJcIIkULpFGBlfIIuehvOOer4MiSijjGRVU8YJXvHkor2re6DaHBi3VvNFhDq3bw+9RzRsd5tDJCHlV80a3OTRoqeaNbnNoVrPSqXzMJj8WsYTlEWaVl+ucPAmEEEYEUexhHwdTklfkLMBBEimkkemuxTOdS85ZRwMllFFBFc2u1oTydu7RClaxZvfWG9iUegqwDrruoNiT75NTfIrznXTezj06xBGO7d76FGdSTzHWcdcdFHtqfXJ67XzFf9/iztXLPR6knrKsc7jGzR97Wq7v8mcb31LeH1NozE4=
+   eJzt1N9KAkEUx/G9z900pSgKuqnXKE1TiqIu6zEyTVPqpi7rJTL/W71Npmn2Jn0FB5epWVYl3BEPfNBZHDy/HeYYxuj17jOMJp5RRAlln/p5BVV8oYcnFBx+FzQNI2SO0dg/1QK9+Mzf/aqeyznEe/lAC218ooOu7b14pSY9X/FeTFhYhB8BLJmzd7472EUYEewhihj2EUfCQ3knPd8kWS6RQhpXyCCLa+SQ91DeSc+3hDIqqKKGOhp4wSvePJRXNW90m0NuSzVvdJhDm9boe1TzRrc55LZU80a3OeS2VPNGtzk0r3npVH5mcQDLWMHqGLPZy3VBniTCiCCKGA5wiKMZyStyFlFCCmlkkB2sxTOdS87ZQhsVVFFHA52B7pTy9u/RGtaxYQ3XW9iWegqyDtnuoNhTcMgpPsX5Tjtv/x4d4wSn1nB9hnOppzjrhO0Oij1Nh5xeO1/x33e4t/XygEeppxzrPG5w+8eeru27/NnDt5T3B2Cay+w=
   </data>
  </layer>
- <layer name="Objects" width="60" height="20">
+ <layer name="Objects" width="60" height="20" visible="0">
   <data encoding="base64" compression="zlib">
    eJztzzkSRGAUReGXsAt0gj0ZkmZPhtSwLk2CVTgL6FSp+t1T9eX3mimllFJKKaXU/wbPbMSE2Xt6zf0tfPxhxfaCv4FvFiLCBzufD5yOfs/4mKNAiRgJUv/pZffU8KtFhx5fVKgd/avc7gLviw9c
   </data>

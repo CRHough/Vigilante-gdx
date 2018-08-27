@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
@@ -67,6 +68,8 @@ public class Player extends Character implements Controllable, Humanoid {
         bdef.type = BodyDef.BodyType.DynamicBody;
         b2body = currentWorld.createBody(bdef);
         
+        // Create body fixture.
+        // Fixture position in box2d is in relation to the body position.
         FixtureDef fdef = new FixtureDef();
         PolygonShape body = new PolygonShape();
         Vector2[] vertices = new Vector2[4];
@@ -78,13 +81,13 @@ public class Player extends Character implements Controllable, Humanoid {
         
         fdef.shape = body;
         fdef.filter.categoryBits = CategoryBits.PLAYER;
-        fdef.filter.maskBits = CategoryBits.GROUND | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON; // What player can collide with.
+        fdef.filter.maskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON; // What player can collide with.
         bodyFixture = b2body.createFixture(fdef);
         bodyFixture.setUserData(this);
         body.dispose();
         
         
-        // Fixture position in box2d is in relation to the body position.
+        // Create weapon fixture.
         CircleShape weapon = new CircleShape();
         weapon.setPosition(new Vector2(attackRange / Constants.PPM, 0));
         weapon.setRadius(attackRange / Constants.PPM);

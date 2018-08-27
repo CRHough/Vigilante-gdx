@@ -80,7 +80,7 @@ public class Knight extends Enemy implements Humanoid {
         
         fdef.shape = body;
         fdef.filter.categoryBits = CategoryBits.ENEMY;
-        fdef.filter.maskBits = CategoryBits.GROUND | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER; // What it can collide with.
+        fdef.filter.maskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER; // What it can collide with.
         bodyFixture = b2body.createFixture(fdef);
         bodyFixture.setUserData(this);
         body.dispose();

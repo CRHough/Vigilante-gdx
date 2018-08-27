@@ -40,24 +40,7 @@ public class GameMap {
         BodyDef bdef = new BodyDef();
         FixtureDef fdef = new FixtureDef();
         
-        // Create rectangular ground bodies/fixtures.
-        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.GROUND.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) / Constants.PPM, (rect.getY() + rect.getHeight() / 2) / Constants.PPM);
-            body = world.createBody(bdef);
-            
-            PolygonShape polygonShape = new PolygonShape();
-            polygonShape.setAsBox(rect.getWidth() / 2 / Constants.PPM, rect.getHeight() / 2 / Constants.PPM);
-            fdef.shape = polygonShape;
-            fdef.filter.categoryBits = CategoryBits.GROUND;
-            body.createFixture(fdef);
-            
-            polygonShape.dispose();
-        }
-        
-        // Create polylinear ground bodies/fixtures.
+        // Create ground bodies/fixtures (polylinear).
         for (MapObject object : tiledMap.getLayers().get(GameMapLayer.GROUND.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
             float[] vertices = ((PolylineMapObject) object).getPolyline().getTransformedVertices();
             Vector2[] worldVertices = new Vector2[vertices.length / 2];
@@ -83,7 +66,54 @@ public class GameMap {
             chainShape.dispose();
         }
         
-        // Create cliff marker bodies/fixtures.
+        
+        // Create platform bodies/fixtures (rectangular).
+        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.PLATFORM.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.set((rect.getX() + rect.getWidth() / 2) / Constants.PPM, (rect.getY() + rect.getHeight() / 2) / Constants.PPM);
+            body = world.createBody(bdef);
+            
+            PolygonShape polygonShape = new PolygonShape();
+            polygonShape.setAsBox(rect.getWidth() / 2 / Constants.PPM, rect.getHeight() / 2 / Constants.PPM);
+            fdef.shape = polygonShape;
+            fdef.friction = Constants.GROUND_FRICTION;
+            fdef.filter.categoryBits = CategoryBits.PLATFORM;
+            body.createFixture(fdef);
+            
+            polygonShape.dispose();
+        }
+        
+        
+        // Create wall bodies/fixtures (polylinear).
+        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.WALL.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
+            float[] vertices = ((PolylineMapObject) object).getPolyline().getTransformedVertices();
+            Vector2[] worldVertices = new Vector2[vertices.length / 2];
+            
+            for (int i = 0; i < worldVertices.length; i++) {
+                worldVertices[i] = new Vector2(vertices[i * 2] / Constants.PPM, vertices[i * 2 + 1] / Constants.PPM);
+            }
+            
+            ChainShape chainShape = new ChainShape();
+            chainShape.createChain(worldVertices);
+            
+            // We are drawing the polylines using the coordinates of their vertices,
+            // so bdef should be set to zero.
+            bdef.type = BodyDef.BodyType.StaticBody;
+            bdef.position.setZero();
+            body = world.createBody(bdef);
+            
+            fdef.shape = chainShape;
+            fdef.friction = Constants.GROUND_FRICTION;
+            fdef.filter.categoryBits = CategoryBits.WALL;
+            body.createFixture(fdef);
+            
+            chainShape.dispose();
+        }
+        
+        
+        // Create cliff marker bodies/fixtures (polylinear).
         for (MapObject object : tiledMap.getLayers().get(GameMapLayer.CLIFF_MARKER.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
             float[] vertices = ((PolylineMapObject) object).getPolyline().getTransformedVertices();
             Vector2[] worldVertices = new Vector2[vertices.length / 2];

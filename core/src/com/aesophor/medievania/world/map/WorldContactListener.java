@@ -1,7 +1,6 @@
 package com.aesophor.medievania.world.map;
 
 import com.aesophor.medievania.constants.CategoryBits;
-import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.world.object.character.Character;
 import com.aesophor.medievania.world.object.character.Player;
 import com.badlogic.gdx.physics.box2d.Contact;
@@ -26,6 +25,24 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
         switch (cDef) {
+            case CategoryBits.PLAYER | CategoryBits.GROUND:
+                System.out.println("Player touched the ground.");
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
+                    ((Player) fixtureA.getUserData()).setIsJumping(false);
+                } else {
+                    ((Player) fixtureB.getUserData()).setIsJumping(false);
+                }
+                break;
+                
+            case CategoryBits.PLAYER | CategoryBits.PLATFORM:
+                System.out.println("Player touched the platform.");
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
+                    ((Player) fixtureA.getUserData()).setIsJumping(false);
+                } else {
+                    ((Player) fixtureB.getUserData()).setIsJumping(false);
+                }
+                break;
+                
             case CategoryBits.PLAYER | CategoryBits.ENEMY:
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     ((Player) fixtureA.getUserData()).receiveDamage(25);
@@ -91,6 +108,24 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
         switch (cDef) {
+            case CategoryBits.PLAYER | CategoryBits.GROUND:
+                System.out.println("player took off from the ground.");
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
+                    ((Player) fixtureA.getUserData()).setIsJumping(true);
+                } else {
+                    ((Player) fixtureB.getUserData()).setIsJumping(true);
+                }
+                break;
+                
+            case CategoryBits.PLAYER | CategoryBits.PLATFORM:
+                System.out.println("player took off from the platform.");
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
+                    ((Player) fixtureA.getUserData()).setIsJumping(true);
+                } else {
+                    ((Player) fixtureB.getUserData()).setIsJumping(true);
+                }
+                break;
+                
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 Player player;
                 // Unset player's current target when contact ends.
@@ -127,13 +162,41 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void preSolve(Contact contact, Manifold oldManifold) {
-        // TODO Auto-generated method stub
+        Fixture fixtureA = contact.getFixtureA();
+        Fixture fixtureB = contact.getFixtureB();
+        
+        int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
+        
+        switch (cDef) {
+            // Allow player to pass through platforms and collide on the way down.
+            case CategoryBits.PLAYER | CategoryBits.PLATFORM:
+                float playerY;
+                float platformY;
+                
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
+                    playerY = fixtureA.getBody().getPosition().y;
+                    platformY = fixtureB.getBody().getPosition().y;
+                } else {
+                    playerY = fixtureB.getBody().getPosition().y;
+                    platformY = fixtureA.getBody().getPosition().y;
+                }
+                
+                if (playerY > platformY + .15f) { // Player is about to land on the platform.
+                    contact.setEnabled(true);
+                } else {
+                    contact.setEnabled(false);
+                }
+                
+                break;
+                
+            default:
+                break;
+        }
         
     }
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-        // TODO Auto-generated method stub
         
     }
 
