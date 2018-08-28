@@ -18,7 +18,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
-public class Player extends Character implements Controllable, Humanoid {
+public class Player extends Character implements Humanoid, Controllable {
     
     private static final String TEXTURE_FILE = "Character/Bandit/Bandit.png";
     

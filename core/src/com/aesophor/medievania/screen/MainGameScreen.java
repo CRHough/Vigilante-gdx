@@ -5,18 +5,20 @@ import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.ui.HUD;
 import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Rumble;
+import com.aesophor.medievania.world.character.Character;
 import com.aesophor.medievania.world.character.Player;
-import com.aesophor.medievania.world.character.humanoid.Knight;
 import com.aesophor.medievania.world.map.GameMap;
 import com.aesophor.medievania.world.map.GameMapManager;
 import com.aesophor.medievania.world.map.WorldContactListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import box2dLight.RayHandler;
 
 public class MainGameScreen extends AbstractScreen {
     
@@ -26,7 +28,7 @@ public class MainGameScreen extends AbstractScreen {
     
     private HUD hud;
     private Player player;
-    private Array<Knight> npcs;
+    private Array<Character> npcs;
     
     public MainGameScreen(GameStateManager gsm) {
         super(gsm);
@@ -42,44 +44,37 @@ public class MainGameScreen extends AbstractScreen {
         
         // Spawn the player and NPCs from the map.
         // The maps contain information about where player and NPCs should be spawned.
+        // Refactor this part later.
         player = gameMapManager.getCurrentMap().spawnPlayer(gsm.getAssets(), getWorld());
         npcs = gameMapManager.getCurrentMap().spawnNPCs(gsm.getAssets(), getWorld());
         
-        // Initialize OrthogonalTiledMapRenderer and Box2DDebugRenderer.
-        renderer = new OrthogonalTiledMapRenderer(gameMapManager.getCurrentMap().getTiledMap(), 1 / Constants.PPM);
-        b2dr = new Box2DDebugRenderer();
-        
         // Initialize HUD.
         hud = new HUD(gsm, player);
+        
+        renderer = new OrthogonalTiledMapRenderer(gameMapManager.getCurrentMap().getTiledMap(), 1 / Constants.PPM);
+        b2dr = new Box2DDebugRenderer();
     }
     
     
     public void update(float delta) {
         player.handleInput(delta);
-        
         gameMapManager.getWorld().step(1/60f, 6, 2);
+        gameMapManager.getRayHandler().update();
         
-        
-        for (Knight c : npcs) {
-            c.update(delta);
-        }
-        
+        npcs.forEach((Character c) -> c.update(delta));
         player.update(delta);
-
         hud.update(delta);
         
-        
-        
         if (Rumble.getRumbleTimeLeft() > 0){
-            CameraUtils.boundCamera(getCamera(), getCurrentMap());
             Rumble.tick(Gdx.graphics.getDeltaTime());
             getCamera().translate(Rumble.getPos());
          } else {
              CameraUtils.lerpToTarget(getCamera(), player.getB2Body().getPosition());
-             CameraUtils.boundCamera(getCamera(), getCurrentMap());
+             
         }
         
-        
+        // Make sure to bound the camera within the TiledMap.
+        CameraUtils.boundCamera(getCamera(), getCurrentMap());
         
         // Tell our renderer to draw only what our camera can see.
         renderer.setView((OrthographicCamera) getCamera());
@@ -88,7 +83,6 @@ public class MainGameScreen extends AbstractScreen {
     @Override
     public void render(float delta) {
         update(delta);
-        
         gsm.clearScreen();
         
         // Render game map.
@@ -102,11 +96,12 @@ public class MainGameScreen extends AbstractScreen {
         // Render characters.
         getBatch().setProjectionMatrix(getCamera().combined);
         getBatch().begin();
-        for (Knight c : npcs) {
-            c.draw(getBatch());
-        }
+        npcs.forEach((Character c) -> c.draw(getBatch()));
         player.draw(getBatch());
         getBatch().end();
+        
+        gameMapManager.getRayHandler().setCombinedMatrix(getCamera().combined);
+        gameMapManager.getRayHandler().render();
         
         // Set our batch to now draw what the Hud camera sees.
         getBatch().setProjectionMatrix(hud.getCamera().combined);
@@ -120,17 +115,15 @@ public class MainGameScreen extends AbstractScreen {
         */
     }
     
-    @Override
-    public void dispose() {
-        renderer.dispose();
-        b2dr.dispose();
-        hud.dispose();
-        gameMapManager.dispose();
-    }
+    
     
     
     public GameStateManager getGSM() {
         return gsm;
+    }
+    
+    public GameMapManager getGameMapManager() {
+        return gameMapManager;
     }
     
     public GameMap getCurrentMap() {
@@ -141,6 +134,18 @@ public class MainGameScreen extends AbstractScreen {
         return gameMapManager.getWorld();
     }
     
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
+        gameMapManager.getRayHandler().useCustomViewport(getViewport().getScreenX(), getViewport().getScreenY(), 1200, 600);
+    }
     
+    @Override
+    public void dispose() {
+        renderer.dispose();
+        b2dr.dispose();
+        hud.dispose();
+        gameMapManager.dispose();
+    }
     
 }

@@ -7,8 +7,6 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Enemy extends Character {
     
-    protected boolean aggressive;
-    
     public Enemy(Texture texture, World world, float x, float y) {
         super(texture, world, x, y);
     }
@@ -25,7 +23,7 @@ public abstract class Enemy extends Character {
         if (isSetToKill()) return;
         
         
-        if (aggressive && hasLockedOnTarget()) {
+        if (isAlerted && hasLockedOnTarget()) {
             // Swing his weapon if lockedOnTarget is in melee attack range.
             if (isTargetInRange()) {
                 swingWeapon();
@@ -51,11 +49,11 @@ public abstract class Enemy extends Character {
     @Override
     public void receiveDamage(int damage) {
         super.receiveDamage(damage);
-        aggressive = true;
+        isAlerted = true;
     }
     
     protected boolean isAggressive() {
-        return aggressive;
+        return isAlerted;
     }
     
 }

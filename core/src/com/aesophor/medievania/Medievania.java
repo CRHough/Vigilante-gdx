@@ -42,18 +42,6 @@ public class Medievania extends Game implements GameStateManager {
         
         showScreen(Screens.MAIN_MENU);
     }
-
-    @Override
-    public void render () {
-        super.render();
-        assets.update();
-    }
-    
-    @Override
-    public void dispose () {
-        assets.dispose();
-        batch.dispose();
-    }
     
     
     /**
@@ -101,6 +89,19 @@ public class Medievania extends Game implements GameStateManager {
     @Override
     public AssetManager getAssets() {
         return assets;
+    }
+    
+    
+    @Override
+    public void render () {
+        super.render();
+        assets.update();
+    }
+    
+    @Override
+    public void dispose () {
+        assets.dispose();
+        batch.dispose();
     }
     
 }

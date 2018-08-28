@@ -2,6 +2,7 @@ package com.aesophor.medievania.world;
 
 public class CategoryBits {
 
+    public static final short NULL = 0;
     public static final short GROUND = 1;
     public static final short PLATFORM = 2;
     public static final short WALL = 4;

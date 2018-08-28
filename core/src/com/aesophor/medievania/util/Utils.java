@@ -7,7 +7,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class Utils {
     
-    private static Array<TextureRegion> frames = new Array<TextureRegion>();
+    private static Array<TextureRegion> frames = new Array<>();
 
     private Utils() {
         

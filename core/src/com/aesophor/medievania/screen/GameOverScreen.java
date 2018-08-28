@@ -50,5 +50,11 @@ public class GameOverScreen extends AbstractScreen {
     public void resize(int width, int height) {
         getViewport().update(width, height);
     }
+    
+    @Override
+    public void dispose() {
+        super.dispose();
+        skin.dispose();
+    }
 
 }

@@ -1,7 +1,8 @@
 package com.aesophor.medievania.world.map;
 
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -9,12 +10,14 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
+import box2dLight.RayHandler;
 
 public class GameMapManager implements Disposable {
     
     private TmxMapLoader maploader;
     private AssetManager assets;
     private World world;
+    private RayHandler rayHandler;
     
     private GameMap currentMap;
     private Map<String, String> backgroundMusics;
@@ -22,6 +25,8 @@ public class GameMapManager implements Disposable {
     public GameMapManager(AssetManager assets, World world) {
         this.assets = assets;
         this.world = world;
+        rayHandler = new RayHandler(world);
+        rayHandler.setAmbientLight(.8f);
         
         maploader = new TmxMapLoader();
         
@@ -43,7 +48,7 @@ public class GameMapManager implements Disposable {
         TiledMap map = maploader.load(mapFilePath);
         Music music = assets.get(backgroundMusics.get(mapFilePath));
         
-        currentMap = new GameMap(assets, world, map, music);
+        currentMap = new GameMap(assets, world, rayHandler, map, music);
     }
     
     /**
@@ -61,6 +66,10 @@ public class GameMapManager implements Disposable {
     
     public World getWorld() {
         return world;
+    }
+    
+    public RayHandler getRayHandler() {
+        return rayHandler;
     }
     
     

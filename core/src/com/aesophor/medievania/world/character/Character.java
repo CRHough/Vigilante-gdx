@@ -1,7 +1,6 @@
 package com.aesophor.medievania.world.character;
 
 import java.util.concurrent.ThreadLocalRandom;
-
 import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.util.Rumble;
 import com.aesophor.medievania.world.CategoryBits;
@@ -48,6 +47,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected Sound jumpSound;
     
     protected float stateTimer;
+    protected boolean isAlerted;
     protected boolean facingRight;
     protected boolean isJumping;
     protected boolean isAttacking;

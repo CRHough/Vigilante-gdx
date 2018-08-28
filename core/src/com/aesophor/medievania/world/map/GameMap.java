@@ -2,10 +2,12 @@ package com.aesophor.medievania.world.map;
 
 import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.world.CategoryBits;
+import com.aesophor.medievania.world.character.Character;
 import com.aesophor.medievania.world.character.Player;
 import com.aesophor.medievania.world.character.humanoid.Knight;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -20,6 +22,8 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 
 public class GameMap implements Disposable {
     
@@ -27,6 +31,7 @@ public class GameMap implements Disposable {
     private static final boolean PLATFORM_COLLIDABLE = true;
     private static final boolean WALL_COLLIDABLE = true;
     private static final boolean CLIFF_MARKER_COLLIDABLE = false;
+    private static final boolean LIGHT_SOURCE_COLLIDABLE = false;
     
     private TiledMap tiledMap;
     private Music backgroundMusic;
@@ -35,7 +40,7 @@ public class GameMap implements Disposable {
     private int mapHeight;
     private int mapTileSize;
     
-    public GameMap(AssetManager assets, World world, TiledMap tiledMap, Music backgroundMusic) {
+    public GameMap(AssetManager assets, World world, RayHandler rayHandler, TiledMap tiledMap, Music backgroundMusic) {
         this.tiledMap = tiledMap;
         this.backgroundMusic = backgroundMusic;
         
@@ -53,19 +58,28 @@ public class GameMap implements Disposable {
         createRectangles(GameMapLayer.PLATFORM, world, PLATFORM_COLLIDABLE, Constants.GROUND_FRICTION, CategoryBits.PLATFORM);
         createPolylines(GameMapLayer.WALL, world, WALL_COLLIDABLE, 0, CategoryBits.WALL);
         createPolylines(GameMapLayer.CLIFF_MARKER, world, CLIFF_MARKER_COLLIDABLE, 0, CategoryBits.CLIFF_MARKER);
+        
+        // Create light sources from the light source layer.
+        Array<Vector2> lightPos = createRectangles(GameMapLayer.LIGHT_SOURCE, world, LIGHT_SOURCE_COLLIDABLE, 0, CategoryBits.NULL);
+        for (Vector2 pos : lightPos) {
+            new PointLight(rayHandler, 100, Color.ORANGE, 80 / Constants.PPM, pos.x, pos.y).setSoftnessLength(0f);;
+        }
     }
     
     
-    private void createRectangles(GameMapLayer layer, World world, boolean collidable, float friction, short categoryBits) {
+    private Array<Vector2> createRectangles(GameMapLayer layer, World world, boolean collidable, float friction, short categoryBits) {
         Body body;
         BodyDef bdef = new BodyDef();
         FixtureDef fdef = new FixtureDef();
+        Array<Vector2> positions = new Array<>();
         
         for (MapObject object : tiledMap.getLayers().get(layer.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            Vector2 position = new Vector2((rect.getX() + rect.getWidth() / 2) / Constants.PPM, (rect.getY() + rect.getHeight() / 2) / Constants.PPM);
+            positions.add(position);
             
             bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set((rect.getX() + rect.getWidth() / 2) / Constants.PPM, (rect.getY() + rect.getHeight() / 2) / Constants.PPM);
+            bdef.position.set(position);
             body = world.createBody(bdef);
             
             PolygonShape polygonShape = new PolygonShape();
@@ -79,6 +93,8 @@ public class GameMap implements Disposable {
             
             polygonShape.dispose();
         }
+        
+        return positions;
     }
     
     private void createPolylines(GameMapLayer layer, World world, boolean collidable, float friction, short categoryBits) {
@@ -120,8 +136,8 @@ public class GameMap implements Disposable {
         return new Player(assets, world, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM);
     }
     
-    public Array<Knight> spawnNPCs(AssetManager assets, World world) {
-        Array<Knight> knights = new Array<>();
+    public Array<Character> spawnNPCs(AssetManager assets, World world) {
+        Array<Character> knights = new Array<>();
         
         for (MapObject object : tiledMap.getLayers().get(GameMapLayer.NPCS.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
