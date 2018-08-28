@@ -1,8 +1,11 @@
 package com.aesophor.medievania.world.map;
 
-import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
-import com.aesophor.medievania.constants.GameMapLayer;
+import com.aesophor.medievania.world.CategoryBits;
+import com.aesophor.medievania.world.character.Player;
+import com.aesophor.medievania.world.character.humanoid.Knight;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -15,6 +18,7 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
 public class GameMap implements Disposable {
@@ -25,12 +29,15 @@ public class GameMap implements Disposable {
     private static final boolean CLIFF_MARKER_COLLIDABLE = false;
     
     private TiledMap tiledMap;
+    private Music backgroundMusic;
+    
     private int mapWidth;
     private int mapHeight;
     private int mapTileSize;
     
-    public GameMap(World world, TiledMap tiledMap) {
+    public GameMap(AssetManager assets, World world, TiledMap tiledMap, Music backgroundMusic) {
         this.tiledMap = tiledMap;
+        this.backgroundMusic = backgroundMusic;
         
         // Extract the properties from the map.
         mapWidth = tiledMap.getProperties().get("width", Integer.class);
@@ -106,9 +113,36 @@ public class GameMap implements Disposable {
         }
     }
     
+    public Player spawnPlayer(AssetManager assets, World world) {
+        MapObject object = tiledMap.getLayers().get(GameMapLayer.PLAYER.ordinal()).getObjects().getByType(RectangleMapObject.class).get(0);
+        Rectangle rect = ((RectangleMapObject) object).getRectangle();
+        
+        return new Player(assets, world, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM);
+    }
+    
+    public Array<Knight> spawnNPCs(AssetManager assets, World world) {
+        Array<Knight> knights = new Array<>();
+        
+        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.NPCS.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
+            Rectangle rect = ((RectangleMapObject) object).getRectangle();
+            knights.add(new Knight(assets, world, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+        }
+        
+        return knights;
+    }
+    
     
     public TiledMap getTiledMap() {
         return tiledMap;
+    }
+    
+    public void playBackgroundMusic() {
+        backgroundMusic.setLooping(true);
+        backgroundMusic.play();
+    }
+    
+    public Music getBackgroundMusic() {
+        return backgroundMusic;
     }
     
     public int getMapWidth() {
@@ -127,6 +161,7 @@ public class GameMap implements Disposable {
     @Override
     public void dispose() {
         tiledMap.dispose();
+        backgroundMusic.dispose();
     }
 
 }

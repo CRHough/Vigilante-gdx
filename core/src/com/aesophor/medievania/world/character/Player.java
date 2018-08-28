@@ -1,9 +1,8 @@
 package com.aesophor.medievania.world.character;
 
-import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
-import com.aesophor.medievania.screen.MainGameScreen;
 import com.aesophor.medievania.util.Utils;
+import com.aesophor.medievania.world.CategoryBits;
 import com.aesophor.medievania.world.character.humanoid.Humanoid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
@@ -22,12 +22,8 @@ public class Player extends Character implements Controllable, Humanoid {
     
     private static final String TEXTURE_FILE = "Character/Bandit/Bandit.png";
     
-    private AssetManager assets;
-    
-    public Player(MainGameScreen screen, float x, float y) {
-        super(screen.getGSM().getAssets().get(TEXTURE_FILE), screen.getWorld(), x, y);
-        
-        assets = screen.getGSM().getAssets();
+    public Player(AssetManager assets, World world, float x, float y) {
+        super(assets.get(TEXTURE_FILE), world, x, y);
         
         health = 100;
         movementSpeed = .25f;

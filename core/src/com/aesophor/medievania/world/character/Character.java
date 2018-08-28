@@ -2,9 +2,9 @@ package com.aesophor.medievania.world.character;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.util.Rumble;
+import com.aesophor.medievania.world.CategoryBits;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,8 +17,9 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Disposable;
 
-public abstract class Character extends Sprite {
+public abstract class Character extends Sprite implements Disposable {
 
     public enum State { IDLE, RUNNING, JUMPING, FALLING, CROUCHING, ATTACKING, KILLED };
     
@@ -435,6 +436,16 @@ public abstract class Character extends Sprite {
     
     public boolean facingRight() {
         return facingRight;
+    }
+    
+    @Override
+    public void dispose() {
+        footstepSound.dispose();
+        hurtSound.dispose();
+        deathSound.dispose();
+        weaponSwingSound.dispose();
+        weaponHitSound.dispose();
+        jumpSound.dispose();
     }
     
 }

@@ -5,60 +5,52 @@ import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.ui.HUD;
 import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Rumble;
-import com.aesophor.medievania.world.character.Enemy;
 import com.aesophor.medievania.world.character.Player;
 import com.aesophor.medievania.world.character.humanoid.Knight;
 import com.aesophor.medievania.world.map.GameMap;
 import com.aesophor.medievania.world.map.GameMapManager;
 import com.aesophor.medievania.world.map.WorldContactListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 public class MainGameScreen extends AbstractScreen {
     
     private GameMapManager gameMapManager;
-    
     private OrthogonalTiledMapRenderer renderer;
-    
     private Box2DDebugRenderer b2dr;
     
     private HUD hud;
-    
     private Player player;
-    private Enemy enemy;
-    
-    private Music backgroundMusic;
+    private Array<Knight> npcs;
     
     public MainGameScreen(GameStateManager gsm) {
         super(gsm);
         
         // Since we will be rendering TiledMaps, we should scale the viewport with PPM.
         getViewport().setWorldSize(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
-        b2dr = new Box2DDebugRenderer();
         
-        gameMapManager = new GameMapManager(new World(new Vector2(0, Constants.GRAVITY), true));
+        // Initialize GameMapManager and load the default map (temporary).
+        gameMapManager = new GameMapManager(gsm.getAssets(), new World(new Vector2(0, Constants.GRAVITY), true));
         gameMapManager.load("Map/starting_point.tmx");
         gameMapManager.getWorld().setContactListener(new WorldContactListener());
+        gameMapManager.getCurrentMap().playBackgroundMusic();
+        
+        // Spawn the player and NPCs from the map.
+        // The maps contain information about where player and NPCs should be spawned.
+        player = gameMapManager.getCurrentMap().spawnPlayer(gsm.getAssets(), getWorld());
+        npcs = gameMapManager.getCurrentMap().spawnNPCs(gsm.getAssets(), getWorld());
+        
+        // Initialize OrthogonalTiledMapRenderer and Box2DDebugRenderer.
         renderer = new OrthogonalTiledMapRenderer(gameMapManager.getCurrentMap().getTiledMap(), 1 / Constants.PPM);
+        b2dr = new Box2DDebugRenderer();
         
-        
-        // Spawn the player and an enemy.
-        player = new Player(this, 30 / Constants.PPM, 200 / Constants.PPM);
-        enemy = new Knight(this, 300 / Constants.PPM, 100 / Constants.PPM);
-        
+        // Initialize HUD.
         hud = new HUD(gsm, player);
-        
-        // Play background music.
-        backgroundMusic = gsm.getAssets().get("Sound/FX/Environmental/water_dripping.mp3");
-        backgroundMusic.setLooping(true);
-        backgroundMusic.setVolume(.6f);
-        backgroundMusic.play();
     }
     
     
@@ -67,9 +59,14 @@ public class MainGameScreen extends AbstractScreen {
         
         gameMapManager.getWorld().step(1/60f, 6, 2);
         
-        hud.update(delta);
-        enemy.update(delta);
+        
+        for (Knight c : npcs) {
+            c.update(delta);
+        }
+        
         player.update(delta);
+
+        hud.update(delta);
         
         
         
@@ -105,7 +102,9 @@ public class MainGameScreen extends AbstractScreen {
         // Render characters.
         getBatch().setProjectionMatrix(getCamera().combined);
         getBatch().begin();
-        enemy.draw(getBatch());
+        for (Knight c : npcs) {
+            c.draw(getBatch());
+        }
         player.draw(getBatch());
         getBatch().end();
         
@@ -123,12 +122,10 @@ public class MainGameScreen extends AbstractScreen {
     
     @Override
     public void dispose() {
-        getCurrentMap().getTiledMap().dispose();
         renderer.dispose();
-        getWorld().dispose();
         b2dr.dispose();
         hud.dispose();
-        backgroundMusic.dispose();
+        gameMapManager.dispose();
     }
     
     
