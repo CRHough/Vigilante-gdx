@@ -25,20 +25,20 @@
   <object id="44" x="641" y="288">
    <polyline points="0,0 95,0 239,-64 319,-64"/>
   </object>
-  <object id="50" x="0" y="142">
+  <object id="50" x="0" y="157.5">
    <polyline points="0,0 96,0"/>
   </object>
-  <object id="51" x="96" y="173">
+  <object id="51" x="96" y="176">
    <polyline points="0,0 16,0"/>
   </object>
-  <object id="52" x="112" y="189">
-   <polyline points="0,0 16,0"/>
+  <object id="52" x="112.5" y="191.5">
+   <polyline points="-0.5,0.5 15.5,0.5"/>
   </object>
  </objectgroup>
  <objectgroup name="Platform">
-  <object id="3" x="5.5" y="220.5" width="32" height="29"/>
-  <object id="7" x="27" y="250" width="32" height="31.5"/>
-  <object id="14" x="128.25" y="221.5" width="48" height="14.5"/>
+  <object id="3" x="5.5" y="220.5" width="32" height="1.66667"/>
+  <object id="7" x="0.666667" y="253" width="58.3333" height="1.16667"/>
+  <object id="14" x="128.25" y="221.5" width="48" height="1.16667"/>
  </objectgroup>
  <objectgroup name="Walls">
   <object id="28" x="208" y="0">
@@ -63,13 +63,13 @@
    <polyline points="0,0 0,32"/>
   </object>
   <object id="55" x="96.3333" y="142.333">
-   <polyline points="0,0 0,32 -96,32 -96,0"/>
+   <polyline points="-0.3333,17.667 -0.3333,33.667 -96.3333,33.667"/>
   </object>
   <object id="56" x="96" y="173.333">
-   <polyline points="0,0 0,16 16,16 16,0"/>
+   <polyline points="0,0 0,16 16,16 16,2.667"/>
   </object>
   <object id="57" x="112.333" y="189.667">
-   <polyline points="0,0 0,16 16,16 16,0"/>
+   <polyline points="0,0 0,16 16,16 15.667,2.333"/>
   </object>
  </objectgroup>
  <objectgroup name="CliffMarker">
@@ -90,17 +90,17 @@
  </layer>
  <layer name="Wall" width="60" height="20">
   <data encoding="base64" compression="zlib">
-   eJztlW0KgzAMhnOA9hBOdhzFMbfhcZTKPsSjbmM32FtQjMXtpy4zDzw0pX/ykkKIFEVR5HA3RA/4NEt3Mg+RJdrA2C7dyTwckPMITyvJe0XOG2xWklf5ToJ/kEIH686XGepP7mEu8A+V6Llief25De4Z3HW1E56Xz7fPVdjxXuM5/3G+rR3vNTcxZ6l5+Xy5fK+Fb5LzTs3Xn3yvueDde4YXgXkVRfkN3j9oN/0=
+   eJztlFEKgkAQhucAu4fI8DhJUhkdJ9nIEo9a4g38F4zGRR96USfng4/dZV/mn4EhUhRFUZbKyxC9YW3mrmQaNpYogls7dyXTcELODJ5XkveBnE9YriTvr+zQlwQ6eOtszPc+5gEeBfb0ippzltefcfDew7S7O+F5+Xw/uS62v+d5zn+cb2X7e94NzFlqXj5fLt/z4Z/kvEPz9Sff8y74995hITCvoijLoAU8njf9
   </data>
  </layer>
  <layer name="Ground - back" width="60" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMApGAb2BGB8DgzgQSwKxFBCrArEa30C7inbAC+g3byD2BWI/II4E4qhh7N8MXgaG+bwQGoZBfBPegXYZfUHGCPXzSAMGQD8bArHRCPF7CtCfqUCcNkL8iw0IA8tvET5EXSYPxApIdRqMlgFi2WFQ17kD3ezBh6jLgoE4BKlOg9EBQBw4yOo6ST7MNgeMhomjx1M1ENcA8V0gvgfELUDcCsR1QFyPRRzG7wXivgH2ry8fZpsDRsPE0eNpPRBvQPLHDiDeicTHJX4QiA8NsH/rsMQXOo0u/xiInyDx3wDxWyz60MW/AvG3AfYvALTIStk=
+   eJzt08EKAVEUxvH7AmNDRMSGNeIZiIjYsEY8A7FhyauwZMl7sGHJkrV/MXW6jYWFbpn71a97z5mm5nQapWxsbGxsbGxsfpuso1QBeed1z73v/5oesw0xcF73/vte/OOZvTLy6cx+ix/+aRn5T/s1wYBSIYQRQRIpRBETZxwJUaeRCZj++u9T4pvLqKCKFtqooS7OBpqi7qBreN6o2JO+H7ev72mMCY44YY4Fpph59N16iZXheWtiT/p+3L6+pzU2Yo4tdqL+1N/jYHjeqce+9FN/fsZF1FfcPN7T+3c8DM/7BGmlSKE=
   </data>
  </layer>
  <layer name="Ground - upper" width="60" height="20">
   <data encoding="base64" compression="zlib">
-   eJzt1N9KAkEUx/G9z900pSgKuqnXKE1TiqIu6zEyTVPqpi7rJTL/W71Npmn2Jn0FB5epWVYl3BEPfNBZHDy/HeYYxuj17jOMJp5RRAlln/p5BVV8oYcnFBx+FzQNI2SO0dg/1QK9+Mzf/aqeyznEe/lAC218ooOu7b14pSY9X/FeTFhYhB8BLJmzd7472EUYEewhihj2EUfCQ3knPd8kWS6RQhpXyCCLa+SQ91DeSc+3hDIqqKKGOhp4wSvePJRXNW90m0NuSzVvdJhDm9boe1TzRrc55LZU80a3OeS2VPNGtzk0r3npVH5mcQDLWMHqGLPZy3VBniTCiCCKGA5wiKMZyStyFlFCCmlkkB2sxTOdS87ZQhsVVFFHA52B7pTy9u/RGtaxYQ3XW9iWegqyDtnuoNhTcMgpPsX5Tjtv/x4d4wSn1nB9hnOppzjrhO0Oij1Nh5xeO1/x33e4t/XygEeppxzrPG5w+8eeru27/NnDt5T3B2Cay+w=
+   eJzt1N9KAkEUx/G9z900pSgKuqnXKE1TiqIu6zEyTVPqpi7rJTL/W71Npmn2Jn0FB5epWVYl3BEPfNBZHDy/HeYYxuj17jOMJp5RRAlln/p5BVV8oYcnFBx+FzQNI2SO0dg/1QK9+Mzf/aqeyznEe/lAC218ooOu7b14pSY9X/FeTFhYhB8BLJmzd7472EUYEewhihj2EUfCQ3knPd8kWS6RQhpXyCCLa+SQ91DeSc+3hDIqqKKGOhp4wSvePJRXNW90m0NuSzVvdJtDbks1b3SYQ5vW6HtU80a3OeS2VPNGtzk0r3npVH5mUwDLWMHqGLPKy3VBniTCiCCKGA5wiKMZyStyFlFCCmlkkB2sxTOdS87ZQhsVVFFHA52B7pTy9u/RGtaxYQ3XW9iWegqyDtnuoNhTcMgpPsX5Tjtv/x4d4wSn1nB9hnOppzjrhO0Oij1Nh5xeO1/x33e4t/XygEeppxzrPG5w+8eeru27/NnDt5T3BzV6y+w=
   </data>
  </layer>
  <layer name="Objects" width="60" height="20">

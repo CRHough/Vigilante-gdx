@@ -1,5 +1,6 @@
 package com.aesophor.medievania.screen;
 
+import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.constants.Constants;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -9,15 +10,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public abstract class AbstractScreen extends Stage implements Screen {
     
-    public static final float VIEWPORT_WIDTH = Constants.V_WIDTH / Constants.PPM;
-    public static final float VIEWPORT_HEIGHT = Constants.V_HEIGHT / Constants.PPM;
+    protected GameStateManager gameStateManager;
     
-    protected ScreenManager screenMgr;
-    
-    protected AbstractScreen() {
+    protected AbstractScreen(GameStateManager gameStateManager) {
         // Note that this default constructor does NOT scale the viewport with PPM!
-        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT , new OrthographicCamera()), ScreenManager.getInstance().getBatch());
-        this.screenMgr = ScreenManager.getInstance();
+        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT , new OrthographicCamera()), gameStateManager.getBatch());
+        this.gameStateManager = gameStateManager;
     }
     
     

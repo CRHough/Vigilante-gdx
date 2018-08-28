@@ -1,8 +1,8 @@
 package com.aesophor.medievania.world.map;
 
 import com.aesophor.medievania.constants.CategoryBits;
-import com.aesophor.medievania.world.object.character.Character;
-import com.aesophor.medievania.world.object.character.Player;
+import com.aesophor.medievania.world.character.Character;
+import com.aesophor.medievania.world.character.Player;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;

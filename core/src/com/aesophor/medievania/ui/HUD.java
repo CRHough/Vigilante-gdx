@@ -1,8 +1,8 @@
 package com.aesophor.medievania.ui;
 
+import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.constants.Constants;
-import com.aesophor.medievania.screen.ScreenManager;
-import com.aesophor.medievania.world.object.character.Player;
+import com.aesophor.medievania.world.character.Player;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,6 +14,7 @@ public class HUD extends Stage {
     
     private static int barLength = 50; // pixel
     
+    private GameStateManager gameStateManager;
     private Player player;
     
     private Texture hudTexture;
@@ -26,12 +27,13 @@ public class HUD extends Stage {
     private Image staminaBarImage;
     private Image magickaBarImage;
     
-    public HUD(Player player) {
-        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), ScreenManager.getInstance().getBatch());
+    public HUD(GameStateManager gameStateManager, Player player) {
+        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gameStateManager.getBatch());
+        this.gameStateManager = gameStateManager;
         this.player = player;
         
         // Initializes player hud Texture and TextureRegions.
-        hudTexture = ScreenManager.getInstance().getAssets().get("Interface/HUD/hud.png");
+        hudTexture = gameStateManager.getAssets().get("Interface/HUD/hud.png");
         barsBackground = new TextureRegion(hudTexture, 0, 4, 100, 32);
         healthBar = new TextureRegion(hudTexture, 0, 0, 1, 4);
         staminaBar = new TextureRegion(hudTexture, 1, 0, 1, 4);
