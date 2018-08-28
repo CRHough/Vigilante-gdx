@@ -2,7 +2,7 @@ package com.aesophor.medievania.world.character.humanoid;
 
 import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
-import com.aesophor.medievania.screen.MainGame;
+import com.aesophor.medievania.screen.MainGameScreen;
 import com.aesophor.medievania.util.Utils;
 import com.aesophor.medievania.world.character.Enemy;
 import com.badlogic.gdx.assets.AssetManager;
@@ -20,7 +20,7 @@ public class Knight extends Enemy implements Humanoid {
     
     private AssetManager assets;
     
-    public Knight(MainGame screen, float x, float y) {
+    public Knight(MainGameScreen screen, float x, float y) {
         super(screen.getGSM().getAssets().get(TEXTURE_FILE), screen.getWorld(), x, y);
         
         assets = screen.getGSM().getAssets();

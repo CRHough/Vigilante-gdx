@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class HUD extends Stage {
+public class InventoryWindow extends Stage {
     
     private static int barLength = 50; // pixel
     
@@ -30,7 +30,7 @@ public class HUD extends Stage {
     private Table hudTable;
     private Table barTable;
     
-    public HUD(GameStateManager gameStateManager, Player player) {
+    public InventoryWindow(GameStateManager gameStateManager, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gameStateManager.getBatch());
         this.gameStateManager = gameStateManager;
         this.player = player;

@@ -15,8 +15,14 @@ import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Disposable;
 
-public class GameMap {
+public class GameMap implements Disposable {
+    
+    private static final boolean GROUND_COLLIDABLE = true;
+    private static final boolean PLATFORM_COLLIDABLE = true;
+    private static final boolean WALL_COLLIDABLE = true;
+    private static final boolean CLIFF_MARKER_COLLIDABLE = false;
     
     private TiledMap tiledMap;
     private int mapWidth;
@@ -35,40 +41,20 @@ public class GameMap {
         mapTileSize = tileWidth;
         
         
-        // Create BodyDef and FixtureDef.
+        // Create bodies and fixtures from each layer.
+        createPolylines(GameMapLayer.GROUND, world, GROUND_COLLIDABLE, Constants.GROUND_FRICTION, CategoryBits.GROUND);
+        createRectangles(GameMapLayer.PLATFORM, world, PLATFORM_COLLIDABLE, Constants.GROUND_FRICTION, CategoryBits.PLATFORM);
+        createPolylines(GameMapLayer.WALL, world, WALL_COLLIDABLE, 0, CategoryBits.WALL);
+        createPolylines(GameMapLayer.CLIFF_MARKER, world, CLIFF_MARKER_COLLIDABLE, 0, CategoryBits.CLIFF_MARKER);
+    }
+    
+    
+    private void createRectangles(GameMapLayer layer, World world, boolean collidable, float friction, short categoryBits) {
         Body body;
         BodyDef bdef = new BodyDef();
         FixtureDef fdef = new FixtureDef();
         
-        // Create ground bodies/fixtures (polylinear).
-        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.GROUND.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
-            float[] vertices = ((PolylineMapObject) object).getPolyline().getTransformedVertices();
-            Vector2[] worldVertices = new Vector2[vertices.length / 2];
-            
-            for (int i = 0; i < worldVertices.length; i++) {
-                worldVertices[i] = new Vector2(vertices[i * 2] / Constants.PPM, vertices[i * 2 + 1] / Constants.PPM);
-            }
-            
-            ChainShape chainShape = new ChainShape();
-            chainShape.createChain(worldVertices);
-            
-            // We are drawing the polylines using the coordinates of their vertices,
-            // so bdef should be set to zero.
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.setZero();
-            body = world.createBody(bdef);
-            
-            fdef.shape = chainShape;
-            fdef.friction = Constants.GROUND_FRICTION;
-            fdef.filter.categoryBits = CategoryBits.GROUND;
-            body.createFixture(fdef);
-            
-            chainShape.dispose();
-        }
-        
-        
-        // Create platform bodies/fixtures (rectangular).
-        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.PLATFORM.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
+        for (MapObject object : tiledMap.getLayers().get(layer.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             
             bdef.type = BodyDef.BodyType.StaticBody;
@@ -77,17 +63,23 @@ public class GameMap {
             
             PolygonShape polygonShape = new PolygonShape();
             polygonShape.setAsBox(rect.getWidth() / 2 / Constants.PPM, rect.getHeight() / 2 / Constants.PPM);
+            
             fdef.shape = polygonShape;
-            fdef.friction = Constants.GROUND_FRICTION;
-            fdef.filter.categoryBits = CategoryBits.PLATFORM;
+            fdef.isSensor = (!collidable);
+            fdef.friction = friction;
+            fdef.filter.categoryBits = categoryBits;
             body.createFixture(fdef);
             
             polygonShape.dispose();
         }
+    }
+    
+    private void createPolylines(GameMapLayer layer, World world, boolean collidable, float friction, short categoryBits) {
+        Body body;
+        BodyDef bdef = new BodyDef();
+        FixtureDef fdef = new FixtureDef();
         
-        
-        // Create wall bodies/fixtures (polylinear).
-        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.WALL.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
+        for (MapObject object : tiledMap.getLayers().get(layer.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
             float[] vertices = ((PolylineMapObject) object).getPolyline().getTransformedVertices();
             Vector2[] worldVertices = new Vector2[vertices.length / 2];
             
@@ -105,36 +97,9 @@ public class GameMap {
             body = world.createBody(bdef);
             
             fdef.shape = chainShape;
-            fdef.friction = 0;
-            fdef.filter.categoryBits = CategoryBits.WALL;
-            body.createFixture(fdef);
-            
-            chainShape.dispose();
-        }
-        
-        
-        // Create cliff marker bodies/fixtures (polylinear).
-        for (MapObject object : tiledMap.getLayers().get(GameMapLayer.CLIFF_MARKER.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
-            float[] vertices = ((PolylineMapObject) object).getPolyline().getTransformedVertices();
-            Vector2[] worldVertices = new Vector2[vertices.length / 2];
-            
-            for (int i = 0; i < worldVertices.length; i++) {
-                worldVertices[i] = new Vector2(vertices[i * 2] / Constants.PPM, vertices[i * 2 + 1] / Constants.PPM);
-            }
-            
-            ChainShape chainShape = new ChainShape();
-            chainShape.createChain(worldVertices);
-            
-            // We are drawing the polylines using the coordinates of their vertices,
-            // so bdef should be set to zero.
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.setZero();
-            body = world.createBody(bdef);
-            
-            fdef.shape = chainShape;
-            fdef.isSensor = true;
-            fdef.friction = Constants.GROUND_FRICTION;
-            fdef.filter.categoryBits = CategoryBits.CLIFF_MARKER;
+            fdef.isSensor = (!collidable);
+            fdef.friction = friction;
+            fdef.filter.categoryBits = categoryBits;
             body.createFixture(fdef);
             
             chainShape.dispose();
@@ -156,6 +121,12 @@ public class GameMap {
     
     public int getMapTileSize() {
         return mapTileSize;
+    }
+
+
+    @Override
+    public void dispose() {
+        tiledMap.dispose();
     }
 
 }

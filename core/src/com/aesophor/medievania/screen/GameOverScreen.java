@@ -6,16 +6,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-public class GameOver extends AbstractScreen {
+public class GameOverScreen extends AbstractScreen {
     
     private static final String SKIN_FILE = "Interface/Skin/medievania_skin.json";
     
     private Skin skin;
     
-    public GameOver(GameStateManager gameStateManager) {
-        super(gameStateManager);
+    public GameOverScreen(GameStateManager gsm) {
+        super(gsm);
         
-        skin = gameStateManager.getAssets().get(SKIN_FILE);
+        skin = gsm.getAssets().get(SKIN_FILE);
         
         Table table = new Table();
         table.center();
@@ -34,7 +34,7 @@ public class GameOver extends AbstractScreen {
 
     public void handleInput(float dt) {
         if (Gdx.input.justTouched()) {
-            gameStateManager.showScreen(Screens.GAME);
+            gsm.showScreen(Screens.GAME);
             dispose();
         }
     }
@@ -42,7 +42,7 @@ public class GameOver extends AbstractScreen {
     @Override
     public void render(float delta) {
         handleInput(delta);
-        gameStateManager.clearScreen();
+        gsm.clearScreen();
         draw();
     }
 

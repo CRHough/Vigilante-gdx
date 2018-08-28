@@ -2,7 +2,7 @@ package com.aesophor.medievania.world.character;
 
 import com.aesophor.medievania.constants.CategoryBits;
 import com.aesophor.medievania.constants.Constants;
-import com.aesophor.medievania.screen.MainGame;
+import com.aesophor.medievania.screen.MainGameScreen;
 import com.aesophor.medievania.util.Utils;
 import com.aesophor.medievania.world.character.humanoid.Humanoid;
 import com.badlogic.gdx.Gdx;
@@ -24,7 +24,7 @@ public class Player extends Character implements Controllable, Humanoid {
     
     private AssetManager assets;
     
-    public Player(MainGame screen, float x, float y) {
+    public Player(MainGameScreen screen, float x, float y) {
         super(screen.getGSM().getAssets().get(TEXTURE_FILE), screen.getWorld(), x, y);
         
         assets = screen.getGSM().getAssets();

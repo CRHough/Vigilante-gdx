@@ -6,17 +6,17 @@ public enum Screens {
     
     MAIN_MENU {
         public AbstractScreen newScreen(Medievania gameStateManager, Object... params) {
-            return new MainMenu(gameStateManager);
+            return new MainMenuScreen(gameStateManager);
         }
     },
     GAME {
         public AbstractScreen newScreen(Medievania gameStateManager, Object... params) {
-            return new MainGame(gameStateManager);
+            return new MainGameScreen(gameStateManager);
         }
     },
     GAME_OVER {
         public AbstractScreen newScreen(Medievania gameStateManager, Object... params) {
-            return new GameOver(gameStateManager);
+            return new GameOverScreen(gameStateManager);
         }
     };
  

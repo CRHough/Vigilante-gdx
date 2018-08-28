@@ -9,6 +9,7 @@ import com.aesophor.medievania.world.character.Enemy;
 import com.aesophor.medievania.world.character.Player;
 import com.aesophor.medievania.world.character.humanoid.Knight;
 import com.aesophor.medievania.world.map.GameMap;
+import com.aesophor.medievania.world.map.GameMapManager;
 import com.aesophor.medievania.world.map.WorldContactListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -19,13 +20,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class MainGame extends AbstractScreen {
+public class MainGameScreen extends AbstractScreen {
+    
+    private GameMapManager gameMapManager;
     
     private OrthogonalTiledMapRenderer renderer;
-    private TmxMapLoader maploader;
-    private GameMap currentMap;
     
-    private World world;
     private Box2DDebugRenderer b2dr;
     
     private HUD hud;
@@ -35,30 +35,27 @@ public class MainGame extends AbstractScreen {
     
     private Music backgroundMusic;
     
-    public MainGame(GameStateManager gameStateManager) {
-        super(gameStateManager);
+    public MainGameScreen(GameStateManager gsm) {
+        super(gsm);
         
         // Since we will be rendering TiledMaps, we should scale the viewport with PPM.
         getViewport().setWorldSize(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
-        
-        world = new World(new Vector2(0, Constants.GRAVITY), true);
         b2dr = new Box2DDebugRenderer();
         
-        maploader = new TmxMapLoader();
-        currentMap = new GameMap(world, maploader.load("Map/starting_point.tmx"));
-        renderer = new OrthogonalTiledMapRenderer(currentMap.getTiledMap(), 1 / Constants.PPM);
+        gameMapManager = new GameMapManager(new World(new Vector2(0, Constants.GRAVITY), true));
+        gameMapManager.load("Map/starting_point.tmx");
+        gameMapManager.getWorld().setContactListener(new WorldContactListener());
+        renderer = new OrthogonalTiledMapRenderer(gameMapManager.getCurrentMap().getTiledMap(), 1 / Constants.PPM);
         
         
         // Spawn the player and an enemy.
         player = new Player(this, 30 / Constants.PPM, 200 / Constants.PPM);
         enemy = new Knight(this, 300 / Constants.PPM, 100 / Constants.PPM);
         
-        world.setContactListener(new WorldContactListener(player));
-        
-        hud = new HUD(gameStateManager, player);
+        hud = new HUD(gsm, player);
         
         // Play background music.
-        backgroundMusic = gameStateManager.getAssets().get("Sound/FX/Environmental/water_dripping.mp3");
+        backgroundMusic = gsm.getAssets().get("Sound/FX/Environmental/water_dripping.mp3");
         backgroundMusic.setLooping(true);
         backgroundMusic.setVolume(.6f);
         backgroundMusic.play();
@@ -68,7 +65,7 @@ public class MainGame extends AbstractScreen {
     public void update(float delta) {
         player.handleInput(delta);
         
-        world.step(1/60f, 6, 2);
+        gameMapManager.getWorld().step(1/60f, 6, 2);
         
         hud.update(delta);
         enemy.update(delta);
@@ -77,12 +74,12 @@ public class MainGame extends AbstractScreen {
         
         
         if (Rumble.getRumbleTimeLeft() > 0){
-            CameraUtils.boundCamera(getCamera(), currentMap);
+            CameraUtils.boundCamera(getCamera(), getCurrentMap());
             Rumble.tick(Gdx.graphics.getDeltaTime());
             getCamera().translate(Rumble.getPos());
          } else {
              CameraUtils.lerpToTarget(getCamera(), player.getB2Body().getPosition());
-             CameraUtils.boundCamera(getCamera(), currentMap);
+             CameraUtils.boundCamera(getCamera(), getCurrentMap());
         }
         
         
@@ -95,14 +92,14 @@ public class MainGame extends AbstractScreen {
     public void render(float delta) {
         update(delta);
         
-        gameStateManager.clearScreen();
+        gsm.clearScreen();
         
         // Render game map.
         renderer.render();
         
         // Render our Box2DDebugLines.
         if (Constants.DEBUG == true) {
-            b2dr.render(world, getCamera().combined);
+            b2dr.render(gameMapManager.getWorld(), getCamera().combined);
         }
         
         // Render characters.
@@ -126,9 +123,9 @@ public class MainGame extends AbstractScreen {
     
     @Override
     public void dispose() {
-        currentMap.getTiledMap().dispose();
+        getCurrentMap().getTiledMap().dispose();
         renderer.dispose();
-        world.dispose();
+        getWorld().dispose();
         b2dr.dispose();
         hud.dispose();
         backgroundMusic.dispose();
@@ -136,11 +133,17 @@ public class MainGame extends AbstractScreen {
     
     
     public GameStateManager getGSM() {
-        return gameStateManager;
+        return gsm;
+    }
+    
+    public GameMap getCurrentMap() {
+        return gameMapManager.getCurrentMap();
     }
     
     public World getWorld() {
-        return world;
+        return gameMapManager.getWorld();
     }
+    
+    
     
 }

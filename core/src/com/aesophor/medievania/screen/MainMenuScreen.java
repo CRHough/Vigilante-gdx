@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
-public class MainMenu extends AbstractScreen {
+public class MainMenuScreen extends AbstractScreen {
     
     private static final String SKIN_FILE = "Interface/Skin/medievania_skin.json";
     private static final String BACKGROUND_TEXTURE_FILE = "Interface/mainmenu_bg.png";
@@ -30,12 +30,12 @@ public class MainMenu extends AbstractScreen {
     private String[] menuItems;
     private int currentItem;
     
-    public MainMenu(Medievania gameStateManager) {
-        super(gameStateManager);
+    public MainMenuScreen(Medievania gsm) {
+        super(gsm);
         
-        skin = gameStateManager.getAssets().get(SKIN_FILE);
-        backgroundTexture = gameStateManager.getAssets().get(BACKGROUND_TEXTURE_FILE);
-        keyPressSound = gameStateManager.getAssets().get(KEY_PRESS_SOUND_FILE);
+        skin = gsm.getAssets().get(SKIN_FILE);
+        backgroundTexture = gsm.getAssets().get(BACKGROUND_TEXTURE_FILE);
+        keyPressSound = gsm.getAssets().get(KEY_PRESS_SOUND_FILE);
         
         menuItems = new String[] {"New Game", "Load Game", "Credits", "End"};
         labels = new Label[menuItems.length];
@@ -57,10 +57,10 @@ public class MainMenu extends AbstractScreen {
     public void render(float delta) {
         handleInput(delta);
         
-        gameStateManager.clearScreen();
-        gameStateManager.getBatch().begin();
-        gameStateManager.getBatch().draw(backgroundTexture, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
-        gameStateManager.getBatch().end();
+        gsm.clearScreen();
+        gsm.getBatch().begin();
+        gsm.getBatch().draw(backgroundTexture, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
+        gsm.getBatch().end();
         
         for (int i = 0; i < labels.length; i++) {
             if (i == currentItem) labels[i].setColor(Color.RED);
@@ -89,7 +89,7 @@ public class MainMenu extends AbstractScreen {
     public void select() {
         switch (currentItem) {
             case 0:
-                gameStateManager.showScreen(Screens.GAME);
+                gsm.showScreen(Screens.GAME);
                 break;
             case 1:
                 break;
