@@ -1,7 +1,5 @@
 package com.aesophor.medievania.world.map;
 
-import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.box2d.LightBuilder;
 import com.aesophor.medievania.util.box2d.TiledObjectUtils;
 import com.aesophor.medievania.world.character.Character;
 import com.aesophor.medievania.world.character.Player;
@@ -28,9 +26,9 @@ public class GameMap implements Disposable {
     private int mapTileSize;
     
     public GameMap(AssetManager assets, World world, RayHandler rayHandler, TiledMap map, Music bgm, float brightness) {
-        tiledMap = map;
-        backgroundMusic = bgm;
-        brightness = brightness;
+        this.tiledMap = map;
+        this.backgroundMusic = bgm;
+        this.brightness = brightness;
         
         // Extract the properties from the map.
         mapWidth = map.getProperties().get("width", Integer.class);
@@ -60,7 +58,7 @@ public class GameMap implements Disposable {
         
         for (MapObject object : tiledMap.getLayers().get(GameMapLayer.NPCS.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            knights.add(new Knight(assets, world, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+            knights.add(new Knight(assets, world, rect.getX(), rect.getY()));
         }
         
         return knights;

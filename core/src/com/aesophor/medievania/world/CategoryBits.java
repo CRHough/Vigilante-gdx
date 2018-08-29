@@ -14,9 +14,4 @@ public class CategoryBits {
     public static final short MELEE_WEAPON = 128;
     public static final short UNTOUCHABLE = 256;
     
-    
-    private CategoryBits() {
-        throw new AssertionError();
-    }
-    
 }

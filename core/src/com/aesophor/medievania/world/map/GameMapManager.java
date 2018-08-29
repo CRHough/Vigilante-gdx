@@ -1,8 +1,8 @@
 package com.aesophor.medievania.world.map;
 
-import java.util.HashMap;
 import java.util.Map;
-
+import java.util.HashMap;
+import com.aesophor.medievania.world.map.GameMap;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.tiled.TiledMap;
@@ -25,10 +25,9 @@ public class GameMapManager implements Disposable {
     public GameMapManager(AssetManager assets, World world) {
         this.assets = assets;
         this.world = world;
-
-        rayHandler = new RayHandler(world);
         
         maploader = new TmxMapLoader();
+        rayHandler = new RayHandler(world);
         
         // Refactor this later.
         backgroundMusics = new HashMap<>();

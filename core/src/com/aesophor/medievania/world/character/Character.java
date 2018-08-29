@@ -1,6 +1,5 @@
 package com.aesophor.medievania.world.character;
 
-import java.util.concurrent.ThreadLocalRandom;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Rumble;
 import com.aesophor.medievania.world.CategoryBits;
@@ -21,11 +20,11 @@ import com.badlogic.gdx.utils.Disposable;
 public abstract class Character extends Sprite implements Disposable {
 
     public enum State { IDLE, RUNNING, JUMPING, FALLING, CROUCHING, ATTACKING, KILLED };
-    
+
     
     protected Character.State currentState;
     protected Character.State previousState;
-    
+
     protected World currentWorld; // The world in which the character is spawned.
     protected Body b2body;
     protected Fixture bodyFixture;
@@ -39,7 +38,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected Animation<TextureRegion> attackAnimation;
     protected Animation<TextureRegion> killedAnimation;
     
-    protected Music footstepSound; // dispose() these sound later.
+    protected Music footstepSound;
     protected Sound hurtSound;
     protected Sound deathSound;
     protected Sound weaponSwingSound;
@@ -64,25 +63,15 @@ public abstract class Character extends Sprite implements Disposable {
     
     protected float movementSpeed;
     protected float jumpHeight;
-    
     protected float attackForce;
     protected float attackTime;
     protected int attackRange;
     protected int attackDamage;
-    
+
+    protected Behavior behavior;
     protected Character lockedOnTarget;
     protected Character inRangeTarget;
-    
-    protected int moveDirection;
-    protected float moveDuration;
-    protected float sleepDuration;
-    protected float moveDurationTimer; // oh god, refactor this part later.
-    protected float sleepDurationTimer;
-    
-    protected Vector2 lastStoppedPosition;
-    protected float lastTraveledDistance;
-    protected float calulateDistanceTimer;
-    
+
     public Character(Texture texture, World currentWorld, float x, float y) {
         super(texture);
         
@@ -94,14 +83,12 @@ public abstract class Character extends Sprite implements Disposable {
         
         stateTimer = 0;
         facingRight = true;
+
+        behavior = new Behavior(this);
     }
     
     
     protected abstract void defineBody();
-    
-    protected void defineMeleeFixture() {
-        
-    }
     
     public void update(float delta) {
         if (!isKilled) {
@@ -126,7 +113,7 @@ public abstract class Character extends Sprite implements Disposable {
                 }
             }
             
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y + 10 / Constants.PPM - getHeight() / 2);
+            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 10 / Constants.PPM);
         }
     }
     
@@ -236,7 +223,7 @@ public abstract class Character extends Sprite implements Disposable {
         if (!isAttacking()) {
             setIsAttacking(true);
             
-            if (isTargetInRange() &&!inRangeTarget.isUntouchable() && !inRangeTarget.isSetToKill()) {
+            if (hasInRangeTarget() &&!inRangeTarget.isUntouchable() && !inRangeTarget.isSetToKill()) {
                 setLockedOnTarget(inRangeTarget);
                 inflictDamage(inRangeTarget, attackDamage);
                 
@@ -281,83 +268,7 @@ public abstract class Character extends Sprite implements Disposable {
         filter.categoryBits = bits;
         f.setFilterData(filter);
     }
-    
-    
-    protected void moveTowardTarget(Character c) {
-        // add response to cliff.
-        if (this.b2body.getPosition().x > c.getB2Body().getPosition().x) {
-            moveLeft();
-        } else {
-            moveRight();
-        }
-    }
-    
-    protected void moveRandomly(float delta) {
-        if (sleepDurationTimer >= sleepDuration) {
-            moveDirection = ThreadLocalRandom.current().nextInt(0, 1 + 1);
-            moveDuration = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-            sleepDuration = ThreadLocalRandom.current().nextInt(0, 5 + 1);
-            
-            moveDurationTimer = 0;
-            sleepDurationTimer = 0;
-        }
-        
-        switch (moveDirection) {
-            case 0:
-                if (moveDurationTimer < moveDuration) {
-                    moveLeft();
-                    jumpIfStucked(delta);
-                    moveDurationTimer += delta;
-                } else {
-                    if (sleepDurationTimer < sleepDuration) {
-                        sleepDurationTimer += delta;
-                    }
-                }
-                break;
-                
-            case 1:
-                if (moveDurationTimer < moveDuration) {
-                    moveRight();
-                    jumpIfStucked(delta);
-                    moveDurationTimer += delta;
-                } else {
-                    if (sleepDurationTimer < sleepDuration) {
-                        sleepDurationTimer += delta;
-                    }
-                }
-                break;
-                
-            default:
-                break;
-        }
-    }
-    
-    public void reverseMovement() { // rename this perhaps?
-        moveDirection = (moveDirection == 0) ? 1 : 0;
-    }
-    
-    
-    protected void jumpIfStucked(float delta) {
-        if (calulateDistanceTimer > 5f / Constants.PPM) {
-            lastTraveledDistance = getDistanceBetween(b2body.getPosition().x, lastStoppedPosition.x);
-            lastStoppedPosition.set(b2body.getPosition());
-            
-            if (lastTraveledDistance == 0) {
-                //isJumping = false; // will this help? is it necessary?
-                jump();
-            }
-            
-            calulateDistanceTimer = 0;
-        } else {
-            calulateDistanceTimer += delta;
-        }
-    }
-    
-    public static float getDistanceBetween(float x1, float x2) {
-        float distance = x1 - x2;
-        return (distance > 0) ? distance : -distance; 
-    }
-    
+
     
     
     
@@ -413,7 +324,7 @@ public abstract class Character extends Sprite implements Disposable {
         return lockedOnTarget != null;
     }
     
-    public boolean isTargetInRange() {
+    public boolean hasInRangeTarget() {
         return inRangeTarget != null;
     }
     
@@ -436,6 +347,10 @@ public abstract class Character extends Sprite implements Disposable {
     
     public boolean facingRight() {
         return facingRight;
+    }
+
+    public Behavior getBehavior() {
+        return behavior;
     }
     
     @Override

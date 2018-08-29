@@ -4,6 +4,7 @@ import java.util.Random;
 import com.badlogic.gdx.math.Vector3;
  
 public class Rumble {
+
     private static float time = 0;
     private static float currentTime = 0;
     private static float power = 0;

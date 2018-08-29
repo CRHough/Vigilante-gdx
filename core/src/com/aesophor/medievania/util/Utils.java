@@ -12,7 +12,18 @@ public class Utils {
     private Utils() {
         
     }
-    
+
+
+    /**
+     * Calculates the distance between position x1 and x2, always returning positive value.
+     * @param x1 position x1.
+     * @param x2 position x2.
+     * @return positive distance value.
+     */
+    public static float getDistance(float x1, float x2) {
+        float distance = x1 - x2;
+        return (distance > 0) ? distance : -distance;
+    }
     
     /**
      * Create animation by extracting a set of TextureRegion from the specified Texture.

@@ -2,6 +2,7 @@ package com.aesophor.medievania.world.character.humanoid;
 
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
+import com.aesophor.medievania.util.box2d.BodyBuilder;
 import com.aesophor.medievania.world.CategoryBits;
 import com.aesophor.medievania.world.character.Enemy;
 import com.badlogic.gdx.assets.AssetManager;
@@ -9,9 +10,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Knight extends Enemy implements Humanoid {
@@ -59,40 +57,33 @@ public class Knight extends Enemy implements Humanoid {
     // Refactor this part into Enemy class.
     @Override
     protected void defineBody() {
-        BodyDef bdef = new BodyDef();
-        bdef.position.set(getX(), getY());
-        bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = currentWorld.createBody(bdef);
-        
-        FixtureDef fdef = new FixtureDef();
-        PolygonShape body = new PolygonShape();
-        Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-5, 20).scl(1 / Constants.PPM);
-        vertices[1] = new Vector2(5, 20).scl(1 / Constants.PPM);
-        vertices[2] = new Vector2(-5, -14).scl(1 / Constants.PPM);
-        vertices[3] = new Vector2(5, -14).scl(1 / Constants.PPM);
-        body.set(vertices);
-        
-        fdef.shape = body;
-        fdef.filter.categoryBits = CategoryBits.ENEMY;
-        fdef.filter.maskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.CLIFF_MARKER | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON; // What it can collide with.
-        bodyFixture = b2body.createFixture(fdef);
-        bodyFixture.setUserData(this);
-        body.dispose();
-        
-        
-        CircleShape weapon = new CircleShape();
-        weapon.setPosition(new Vector2((getX() + attackRange) / Constants.PPM, getY() / Constants.PPM));
-        weapon.setRadius(attackRange / Constants.PPM);
-        
-        fdef.shape = weapon;
-        fdef.isSensor = true; // a sensor won't collide with the world.
-        fdef.filter.categoryBits = CategoryBits.MELEE_WEAPON;
-        fdef.filter.maskBits = CategoryBits.PLAYER | CategoryBits.OBJECT;
-        
-        meleeWeaponFixture = b2body.createFixture(fdef);
-        meleeWeaponFixture.setUserData(this);
-        weapon.dispose();
+        Vector2[] bodyFixtureVertices = new Vector2[4];
+        bodyFixtureVertices[0] = new Vector2(-5, 20);
+        bodyFixtureVertices[1] = new Vector2(5, 20);
+        bodyFixtureVertices[2] = new Vector2(-5, -14);
+        bodyFixtureVertices[3] = new Vector2(5, -14);
+
+        Vector2 meleeAttackFixtureVertices = new Vector2(attackRange, 0);
+
+
+        BodyBuilder bodyBuilder = new BodyBuilder(currentWorld);
+
+        b2body = bodyBuilder.type(BodyDef.BodyType.DynamicBody)
+                .position(getX(), getY(), Constants.PPM)
+                .buildBody();
+
+        bodyFixture = bodyBuilder.newPolygonFixture(bodyFixtureVertices, Constants.PPM)
+                .categoryBits(CategoryBits.ENEMY)
+                .maskBits(CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER)
+                .setUserData(this)
+                .buildFixture();
+
+        meleeWeaponFixture = bodyBuilder.newCircleFixture(meleeAttackFixtureVertices, attackRange, Constants.PPM)
+                .categoryBits(CategoryBits.MELEE_WEAPON)
+                .maskBits(CategoryBits.PLAYER | CategoryBits.OBJECT)
+                .isSensor(true)
+                .setUserData(this)
+                .buildFixture();
     }
 
 }
