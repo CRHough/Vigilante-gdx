@@ -175,7 +175,7 @@ public class BodyBuilder {
      * @param maskBits mask bits.
      * @return BodyBuilder instance.
      */
-    public BodyBuilder maskBits(int maskBits) {
+    public BodyBuilder maskBits(short maskBits) {
         fdef.filter.maskBits = (short) maskBits;
         return this;
     }

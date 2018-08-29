@@ -3,7 +3,7 @@ package com.aesophor.medievania.map;
 import com.aesophor.medievania.util.box2d.TiledObjectUtils;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Player;
-import com.aesophor.medievania.character.humanoid.Knight;
+import com.aesophor.medievania.character.Knight;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;

@@ -1,17 +1,15 @@
 package com.aesophor.medievania.character;
 
 import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.Rumble;
 import com.aesophor.medievania.util.Utils;
-import com.aesophor.medievania.util.box2d.BodyBuilder;
 import com.aesophor.medievania.util.CategoryBits;
-import com.aesophor.medievania.character.humanoid.Humanoid;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -19,10 +17,14 @@ import com.badlogic.gdx.utils.Timer.Task;
 public class Player extends Character implements Humanoid, Controllable {
     
     private static final String TEXTURE_FILE = "Character/Bandit/Bandit.png";
+    private boolean isAtPortal;
     
     public Player(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
-        
+
+        bodyWidth = 10;
+        bodyHeight = 34;
+
         health = 100;
         movementSpeed = .25f;
         jumpHeight = 3f;
@@ -57,35 +59,16 @@ public class Player extends Character implements Humanoid, Controllable {
     
     @Override
     public void defineBody() {
-        Vector2[] bodyFixtureVertices = new Vector2[4];
-        bodyFixtureVertices[0] = new Vector2(-5, 20);
-        bodyFixtureVertices[1] = new Vector2(5, 20);
-        bodyFixtureVertices[2] = new Vector2(-5, -14);
-        bodyFixtureVertices[3] = new Vector2(5, -14);
+        super.defineBody();
 
-        Vector2 meleeAttackFixtureVertices = new Vector2(attackRange, 0);
+        short bodyCategoryBits = CategoryBits.PLAYER;
+        short bodyMaskBits = (short) CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON;
+        short weaponMaskBits = (short) CategoryBits.ENEMY | CategoryBits.OBJECT;
 
-
-        BodyBuilder bodyBuilder = new BodyBuilder(currentWorld);
-
-        b2body = bodyBuilder.type(BodyDef.BodyType.DynamicBody)
-                .position(getX(), getY(), Constants.PPM)
-                .buildBody();
-
-        bodyFixture = bodyBuilder.newPolygonFixture(bodyFixtureVertices, Constants.PPM)
-                .categoryBits(CategoryBits.PLAYER)
-                .maskBits(CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON)
-                .setUserData(this)
-                .buildFixture();
-
-        meleeWeaponFixture = bodyBuilder.newCircleFixture(meleeAttackFixtureVertices, attackRange, Constants.PPM)
-                .categoryBits(CategoryBits.MELEE_WEAPON)
-                .maskBits(CategoryBits.ENEMY | CategoryBits.OBJECT)
-                .isSensor(true)
-                .setUserData(this)
-                .buildFixture();
+        createBodyFixture(bodyCategoryBits, bodyMaskBits);
+        createMeleeWeaponFixture(weaponMaskBits);
     }
-    
+
     @Override
     public void handleInput(float delta) {
         if (setToKill) {
@@ -95,8 +78,7 @@ public class Player extends Character implements Humanoid, Controllable {
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
             Constants.DEBUG = (Constants.DEBUG == true) ? false : true;
         }
-        
-        
+
         
         if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
             swingWeapon();
@@ -107,7 +89,7 @@ public class Player extends Character implements Humanoid, Controllable {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
                 jump();
             } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                
+                b2body.getPosition().y += 5;
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
                 // if (!isCrouching) crouch();
                 // else getUp();
@@ -118,14 +100,20 @@ public class Player extends Character implements Humanoid, Controllable {
             }
         }
     }
+
+    @Override
+    public void inflictDamage(Character c, int damage) {
+        super.inflictDamage(c, damage);
+        Rumble.rumble(8 / Constants.PPM, .1f);
+    }
     
     @Override
     public void receiveDamage(int damage) {
         super.receiveDamage(damage);
         
-        
         // Sets the player to be untouchable for a while.
         if (!isUntouchable) {
+            Rumble.rumble(8 / Constants.PPM, .1f);
             isUntouchable = true;
             
             Timer.schedule(new Task() {

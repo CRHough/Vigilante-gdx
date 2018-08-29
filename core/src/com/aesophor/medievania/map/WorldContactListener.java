@@ -68,9 +68,9 @@ public class WorldContactListener implements ContactListener {
                 
             case CategoryBits.ENEMY | CategoryBits.CLIFF_MARKER:
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
-                    ((Character) fixtureA.getUserData()).getBehavior().reverseMovement();
+                    ((Character) fixtureA.getUserData()).getBehavioralModel().reverseDirection();
                 } else {
-                    ((Character) fixtureB.getUserData()).getBehavior().reverseMovement();
+                    ((Character) fixtureB.getUserData()).getBehavioralModel().reverseDirection();
                 }
                 System.out.println("hit!");
                 break;

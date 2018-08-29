@@ -1,8 +1,8 @@
 package com.aesophor.medievania.character;
 
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.Rumble;
 import com.aesophor.medievania.util.CategoryBits;
+import com.aesophor.medievania.util.box2d.BodyBuilder;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,11 +10,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Filter;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 
 public abstract class Character extends Sprite implements Disposable {
@@ -26,6 +22,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected Character.State previousState;
 
     protected World currentWorld;
+    protected BodyBuilder bodyBuilder;
     protected Body b2body;
     protected Fixture bodyFixture;
     protected Fixture meleeWeaponFixture;
@@ -54,13 +51,16 @@ public abstract class Character extends Sprite implements Disposable {
     protected boolean isUntouchable;
     protected boolean isKilled;
     protected boolean setToKill;
-    
+
     protected String name;
     protected int level;
     protected int health;
     protected int stamina;
     protected int magicka;
-    
+
+    protected float bodyHeight;
+    protected float bodyWidth;
+
     protected float movementSpeed;
     protected float jumpHeight;
     protected float attackForce;
@@ -68,7 +68,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected int attackRange;
     protected int attackDamage;
 
-    protected Behavior behavior;
+    protected BehavioralModel behavioralModel;
     protected Character lockedOnTarget;
     protected Character inRangeTarget;
 
@@ -84,11 +84,10 @@ public abstract class Character extends Sprite implements Disposable {
         stateTimer = 0;
         facingRight = true;
 
-        behavior = new Behavior(this);
+        bodyBuilder = new BodyBuilder(currentWorld);
+        behavioralModel = new BehavioralModel(this);
     }
-    
-    
-    protected abstract void defineBody();
+
     
     public void update(float delta) {
         if (!isKilled) {
@@ -180,6 +179,37 @@ public abstract class Character extends Sprite implements Disposable {
             return Character.State.IDLE;
         }
     }
+
+    protected void defineBody() {
+        b2body = bodyBuilder.type(BodyDef.BodyType.DynamicBody)
+                .position(getX(), getY(), Constants.PPM)
+                .buildBody();
+    }
+
+    protected void createBodyFixture(short categoryBits, short maskBits) {
+        Vector2[] bodyFixtureVertices = new Vector2[4];
+        bodyFixtureVertices[0] = new Vector2(-bodyWidth / 2, bodyHeight / 2);
+        bodyFixtureVertices[1] = new Vector2(bodyWidth / 2, bodyHeight / 2);
+        bodyFixtureVertices[2] = new Vector2(-bodyWidth / 2, -bodyHeight / 2);
+        bodyFixtureVertices[3] = new Vector2(bodyWidth / 2, -bodyHeight / 2);
+
+        bodyFixture = bodyBuilder.newPolygonFixture(bodyFixtureVertices, Constants.PPM)
+                .categoryBits(categoryBits)
+                .maskBits(maskBits)
+                .setUserData(this)
+                .buildFixture();
+    }
+
+    protected void createMeleeWeaponFixture(short maskBits) {
+        Vector2 meleeAttackFixturePosition = new Vector2(attackRange, 0);
+
+        meleeWeaponFixture = bodyBuilder.newCircleFixture(meleeAttackFixturePosition, attackRange, Constants.PPM)
+                .categoryBits(CategoryBits.MELEE_WEAPON)
+                .maskBits(maskBits)
+                .isSensor(true)
+                .setUserData(this)
+                .buildFixture();
+    }
     
 
     public void moveLeft() {
@@ -238,19 +268,11 @@ public abstract class Character extends Sprite implements Disposable {
     }
     
     public void inflictDamage(Character c, int damage) {
-        if (this.getClass().equals(Player.class)) {
-            Rumble.rumble(8 / Constants.PPM, .1f);
-        }
-        
         c.receiveDamage(damage);
         c.pushedBackward((facingRight) ? attackForce : -attackForce);
     }
     
     public void receiveDamage(int damage) {
-        if (this.getClass().equals(Player.class)) {
-            Rumble.rumble(8 / Constants.PPM, .1f);
-        }
-
         if (!isUntouchable) {
             health -= damage;
 
@@ -274,9 +296,6 @@ public abstract class Character extends Sprite implements Disposable {
         f.setFilterData(filter);
     }
 
-    
-    
-    
     
     // Review the code below.
     public Body getB2Body() {
@@ -354,8 +373,8 @@ public abstract class Character extends Sprite implements Disposable {
         return facingRight;
     }
 
-    public Behavior getBehavior() {
-        return behavior;
+    public BehavioralModel getBehavioralModel() {
+        return behavioralModel;
     }
     
     @Override

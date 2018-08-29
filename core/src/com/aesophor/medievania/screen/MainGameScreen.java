@@ -112,9 +112,7 @@ public class MainGameScreen extends AbstractScreen {
         }
         */
     }
-    
-    
-    
+
     
     public GameStateManager getGSM() {
         return gsm;
@@ -135,7 +133,11 @@ public class MainGameScreen extends AbstractScreen {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        gameMapManager.getRayHandler().useCustomViewport(getViewport().getScreenX(), getViewport().getScreenY(), 1200, 600);
+
+        gameMapManager.getRayHandler().useCustomViewport(
+                getViewport().getScreenX(), getViewport().getScreenY(),
+                getViewport().getScreenWidth(), getViewport().getScreenHeight()
+        );
     }
     
     @Override
@@ -144,6 +146,8 @@ public class MainGameScreen extends AbstractScreen {
         b2dr.dispose();
         hud.dispose();
         gameMapManager.dispose();
+        player.dispose();
+        npcs.forEach((Character c) -> c.dispose());
     }
     
 }

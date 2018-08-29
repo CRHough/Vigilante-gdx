@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="16" tileheight="16" infinite="0" nextobjectid="72">
+<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="16" tileheight="16" infinite="0" nextobjectid="76">
  <tileset firstgid="1" name="GothicVaniaTown" tilewidth="16" tileheight="16" tilecount="3111" columns="61">
   <image source="Resources/GothicVania-town-files/GothicVaniaTown.png" width="991" height="830"/>
  </tileset>
@@ -40,7 +40,7 @@
   <object id="7" x="0.666667" y="253" width="58.3333" height="1.16667"/>
   <object id="14" x="128.25" y="221.5" width="48" height="1.16667"/>
  </objectgroup>
- <objectgroup name="Walls">
+ <objectgroup name="Wall">
   <object id="28" x="208" y="0">
    <polyline points="0,0 0,160 256,160 256,80 416,80 416,0"/>
   </object>
@@ -72,6 +72,10 @@
    <polyline points="0,0 0,16 16,16 15.667,2.333"/>
   </object>
  </objectgroup>
+ <objectgroup name="Portal">
+  <object id="73" x="324.333" y="221.333" width="7" height="27.6667"/>
+  <object id="75" x="36.5" y="124.833" width="7" height="27.6667"/>
+ </objectgroup>
  <objectgroup name="CliffMarker">
   <object id="37" x="575.879" y="281.667">
    <polyline points="0,0 0,7.09091"/>
@@ -90,7 +94,7 @@
  <objectgroup name="Player">
   <object id="64" x="32" y="128.333" width="16" height="15.3333"/>
  </objectgroup>
- <objectgroup name="NPCs">
+ <objectgroup name="NPCS">
   <object id="66" x="336.333" y="224.333" width="15.6667" height="15.3333"/>
   <object id="67" x="512.667" y="257.333" width="15" height="14.6667"/>
  </objectgroup>

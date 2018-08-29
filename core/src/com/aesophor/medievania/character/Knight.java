@@ -1,15 +1,11 @@
-package com.aesophor.medievania.character.humanoid;
+package com.aesophor.medievania.character;
 
-import com.aesophor.medievania.character.Enemy;
+import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
-import com.aesophor.medievania.util.box2d.BodyBuilder;
-import com.aesophor.medievania.util.CategoryBits;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Knight extends Enemy implements Humanoid {
@@ -18,10 +14,13 @@ public class Knight extends Enemy implements Humanoid {
     
     public Knight(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
-        
+
+        bodyWidth = 10;
+        bodyHeight = 34;
+
         health = 100;
         movementSpeed = .25f;
-        jumpHeight = 3.3f;
+        jumpHeight = 3.5f;
         attackForce = .6f;
         attackTime = 1.2f;
         attackRange = 14;
@@ -57,33 +56,14 @@ public class Knight extends Enemy implements Humanoid {
     // Refactor this part into Enemy class.
     @Override
     protected void defineBody() {
-        Vector2[] bodyFixtureVertices = new Vector2[4];
-        bodyFixtureVertices[0] = new Vector2(-5, 20);
-        bodyFixtureVertices[1] = new Vector2(5, 20);
-        bodyFixtureVertices[2] = new Vector2(-5, -14);
-        bodyFixtureVertices[3] = new Vector2(5, -14);
+        super.defineBody();
 
-        Vector2 meleeAttackFixtureVertices = new Vector2(attackRange, 0);
+        short bodyCategoryBits = CategoryBits.ENEMY;
+        short bodyMaskBits = (short) CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER;
+        short weaponMaskBits = (short) CategoryBits.PLAYER | CategoryBits.OBJECT;
 
-
-        BodyBuilder bodyBuilder = new BodyBuilder(currentWorld);
-
-        b2body = bodyBuilder.type(BodyDef.BodyType.DynamicBody)
-                .position(getX(), getY(), Constants.PPM)
-                .buildBody();
-
-        bodyFixture = bodyBuilder.newPolygonFixture(bodyFixtureVertices, Constants.PPM)
-                .categoryBits(CategoryBits.ENEMY)
-                .maskBits(CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER)
-                .setUserData(this)
-                .buildFixture();
-
-        meleeWeaponFixture = bodyBuilder.newCircleFixture(meleeAttackFixtureVertices, attackRange, Constants.PPM)
-                .categoryBits(CategoryBits.MELEE_WEAPON)
-                .maskBits(CategoryBits.PLAYER | CategoryBits.OBJECT)
-                .isSensor(true)
-                .setUserData(this)
-                .buildFixture();
+        createBodyFixture(bodyCategoryBits, bodyMaskBits);
+        createMeleeWeaponFixture(weaponMaskBits);
     }
 
 }
