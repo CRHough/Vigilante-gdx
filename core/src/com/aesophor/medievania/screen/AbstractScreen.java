@@ -1,7 +1,7 @@
 package com.aesophor.medievania.screen;
 
 import com.aesophor.medievania.GameStateManager;
-import com.aesophor.medievania.constants.Constants;
+import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;

@@ -1,6 +1,5 @@
 package com.aesophor.medievania.util;
 
-import com.aesophor.medievania.constants.Constants;
 import com.aesophor.medievania.world.map.GameMap;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Vector2;

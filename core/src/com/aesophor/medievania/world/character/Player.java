@@ -1,7 +1,8 @@
 package com.aesophor.medievania.world.character;
 
-import com.aesophor.medievania.constants.Constants;
+import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
+import com.aesophor.medievania.util.box2d.BodyBuilder;
 import com.aesophor.medievania.world.CategoryBits;
 import com.aesophor.medievania.world.character.humanoid.Humanoid;
 import com.badlogic.gdx.Gdx;
@@ -11,9 +12,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -59,43 +57,33 @@ public class Player extends Character implements Humanoid, Controllable {
     
     @Override
     public void defineBody() {
-        BodyDef bdef = new BodyDef();
-        bdef.position.set(getX(), getY());
-        bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = currentWorld.createBody(bdef);
-        
-        // Create body fixture.
-        // Fixture position in box2d is in relation to the body position.
-        FixtureDef fdef = new FixtureDef();
-        PolygonShape body = new PolygonShape();
-        Vector2[] vertices = new Vector2[4];
-        vertices[0] = new Vector2(-5, 20).scl(1 / Constants.PPM);
-        vertices[1] = new Vector2(5, 20).scl(1 / Constants.PPM);
-        vertices[2] = new Vector2(-5, -14).scl(1 / Constants.PPM);
-        vertices[3] = new Vector2(5, -14).scl(1 / Constants.PPM);
-        body.set(vertices);
-        
-        fdef.shape = body;
-        fdef.filter.categoryBits = CategoryBits.PLAYER;
-        fdef.filter.maskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON; // What player can collide with.
-        bodyFixture = b2body.createFixture(fdef);
-        bodyFixture.setUserData(this);
-        body.dispose();
-        
-        
-        // Create weapon fixture.
-        CircleShape weapon = new CircleShape();
-        weapon.setPosition(new Vector2(attackRange / Constants.PPM, 0));
-        weapon.setRadius(attackRange / Constants.PPM);
-        
-        fdef.shape = weapon;
-        fdef.isSensor = true; // a sensor won't collide with the world.
-        fdef.filter.categoryBits = CategoryBits.MELEE_WEAPON;
-        fdef.filter.maskBits = CategoryBits.ENEMY | CategoryBits.OBJECT; // What player can collide with.
-        
-        meleeAttackFixture = b2body.createFixture(fdef);
-        meleeAttackFixture.setUserData(this);
-        weapon.dispose();
+        Vector2[] bodyFixtureVertices = new Vector2[4];
+        bodyFixtureVertices[0] = new Vector2(-5, 20);
+        bodyFixtureVertices[1] = new Vector2(5, 20);
+        bodyFixtureVertices[2] = new Vector2(-5, -14);
+        bodyFixtureVertices[3] = new Vector2(5, -14);
+
+        Vector2 meleeAttackFixtureVertices = new Vector2(attackRange, 0);
+
+
+        BodyBuilder bodyBuilder = new BodyBuilder(currentWorld);
+
+        b2body = bodyBuilder.type(BodyDef.BodyType.DynamicBody)
+                .position(getX(), getY(), Constants.PPM)
+                .buildBody();
+
+        bodyFixture = bodyBuilder.newPolygonFixture(bodyFixtureVertices, Constants.PPM)
+                .categoryBits(CategoryBits.PLAYER)
+                .maskBits(CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON)
+                .setUserData(this)
+                .buildFixture();
+
+        meleeWeaponFixture = bodyBuilder.newCircleFixture(meleeAttackFixtureVertices, attackRange, Constants.PPM)
+                .categoryBits(CategoryBits.MELEE_WEAPON)
+                .maskBits(CategoryBits.ENEMY | CategoryBits.OBJECT)
+                .isSensor(true)
+                .setUserData(this)
+                .buildFixture();
     }
     
     @Override
@@ -140,13 +128,12 @@ public class Player extends Character implements Humanoid, Controllable {
         if (!isUntouchable) {
             isUntouchable = true;
             
-            Timer.schedule(new Task(){
+            Timer.schedule(new Task() {
                 @Override
                 public void run() {
                     if (!setToKill) {
                         isUntouchable = false;
                     }
-                    
                 }
             }, 3f);
         }

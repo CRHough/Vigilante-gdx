@@ -25,8 +25,8 @@ public class GameMapManager implements Disposable {
     public GameMapManager(AssetManager assets, World world) {
         this.assets = assets;
         this.world = world;
+
         rayHandler = new RayHandler(world);
-        rayHandler.setAmbientLight(.8f);
         
         maploader = new TmxMapLoader();
         
@@ -48,7 +48,7 @@ public class GameMapManager implements Disposable {
         TiledMap map = maploader.load(mapFilePath);
         Music music = assets.get(backgroundMusics.get(mapFilePath));
         
-        currentMap = new GameMap(assets, world, rayHandler, map, music);
+        currentMap = new GameMap(assets, world, rayHandler, map, music, .8f); // Temporary
     }
     
     /**
@@ -67,7 +67,7 @@ public class GameMapManager implements Disposable {
     public World getWorld() {
         return world;
     }
-    
+
     public RayHandler getRayHandler() {
         return rayHandler;
     }

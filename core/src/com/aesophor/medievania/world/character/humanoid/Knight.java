@@ -1,6 +1,6 @@
 package com.aesophor.medievania.world.character.humanoid;
 
-import com.aesophor.medievania.constants.Constants;
+import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
 import com.aesophor.medievania.world.CategoryBits;
 import com.aesophor.medievania.world.character.Enemy;
@@ -90,8 +90,8 @@ public class Knight extends Enemy implements Humanoid {
         fdef.filter.categoryBits = CategoryBits.MELEE_WEAPON;
         fdef.filter.maskBits = CategoryBits.PLAYER | CategoryBits.OBJECT;
         
-        meleeAttackFixture = b2body.createFixture(fdef);
-        meleeAttackFixture.setUserData(this);
+        meleeWeaponFixture = b2body.createFixture(fdef);
+        meleeWeaponFixture.setUserData(this);
         weapon.dispose();
     }
 

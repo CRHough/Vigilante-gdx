@@ -1,7 +1,7 @@
 package com.aesophor.medievania.world.character;
 
 import java.util.concurrent.ThreadLocalRandom;
-import com.aesophor.medievania.constants.Constants;
+import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Rumble;
 import com.aesophor.medievania.world.CategoryBits;
 import com.badlogic.gdx.audio.Music;
@@ -29,7 +29,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected World currentWorld; // The world in which the character is spawned.
     protected Body b2body;
     protected Fixture bodyFixture;
-    protected Fixture meleeAttackFixture;
+    protected Fixture meleeWeaponFixture;
     
     protected TextureRegion idleAnimation; // Change to Animation later.
     protected Animation<TextureRegion> runAnimation;
@@ -162,11 +162,11 @@ public abstract class Character extends Sprite implements Disposable {
         
         if (!facingRight && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false); // flip x, flip y.
-            CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
+            CircleShape shape = (CircleShape) meleeWeaponFixture.getShape();
             shape.setPosition(new Vector2(-attackRange / Constants.PPM, 0));
         } else if (facingRight && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-            CircleShape shape = (CircleShape) meleeAttackFixture.getShape();
+            CircleShape shape = (CircleShape) meleeWeaponFixture.getShape();
             shape.setPosition(new Vector2(attackRange / Constants.PPM, 0));
         }
         

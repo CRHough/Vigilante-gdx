@@ -1,139 +1,58 @@
 package com.aesophor.medievania.world.map;
 
-import com.aesophor.medievania.constants.Constants;
-import com.aesophor.medievania.world.CategoryBits;
+import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.box2d.LightBuilder;
+import com.aesophor.medievania.util.box2d.TiledObjectUtils;
 import com.aesophor.medievania.world.character.Character;
 import com.aesophor.medievania.world.character.Player;
 import com.aesophor.medievania.world.character.humanoid.Knight;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
-import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
 public class GameMap implements Disposable {
     
-    private static final boolean GROUND_COLLIDABLE = true;
-    private static final boolean PLATFORM_COLLIDABLE = true;
-    private static final boolean WALL_COLLIDABLE = true;
-    private static final boolean CLIFF_MARKER_COLLIDABLE = false;
-    private static final boolean LIGHT_SOURCE_COLLIDABLE = false;
-    
     private TiledMap tiledMap;
     private Music backgroundMusic;
+    private float brightness;
     
     private int mapWidth;
     private int mapHeight;
     private int mapTileSize;
     
-    public GameMap(AssetManager assets, World world, RayHandler rayHandler, TiledMap tiledMap, Music backgroundMusic) {
-        this.tiledMap = tiledMap;
-        this.backgroundMusic = backgroundMusic;
+    public GameMap(AssetManager assets, World world, RayHandler rayHandler, TiledMap map, Music bgm, float brightness) {
+        tiledMap = map;
+        backgroundMusic = bgm;
+        brightness = brightness;
         
         // Extract the properties from the map.
-        mapWidth = tiledMap.getProperties().get("width", Integer.class);
-        mapHeight = tiledMap.getProperties().get("height", Integer.class);
-        int tileWidth = tiledMap.getProperties().get("tilewidth", Integer.class);
-        int tileHeight = tiledMap.getProperties().get("tileheight", Integer.class);
+        mapWidth = map.getProperties().get("width", Integer.class);
+        mapHeight = map.getProperties().get("height", Integer.class);
+        int tileWidth = map.getProperties().get("tilewidth", Integer.class);
+        int tileHeight = map.getProperties().get("tileheight", Integer.class);
         assert tileWidth == tileHeight;
         mapTileSize = tileWidth;
+
+        // Update brightness according to this map.
+        rayHandler.setAmbientLight(brightness);
         
-        
-        // Create bodies and fixtures from each layer.
-        createPolylines(GameMapLayer.GROUND, world, GROUND_COLLIDABLE, Constants.GROUND_FRICTION, CategoryBits.GROUND);
-        createRectangles(GameMapLayer.PLATFORM, world, PLATFORM_COLLIDABLE, Constants.GROUND_FRICTION, CategoryBits.PLATFORM);
-        createPolylines(GameMapLayer.WALL, world, WALL_COLLIDABLE, 0, CategoryBits.WALL);
-        createPolylines(GameMapLayer.CLIFF_MARKER, world, CLIFF_MARKER_COLLIDABLE, 0, CategoryBits.CLIFF_MARKER);
-        
-        // Create light sources from the light source layer.
-        Array<Vector2> lightPos = createRectangles(GameMapLayer.LIGHT_SOURCE, world, LIGHT_SOURCE_COLLIDABLE, 0, CategoryBits.NULL);
-        for (Vector2 pos : lightPos) {
-            new PointLight(rayHandler, 100, Color.ORANGE, 80 / Constants.PPM, pos.x, pos.y).setSoftnessLength(0f);;
-        }
+        // Create bodies in the world according to each map layer.
+        TiledObjectUtils.parseLayers(world, map, rayHandler);
     }
-    
-    
-    private Array<Vector2> createRectangles(GameMapLayer layer, World world, boolean collidable, float friction, short categoryBits) {
-        Body body;
-        BodyDef bdef = new BodyDef();
-        FixtureDef fdef = new FixtureDef();
-        Array<Vector2> positions = new Array<>();
-        
-        for (MapObject object : tiledMap.getLayers().get(layer.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
-            Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            Vector2 position = new Vector2((rect.getX() + rect.getWidth() / 2) / Constants.PPM, (rect.getY() + rect.getHeight() / 2) / Constants.PPM);
-            positions.add(position);
-            
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.set(position);
-            body = world.createBody(bdef);
-            
-            PolygonShape polygonShape = new PolygonShape();
-            polygonShape.setAsBox(rect.getWidth() / 2 / Constants.PPM, rect.getHeight() / 2 / Constants.PPM);
-            
-            fdef.shape = polygonShape;
-            fdef.isSensor = (!collidable);
-            fdef.friction = friction;
-            fdef.filter.categoryBits = categoryBits;
-            body.createFixture(fdef);
-            
-            polygonShape.dispose();
-        }
-        
-        return positions;
-    }
-    
-    private void createPolylines(GameMapLayer layer, World world, boolean collidable, float friction, short categoryBits) {
-        Body body;
-        BodyDef bdef = new BodyDef();
-        FixtureDef fdef = new FixtureDef();
-        
-        for (MapObject object : tiledMap.getLayers().get(layer.ordinal()).getObjects().getByType(PolylineMapObject.class)) {
-            float[] vertices = ((PolylineMapObject) object).getPolyline().getTransformedVertices();
-            Vector2[] worldVertices = new Vector2[vertices.length / 2];
-            
-            for (int i = 0; i < worldVertices.length; i++) {
-                worldVertices[i] = new Vector2(vertices[i * 2] / Constants.PPM, vertices[i * 2 + 1] / Constants.PPM);
-            }
-            
-            ChainShape chainShape = new ChainShape();
-            chainShape.createChain(worldVertices);
-            
-            // We are drawing the polylines using the coordinates of their vertices,
-            // so bdef should be set to zero.
-            bdef.type = BodyDef.BodyType.StaticBody;
-            bdef.position.setZero();
-            body = world.createBody(bdef);
-            
-            fdef.shape = chainShape;
-            fdef.isSensor = (!collidable);
-            fdef.friction = friction;
-            fdef.filter.categoryBits = categoryBits;
-            body.createFixture(fdef);
-            
-            chainShape.dispose();
-        }
-    }
+
     
     public Player spawnPlayer(AssetManager assets, World world) {
         MapObject object = tiledMap.getLayers().get(GameMapLayer.PLAYER.ordinal()).getObjects().getByType(RectangleMapObject.class).get(0);
         Rectangle rect = ((RectangleMapObject) object).getRectangle();
         
-        return new Player(assets, world, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM);
+        return new Player(assets, world, rect.getX(), rect.getY());
     }
     
     public Array<Character> spawnNPCs(AssetManager assets, World world) {

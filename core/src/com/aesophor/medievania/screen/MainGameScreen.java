@@ -1,7 +1,7 @@
 package com.aesophor.medievania.screen;
 
 import com.aesophor.medievania.GameStateManager;
-import com.aesophor.medievania.constants.Constants;
+import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.ui.HUD;
 import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Rumble;
@@ -11,14 +11,12 @@ import com.aesophor.medievania.world.map.GameMap;
 import com.aesophor.medievania.world.map.GameMapManager;
 import com.aesophor.medievania.world.map.WorldContactListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import box2dLight.RayHandler;
 
 public class MainGameScreen extends AbstractScreen {
     
@@ -99,7 +97,7 @@ public class MainGameScreen extends AbstractScreen {
         npcs.forEach((Character c) -> c.draw(getBatch()));
         player.draw(getBatch());
         getBatch().end();
-        
+
         gameMapManager.getRayHandler().setCombinedMatrix(getCamera().combined);
         gameMapManager.getRayHandler().render();
         
