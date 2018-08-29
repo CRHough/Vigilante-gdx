@@ -1,8 +1,8 @@
-package com.aesophor.medievania.world.character;
+package com.aesophor.medievania.character;
 
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Rumble;
-import com.aesophor.medievania.world.CategoryBits;
+import com.aesophor.medievania.util.CategoryBits;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -25,7 +25,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected Character.State currentState;
     protected Character.State previousState;
 
-    protected World currentWorld; // The world in which the character is spawned.
+    protected World currentWorld;
     protected Body b2body;
     protected Fixture bodyFixture;
     protected Fixture meleeWeaponFixture;
@@ -112,34 +112,36 @@ public abstract class Character extends Sprite implements Disposable {
                     stateTimer = 0;
                 }
             }
-            
-            setPosition(b2body.getPosition().x - getWidth() / 2, b2body.getPosition().y - getHeight() / 2 + 10 / Constants.PPM);
+
+            float textureX = b2body.getPosition().x - getWidth() / 2;
+            float textureY = b2body.getPosition().y - getHeight() / 2 + (10 / Constants.PPM);
+            setPosition(textureX, textureY);
         }
     }
     
-    public TextureRegion getFrame(float delta) {
+    private TextureRegion getFrame(float delta) {
         previousState = currentState;
         currentState = getState();
         
         TextureRegion textureRegion;
         switch (currentState) {
             case RUNNING:
-                textureRegion = (TextureRegion) runAnimation.getKeyFrame(stateTimer, true);
+                textureRegion = runAnimation.getKeyFrame(stateTimer, true);
                 break;
             case JUMPING:
-                textureRegion = (TextureRegion) jumpAnimation.getKeyFrame(stateTimer, false);
+                textureRegion = jumpAnimation.getKeyFrame(stateTimer, false);
                 break;
             case FALLING:
-                textureRegion = (TextureRegion) fallAnimation.getKeyFrame(stateTimer, false);
+                textureRegion = fallAnimation.getKeyFrame(stateTimer, false);
                 break;
             case CROUCHING:
-                textureRegion = (TextureRegion) crouchAnimation.getKeyFrame(stateTimer, false);
+                textureRegion = crouchAnimation.getKeyFrame(stateTimer, false);
                 break;
             case ATTACKING:
-                textureRegion = (TextureRegion) attackAnimation.getKeyFrame(stateTimer, false);
+                textureRegion = attackAnimation.getKeyFrame(stateTimer, false);
                 break;
             case KILLED:
-                textureRegion = (TextureRegion) killedAnimation.getKeyFrame(stateTimer, false);
+                textureRegion = killedAnimation.getKeyFrame(stateTimer, false);
                 break;
             case IDLE:
             default:
@@ -148,7 +150,7 @@ public abstract class Character extends Sprite implements Disposable {
         }
         
         if (!facingRight && !textureRegion.isFlipX()) {
-            textureRegion.flip(true, false); // flip x, flip y.
+            textureRegion.flip(true, false);
             CircleShape shape = (CircleShape) meleeWeaponFixture.getShape();
             shape.setPosition(new Vector2(-attackRange / Constants.PPM, 0));
         } else if (facingRight && textureRegion.isFlipX()) {
@@ -161,7 +163,7 @@ public abstract class Character extends Sprite implements Disposable {
         return textureRegion;
     }
     
-    public Character.State getState() {
+    private Character.State getState() {
         if (setToKill) {
             return Character.State.KILLED;
         } else if (isAttacking) {
@@ -179,8 +181,7 @@ public abstract class Character extends Sprite implements Disposable {
         }
     }
     
-    
-    // Movement controls
+
     public void moveLeft() {
         facingRight = false;
         
@@ -222,8 +223,8 @@ public abstract class Character extends Sprite implements Disposable {
     public void swingWeapon() {
         if (!isAttacking()) {
             setIsAttacking(true);
-            
-            if (hasInRangeTarget() &&!inRangeTarget.isUntouchable() && !inRangeTarget.isSetToKill()) {
+
+            if (hasInRangeTarget() && !inRangeTarget.isUntouchable() && !inRangeTarget.isSetToKill()) {
                 setLockedOnTarget(inRangeTarget);
                 inflictDamage(inRangeTarget, attackDamage);
                 
@@ -246,16 +247,20 @@ public abstract class Character extends Sprite implements Disposable {
     }
     
     public void receiveDamage(int damage) {
-        if (isUntouchable) return;
-        
-        health -= damage;
-        
-        if (health <= 0) {
-            setCategoryBits(bodyFixture, CategoryBits.UNTOUCHABLE);
-            setToKill = true;
-            deathSound.play();
-        } else {
-            hurtSound.play();
+        if (this.getClass().equals(Player.class)) {
+            Rumble.rumble(8 / Constants.PPM, .1f);
+        }
+
+        if (!isUntouchable) {
+            health -= damage;
+
+            if (health <= 0) {
+                setCategoryBits(bodyFixture, CategoryBits.UNTOUCHABLE);
+                setToKill = true;
+                deathSound.play();
+            } else {
+                hurtSound.play();
+            }
         }
     }
     

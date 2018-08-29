@@ -1,4 +1,4 @@
-package com.aesophor.medievania.world;
+package com.aesophor.medievania.util;
 
 public class CategoryBits {
 

@@ -1,4 +1,4 @@
-package com.aesophor.medievania.world.map;
+package com.aesophor.medievania.map;
 
 public enum GameMapLayer {
 

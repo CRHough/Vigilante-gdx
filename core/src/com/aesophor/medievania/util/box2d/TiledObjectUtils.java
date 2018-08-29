@@ -1,10 +1,9 @@
 package com.aesophor.medievania.util.box2d;
 
-import box2dLight.Light;
 import box2dLight.RayHandler;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.world.CategoryBits;
-import com.aesophor.medievania.world.map.GameMapLayer;
+import com.aesophor.medievania.util.CategoryBits;
+import com.aesophor.medievania.map.GameMapLayer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapObjects;

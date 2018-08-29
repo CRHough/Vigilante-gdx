@@ -1,8 +1,8 @@
-package com.aesophor.medievania.world.map;
+package com.aesophor.medievania.map;
 
 import java.util.Map;
 import java.util.HashMap;
-import com.aesophor.medievania.world.map.GameMap;
+
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.tiled.TiledMap;

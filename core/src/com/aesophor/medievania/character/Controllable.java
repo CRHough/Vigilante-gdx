@@ -1,4 +1,4 @@
-package com.aesophor.medievania.world.character;
+package com.aesophor.medievania.character;
 
 public interface Controllable {
 

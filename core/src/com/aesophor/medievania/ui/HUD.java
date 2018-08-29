@@ -2,7 +2,7 @@ package com.aesophor.medievania.ui;
 
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.world.character.Player;
+import com.aesophor.medievania.character.Player;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;

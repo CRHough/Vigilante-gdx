@@ -1,10 +1,10 @@
-package com.aesophor.medievania.world.character.humanoid;
+package com.aesophor.medievania.character.humanoid;
 
+import com.aesophor.medievania.character.Enemy;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
 import com.aesophor.medievania.util.box2d.BodyBuilder;
-import com.aesophor.medievania.world.CategoryBits;
-import com.aesophor.medievania.world.character.Enemy;
+import com.aesophor.medievania.util.CategoryBits;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

@@ -1,4 +1,4 @@
-package com.aesophor.medievania.world.character;
+package com.aesophor.medievania.character;
 
 import java.util.concurrent.ThreadLocalRandom;
 import com.aesophor.medievania.util.Utils;

@@ -1,4 +1,4 @@
-package com.aesophor.medievania.world;
+package com.aesophor.medievania.util;
 
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.maps.tiled.TiledMap;
