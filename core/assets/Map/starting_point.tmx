@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="16" tileheight="16" infinite="0" nextobjectid="76">
+<map version="1.0" tiledversion="1.1.6" orientation="orthogonal" renderorder="right-down" width="60" height="20" tilewidth="16" tileheight="16" infinite="0" nextobjectid="81">
+ <properties>
+  <property name="backgroundMusic" value="Sound/FX/Environmental/water_dripping.mp3"/>
+  <property name="brightness" type="float" value="0.8"/>
+ </properties>
  <tileset firstgid="1" name="GothicVaniaTown" tilewidth="16" tileheight="16" tilecount="3111" columns="61">
   <image source="Resources/GothicVania-town-files/GothicVaniaTown.png" width="991" height="830"/>
  </tileset>
@@ -72,10 +76,6 @@
    <polyline points="0,0 0,16 16,16 15.667,2.333"/>
   </object>
  </objectgroup>
- <objectgroup name="Portal">
-  <object id="73" x="324.333" y="221.333" width="7" height="27.6667"/>
-  <object id="75" x="36.5" y="124.833" width="7" height="27.6667"/>
- </objectgroup>
  <objectgroup name="CliffMarker">
   <object id="37" x="575.879" y="281.667">
    <polyline points="0,0 0,7.09091"/>
@@ -85,6 +85,20 @@
   </object>
   <object id="59" x="111.091" y="280.878">
    <polyline points="0,0 0,7.09091"/>
+  </object>
+ </objectgroup>
+ <objectgroup name="Portal">
+  <object id="75" x="36.5" y="124.833" width="7" height="27.6667">
+   <properties>
+    <property name="targetMap" value="Map/village.tmx"/>
+    <property name="targetPortalID" type="int" value="0"/>
+   </properties>
+  </object>
+  <object id="80" x="325.167" y="221.5" width="7" height="27.6667">
+   <properties>
+    <property name="targetMap" value="Map/village.tmx"/>
+    <property name="targetPortalID" type="int" value="0"/>
+   </properties>
   </object>
  </objectgroup>
  <objectgroup name="LightSource">

@@ -74,18 +74,15 @@ public abstract class Character extends Sprite implements Disposable {
 
     public Character(Texture texture, World currentWorld, float x, float y) {
         super(texture);
-        
         this.currentWorld = currentWorld;
         setPosition(x, y);
-        
-        currentState = Character.State.IDLE;
-        previousState = Character.State.IDLE;
-        
-        stateTimer = 0;
-        facingRight = true;
 
         bodyBuilder = new BodyBuilder(currentWorld);
         behavioralModel = new BehavioralModel(this);
+        
+        currentState = Character.State.IDLE;
+        previousState = Character.State.IDLE;
+        facingRight = true;
     }
 
     
@@ -180,20 +177,18 @@ public abstract class Character extends Sprite implements Disposable {
         }
     }
 
-    protected void defineBody() {
-        b2body = bodyBuilder.type(BodyDef.BodyType.DynamicBody)
+    protected void defineBody(BodyDef.BodyType type, float width, float height,
+                              short bodyCategoryBits, short bodyMaskBits, short meleeWeaponMaskBits) {
+        b2body = bodyBuilder.type(type)
                 .position(getX(), getY(), Constants.PPM)
                 .buildBody();
+
+        createBodyFixture(bodyCategoryBits, bodyMaskBits);
+        createMeleeWeaponFixture(meleeWeaponMaskBits);
     }
 
     protected void createBodyFixture(short categoryBits, short maskBits) {
-        Vector2[] bodyFixtureVertices = new Vector2[4];
-        bodyFixtureVertices[0] = new Vector2(-bodyWidth / 2, bodyHeight / 2);
-        bodyFixtureVertices[1] = new Vector2(bodyWidth / 2, bodyHeight / 2);
-        bodyFixtureVertices[2] = new Vector2(-bodyWidth / 2, -bodyHeight / 2);
-        bodyFixtureVertices[3] = new Vector2(bodyWidth / 2, -bodyHeight / 2);
-
-        bodyFixture = bodyBuilder.newPolygonFixture(bodyFixtureVertices, Constants.PPM)
+        bodyFixture = bodyBuilder.newRectangleFixture(b2body.getPosition(), bodyWidth / 2, bodyHeight / 2, Constants.PPM)
                 .categoryBits(categoryBits)
                 .maskBits(maskBits)
                 .setUserData(this)

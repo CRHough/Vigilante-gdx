@@ -1,15 +1,16 @@
 package com.aesophor.medievania.character;
 
+import com.aesophor.medievania.GameMapManager;
+import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Rumble;
 import com.aesophor.medievania.util.Utils;
 import com.aesophor.medievania.util.CategoryBits;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -17,10 +18,13 @@ import com.badlogic.gdx.utils.Timer.Task;
 public class Player extends Character implements Humanoid, Controllable {
     
     private static final String TEXTURE_FILE = "Character/Bandit/Bandit.png";
-    private boolean isAtPortal;
+
+    private GameMapManager gameMapManager;
+    private Portal currentPortal;
     
-    public Player(AssetManager assets, World world, float x, float y) {
+    public Player(GameMapManager gameMapManager, AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
+        this.gameMapManager = gameMapManager;
 
         bodyWidth = 10;
         bodyHeight = 34;
@@ -49,56 +53,41 @@ public class Player extends Character implements Humanoid, Controllable {
         weaponSwingSound = assets.get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
         weaponHitSound = assets.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
         jumpSound = assets.get("Sound/FX/Player/jump.wav", Sound.class);
-        
+
+        // Create body and fixtures.
         defineBody();
-        
+
         setBounds(0, 0, 120 / Constants.PPM, 120 / Constants.PPM);
         setRegion(idleAnimation);
-    }
-    
-    
-    @Override
-    public void defineBody() {
-        super.defineBody();
-
-        short bodyCategoryBits = CategoryBits.PLAYER;
-        short bodyMaskBits = (short) CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON;
-        short weaponMaskBits = (short) CategoryBits.ENEMY | CategoryBits.OBJECT;
-
-        createBodyFixture(bodyCategoryBits, bodyMaskBits);
-        createMeleeWeaponFixture(weaponMaskBits);
     }
 
     @Override
     public void handleInput(float delta) {
-        if (setToKill) {
-            return;
-        }
-        
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
-            Constants.DEBUG = (Constants.DEBUG == true) ? false : true;
-        }
 
-        
-        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-            swingWeapon();
-        }
-        
-        // When player is attacking, movement is disabled.
-        if (!isAttacking()) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
-                jump();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                b2body.getPosition().y += 5;
-            } else if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
-                // if (!isCrouching) crouch();
-                // else getUp();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                moveRight();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                moveLeft();
-            }
-        }
+    }
+
+    public void defineBody() {
+        short bodyCategoryBits = CategoryBits.PLAYER;
+        short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON;
+        short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
+        super.defineBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight, bodyCategoryBits, bodyMaskBits, weaponMaskBits);
+    }
+
+    public void redefineBody(World currentWorld) {
+        this.currentWorld = currentWorld;
+        defineBody();
+    }
+
+    public Portal getCurrentPortal() {
+        return currentPortal;
+    }
+
+    public void setCurrentPortal(Portal currentPortal) {
+        this.currentPortal = currentPortal;
+    }
+
+    public void reposition(Vector2 position) {
+        b2body.setTransform(position, 0);
     }
 
     @Override

@@ -54,6 +54,14 @@ public class WorldContactListener implements ContactListener {
                     ((Character) fixtureB.getUserData()).setIsJumping(false);
                 }
                 break;
+
+            case CategoryBits.PLAYER | CategoryBits.PORTAL:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
+                    ((Player) fixtureA.getUserData()).setCurrentPortal((Portal) fixtureB.getUserData());
+                } else {
+                    ((Player) fixtureB.getUserData()).setCurrentPortal((Portal) fixtureA.getUserData());
+                }
+                break;
                 
                 
             case CategoryBits.PLAYER | CategoryBits.ENEMY:
@@ -143,6 +151,15 @@ public class WorldContactListener implements ContactListener {
                     if (((Player) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
                         ((Player) fixtureB.getUserData()).setIsJumping(true);
                     }
+                }
+                break;
+
+
+            case CategoryBits.PLAYER | CategoryBits.PORTAL:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
+                    ((Player) fixtureA.getUserData()).setCurrentPortal(null);
+                } else {
+                    ((Player) fixtureB.getUserData()).setCurrentPortal(null);
                 }
                 break;
                 

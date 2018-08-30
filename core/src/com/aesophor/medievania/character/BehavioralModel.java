@@ -8,6 +8,7 @@ public class BehavioralModel {
 
     private enum Direction { LEFT, RIGHT };
 
+
     private Character character;
 
     /* The following variables are used in moveRandomly() */

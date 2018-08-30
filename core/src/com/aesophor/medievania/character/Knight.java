@@ -6,6 +6,7 @@ import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Knight extends Enemy implements Humanoid {
@@ -19,7 +20,7 @@ public class Knight extends Enemy implements Humanoid {
         bodyHeight = 34;
 
         health = 100;
-        movementSpeed = .25f;
+        movementSpeed = .20f;
         jumpHeight = 3.5f;
         attackForce = .6f;
         attackTime = 1.2f;
@@ -42,28 +43,17 @@ public class Knight extends Enemy implements Humanoid {
         weaponSwingSound = assets.get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
         weaponHitSound = assets.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
         jumpSound = assets.get("Sound/FX/Player/jump.wav", Sound.class);
-        
-        defineBody();
+
+        // Create body and fixtures.
+        short bodyCategoryBits = CategoryBits.ENEMY;
+        short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER;
+        short weaponMaskBits = CategoryBits.PLAYER | CategoryBits.OBJECT;
+        defineBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight, bodyCategoryBits, bodyMaskBits, weaponMaskBits);
         
         setBounds(0, 0, 50 / Constants.PPM, 50 / Constants.PPM);
         setRegion(idleAnimation);
         
         facingRight = false;
-    }
-    
-    
-
-    // Refactor this part into Enemy class.
-    @Override
-    protected void defineBody() {
-        super.defineBody();
-
-        short bodyCategoryBits = CategoryBits.ENEMY;
-        short bodyMaskBits = (short) CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER;
-        short weaponMaskBits = (short) CategoryBits.PLAYER | CategoryBits.OBJECT;
-
-        createBodyFixture(bodyCategoryBits, bodyMaskBits);
-        createMeleeWeaponFixture(weaponMaskBits);
     }
 
 }
