@@ -1,23 +1,21 @@
 package com.aesophor.medievania.screen;
 
-import java.util.Map;
-import java.util.HashMap;
 import box2dLight.RayHandler;
-import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.GameMapManager;
-import com.aesophor.medievania.map.Portal;
-import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.ui.HUD;
-import com.aesophor.medievania.util.CameraUtils;
-import com.aesophor.medievania.util.Rumble;
+import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Player;
 import com.aesophor.medievania.map.GameMap;
+import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
+import com.aesophor.medievania.ui.HUD;
+import com.aesophor.medievania.util.CameraUtils;
+import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.Rumble;
+import com.aesophor.medievania.util.ScreenEffects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -26,11 +24,13 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 
 public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
     private AssetManager assets;
     private RayHandler rayHandler;
+    private ScreenEffects effects;
     private World world;
 
     private OrthogonalTiledMapRenderer renderer;
@@ -48,14 +48,14 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         // Since we will be rendering TiledMaps, we should scale the viewport with PPM.
         getViewport().setWorldSize(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
 
+        // Initialize shade for fade out/in effect during map trasitions.
+        effects = new ScreenEffects(getBatch(), getCamera());
+
 
         world = new World(new Vector2(0, Constants.GRAVITY), true);
         assets = gsm.getAssets();
         rayHandler = new RayHandler(world);
         maploader = new TmxMapLoader();
-
-
-
 
         world.setContactListener(new WorldContactListener());
         load("Map/starting_point.tmx");
@@ -72,9 +72,6 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
         renderer = new OrthogonalTiledMapRenderer(currentMap.getTiledMap(), 1 / Constants.PPM);
         b2dr = new Box2DDebugRenderer();
-
-
-
     }
 
 
@@ -106,15 +103,21 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 player.moveLeft();
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                if (player.getCurrentPortal() != null) {
-                    Portal currentPortal = player.getCurrentPortal();
-                    int targetPortalID = currentPortal.getTargetPortalID();
+                if (player.getCurrentPortal() != null && !player.isSetToKill()) {
+                    effects.fadeOut(.5f);
+                    Timer.schedule(new Timer.Task() {
+                        @Override
+                        public void run() {
+                            Portal currentPortal = player.getCurrentPortal();
+                            int targetPortalID = currentPortal.getTargetPortalID();
 
-                    load(currentPortal.getTargetMap());
-                    load(currentPortal.getTargetMap(), currentPortal.getTargetPortalID());
+                            load(currentPortal.getTargetMap());
+                            effects.fadeIn(.5f);
 
-                    // Reposition the player at the position of the target portal's body.
-                    player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
+                            // Reposition the player at the position of the target portal's body.
+                            player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
+                        }
+                    }, .75f);
                 }
             }
         }
@@ -158,11 +161,14 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
             b2dr.render(world, getCamera().combined);
         }
 
+
+
         // Render characters.
         getBatch().setProjectionMatrix(getCamera().combined);
         getBatch().begin();
         enemies.forEach((Character c) -> c.draw(getBatch()));
         player.draw(getBatch());
+
         getBatch().end();
 
         rayHandler.setCombinedMatrix(getCamera().combined);
@@ -172,6 +178,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         getBatch().setProjectionMatrix(hud.getCamera().combined);
         hud.draw();
 
+        effects.draw();
         /*
         if (player.isKilled()) {
             game.setScreen(new GameOverScreen(game));
@@ -194,6 +201,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
     public void load(String gameMapFile) {
 
         if (renderer != null && currentMap != null) {
+
             currentMap.getBackgroundMusic().stop();
             currentMap.dispose();
              //set the map in your renderer
@@ -227,19 +235,13 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
         enemies = currentMap.spawnNPCs();
 
-
-        //currentMap = new GameMap(this, gameMapFile, music, .8f); // Temporary
-        //currentMap.playBackgroundMusic();
+        effects.updateShadeSize(getCurrentMap().getMapWidth(), getCurrentMap().getMapHeight());
 
         // Spawn the player and NPCs from the map.
         // The maps contain information about where player and NPCs should be spawned.
         // Refactor this part later.
     }
 
-
-    public void load(String gameMapFile, int portalOrdinal) {
-        load(gameMapFile);
-    }
 
 
     @Override

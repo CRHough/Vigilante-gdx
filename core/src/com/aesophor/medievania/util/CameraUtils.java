@@ -19,11 +19,11 @@ public class CameraUtils {
      */
     public static void boundCamera(Camera camera, GameMap map) {
         Vector3 position = camera.position;
-        
+
         float startX = camera.viewportWidth / 2;
         float startY = camera.viewportHeight / 2;
         float endX =  (map.getMapWidth() * map.getMapTileSize()) / Constants.PPM - camera.viewportWidth / 2;
-        float endY = (map.getMapWidth() * map.getMapTileSize()) / Constants.PPM - camera.viewportHeight / 2;
+        float endY = (map.getMapHeight() * map.getMapTileSize()) / Constants.PPM - camera.viewportHeight / 2;
         
         if (position.x < startX) {
             position.x = startX;

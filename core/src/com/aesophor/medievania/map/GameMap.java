@@ -1,10 +1,10 @@
 package com.aesophor.medievania.map;
 
 import com.aesophor.medievania.GameMapManager;
-import com.aesophor.medievania.util.box2d.TiledObjectUtils;
 import com.aesophor.medievania.character.Character;
-import com.aesophor.medievania.character.Player;
 import com.aesophor.medievania.character.Knight;
+import com.aesophor.medievania.character.Player;
+import com.aesophor.medievania.util.box2d.TiledObjectUtils;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
@@ -25,7 +25,7 @@ public class GameMap implements Disposable {
     private int mapWidth;
     private int mapHeight;
     private int mapTileSize;
-    
+
     public GameMap(GameMapManager gameMapManager, String mapFilePath) {
         this.gameMapManager = gameMapManager;
         this.mapFilePath = mapFilePath;

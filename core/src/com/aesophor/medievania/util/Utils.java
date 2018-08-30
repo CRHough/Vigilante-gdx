@@ -1,9 +1,12 @@
 package com.aesophor.medievania.util;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 public class Utils {
     
@@ -13,6 +16,21 @@ public class Utils {
         
     }
 
+
+    public static Texture getTexture(){
+
+        Pixmap pixmap;
+        try {
+            pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        }catch (GdxRuntimeException e)
+        {
+            pixmap = new Pixmap(1,1, Pixmap.Format.RGB565);
+        }
+        pixmap.setColor(Color.BLACK);
+        pixmap.drawRectangle(0,0,1,1);
+
+        return new Texture(pixmap);
+    }
 
     /**
      * Calculates the distance between position x1 and x2, always returning positive value.
