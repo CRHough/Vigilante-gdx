@@ -19,12 +19,10 @@ public class Player extends Character implements Humanoid, Controllable {
     
     private static final String TEXTURE_FILE = "Character/Bandit/Bandit.png";
 
-    private GameMapManager gameMapManager;
     private Portal currentPortal;
     
-    public Player(GameMapManager gameMapManager, AssetManager assets, World world, float x, float y) {
+    public Player(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
-        this.gameMapManager = gameMapManager;
 
         bodyWidth = 10;
         bodyHeight = 34;
@@ -71,11 +69,6 @@ public class Player extends Character implements Humanoid, Controllable {
         short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON;
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
         super.defineBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight, bodyCategoryBits, bodyMaskBits, weaponMaskBits);
-    }
-
-    public void redefineBody(World currentWorld) {
-        this.currentWorld = currentWorld;
-        defineBody();
     }
 
     public Portal getCurrentPortal() {

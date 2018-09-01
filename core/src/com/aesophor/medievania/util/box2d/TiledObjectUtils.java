@@ -30,13 +30,11 @@ public class TiledObjectUtils {
 
     /**
      * Parses the layers of the specified TiledMap, and creates the corresponding bodies.
-     * @param gameMapManager instance of GameMapManager.
+     * @param world the world where all layer bodies will be built.
+     * @param rayHandler the RayHandler to handle lighting.
      * @param gameMap the tiled map to parse.
      */
-    public static void parseLayers(GameMapManager gameMapManager, GameMap gameMap) {
-        World world = gameMapManager.getWorld();
-        RayHandler rayHandler = gameMapManager.getRayHandler();
-
+    public static void parseLayers(World world, RayHandler rayHandler, GameMap gameMap) {
         createPolylines(world, gameMap, GameMapLayer.GROUND, CategoryBits.GROUND, GROUND_COLLIDABLE, Constants.GROUND_FRICTION);
         createRectangles(world, gameMap, GameMapLayer.PLATFORM, CategoryBits.PLATFORM, PLATFORM_COLLIDABLE, Constants.GROUND_FRICTION);
         createPolylines(world, gameMap, GameMapLayer.WALL, CategoryBits.WALL, WALL_COLLIDABLE, 0);

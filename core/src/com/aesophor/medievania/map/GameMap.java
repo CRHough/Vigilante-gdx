@@ -17,11 +17,11 @@ public class GameMap implements Disposable {
 
     private GameMapManager gameMapManager;
     private String mapFilePath;
-    private Music backgroundMusic;
-    private Array<Portal> portals;
-    private float brightness;
-
     private TiledMap tiledMap;
+
+    private Array<Portal> portals;
+    private Music backgroundMusic;
+    private float brightness;
     private int mapWidth;
     private int mapHeight;
     private int mapTileSize;
@@ -29,15 +29,10 @@ public class GameMap implements Disposable {
     public GameMap(GameMapManager gameMapManager, String mapFilePath) {
         this.gameMapManager = gameMapManager;
         this.mapFilePath = mapFilePath;
-
+        tiledMap = gameMapManager.getMapLoader().load(mapFilePath);
         portals = new Array<>();
 
-        tiledMap = gameMapManager.getMapLoader().load(mapFilePath);
-        backgroundMusic = gameMapManager.getAssets().get((String) tiledMap.getProperties().get("backgroundMusic"));
-        brightness = (Float) tiledMap.getProperties().get("brightness");
-
-        
-        // Extract the properties from the map.
+        // Extract width, height and tile size from the map.
         mapWidth = tiledMap.getProperties().get("width", Integer.class);
         mapHeight = tiledMap.getProperties().get("height", Integer.class);
         int tileWidth = tiledMap.getProperties().get("tilewidth", Integer.class);
@@ -45,11 +40,15 @@ public class GameMap implements Disposable {
         assert tileWidth == tileHeight;
         mapTileSize = tileWidth;
 
+        // Extract backgroundMusic and brightness from the map (they are stored as custom properties).
+        backgroundMusic = gameMapManager.getAssets().get((String) tiledMap.getProperties().get("backgroundMusic"));
+        brightness = (Float) tiledMap.getProperties().get("brightness");
+
         // Update brightness according to this map.
         gameMapManager.getRayHandler().setAmbientLight(brightness);
         
         // Create bodies in the world according to each map layer.
-        TiledObjectUtils.parseLayers(gameMapManager, this);
+        TiledObjectUtils.parseLayers(gameMapManager.getWorld(), gameMapManager.getRayHandler(), this);
     }
 
     
@@ -57,7 +56,7 @@ public class GameMap implements Disposable {
         MapObject object = tiledMap.getLayers().get(GameMapLayer.PLAYER.ordinal()).getObjects().getByType(RectangleMapObject.class).get(0);
         Rectangle rect = ((RectangleMapObject) object).getRectangle();
         
-        return new Player(gameMapManager, gameMapManager.getAssets(), gameMapManager.getWorld(), rect.getX(), rect.getY());
+        return new Player(gameMapManager.getAssets(), gameMapManager.getWorld(), rect.getX(), rect.getY());
     }
     
     public Array<Character> spawnNPCs() {
