@@ -1,6 +1,5 @@
 package com.aesophor.medievania.character;
 
-import com.aesophor.medievania.GameMapManager;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Rumble;
@@ -94,15 +93,18 @@ public class Player extends Character implements Humanoid, Controllable {
         super.receiveDamage(damage);
         
         // Sets the player to be untouchable for a while.
-        if (!isUntouchable) {
+        if (!isInvincible) {
             Rumble.rumble(8 / Constants.PPM, .1f);
-            isUntouchable = true;
+
+            setCategoryBits(bodyFixture, CategoryBits.INVINCIBLE);
+            isInvincible = true;
             
             Timer.schedule(new Task() {
                 @Override
                 public void run() {
                     if (!setToKill) {
-                        isUntouchable = false;
+                        setCategoryBits(bodyFixture, CategoryBits.PLAYER);
+                        isInvincible = false;
                     }
                 }
             }, 3f);

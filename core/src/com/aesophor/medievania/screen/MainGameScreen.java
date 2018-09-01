@@ -35,7 +35,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
     private OrthogonalTiledMapRenderer renderer;
     private Box2DDebugRenderer b2dr;
-    private TmxMapLoader maploader;
+    private TmxMapLoader mapLoader;
     private GameMap currentMap;
 
     private HUD hud;
@@ -57,7 +57,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         effects = new ScreenEffects(getBatch(), getCamera());
 
         // Load the tiled map.
-        maploader = new TmxMapLoader();
+        mapLoader = new TmxMapLoader();
         load("Map/starting_point.tmx");
 
         // Initialize the OrthogonalTiledMapRenderer to show our map.
@@ -90,16 +90,16 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
                 player.jump();
             } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 player.getB2Body().getPosition().y += 5;
-            } else if (Gdx.input.isKeyJustPressed(Input.Keys.SHIFT_LEFT)) {
-                // if (!isCrouching) crouch();
-                // else getUp();
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.moveRight();
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
                 player.moveLeft();
+            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                player.crouch();
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 if (player.getCurrentPortal() != null && !player.isSetToKill()) {
                     effects.fadeOut(.5f);
+
                     Timer.schedule(new Timer.Task() {
                         @Override
                         public void run() {
@@ -107,12 +107,13 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
                             int targetPortalID = currentPortal.getTargetPortalID();
 
                             load(currentPortal.getTargetMap());
-                            effects.fadeIn(.7f);
 
                             // Reposition the player at the position of the target portal's body.
                             player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
+
+                            effects.fadeIn(.8f);
                         }
-                    }, .75f);
+                    }, .5f);
                 }
             }
         }
@@ -247,7 +248,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
     @Override
     public TmxMapLoader getMapLoader() {
-        return maploader;
+        return mapLoader;
     }
 
     public GameMap getCurrentMap() {

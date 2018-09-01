@@ -38,6 +38,22 @@ public class WorldContactListener implements ContactListener {
                     ((Player) fixtureB.getUserData()).setIsJumping(false);
                 }
                 break;
+
+            case CategoryBits.INVINCIBLE | CategoryBits.GROUND:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
+                    ((Player) fixtureA.getUserData()).setIsJumping(false);
+                } else {
+                    ((Player) fixtureB.getUserData()).setIsJumping(false);
+                }
+                break;
+
+            case CategoryBits.INVINCIBLE | CategoryBits.PLATFORM:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
+                    ((Player) fixtureA.getUserData()).setIsJumping(false);
+                } else {
+                    ((Player) fixtureB.getUserData()).setIsJumping(false);
+                }
+                break;
                 
             case CategoryBits.ENEMY | CategoryBits.GROUND:
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
@@ -144,6 +160,30 @@ public class WorldContactListener implements ContactListener {
                 
             case CategoryBits.PLAYER | CategoryBits.PLATFORM:
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
+                    if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Player) fixtureA.getUserData()).setIsJumping(true);
+                    }
+                } else {
+                    if (((Player) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Player) fixtureB.getUserData()).setIsJumping(true);
+                    }
+                }
+                break;
+
+            case CategoryBits.INVINCIBLE | CategoryBits.GROUND:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.INVINCIBLE) {
+                    if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Player) fixtureA.getUserData()).setIsJumping(true);
+                    }
+                } else {
+                    if (((Player) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Player) fixtureB.getUserData()).setIsJumping(true);
+                    }
+                }
+                break;
+
+            case CategoryBits.INVINCIBLE | CategoryBits.PLATFORM:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.INVINCIBLE) {
                     if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
                         ((Player) fixtureA.getUserData()).setIsJumping(true);
                     }

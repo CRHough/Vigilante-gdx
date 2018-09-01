@@ -1,7 +1,6 @@
 package com.aesophor.medievania.util.box2d;
 
 import box2dLight.RayHandler;
-import com.aesophor.medievania.GameMapManager;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.GameMapLayer;
 import com.aesophor.medievania.map.Portal;

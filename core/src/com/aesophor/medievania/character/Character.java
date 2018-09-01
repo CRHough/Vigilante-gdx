@@ -48,7 +48,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected boolean isJumping;
     protected boolean isAttacking;
     protected boolean isCrouching;
-    protected boolean isUntouchable;
+    protected boolean isInvincible;
     protected boolean isKilled;
     protected boolean setToKill;
 
@@ -249,11 +249,11 @@ public abstract class Character extends Sprite implements Disposable {
         if (!isAttacking()) {
             setIsAttacking(true);
 
-            if (hasInRangeTarget() && !inRangeTarget.isUntouchable() && !inRangeTarget.isSetToKill()) {
+            if (hasInRangeTarget() && !inRangeTarget.isInvincible() && !inRangeTarget.isSetToKill()) {
                 setLockedOnTarget(inRangeTarget);
-                inflictDamage(inRangeTarget, attackDamage);
-                
                 inRangeTarget.setLockedOnTarget(this);
+
+                inflictDamage(inRangeTarget, attackDamage);
                 weaponHitSound.play();
             }
             
@@ -268,11 +268,11 @@ public abstract class Character extends Sprite implements Disposable {
     }
     
     public void receiveDamage(int damage) {
-        if (!isUntouchable) {
+        if (!isInvincible) {
             health -= damage;
 
             if (health <= 0) {
-                setCategoryBits(bodyFixture, CategoryBits.UNTOUCHABLE);
+                setCategoryBits(bodyFixture, CategoryBits.INVINCIBLE);
                 setToKill = true;
                 deathSound.play();
             } else {
@@ -310,8 +310,8 @@ public abstract class Character extends Sprite implements Disposable {
         return isCrouching;
     }
     
-    public boolean isUntouchable() {
-        return isUntouchable;
+    public boolean isInvincible() {
+        return isInvincible;
     }
     
     public int getHealth() {

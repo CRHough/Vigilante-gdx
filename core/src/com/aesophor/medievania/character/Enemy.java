@@ -40,6 +40,12 @@ public abstract class Enemy extends Character {
             getBehavioralModel().moveRandomly(delta, 0, 5, 0, 5);
         }
     }
+
+    @Override
+    public void inflictDamage(Character c, int damage) {
+        super.inflictDamage(c, damage);
+        setInRangeTarget(null);
+    }
     
     @Override
     public void receiveDamage(int damage) {

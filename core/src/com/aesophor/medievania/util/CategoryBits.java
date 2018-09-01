@@ -13,6 +13,6 @@ public class CategoryBits {
     public static final short ENEMY = 64;
     public static final short OBJECT = 128;
     public static final short MELEE_WEAPON = 256;
-    public static final short UNTOUCHABLE = 512;
+    public static final short INVINCIBLE = 512;
     
 }
