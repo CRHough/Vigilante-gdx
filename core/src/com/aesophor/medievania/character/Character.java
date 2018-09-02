@@ -1,6 +1,5 @@
 package com.aesophor.medievania.character;
 
-import com.aesophor.medievania.equipment.Wieldable;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.box2d.BodyBuilder;
@@ -183,8 +182,7 @@ public abstract class Character extends Sprite implements Disposable {
         }
     }
 
-    protected void defineBody(BodyDef.BodyType type, float width, float height,
-                              short bodyCategoryBits, short bodyMaskBits, short feetMaskBits, short meleeWeaponMaskBits) {
+    protected void defineBody(BodyDef.BodyType type, short bodyCategoryBits, short bodyMaskBits, short feetMaskBits, short meleeWeaponMaskBits) {
         b2body = bodyBuilder.type(type)
                 .position(getX(), getY(), Constants.PPM)
                 .buildBody();
@@ -292,7 +290,7 @@ public abstract class Character extends Sprite implements Disposable {
     
     public void inflictDamage(Character c, int damage) {
         c.receiveDamage(damage);
-        c.pushedBackward((facingRight) ? attackForce : -attackForce);
+        c.knockedBack((facingRight) ? attackForce : -attackForce);
     }
     
     public void receiveDamage(int damage) {
@@ -309,7 +307,7 @@ public abstract class Character extends Sprite implements Disposable {
         }
     }
     
-    public void pushedBackward(float force) {
+    public void knockedBack(float force) {
         b2body.applyLinearImpulse(new Vector2(force, 1f), b2body.getWorldCenter(), true);
     }
     

@@ -50,7 +50,7 @@ public class Knight extends Enemy implements Humanoid {
         short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
         short weaponMaskBits = CategoryBits.PLAYER | CategoryBits.OBJECT;
 
-        defineBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
+        defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
         
         setBounds(0, 0, 50 / Constants.PPM, 50 / Constants.PPM);
         setRegion(idleAnimation);

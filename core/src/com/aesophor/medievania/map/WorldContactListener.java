@@ -53,10 +53,10 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.PLAYER | CategoryBits.ENEMY:
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
                     ((Player) fixtureA.getUserData()).receiveDamage(25);
-                    ((Player) fixtureA.getUserData()).pushedBackward(1f);
+                    ((Player) fixtureA.getUserData()).knockedBack(1f);
                 } else {
                     ((Player) fixtureB.getUserData()).receiveDamage(25);
-                    ((Player) fixtureB.getUserData()).pushedBackward(1f);
+                    ((Player) fixtureB.getUserData()).knockedBack(1f);
                 }
                 break;
                 

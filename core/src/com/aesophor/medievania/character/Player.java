@@ -70,7 +70,7 @@ public class Player extends Character implements Humanoid, Controllable {
         short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
 
-        super.defineBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
+        super.defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
     }
 
     public Portal getCurrentPortal() {

@@ -29,7 +29,7 @@ public abstract class Enemy extends Character {
                 }
             } else {
                 // If the target isn't within melee attack range, move toward it until it can be attacked.
-                if (Utils.getDistance(b2body.getPosition().x, lockedOnTarget.b2body.getPosition().x) >= attackRange / Constants.PPM) {
+                if (Utils.getDistance(b2body.getPosition().x, lockedOnTarget.b2body.getPosition().x) >= attackRange * 2 / Constants.PPM) {
                     getBehavioralModel().moveTowardTarget(lockedOnTarget);
 
                     // Jump if it gets stucked while moving toward the lockedOnTarget.
