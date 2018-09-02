@@ -62,7 +62,7 @@ public class BehavioralModel {
             waitTimer = 0;
         }
 
-        if (moveTimer < moveDuration || waitTimer < waitDuration) {
+        if (moveTimer < moveDuration) {
             switch (direction) {
                 case LEFT:
                     character.moveLeft();

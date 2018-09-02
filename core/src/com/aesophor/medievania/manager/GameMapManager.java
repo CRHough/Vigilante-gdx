@@ -1,4 +1,4 @@
-package com.aesophor.medievania;
+package com.aesophor.medievania.manager;
 
 import box2dLight.RayHandler;
 import com.aesophor.medievania.character.Player;

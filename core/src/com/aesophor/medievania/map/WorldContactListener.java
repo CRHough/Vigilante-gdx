@@ -23,51 +23,21 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
         switch (cDef) {
-            case CategoryBits.PLAYER | CategoryBits.GROUND:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    ((Player) fixtureA.getUserData()).setIsJumping(false);
-                } else {
-                    ((Player) fixtureB.getUserData()).setIsJumping(false);
-                }
-                break;
-                
-            case CategoryBits.PLAYER | CategoryBits.PLATFORM:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    ((Player) fixtureA.getUserData()).setIsJumping(false);
-                } else {
-                    ((Player) fixtureB.getUserData()).setIsJumping(false);
-                }
-                break;
-
-            case CategoryBits.INVINCIBLE | CategoryBits.GROUND:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    ((Player) fixtureA.getUserData()).setIsJumping(false);
-                } else {
-                    ((Player) fixtureB.getUserData()).setIsJumping(false);
-                }
-                break;
-
-            case CategoryBits.INVINCIBLE | CategoryBits.PLATFORM:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    ((Player) fixtureA.getUserData()).setIsJumping(false);
-                } else {
-                    ((Player) fixtureB.getUserData()).setIsJumping(false);
-                }
-                break;
-                
-            case CategoryBits.ENEMY | CategoryBits.GROUND:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
+            case CategoryBits.FEET | CategoryBits.GROUND:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
                     ((Character) fixtureA.getUserData()).setIsJumping(false);
                 } else {
                     ((Character) fixtureB.getUserData()).setIsJumping(false);
                 }
                 break;
                 
-            case CategoryBits.ENEMY | CategoryBits.PLATFORM:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
+            case CategoryBits.FEET | CategoryBits.PLATFORM:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
                     ((Character) fixtureA.getUserData()).setIsJumping(false);
+                    ((Character) fixtureA.getUserData()).setIsOnPlatform(true);
                 } else {
                     ((Character) fixtureB.getUserData()).setIsJumping(false);
+                    ((Character) fixtureB.getUserData()).setIsOnPlatform(true);
                 }
                 break;
 
@@ -96,7 +66,6 @@ public class WorldContactListener implements ContactListener {
                 } else {
                     ((Character) fixtureB.getUserData()).getBehavioralModel().reverseDirection();
                 }
-                System.out.println("hit!");
                 break;
                 
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
@@ -146,50 +115,28 @@ public class WorldContactListener implements ContactListener {
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
         switch (cDef) {
-            case CategoryBits.PLAYER | CategoryBits.GROUND:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Player) fixtureA.getUserData()).setIsJumping(true);
+            case CategoryBits.FEET | CategoryBits.GROUND:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
+                    if (((Character) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < .5f) {
+                        ((Character) fixtureA.getUserData()).setIsJumping(true);
                     }
                 } else {
-                    if (((Player) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Player) fixtureB.getUserData()).setIsJumping(true);
+                    if (((Character) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < .5f) {
+                        ((Character) fixtureB.getUserData()).setIsJumping(true);
                     }
                 }
                 break;
                 
-            case CategoryBits.PLAYER | CategoryBits.PLATFORM:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Player) fixtureA.getUserData()).setIsJumping(true);
+            case CategoryBits.FEET | CategoryBits.PLATFORM:
+                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
+                    if (((Character) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Character) fixtureA.getUserData()).setIsJumping(true);
+                        ((Character) fixtureA.getUserData()).setIsOnPlatform(false);
                     }
                 } else {
-                    if (((Player) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Player) fixtureB.getUserData()).setIsJumping(true);
-                    }
-                }
-                break;
-
-            case CategoryBits.INVINCIBLE | CategoryBits.GROUND:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.INVINCIBLE) {
-                    if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Player) fixtureA.getUserData()).setIsJumping(true);
-                    }
-                } else {
-                    if (((Player) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Player) fixtureB.getUserData()).setIsJumping(true);
-                    }
-                }
-                break;
-
-            case CategoryBits.INVINCIBLE | CategoryBits.PLATFORM:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.INVINCIBLE) {
-                    if (((Player) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Player) fixtureA.getUserData()).setIsJumping(true);
-                    }
-                } else {
-                    if (((Player) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Player) fixtureB.getUserData()).setIsJumping(true);
+                    if (((Character) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
+                        ((Character) fixtureB.getUserData()).setIsJumping(true);
+                        ((Character) fixtureB.getUserData()).setIsOnPlatform(false);
                     }
                 }
                 break;
@@ -202,22 +149,7 @@ public class WorldContactListener implements ContactListener {
                     ((Player) fixtureB.getUserData()).setCurrentPortal(null);
                 }
                 break;
-                
-            case CategoryBits.ENEMY | CategoryBits.GROUND:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
-                    ((Character) fixtureA.getUserData()).setIsJumping(true);
-                } else {
-                    ((Character) fixtureB.getUserData()).setIsJumping(true);
-                }
-                break;
-                
-            case CategoryBits.ENEMY | CategoryBits.PLATFORM:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
-                    ((Character) fixtureA.getUserData()).setIsJumping(true);
-                } else {
-                    ((Character) fixtureB.getUserData()).setIsJumping(true);
-                }
-                break;
+
                 
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 Player player;

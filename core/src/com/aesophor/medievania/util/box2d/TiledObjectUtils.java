@@ -36,7 +36,7 @@ public class TiledObjectUtils {
     public static void parseLayers(World world, RayHandler rayHandler, GameMap gameMap) {
         createPolylines(world, gameMap, GameMapLayer.GROUND, CategoryBits.GROUND, GROUND_COLLIDABLE, Constants.GROUND_FRICTION);
         createRectangles(world, gameMap, GameMapLayer.PLATFORM, CategoryBits.PLATFORM, PLATFORM_COLLIDABLE, Constants.GROUND_FRICTION);
-        createPolylines(world, gameMap, GameMapLayer.WALL, CategoryBits.WALL, WALL_COLLIDABLE, 0);
+        createPolylines(world, gameMap, GameMapLayer.WALL, CategoryBits.WALL, WALL_COLLIDABLE, .5f);
         createPolylines(world, gameMap, GameMapLayer.CLIFF_MARKER, CategoryBits.CLIFF_MARKER, CLIFF_MARKER_COLLIDABLE, 0);
         createPortals(world, gameMap, GameMapLayer.PORTAL);
         createLightSources(rayHandler, gameMap, GameMapLayer.LIGHT_SOURCE);

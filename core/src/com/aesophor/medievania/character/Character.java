@@ -1,5 +1,6 @@
 package com.aesophor.medievania.character;
 
+import com.aesophor.medievania.equipment.Wieldable;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.box2d.BodyBuilder;
@@ -26,6 +27,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected Body b2body;
     protected Fixture bodyFixture;
     protected Fixture meleeWeaponFixture;
+    protected Fixture feetFixture;
     
     protected TextureRegion idleAnimation; // Change to Animation later.
     protected Animation<TextureRegion> runAnimation;
@@ -46,6 +48,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected boolean isAlerted;
     protected boolean facingRight;
     protected boolean isJumping;
+    protected boolean isOnPlatform;
     protected boolean isAttacking;
     protected boolean isCrouching;
     protected boolean isInvincible;
@@ -67,6 +70,9 @@ public abstract class Character extends Sprite implements Disposable {
     protected float attackTime;
     protected int attackRange;
     protected int attackDamage;
+
+    //protected Wieldable rightHandedWeapon;
+    //protected Wieldable leftHandedWeapon;
 
     protected BehavioralModel behavioralModel;
     protected Character lockedOnTarget;
@@ -178,12 +184,13 @@ public abstract class Character extends Sprite implements Disposable {
     }
 
     protected void defineBody(BodyDef.BodyType type, float width, float height,
-                              short bodyCategoryBits, short bodyMaskBits, short meleeWeaponMaskBits) {
+                              short bodyCategoryBits, short bodyMaskBits, short feetMaskBits, short meleeWeaponMaskBits) {
         b2body = bodyBuilder.type(type)
                 .position(getX(), getY(), Constants.PPM)
                 .buildBody();
 
         createBodyFixture(bodyCategoryBits, bodyMaskBits);
+        createFeetFixture(feetMaskBits);
         createMeleeWeaponFixture(meleeWeaponMaskBits);
     }
 
@@ -191,6 +198,21 @@ public abstract class Character extends Sprite implements Disposable {
         bodyFixture = bodyBuilder.newRectangleFixture(b2body.getPosition(), bodyWidth / 2, bodyHeight / 2, Constants.PPM)
                 .categoryBits(categoryBits)
                 .maskBits(maskBits)
+                .setUserData(this)
+                .buildFixture();
+    }
+
+    protected void createFeetFixture(short maskBits) {
+        Vector2[] feetPolyVertices = new Vector2[4];
+        feetPolyVertices[0] =  new Vector2(-bodyWidth / 2 + 1, -bodyHeight / 2);
+        feetPolyVertices[1] =  new Vector2(bodyWidth / 2 - 1, -bodyHeight / 2);
+        feetPolyVertices[2] =  new Vector2(-bodyWidth / 2 + 1, -bodyHeight / 2 - 2);
+        feetPolyVertices[3] =  new Vector2(bodyWidth / 2 - 1, -bodyHeight / 2 - 2);
+
+        feetFixture = bodyBuilder.newPolygonFixture(feetPolyVertices, Constants.PPM)
+                .categoryBits(CategoryBits.FEET)
+                .maskBits(maskBits)
+                .isSensor(true)
                 .setUserData(this)
                 .buildFixture();
     }
@@ -205,7 +227,7 @@ public abstract class Character extends Sprite implements Disposable {
                 .setUserData(this)
                 .buildFixture();
     }
-    
+
 
     public void moveLeft() {
         facingRight = false;
@@ -229,6 +251,12 @@ public abstract class Character extends Sprite implements Disposable {
             
             getB2Body().applyLinearImpulse(new Vector2(0, jumpHeight), b2body.getWorldCenter(), true);
             jumpSound.play();
+        }
+    }
+
+    public void jumpDown() {
+        if (isOnPlatform) {
+            b2body.setTransform(b2body.getPosition().x, b2body.getPosition().y - 3f / Constants.PPM, 0);
         }
     }
     
@@ -332,6 +360,14 @@ public abstract class Character extends Sprite implements Disposable {
     
     public void setIsJumping(boolean isJumping) {
         this.isJumping = isJumping;
+    }
+
+    public boolean isOnPlatform() {
+        return isOnPlatform;
+    }
+
+    public void setIsOnPlatform(boolean isOnPlatform) {
+        this.isOnPlatform = isOnPlatform;
     }
     
     public void setIsAttacking(boolean isAttacking) {

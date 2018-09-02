@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui;
 
-import com.aesophor.medievania.GameStateManager;
+import com.aesophor.medievania.manager.GameStateManager;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.character.Player;
 import com.badlogic.gdx.graphics.Texture;
@@ -74,7 +74,7 @@ public class HUD extends Stage {
     }
     
     
-    public void update(float dt) {
+    public void update(float delta) {
         healthBarImage.setScaleX(barLength * player.getHealth() / 100f); // 100 is only temporary (player's full heatlh is 100)
     }
     

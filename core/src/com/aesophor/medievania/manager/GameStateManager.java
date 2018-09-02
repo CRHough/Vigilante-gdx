@@ -1,4 +1,4 @@
-package com.aesophor.medievania;
+package com.aesophor.medievania.manager;
 
 import com.aesophor.medievania.screen.Screens;
 import com.badlogic.gdx.assets.AssetManager;

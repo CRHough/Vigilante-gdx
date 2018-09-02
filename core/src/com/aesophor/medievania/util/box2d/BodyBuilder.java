@@ -116,11 +116,11 @@ public class BodyBuilder {
     }
 
     /**
-     * Creates a new Polyline fixture whose position is relative to the body's position.
+     * Creates a new Polyline fixture. Body's position should be set to zero if using this.
      * This will clear the current Fixture Definition.
      * Always call buildFixture() before creating another new fixture, but if this is the very first
      * fixture you are creating with this BodyBuilder instance, then you don't need to call it though.
-     * @param vertices the vertices of the polyline. Body's position should be set to zero.
+     * @param vertices the vertices of the polyline.
      * @param ppm scale factor.
      * @return BodyBuilder instance.
      */
@@ -133,6 +133,27 @@ public class BodyBuilder {
             vector.scl(1 / ppm);
         }
         shape.createChain(vertices);
+        bodyShape = shape;
+        fdef.shape = shape;
+        return this;
+    }
+
+    /**
+     * Creates a new EdgeShape fixture whose position is relative to the body's position.
+     * This will clear the current Fixture Definition.
+     * Always call buildFixture() before creating another new fixture, but if this is the very first
+     * fixture you are creating with this BodyBuilder instance, then you don't need to call it though.
+     * @param vertex1 the first vertex of the body.
+     * @param vertex2 the second vertex of the body.
+     * @param ppm scale factor.
+     * @return BodyBuilder instance.
+     */
+    public BodyBuilder newEdgeShapeFixture(Vector2 vertex1, Vector2 vertex2, float ppm) {
+        fdef = new FixtureDef();
+        userData = null;
+
+        EdgeShape shape = new EdgeShape();
+        shape.set(vertex1.scl(1 / ppm), vertex2.scl(1 / ppm));
         bodyShape = shape;
         fdef.shape = shape;
         return this;

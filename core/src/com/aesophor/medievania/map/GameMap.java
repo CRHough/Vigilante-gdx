@@ -1,6 +1,6 @@
 package com.aesophor.medievania.map;
 
-import com.aesophor.medievania.GameMapManager;
+import com.aesophor.medievania.manager.GameMapManager;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Knight;
 import com.aesophor.medievania.character.Player;

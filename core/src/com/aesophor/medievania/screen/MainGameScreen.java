@@ -1,13 +1,14 @@
 package com.aesophor.medievania.screen;
 
 import box2dLight.RayHandler;
-import com.aesophor.medievania.GameMapManager;
-import com.aesophor.medievania.GameStateManager;
+import com.aesophor.medievania.manager.GameMapManager;
+import com.aesophor.medievania.manager.GameStateManager;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Player;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
+import com.aesophor.medievania.ui.BottomMenu;
 import com.aesophor.medievania.ui.HUD;
 import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Constants;
@@ -38,7 +39,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
     private TmxMapLoader mapLoader;
     private GameMap currentMap;
 
-    private HUD hud;
+    private final HUD hud;
     private Player player;
     private Array<Character> enemies;
 
@@ -89,7 +90,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
                 player.jump();
             } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                player.getB2Body().getPosition().y += 5;
+                player.jumpDown();
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.moveRight();
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -123,8 +124,8 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         handleInput(delta);
 
         world.step(1/60f, 6, 2);
-        rayHandler.update();
 
+        rayHandler.update();
         enemies.forEach((Character c) -> c.update(delta));
         player.update(delta);
         hud.update(delta);

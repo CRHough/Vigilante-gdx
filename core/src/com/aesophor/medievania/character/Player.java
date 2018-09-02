@@ -1,5 +1,6 @@
 package com.aesophor.medievania.character;
 
+import com.aesophor.medievania.equipment.Axe;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Rumble;
@@ -36,7 +37,7 @@ public class Player extends Character implements Humanoid, Controllable {
         
         // Create animations by extracting frames from the spritesheet.
         idleAnimation = new TextureRegion(getTexture(), 7 * 80, 2 * 80, 80, 80);
-        runAnimation = Utils.createAnimation(getTexture(), 10f / Constants.PPM,     0, 7,  0, 3 * 80,  80, 80);
+        runAnimation = Utils.createAnimation(getTexture(), 9f / Constants.PPM,     0, 7,  0, 3 * 80,  80, 80);
         jumpAnimation = Utils.createAnimation(getTexture(), 10f / Constants.PPM,     0, 3,  0, 1 * 80,  80, 80);
         fallAnimation = Utils.createAnimation(getTexture(), 10f / Constants.PPM,    4, 4,  0, 1 * 80,  80, 80);
         crouchAnimation = Utils.createAnimation(getTexture(), 10f / Constants.PPM,  5, 5,  0, 1 * 80,  80, 80);
@@ -66,8 +67,10 @@ public class Player extends Character implements Humanoid, Controllable {
     public void defineBody() {
         short bodyCategoryBits = CategoryBits.PLAYER;
         short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON;
+        short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
-        super.defineBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight, bodyCategoryBits, bodyMaskBits, weaponMaskBits);
+
+        super.defineBody(BodyDef.BodyType.DynamicBody, bodyWidth, bodyHeight, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
     }
 
     public Portal getCurrentPortal() {
@@ -80,6 +83,10 @@ public class Player extends Character implements Humanoid, Controllable {
 
     public void reposition(Vector2 position) {
         b2body.setTransform(position, 0);
+    }
+
+    public void reposition(float x, float y) {
+        b2body.setTransform(x, y, 0);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.aesophor.medievania;
 
+import com.aesophor.medievania.manager.GameStateManager;
 import com.aesophor.medievania.screen.AbstractScreen;
 import com.aesophor.medievania.screen.Screens;
 import com.badlogic.gdx.Game;
