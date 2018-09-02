@@ -250,7 +250,8 @@ public abstract class Character extends Sprite implements Disposable {
 
     public void jumpDown() {
         if (isOnPlatform) {
-            b2body.setTransform(b2body.getPosition().x, b2body.getPosition().y - 3f / Constants.PPM, 0);
+            isOnPlatform = false;
+            b2body.setTransform(b2body.getPosition().x, b2body.getPosition().y - 8f / Constants.PPM, 0);
         }
     }
     

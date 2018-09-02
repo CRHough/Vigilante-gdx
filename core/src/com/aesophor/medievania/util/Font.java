@@ -1,6 +1,5 @@
 package com.aesophor.medievania.util;
 
-import com.aesophor.medievania.Medievania;
 import com.aesophor.medievania.manager.GameStateManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
@@ -12,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoa
 
 public class Font {
 
-    private static final String FONT_FILE = "Interface/Font/m5x7.ttf";
+    private static final String FONT_FILE = "Interface/Font/Vormgevers.ttf";
     private static BitmapFont defaultFont;
 
     private GameStateManager gsm;

@@ -94,12 +94,22 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
             player.swingWeapon();
         }
 
+        if (player.isCrouching() && !Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            player.getUp();
+        }
+
         // When player is attacking, movement is disabled.
         if (!player.isAttacking()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
-                player.jump();
+                if (player.isCrouching()) {
+                    player.jumpDown();
+                } else {
+                    player.jump();
+                    messageArea.show("The player has jumped.");
+                }
+
             } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                player.jumpDown();
+
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.moveRight();
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -119,8 +129,9 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
                             // Reposition the player at the position of the target portal's body.
                             player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
                         }
-                    }, Actions.fadeOut(.75f)));
+                    }, Actions.fadeOut(.85f)));
                 } else {
+                    messageArea.show("There aren't any door right here.");
                 }
             }
         }
