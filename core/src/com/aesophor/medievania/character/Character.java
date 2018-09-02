@@ -55,6 +55,7 @@ public abstract class Character extends Sprite implements Disposable {
 
     protected String name;
     protected int level;
+    protected int exp;
     protected int health;
     protected int stamina;
     protected int magicka;
@@ -323,7 +324,10 @@ public abstract class Character extends Sprite implements Disposable {
     public Fixture getBodyFixture() {
         return bodyFixture;
     }
-    
+
+    public String getName() {
+        return name;
+    }
     
     public boolean isAttacking() {
         return isAttacking;

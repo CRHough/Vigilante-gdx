@@ -56,7 +56,7 @@ public class GameMap implements Disposable {
         MapObject object = tiledMap.getLayers().get(GameMapLayer.PLAYER.ordinal()).getObjects().getByType(RectangleMapObject.class).get(0);
         Rectangle rect = ((RectangleMapObject) object).getRectangle();
         
-        return new Player(gameMapManager.getAssets(), gameMapManager.getWorld(), rect.getX(), rect.getY());
+        return new Player(gameMapManager, rect.getX(), rect.getY());
     }
     
     public Array<Character> spawnNPCs() {

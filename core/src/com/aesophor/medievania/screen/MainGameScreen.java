@@ -8,9 +8,12 @@ import com.aesophor.medievania.manager.GameStateManager;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
-import com.aesophor.medievania.ui.HUD;
 import com.aesophor.medievania.message.MessageArea;
-import com.aesophor.medievania.util.*;
+import com.aesophor.medievania.ui.HUD;
+import com.aesophor.medievania.util.CameraUtils;
+import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.Rumble;
+import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
@@ -26,8 +29,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
-
-import java.util.concurrent.TimeUnit;
 
 public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
@@ -105,9 +106,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
                     player.jumpDown();
                 } else {
                     player.jump();
-                    messageArea.show("The player has jumped.");
                 }
-
             } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
 
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
@@ -130,8 +129,6 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
                             player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
                         }
                     }, Actions.fadeOut(.85f)));
-                } else {
-                    messageArea.show("There aren't any door right here.");
                 }
             }
         }
@@ -277,6 +274,11 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
     @Override
     public TmxMapLoader getMapLoader() {
         return mapLoader;
+    }
+
+    @Override
+    public MessageArea getMessageArea() {
+        return messageArea;
     }
 
     public GameMap getCurrentMap() {

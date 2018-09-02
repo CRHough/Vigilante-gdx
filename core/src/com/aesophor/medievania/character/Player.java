@@ -1,16 +1,15 @@
 package com.aesophor.medievania.character;
 
+import com.aesophor.medievania.manager.GameMapManager;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Rumble;
 import com.aesophor.medievania.util.Utils;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
@@ -18,10 +17,12 @@ public class Player extends Character implements Humanoid, Controllable {
     
     private static final String TEXTURE_FILE = "Character/Bandit/Bandit.png";
 
+    private GameMapManager gameMapManager;
     private Portal currentPortal;
     
-    public Player(AssetManager assets, World world, float x, float y) {
-        super(assets.get(TEXTURE_FILE), world, x, y);
+    public Player(GameMapManager gameMapManager, float x, float y) {
+        super(gameMapManager.getAssets().get(TEXTURE_FILE), gameMapManager.getWorld(), x, y);
+        this.gameMapManager = gameMapManager;
 
         bodyWidth = 10;
         bodyHeight = 34;
@@ -44,12 +45,12 @@ public class Player extends Character implements Humanoid, Controllable {
         killedAnimation = Utils.createAnimation(getTexture(), 24f / Constants.PPM,  0, 5,  0,      0,  80, 80);
         
         // Sounds.
-        footstepSound = assets.get("Sound/FX/Player/footstep.mp3");
-        hurtSound = assets.get("Sound/FX/Player/hurt.wav");
-        deathSound = assets.get("Sound/FX/Player/death.mp3");
-        weaponSwingSound = assets.get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
-        weaponHitSound = assets.get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
-        jumpSound = assets.get("Sound/FX/Player/jump.wav", Sound.class);
+        footstepSound = gameMapManager.getAssets().get("Sound/FX/Player/footstep.mp3");
+        hurtSound = gameMapManager.getAssets().get("Sound/FX/Player/hurt.wav");
+        deathSound = gameMapManager.getAssets().get("Sound/FX/Player/death.mp3");
+        weaponSwingSound = gameMapManager.getAssets().get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
+        weaponHitSound = gameMapManager.getAssets().get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
+        jumpSound = gameMapManager.getAssets().get("Sound/FX/Player/jump.wav", Sound.class);
 
         // Create body and fixtures.
         defineBody();
@@ -91,7 +92,12 @@ public class Player extends Character implements Humanoid, Controllable {
     @Override
     public void inflictDamage(Character c, int damage) {
         super.inflictDamage(c, damage);
+        gameMapManager.getMessageArea().show(String.format("You dealt %d pts damage to %s", damage, c.getName()));
         Rumble.rumble(8 / Constants.PPM, .1f);
+
+        if (c.isSetToKill()) {
+            gameMapManager.getMessageArea().show(String.format("You earned 10 exp."));
+        }
     }
     
     @Override

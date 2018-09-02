@@ -16,6 +16,7 @@ public class Knight extends Enemy implements Humanoid {
     public Knight(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
 
+        name = "Castle guard";
         bodyWidth = 10;
         bodyHeight = 34;
 
