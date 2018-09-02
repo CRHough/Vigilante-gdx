@@ -9,7 +9,7 @@ import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
 import com.aesophor.medievania.ui.HUD;
-import com.aesophor.medievania.ui.Messages;
+import com.aesophor.medievania.message.MessageArea;
 import com.aesophor.medievania.util.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -42,7 +42,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
     private GameMap currentMap;
 
     private final HUD hud;
-    private final Messages messages;
+    private final MessageArea messageArea;
     private Player player;
     private Array<Character> enemies;
 
@@ -70,7 +70,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         // Initialize player and HUD.
         player = currentMap.spawnPlayer();
         hud = new HUD(gsm, player);
-        messages = new Messages(gsm, TimeUnit.SECONDS.toMillis(1), 0, 10);
+        messageArea = new MessageArea(gsm, 6, 3f);
 
         // Draw a shade over everything to provide fade in/out effects.
         shade = new Image(new TextureRegion(Utils.getTexture()));
@@ -120,6 +120,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
                             player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
                         }
                     }, Actions.fadeOut(.75f)));
+                } else {
                 }
             }
         }
@@ -134,7 +135,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         enemies.forEach((Character c) -> c.update(delta));
         player.update(delta);
         hud.update(delta);
-        messages.update(delta);
+        messageArea.update(delta);
 
         if (Rumble.getRumbleTimeLeft() > 0){
             Rumble.tick(Gdx.graphics.getDeltaTime());
@@ -177,11 +178,11 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         getBatch().setProjectionMatrix(hud.getCamera().combined);
         hud.draw();
 
-        getBatch().setProjectionMatrix(messages.getCamera().combined);
-        messages.draw();
+        getBatch().setProjectionMatrix(messageArea.getCamera().combined);
+        messageArea.draw();
 
         // Draw all actors in this stage.
-        messages.draw();
+        messageArea.draw();
         this.draw();
     }
 

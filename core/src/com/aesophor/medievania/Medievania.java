@@ -3,6 +3,7 @@ package com.aesophor.medievania;
 import com.aesophor.medievania.manager.GameStateManager;
 import com.aesophor.medievania.screen.AbstractScreen;
 import com.aesophor.medievania.screen.Screens;
+import com.aesophor.medievania.util.Font;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -18,11 +19,13 @@ public class Medievania extends Game implements GameStateManager {
     
     private SpriteBatch batch;
     private AssetManager assets;
+    private Font font;
     
     @Override
     public void create () {
         this.batch = new SpriteBatch();
         this.assets = new AssetManager();
+        this.font = new Font(this);
         
         assets.load("Interface/Skin/medievania_skin.json", Skin.class);
         assets.load("Interface/mainmenu_bg.png", Texture.class);
@@ -90,6 +93,15 @@ public class Medievania extends Game implements GameStateManager {
     @Override
     public AssetManager getAssets() {
         return assets;
+    }
+
+    /**
+     * Gets the default font.
+     * @return default font.
+     */
+    @Override
+    public Font getFont() {
+        return font;
     }
     
     
