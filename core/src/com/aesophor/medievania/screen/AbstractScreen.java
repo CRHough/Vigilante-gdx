@@ -16,13 +16,9 @@ public abstract class AbstractScreen extends Stage implements Screen {
         // Note that this default constructor does NOT scale the viewport with PPM!
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT , new OrthographicCamera()), gsm.getBatch());
         this.gsm = gsm;
-    }
-    
-    
-    @Override
-    public void show() {
         Gdx.input.setInputProcessor(this);
     }
+
  
     @Override
     public void resize(int width, int height) {
@@ -33,7 +29,8 @@ public abstract class AbstractScreen extends Stage implements Screen {
     public void dispose() {
         super.dispose();
     }
- 
+
+    @Override public void show() {}
     @Override public void hide() {}
     @Override public void pause() {}
     @Override public void resume() {}

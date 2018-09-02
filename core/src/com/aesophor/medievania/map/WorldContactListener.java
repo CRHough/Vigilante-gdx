@@ -15,6 +15,7 @@ public class WorldContactListener implements ContactListener {
         
     }
 
+
     @Override
     public void beginContact(Contact contact) {
         Fixture fixtureA = contact.getFixtureA();
@@ -117,11 +118,11 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             case CategoryBits.FEET | CategoryBits.GROUND:
                 if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
-                    if (((Character) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < .5f) {
+                    if (((Character) fixtureA.getUserData()).getB2Body().getLinearVelocity().y > .5f) {
                         ((Character) fixtureA.getUserData()).setIsJumping(true);
                     }
                 } else {
-                    if (((Character) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < .5f) {
+                    if (((Character) fixtureB.getUserData()).getB2Body().getLinearVelocity().y > .5f) {
                         ((Character) fixtureB.getUserData()).setIsJumping(true);
                     }
                 }

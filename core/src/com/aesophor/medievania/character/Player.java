@@ -1,11 +1,10 @@
 package com.aesophor.medievania.character;
 
-import com.aesophor.medievania.equipment.Axe;
 import com.aesophor.medievania.map.Portal;
+import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Rumble;
 import com.aesophor.medievania.util.Utils;
-import com.aesophor.medievania.util.CategoryBits;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,7 +27,7 @@ public class Player extends Character implements Humanoid, Controllable {
         bodyHeight = 34;
 
         health = 100;
-        movementSpeed = .25f;
+        movementSpeed = .3f;
         jumpHeight = 3f;
         attackForce = 1f;
         attackTime = 1f;

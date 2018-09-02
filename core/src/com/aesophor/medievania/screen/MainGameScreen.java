@@ -1,38 +1,40 @@
 package com.aesophor.medievania.screen;
 
 import box2dLight.RayHandler;
-import com.aesophor.medievania.manager.GameMapManager;
-import com.aesophor.medievania.manager.GameStateManager;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Player;
+import com.aesophor.medievania.manager.GameMapManager;
+import com.aesophor.medievania.manager.GameStateManager;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
-import com.aesophor.medievania.ui.BottomMenu;
 import com.aesophor.medievania.ui.HUD;
-import com.aesophor.medievania.util.CameraUtils;
-import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.Rumble;
-import com.aesophor.medievania.util.ScreenEffects;
+import com.aesophor.medievania.ui.Messages;
+import com.aesophor.medievania.util.*;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
+
+import java.util.concurrent.TimeUnit;
 
 public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
     private World world;
     private AssetManager assets;
     private RayHandler rayHandler;
-    private ScreenEffects effects;
+    private Image shade;
 
     private OrthogonalTiledMapRenderer renderer;
     private Box2DDebugRenderer b2dr;
@@ -40,6 +42,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
     private GameMap currentMap;
 
     private final HUD hud;
+    private final Messages messages;
     private Player player;
     private Array<Character> enemies;
 
@@ -55,7 +58,6 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
         assets = gsm.getAssets();
         rayHandler = new RayHandler(world);
-        effects = new ScreenEffects(getBatch(), getCamera());
 
         // Load the tiled map.
         mapLoader = new TmxMapLoader();
@@ -68,6 +70,13 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         // Initialize player and HUD.
         player = currentMap.spawnPlayer();
         hud = new HUD(gsm, player);
+        messages = new Messages(gsm, TimeUnit.SECONDS.toMillis(1), 0, 10);
+
+        // Draw a shade over everything to provide fade in/out effects.
+        shade = new Image(new TextureRegion(Utils.getTexture()));
+        shade.setSize(getViewport().getScreenWidth(), getViewport().getScreenHeight());
+        shade.setColor(0, 0, 0, 0);
+        addActor(shade);
     }
 
 
@@ -99,9 +108,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
                 player.crouch();
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 if (player.getCurrentPortal() != null && !player.isSetToKill()) {
-                    effects.fadeOut(.5f);
-
-                    Timer.schedule(new Timer.Task() {
+                    shade.addAction(Actions.sequence(Actions.fadeIn(.3f), new RunnableAction() {
                         @Override
                         public void run() {
                             Portal currentPortal = player.getCurrentPortal();
@@ -111,10 +118,8 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
                             // Reposition the player at the position of the target portal's body.
                             player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
-
-                            effects.fadeIn(.8f);
                         }
-                    }, .5f);
+                    }, Actions.fadeOut(.75f)));
                 }
             }
         }
@@ -129,6 +134,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         enemies.forEach((Character c) -> c.update(delta));
         player.update(delta);
         hud.update(delta);
+        messages.update(delta);
 
         if (Rumble.getRumbleTimeLeft() > 0){
             Rumble.tick(Gdx.graphics.getDeltaTime());
@@ -142,6 +148,9 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
         // Tell our renderer to draw only what our camera can see.
         renderer.setView((OrthographicCamera) getCamera());
+
+        // Update all actors in this stage.
+        this.act(delta);
     }
 
     @Override
@@ -168,8 +177,12 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         getBatch().setProjectionMatrix(hud.getCamera().combined);
         hud.draw();
 
-        // Draws a shade over the entire screen so that we can provide fade out/in effects later.
-        effects.draw();
+        getBatch().setProjectionMatrix(messages.getCamera().combined);
+        messages.draw();
+
+        // Draw all actors in this stage.
+        messages.draw();
+        this.draw();
     }
 
     @Override
@@ -226,7 +239,9 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         }
 
         // Update shade size to make fade out/in work correctly.
-        effects.updateShadeSize(getCurrentMap().getMapWidth(), getCurrentMap().getMapHeight());
+        if (shade != null) {
+            shade.setSize(getCurrentMap().getMapWidth(), getCurrentMap().getMapHeight());
+        }
 
         // TODO: Don't respawn enemies whenever a map loads.
         enemies = currentMap.spawnNPCs();

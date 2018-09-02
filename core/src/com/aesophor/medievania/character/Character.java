@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.Disposable;
 public abstract class Character extends Sprite implements Disposable {
 
     public enum State { IDLE, RUNNING, JUMPING, FALLING, CROUCHING, ATTACKING, KILLED };
-
     
     protected Character.State currentState;
     protected Character.State previousState;
@@ -69,9 +68,6 @@ public abstract class Character extends Sprite implements Disposable {
     protected float attackTime;
     protected int attackRange;
     protected int attackDamage;
-
-    //protected Wieldable rightHandedWeapon;
-    //protected Wieldable leftHandedWeapon;
 
     protected BehavioralModel behavioralModel;
     protected Character lockedOnTarget;
