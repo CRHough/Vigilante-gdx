@@ -8,8 +8,9 @@ import com.aesophor.medievania.manager.GameStateManager;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
-import com.aesophor.medievania.message.MessageArea;
+import com.aesophor.medievania.ui.DamageIndicator;
 import com.aesophor.medievania.ui.HUD;
+import com.aesophor.medievania.ui.MessageArea;
 import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Rumble;
@@ -44,6 +45,8 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
 
     private final HUD hud;
     private final MessageArea messageArea;
+    private final DamageIndicator damageIndicator;
+
     private Player player;
     private Array<Character> enemies;
 
@@ -72,6 +75,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         player = currentMap.spawnPlayer();
         hud = new HUD(gsm, player);
         messageArea = new MessageArea(gsm, 6, 3f);
+        damageIndicator = new DamageIndicator(gsm, getCamera(), 1f);
 
         // Draw a shade over everything to provide fade in/out effects.
         shade = new Image(new TextureRegion(Utils.getTexture()));
@@ -144,6 +148,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         player.update(delta);
         hud.update(delta);
         messageArea.update(delta);
+        damageIndicator.update(delta);
 
         if (Rumble.getRumbleTimeLeft() > 0){
             Rumble.tick(Gdx.graphics.getDeltaTime());
@@ -189,14 +194,18 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         getBatch().setProjectionMatrix(messageArea.getCamera().combined);
         messageArea.draw();
 
-        // Draw all actors in this stage.
-        messageArea.draw();
+        getBatch().setProjectionMatrix(damageIndicator.getCamera().combined);
+        damageIndicator.draw();
+
+        // Draw all actors on this stage.
         this.draw();
     }
 
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
+
+        damageIndicator.getViewport().update(width, height);
 
         int viewportX = getViewport().getScreenX();
         int viewportY = getViewport().getScreenY();
@@ -279,6 +288,11 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
     @Override
     public MessageArea getMessageArea() {
         return messageArea;
+    }
+
+    @Override
+    public DamageIndicator getDamageIndicator() {
+        return damageIndicator;
     }
 
     public GameMap getCurrentMap() {

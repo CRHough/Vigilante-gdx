@@ -2,7 +2,6 @@ package com.aesophor.medievania.util;
 
 public class CategoryBits {
 
-    public static final short NULL = 0;
     public static final short GROUND = 1;
     public static final short PLATFORM = 2;
     public static final short FEET = 4;
@@ -14,6 +13,6 @@ public class CategoryBits {
     public static final short ENEMY = 128;
     public static final short OBJECT = 256;
     public static final short MELEE_WEAPON = 512;
-    public static final short INVINCIBLE = 1024;
+    public static final short DESTROYED = 1024;
     
 }

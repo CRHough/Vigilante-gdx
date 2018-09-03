@@ -11,7 +11,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Queue;
 
 public abstract class Character extends Sprite implements Disposable {
 
@@ -74,6 +76,8 @@ public abstract class Character extends Sprite implements Disposable {
     protected Character lockedOnTarget;
     protected Character inRangeTarget;
 
+    protected Queue<Actor> damageIndicators;
+
     public Character(Texture texture, World currentWorld, float x, float y) {
         super(texture);
         this.currentWorld = currentWorld;
@@ -85,6 +89,8 @@ public abstract class Character extends Sprite implements Disposable {
         currentState = Character.State.IDLE;
         previousState = Character.State.IDLE;
         facingRight = true;
+
+        damageIndicators = new Queue<>();
     }
 
     
@@ -296,7 +302,7 @@ public abstract class Character extends Sprite implements Disposable {
             health -= damage;
 
             if (health <= 0) {
-                setCategoryBits(bodyFixture, CategoryBits.INVINCIBLE);
+                setCategoryBits(bodyFixture, CategoryBits.DESTROYED);
                 setToKill = true;
                 deathSound.play();
             } else {
@@ -405,6 +411,10 @@ public abstract class Character extends Sprite implements Disposable {
 
     public BehavioralModel getBehavioralModel() {
         return behavioralModel;
+    }
+
+    public Queue<Actor> getDamageIndicators() {
+        return damageIndicators;
     }
     
     @Override

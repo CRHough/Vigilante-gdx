@@ -1,4 +1,4 @@
-package com.aesophor.medievania.message;
+package com.aesophor.medievania.ui;
 
 import com.aesophor.medievania.manager.GameStateManager;
 import com.aesophor.medievania.util.Constants;
@@ -30,10 +30,12 @@ public class MessageArea extends Stage {
 
         // Move previous messages up.
         for (Actor message : getActors()) {
-            ((Message) message).addAction(Actions.moveBy(0, 10f, .2f));
+            message.addAction(Actions.moveBy(0, 10f, .2f));
         }
 
         // Display the new message.
+        // Rename Message later! It can be reused for displaying on-screen texts, so
+        // the name should be more generic.
         Message newMsg = new Message(content, new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE), messageLifetime);
         newMsg.setPosition(10f, 0f);
         newMsg.addAction(Actions.moveBy(0f, 10f, .2f));

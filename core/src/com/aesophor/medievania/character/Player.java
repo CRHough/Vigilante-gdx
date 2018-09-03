@@ -91,7 +91,13 @@ public class Player extends Character implements Humanoid, Controllable {
 
     @Override
     public void inflictDamage(Character c, int damage) {
+        if ((this.facingRight && c.facingRight()) || (!this.facingRight && !c.facingRight())) {
+            damage *= 2;
+            gameMapManager.getMessageArea().show("Critical hit!");
+        }
+
         super.inflictDamage(c, damage);
+        gameMapManager.getDamageIndicator().show(c, damage);
         gameMapManager.getMessageArea().show(String.format("You dealt %d pts damage to %s", damage, c.getName()));
         Rumble.rumble(8 / Constants.PPM, .1f);
 
@@ -103,19 +109,16 @@ public class Player extends Character implements Humanoid, Controllable {
     @Override
     public void receiveDamage(int damage) {
         super.receiveDamage(damage);
-        
+
         // Sets the player to be untouchable for a while.
         if (!isInvincible) {
             Rumble.rumble(8 / Constants.PPM, .1f);
-
-            setCategoryBits(bodyFixture, CategoryBits.INVINCIBLE);
             isInvincible = true;
-            
+
             Timer.schedule(new Task() {
                 @Override
                 public void run() {
                     if (!setToKill) {
-                        setCategoryBits(bodyFixture, CategoryBits.PLAYER);
                         isInvincible = false;
                     }
                 }
