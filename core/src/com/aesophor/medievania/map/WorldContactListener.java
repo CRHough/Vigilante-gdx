@@ -11,9 +11,9 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
 public class WorldContactListener implements ContactListener {
-    
+
     public WorldContactListener() {
-        
+
     }
 
 

@@ -3,7 +3,7 @@ package com.aesophor.medievania.util;
 import java.util.Random;
 import com.badlogic.gdx.math.Vector3;
  
-public class Rumble {
+public class CameraShake {
 
     private static float time = 0;
     private static float currentTime = 0;
@@ -12,14 +12,14 @@ public class Rumble {
     private static Random random;
     private static Vector3 pos = new Vector3();
  
-    public static void rumble(float rumblePower, float rumbleLength) {
+    public static void shake(float rumblePower, float rumbleLength) {
         random = new Random();
         power = rumblePower;
         time = rumbleLength;
         currentTime = 0;
     }
  
-    public static Vector3 tick(float delta) {
+    public static Vector3 update(float delta) {
         if (currentTime <= time) {
             currentPower = power * ((time - currentTime) / time);
  
@@ -33,7 +33,7 @@ public class Rumble {
         return pos;
     }
  
-    public static float getRumbleTimeLeft() {
+    public static float getShakeTimeLeft() {
         return time;
     }
  

@@ -13,7 +13,7 @@ import com.aesophor.medievania.ui.HUD;
 import com.aesophor.medievania.ui.MessageArea;
 import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.Rumble;
+import com.aesophor.medievania.util.CameraShake;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -33,55 +33,55 @@ import com.badlogic.gdx.utils.Array;
 
 public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
-    private World world;
-    private AssetManager assets;
-    private RayHandler rayHandler;
-    private Image shade;
+    private final AssetManager assets;
+    private final RayHandler rayHandler;
+    private final OrthogonalTiledMapRenderer renderer;
+    private final Box2DDebugRenderer b2dr;
+    private final TmxMapLoader mapLoader;
 
-    private OrthogonalTiledMapRenderer renderer;
-    private Box2DDebugRenderer b2dr;
-    private TmxMapLoader mapLoader;
+    private final DamageIndicator damageIndicator;
+    private final MessageArea messageArea;
+    private final HUD hud;
+    private final Image shade;
+
+    private World world;
     private GameMap currentMap;
 
-    private final HUD hud;
-    private final MessageArea messageArea;
-    private final DamageIndicator damageIndicator;
-
-    private Player player;
+    private final Player player;
     private Array<Character> enemies;
 
     public MainGameScreen(GameStateManager gsm) {
         super(gsm);
+        assets = gsm.getAssets();
+        rayHandler = new RayHandler(null);
 
         // Since we will be rendering TiledMaps, we should scale the viewport with PPM.
         getViewport().setWorldSize(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
 
-        // Initialize the world.
+        // Initialize the world, and register the world contact listener.
         world = new World(new Vector2(0, Constants.GRAVITY), true);
         world.setContactListener(new WorldContactListener());
 
-        assets = gsm.getAssets();
-        rayHandler = new RayHandler(world);
-
-        // Load the tiled map.
-        mapLoader = new TmxMapLoader();
-        load("Map/starting_point.tmx");
-
-        // Initialize the OrthogonalTiledMapRenderer to show our map.
-        renderer = new OrthogonalTiledMapRenderer(currentMap.getTiledMap(), 1 / Constants.PPM);
-        b2dr = new Box2DDebugRenderer();
-
-        // Initialize player and HUD.
-        player = currentMap.spawnPlayer();
-        hud = new HUD(gsm, player);
-        messageArea = new MessageArea(gsm, 6, 3f);
-        damageIndicator = new DamageIndicator(gsm, getCamera(), 1.5f);
-
-        // Draw a shade over everything to provide fade in/out effects.
+        // Initialize shade to provide fade in/out effects later.
+        // The shade is drawn atop everything, with only its transparency being adjusted.
         shade = new Image(new TextureRegion(Utils.getTexture()));
         shade.setSize(getViewport().getScreenWidth(), getViewport().getScreenHeight());
         shade.setColor(0, 0, 0, 0);
         addActor(shade);
+
+        // Initialize the OrthogonalTiledMapRenderer to render our map.
+        renderer = new OrthogonalTiledMapRenderer(null, 1 / Constants.PPM);
+        b2dr = new Box2DDebugRenderer();
+        mapLoader = new TmxMapLoader();
+
+        // Load the map and spawn player.
+        setGameMap("Map/starting_point.tmx");
+        player = currentMap.spawnPlayer();
+
+        // Initialize HUD.
+        damageIndicator = new DamageIndicator(gsm, getCamera(), 1.5f);
+        messageArea = new MessageArea(gsm, 6, 3f);
+        hud = new HUD(gsm, player);
     }
 
 
@@ -127,7 +127,7 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
                             Portal currentPortal = player.getCurrentPortal();
                             int targetPortalID = currentPortal.getTargetPortalID();
 
-                            load(currentPortal.getTargetMap());
+                            setGameMap(currentPortal.getTargetMap());
 
                             // Reposition the player at the position of the target portal's body.
                             player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
@@ -150,9 +150,9 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         messageArea.update(delta);
         damageIndicator.update(delta);
 
-        if (Rumble.getRumbleTimeLeft() > 0){
-            Rumble.tick(Gdx.graphics.getDeltaTime());
-            getCamera().translate(Rumble.getPos());
+        if (CameraShake.getShakeTimeLeft() > 0){
+            CameraShake.update(Gdx.graphics.getDeltaTime());
+            getCamera().translate(CameraShake.getPos());
         } else {
             CameraUtils.lerpToTarget(getCamera(), player.getB2Body().getPosition());
         }
@@ -187,15 +187,15 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         player.draw(getBatch());
         getBatch().end();
 
-        // Set our batch to now draw what the Hud camera sees.
-        getBatch().setProjectionMatrix(hud.getCamera().combined);
-        hud.draw();
+        getBatch().setProjectionMatrix(damageIndicator.getCamera().combined);
+        damageIndicator.draw();
 
         getBatch().setProjectionMatrix(messageArea.getCamera().combined);
         messageArea.draw();
 
-        getBatch().setProjectionMatrix(damageIndicator.getCamera().combined);
-        damageIndicator.draw();
+        // Set our batch to now draw what the Hud camera sees.
+        getBatch().setProjectionMatrix(hud.getCamera().combined);
+        hud.draw();
 
         // Draw all actors on this stage.
         this.draw();
@@ -205,13 +205,12 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     public void resize(int width, int height) {
         super.resize(width, height);
 
-        damageIndicator.getViewport().update(width, height);
-
         int viewportX = getViewport().getScreenX();
         int viewportY = getViewport().getScreenY();
         int viewportWidth = getViewport().getScreenWidth();
         int viewportHeight = getViewport().getScreenHeight();
         rayHandler.useCustomViewport(viewportX, viewportY, viewportWidth, viewportHeight);
+        damageIndicator.getViewport().update(width, height);
     }
 
     @Override
@@ -226,10 +225,14 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     }
 
 
+    /**
+     * Sets the speicified GameMap as the current one.
+     * @param gameMapFile path to the .tmx tiled map.
+     */
     @Override
-    public void load(String gameMapFile) {
-        // Dispose previous map data. Don't execute this block if it is the first time loading a map.
-        if (renderer != null && currentMap != null) {
+    public void setGameMap(String gameMapFile) {
+        // Dispose previous map data if there is any.
+        if (currentMap != null) {
             // Stop the background music, lights and dispose previous GameMap.
             currentMap.getBackgroundMusic().stop();
             rayHandler.removeAll();
@@ -251,15 +254,14 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         currentMap = new GameMap(this, gameMapFile);
         currentMap.playBackgroundMusic();
 
+        // Update the RayHandler.
+        rayHandler.setWorld(world);
+
         // Sets the OrthogonalTiledMapRenderer to show our new map.
-        if (renderer != null) {
-            renderer.setMap(currentMap.getTiledMap());
-        }
+        renderer.setMap(currentMap.getTiledMap());
 
         // Update shade size to make fade out/in work correctly.
-        if (shade != null) {
-            shade.setSize(getCurrentMap().getMapWidth(), getCurrentMap().getMapHeight());
-        }
+        shade.setSize(getCurrentMap().getMapWidth(), getCurrentMap().getMapHeight());
 
         // TODO: Don't respawn enemies whenever a map loads.
         enemies = currentMap.spawnNPCs();

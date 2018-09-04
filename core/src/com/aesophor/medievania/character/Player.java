@@ -4,7 +4,7 @@ import com.aesophor.medievania.GameWorldManager;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.Rumble;
+import com.aesophor.medievania.util.CameraShake;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -99,7 +99,7 @@ public class Player extends Character implements Humanoid, Controllable {
         super.inflictDamage(c, damage);
         gameWorldManager.getDamageIndicator().show(c, damage);
         gameWorldManager.getMessageArea().show(String.format("You dealt %d pts damage to %s", damage, c.getName()));
-        Rumble.rumble(8 / Constants.PPM, .1f);
+        CameraShake.shake(8 / Constants.PPM, .1f);
 
         if (c.isSetToKill()) {
             gameWorldManager.getMessageArea().show(String.format("You earned 10 exp."));
@@ -112,7 +112,7 @@ public class Player extends Character implements Humanoid, Controllable {
 
         // Sets the player to be untouchable for a while.
         if (!isInvincible) {
-            Rumble.rumble(8 / Constants.PPM, .1f);
+            CameraShake.shake(8 / Constants.PPM, .1f);
             isInvincible = true;
 
             Timer.schedule(new Task() {
