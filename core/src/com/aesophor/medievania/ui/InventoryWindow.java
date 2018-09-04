@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui;
 
-import com.aesophor.medievania.manager.GameStateManager;
+import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.character.Player;
 import com.badlogic.gdx.graphics.Texture;

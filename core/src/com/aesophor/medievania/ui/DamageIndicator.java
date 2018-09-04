@@ -1,7 +1,7 @@
 package com.aesophor.medievania.ui;
 
 import com.aesophor.medievania.character.Character;
-import com.aesophor.medievania.manager.GameStateManager;
+import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -35,7 +35,7 @@ public class DamageIndicator extends Stage {
     public void show(Character c, int damage) {
         // Move previous text indicator up.
         for (Actor i : c.getDamageIndicators()) {
-            i.addAction(Actions.moveBy(0, .5f, .2f));
+            i.addAction(Actions.moveBy(0, 10f, .2f));
         }
 
         // Display the new message.
@@ -48,14 +48,16 @@ public class DamageIndicator extends Stage {
         gameScreenCamera.project(worldCoordinates);
 
         indicator.setPosition(worldCoordinates.x * Constants.V_WIDTH / getViewport().getScreenWidth(), worldCoordinates.y * Constants.V_HEIGHT / getViewport().getScreenHeight());
-        indicator.addAction(Actions.moveBy(0f, .1f, .2f));
+        indicator.addAction(Actions.moveBy(0, 10f, .2f));
         c.getDamageIndicators().addLast(indicator);
         addActor(indicator);
     }
 
 
     public void update(float delta) {
-        // If any previous message has expired
+
+        // Remove the actor from character's queue....
+        // do this tomorrow i'm going to bed right now...
         for (Actor i : getActors()) {
             Message indicator = ((Message) i);
             indicator.update(delta);
@@ -64,6 +66,7 @@ public class DamageIndicator extends Stage {
                 indicator.addAction(Actions.sequence(Actions.fadeOut(.3f), Actions.removeActor()));
             }
         }
+
 
         act(delta);
     }

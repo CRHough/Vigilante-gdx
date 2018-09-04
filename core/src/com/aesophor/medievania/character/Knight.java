@@ -23,7 +23,7 @@ public class Knight extends Enemy implements Humanoid {
         health = 100;
         movementSpeed = .20f;
         jumpHeight = 3.5f;
-        attackForce = .6f;
+        attackForce = 1.2f;
         attackTime = 1.2f;
         attackRange = 14;
         attackDamage = 25;

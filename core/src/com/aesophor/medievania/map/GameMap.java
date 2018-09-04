@@ -1,6 +1,6 @@
 package com.aesophor.medievania.map;
 
-import com.aesophor.medievania.manager.GameMapManager;
+import com.aesophor.medievania.GameWorldManager;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Knight;
 import com.aesophor.medievania.character.Player;
@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class GameMap implements Disposable {
 
-    private GameMapManager gameMapManager;
+    private GameWorldManager gameWorldManager;
     private String mapFilePath;
     private TiledMap tiledMap;
 
@@ -26,10 +26,10 @@ public class GameMap implements Disposable {
     private int mapHeight;
     private int mapTileSize;
 
-    public GameMap(GameMapManager gameMapManager, String mapFilePath) {
-        this.gameMapManager = gameMapManager;
+    public GameMap(GameWorldManager gameWorldManager, String mapFilePath) {
+        this.gameWorldManager = gameWorldManager;
         this.mapFilePath = mapFilePath;
-        tiledMap = gameMapManager.getMapLoader().load(mapFilePath);
+        tiledMap = gameWorldManager.getMapLoader().load(mapFilePath);
         portals = new Array<>();
 
         // Extract width, height and tile size from the map.
@@ -41,14 +41,14 @@ public class GameMap implements Disposable {
         mapTileSize = tileWidth;
 
         // Extract backgroundMusic and brightness from the map (they are stored as custom properties).
-        backgroundMusic = gameMapManager.getAssets().get((String) tiledMap.getProperties().get("backgroundMusic"));
+        backgroundMusic = gameWorldManager.getAssets().get((String) tiledMap.getProperties().get("backgroundMusic"));
         brightness = (Float) tiledMap.getProperties().get("brightness");
 
         // Update brightness according to this map.
-        gameMapManager.getRayHandler().setAmbientLight(brightness);
+        gameWorldManager.getRayHandler().setAmbientLight(brightness);
         
         // Create bodies in the world according to each map layer.
-        TiledObjectUtils.parseLayers(gameMapManager.getWorld(), gameMapManager.getRayHandler(), this);
+        TiledObjectUtils.parseLayers(gameWorldManager.getWorld(), gameWorldManager.getRayHandler(), this);
     }
 
     
@@ -56,7 +56,7 @@ public class GameMap implements Disposable {
         MapObject object = tiledMap.getLayers().get(GameMapLayer.PLAYER.ordinal()).getObjects().getByType(RectangleMapObject.class).get(0);
         Rectangle rect = ((RectangleMapObject) object).getRectangle();
         
-        return new Player(gameMapManager, rect.getX(), rect.getY());
+        return new Player(gameWorldManager, rect.getX(), rect.getY());
     }
     
     public Array<Character> spawnNPCs() {
@@ -64,7 +64,7 @@ public class GameMap implements Disposable {
         
         for (MapObject object : tiledMap.getLayers().get(GameMapLayer.NPCS.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            knights.add(new Knight(gameMapManager.getAssets(), gameMapManager.getWorld(), rect.getX(), rect.getY()));
+            knights.add(new Knight(gameWorldManager.getAssets(), gameWorldManager.getWorld(), rect.getX(), rect.getY()));
         }
         
         return knights;

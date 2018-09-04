@@ -1,5 +1,6 @@
 package com.aesophor.medievania.map;
 
+import com.aesophor.medievania.character.Enemy;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Player;
@@ -18,89 +19,63 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
+        // Some variables that might get reused for several times.
+        Character character;
+        Player player;
+        Enemy enemy;
+        Portal portal;
+
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
-        
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
         switch (cDef) {
+            // When a character lands on the ground, make following changes.
             case CategoryBits.FEET | CategoryBits.GROUND:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
-                    ((Character) fixtureA.getUserData()).setIsJumping(false);
-                } else {
-                    ((Character) fixtureB.getUserData()).setIsJumping(false);
-                }
-                break;
-                
-            case CategoryBits.FEET | CategoryBits.PLATFORM:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
-                    ((Character) fixtureA.getUserData()).setIsJumping(false);
-                    ((Character) fixtureA.getUserData()).setIsOnPlatform(true);
-                } else {
-                    ((Character) fixtureB.getUserData()).setIsJumping(false);
-                    ((Character) fixtureB.getUserData()).setIsOnPlatform(true);
-                }
+                character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
+                character.setIsJumping(false);
                 break;
 
+            // When a character lands on a platform, make following changes.
+            case CategoryBits.FEET | CategoryBits.PLATFORM:
+                character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
+                character.setIsJumping(false);
+                character.setIsOnPlatform(true);
+                break;
+
+            // When player gets close to a portal, register the portal to the player.
             case CategoryBits.PLAYER | CategoryBits.PORTAL:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    ((Player) fixtureA.getUserData()).setCurrentPortal((Portal) fixtureB.getUserData());
-                } else {
-                    ((Player) fixtureB.getUserData()).setCurrentPortal((Portal) fixtureA.getUserData());
-                }
+                player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
+                portal = (Portal) getTargetFixture(CategoryBits.PORTAL, fixtureA, fixtureB).getUserData();
+                player.setCurrentPortal(portal);
                 break;
-                
-                
+
+
+            // When a player bumps into an enemy, the enemy will inflict damage and knockback to the player.
             case CategoryBits.PLAYER | CategoryBits.ENEMY:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    ((Player) fixtureA.getUserData()).receiveDamage(25);
-                    ((Player) fixtureA.getUserData()).knockedBack(1f);
-                } else {
-                    ((Player) fixtureB.getUserData()).receiveDamage(25);
-                    ((Player) fixtureB.getUserData()).knockedBack(1f);
-                }
+                player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
+                enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
+                enemy.inflictDamage(player, 25);
                 break;
-                
+
+            // When an NPC hits a cliff marker, reverse the NPC's current direction.
             case CategoryBits.ENEMY | CategoryBits.CLIFF_MARKER:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
-                    ((Character) fixtureA.getUserData()).getBehavioralModel().reverseDirection();
-                } else {
-                    ((Character) fixtureB.getUserData()).getBehavioralModel().reverseDirection();
-                }
+                enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
+                enemy.getBehavioralModel().reverseDirection();
                 break;
-                
+
+            // Set enemy as player's current target (so player can inflict damage to enemy).
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
-                Player player;
-                Character target;
-                // Set enemy as player's current target (so he can inflict damage to it).
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
-                    target = (Character) (fixtureA.getUserData());
-                    player = (Player) (fixtureB.getUserData());
-                    
-                    player.setInRangeTarget(target);
-                } else {
-                    target = (Character) (fixtureB.getUserData());
-                    player = (Player) (fixtureA.getUserData());
-                    
-                    player.setInRangeTarget(target);
-                }
+                player = (Player) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
+                enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
+                player.setInRangeTarget(enemy);
                 break;
-                
+
+            // Set player as enemy's current target (so enemy can inflict damage to player).
             case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
-                Player p;
-                Character t;
-                // Set enemy as player's current target (so he can inflict damage to it).
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    p = (Player) (fixtureA.getUserData());
-                    t = (Character) (fixtureB.getUserData());
-                    
-                    t.setInRangeTarget(p);
-                } else {
-                    p = (Player) (fixtureB.getUserData());
-                    t = (Character) (fixtureA.getUserData());
-                    
-                    t.setInRangeTarget(p);
-                }
+                player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
+                enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
+                enemy.setInRangeTarget(player);
                 break;
                 
             default:
@@ -110,70 +85,51 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
+        // Some variables that might get reused for several times.
+        Character character;
+        Player player;
+        Enemy enemy;
+        Portal portal;
+
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
-        
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
         
         switch (cDef) {
+            // When a character leaves the ground, make following changes.
             case CategoryBits.FEET | CategoryBits.GROUND:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
-                    if (((Character) fixtureA.getUserData()).getB2Body().getLinearVelocity().y > .5f) {
-                        ((Character) fixtureA.getUserData()).setIsJumping(true);
-                    }
-                } else {
-                    if (((Character) fixtureB.getUserData()).getB2Body().getLinearVelocity().y > .5f) {
-                        ((Character) fixtureB.getUserData()).setIsJumping(true);
-                    }
+                character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
+                if (character.getB2Body().getLinearVelocity().y > .5f) {
+                    character.setIsJumping(true);
                 }
                 break;
-                
+
+            // When a character leaves the platform, make following changes.
             case CategoryBits.FEET | CategoryBits.PLATFORM:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.FEET) {
-                    if (((Character) fixtureA.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Character) fixtureA.getUserData()).setIsJumping(true);
-                        ((Character) fixtureA.getUserData()).setIsOnPlatform(false);
-                    }
-                } else {
-                    if (((Character) fixtureB.getUserData()).getB2Body().getLinearVelocity().y < -.5f) {
-                        ((Character) fixtureB.getUserData()).setIsJumping(true);
-                        ((Character) fixtureB.getUserData()).setIsOnPlatform(false);
-                    }
+                character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
+                if (character.getB2Body().getLinearVelocity().y < -.5f) {
+                    character.setIsJumping(true);
+                    character.setIsOnPlatform(false);
                 }
                 break;
 
-
+            // When player leaves the portal, unregister the portal from the player.
             case CategoryBits.PLAYER | CategoryBits.PORTAL:
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    ((Player) fixtureA.getUserData()).setCurrentPortal(null);
-                } else {
-                    ((Player) fixtureB.getUserData()).setCurrentPortal(null);
-                }
+                player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
+                player.setCurrentPortal(null);
                 break;
 
-                
+
+            // Clear player's current target (so player cannot inflict damage to enemy from a distance).
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
-                Player player;
-                // Clear player's in range target when contact ends.
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.ENEMY) {
-                    player = (Player) (fixtureB.getUserData());
-                    player.setInRangeTarget(null);
-                } else {
-                    player = (Player) (fixtureA.getUserData());
-                    player.setInRangeTarget(null);
-                }
+                player = (Player) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
+                player.setInRangeTarget(null);
                 break;
-                
+
+            // Clear enemy's current target (so enemy cannot inflict damage to player from a distance).
             case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
-                Character t;
-                // Clear target's in range target when contact ends.
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    t = (Character) (fixtureB.getUserData());
-                    t.setInRangeTarget(null);
-                } else {
-                    t = (Character) (fixtureA.getUserData());
-                    t.setInRangeTarget(null);
-                }
+                enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
+                enemy.setInRangeTarget(null);
                 break;
                 
             default:
@@ -191,23 +147,15 @@ public class WorldContactListener implements ContactListener {
         switch (cDef) {
             // Allow player to pass through platforms and collide on the way down.
             case CategoryBits.PLAYER | CategoryBits.PLATFORM:
-                float playerY;
-                float platformY;
-                
-                if (fixtureA.getFilterData().categoryBits == CategoryBits.PLAYER) {
-                    playerY = fixtureA.getBody().getPosition().y;
-                    platformY = fixtureB.getBody().getPosition().y;
-                } else {
-                    playerY = fixtureB.getBody().getPosition().y;
-                    platformY = fixtureA.getBody().getPosition().y;
-                }
-                
-                if (playerY > platformY + .15f) { // Player is about to land on the platform.
-                    contact.setEnabled(true);
-                } else {
-                    contact.setEnabled(false);
-                }
-                
+                Fixture playerBody = getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB);
+                Fixture platform = getTargetFixture(CategoryBits.PLATFORM, fixtureA, fixtureB);
+
+                float playerY = playerBody.getBody().getPosition().y;
+                float platformY = platform.getBody().getPosition().y;
+
+                // Enable contact if the player is about to land on the platform.
+                // .15f is a value that works fine in my world.
+                contact.setEnabled((playerY > platformY + .15f));
                 break;
                 
             default:
@@ -219,6 +167,28 @@ public class WorldContactListener implements ContactListener {
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
         
+    }
+
+
+    /**
+     * Gets the target fixture which holds the specified CategoryBits from two candidates.
+     * @param targetCategoryBits target category bits.
+     * @param fixtureA candidate A.
+     * @param fixtureB candidate B.
+     * @return target fixture. If the target cannot be found, it returns null.
+     */
+    public static Fixture getTargetFixture(short targetCategoryBits, Fixture fixtureA, Fixture fixtureB) {
+        Fixture targetFixture;
+
+        if (fixtureA.getFilterData().categoryBits == targetCategoryBits) {
+            targetFixture = fixtureA;
+        } else if (fixtureB.getFilterData().categoryBits == targetCategoryBits) {
+            targetFixture = fixtureB;
+        } else {
+            targetFixture = null;
+        }
+
+        return targetFixture;
     }
 
 }

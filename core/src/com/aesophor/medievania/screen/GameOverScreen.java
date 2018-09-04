@@ -1,6 +1,6 @@
 package com.aesophor.medievania.screen;
 
-import com.aesophor.medievania.manager.GameStateManager;
+import com.aesophor.medievania.GameStateManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;

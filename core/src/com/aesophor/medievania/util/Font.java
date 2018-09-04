@@ -1,6 +1,6 @@
 package com.aesophor.medievania.util;
 
-import com.aesophor.medievania.manager.GameStateManager;
+import com.aesophor.medievania.GameStateManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;

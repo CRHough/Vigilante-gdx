@@ -1,4 +1,4 @@
-package com.aesophor.medievania.manager;
+package com.aesophor.medievania;
 
 import com.aesophor.medievania.screen.Screens;
 import com.aesophor.medievania.util.Font;

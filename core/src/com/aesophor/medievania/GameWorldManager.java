@@ -1,4 +1,4 @@
-package com.aesophor.medievania.manager;
+package com.aesophor.medievania;
 
 import box2dLight.RayHandler;
 import com.aesophor.medievania.character.Player;
@@ -10,7 +10,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
-public interface GameMapManager extends Disposable {
+public interface GameWorldManager extends Disposable {
 
     public void load(String gameMapFile);
 
@@ -18,6 +18,7 @@ public interface GameMapManager extends Disposable {
     public AssetManager getAssets();
     public RayHandler getRayHandler();
     public TmxMapLoader getMapLoader();
+
     public MessageArea getMessageArea();
     public DamageIndicator getDamageIndicator();
 

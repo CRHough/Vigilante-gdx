@@ -3,8 +3,8 @@ package com.aesophor.medievania.screen;
 import box2dLight.RayHandler;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Player;
-import com.aesophor.medievania.manager.GameMapManager;
-import com.aesophor.medievania.manager.GameStateManager;
+import com.aesophor.medievania.GameWorldManager;
+import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
@@ -31,7 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
 
-public class MainGameScreen extends AbstractScreen implements GameMapManager {
+public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
     private World world;
     private AssetManager assets;
@@ -75,7 +75,7 @@ public class MainGameScreen extends AbstractScreen implements GameMapManager {
         player = currentMap.spawnPlayer();
         hud = new HUD(gsm, player);
         messageArea = new MessageArea(gsm, 6, 3f);
-        damageIndicator = new DamageIndicator(gsm, getCamera(), 1f);
+        damageIndicator = new DamageIndicator(gsm, getCamera(), 1.5f);
 
         // Draw a shade over everything to provide fade in/out effects.
         shade = new Image(new TextureRegion(Utils.getTexture()));
