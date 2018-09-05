@@ -1,7 +1,6 @@
 package com.aesophor.medievania.ui;
 
 import com.aesophor.medievania.character.Character;
-import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -41,9 +40,9 @@ public class DamageIndicator extends Stage {
         }
 
         // Display the new message.
-        // Rename Message later! It can be reused for displaying on-screens texts, so
+        // Rename OnScreenText later! It can be reused for displaying on-screens texts, so
         // the name should be more generic.
-        Message indicator = new Message(Integer.toString(damage), new Label.LabelStyle(font, Color.WHITE), damageTextLifetime);
+        OnScreenText indicator = new OnScreenText(Integer.toString(damage), new Label.LabelStyle(font, Color.WHITE), damageTextLifetime);
 
         // Convert the coordinate from world to screens.
         Vector3 worldCoordinates = new Vector3(c.getB2Body().getPosition().x, c.getB2Body().getPosition().y, 0);
@@ -61,7 +60,7 @@ public class DamageIndicator extends Stage {
         // Remove the actor from character's queue....
         // do this tomorrow i'm going to bed right now...
         for (Actor i : getActors()) {
-            Message indicator = ((Message) i);
+            OnScreenText indicator = ((OnScreenText) i);
             indicator.update(delta);
 
             if (indicator.hasExpired()) {

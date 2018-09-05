@@ -69,13 +69,14 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
         // Initialize PooledEngine and systems.
         engine = new PooledEngine();
-        engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera()));
-        engine.addSystem(new B2DebugRendererSystem(world, getCamera()));
-        engine.addSystem(new B2LightsSystem(world, getCamera()));
-        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicator));
-        engine.addSystem(new NotificationSystem(getBatch(), notificationArea));
-        engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));
-        engine.addSystem(new ScreenFadeSystem(this));
+        engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera())); // Renders TiledMap textures.
+        //engine.addSystem(new EntityRendererSystem());                                   // Renders entities (player/enemies/obj)
+        engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                // Renders physics debug profiles.
+        engine.addSystem(new B2LightsSystem(world, getCamera()));                       // Renders Dynamic box2d lights.
+        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicator));       // Renders damage indicators.
+        engine.addSystem(new NotificationSystem(getBatch(), notificationArea));         // Renders Notifications.
+        engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));           // Renders player status bars.
+        engine.addSystem(new ScreenFadeSystem(this));                   // Renders screen fade effects. (not suitable for ECS ?)
 
         // Load the map and spawn player.
         mapLoader = new TmxMapLoader();
