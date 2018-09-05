@@ -150,7 +150,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         enemies.forEach((Character c) -> c.update(delta));
         player.update(delta);
 
-
         if (CameraShake.getShakeTimeLeft() > 0){
             CameraShake.update(Gdx.graphics.getDeltaTime());
             getCamera().translate(CameraShake.getPos());
@@ -186,8 +185,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-
-        damageIndicator.getViewport().update(width, height);
 
         int viewportX = getViewport().getScreenX();
         int viewportY = getViewport().getScreenY();
