@@ -1,51 +1,46 @@
 package com.aesophor.medievania.screens;
 
-import box2dLight.RayHandler;
+import com.aesophor.medievania.GameStateManager;
+import com.aesophor.medievania.GameWorldManager;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Player;
-import com.aesophor.medievania.GameWorldManager;
-import com.aesophor.medievania.GameStateManager;
-import com.aesophor.medievania.event.*;
+import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.MainGameScreenResizeEvent;
+import com.aesophor.medievania.event.MapChangedEvent;
+import com.aesophor.medievania.event.PortalUsedEvent;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
-import com.aesophor.medievania.system.B2DebugRendererSystem;
-import com.aesophor.medievania.system.B2LightsSystem;
-import com.aesophor.medievania.system.TiledMapRendererSystem;
+import com.aesophor.medievania.system.*;
 import com.aesophor.medievania.ui.DamageIndicator;
-import com.aesophor.medievania.ui.HUD;
-import com.aesophor.medievania.ui.MessageArea;
+import com.aesophor.medievania.ui.StatusBars;
+import com.aesophor.medievania.ui.NotificationArea;
+import com.aesophor.medievania.util.CameraShake;
 import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.CameraShake;
-import com.aesophor.medievania.util.Utils;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
 
 public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
-    private PooledEngine engine;
-    private GameEventManager gameEventManager;
+    private final GameEventManager gameEventManager;
+    private final PooledEngine engine;
+
+    private final StatusBars statusBars;
+    private final DamageIndicator damageIndicator;
+    private final NotificationArea notificationArea;
 
     private final AssetManager assets;
     private final TmxMapLoader mapLoader;
-
-    private final DamageIndicator damageIndicator;
-    private final MessageArea messageArea;
-    private final HUD hud;
-    private final Image shade;
 
     private World world;
     private GameMap currentMap;
@@ -60,35 +55,33 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         // Since we will be rendering TiledMaps, we should scale the viewport with PPM.
         getViewport().setWorldSize(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
 
+        // Initialize the GameEventManager.
+        gameEventManager = GameEventManager.getInstance();
+
         // Initialize the world, and register the world contact listener.
         world = new World(new Vector2(0, Constants.GRAVITY), true);
         world.setContactListener(new WorldContactListener());
 
+        // Initialize damage indicators and notificationArea area.
+        statusBars = new StatusBars(gsm);
+        damageIndicator = new DamageIndicator(getBatch(), gsm.getFont().getDefaultFont(), getCamera(), 1.5f);
+        notificationArea = new NotificationArea(getBatch(), gsm.getFont().getDefaultFont(), 6, .3f);
+
+        // Initialize PooledEngine and systems.
         engine = new PooledEngine();
         engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera()));
         engine.addSystem(new B2DebugRendererSystem(world, getCamera()));
         engine.addSystem(new B2LightsSystem(world, getCamera()));
-
-        gameEventManager = GameEventManager.getInstance();
-
-        // Initialize shade to provide fade in/out effects later.
-        // The shade is drawn atop everything, with only its transparency being adjusted.
-        shade = new Image(new TextureRegion(Utils.getTexture()));
-        shade.setSize(getViewport().getScreenWidth(), getViewport().getScreenHeight());
-        shade.setColor(0, 0, 0, 0);
-        addActor(shade);
-
-        // Initialize the OrthogonalTiledMapRenderer to render our map.
-        mapLoader = new TmxMapLoader();
+        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicator));
+        engine.addSystem(new NotificationSystem(getBatch(), notificationArea));
+        engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));
+        engine.addSystem(new ScreenFadeSystem(this));
 
         // Load the map and spawn player.
+        mapLoader = new TmxMapLoader();
         setGameMap("map/starting_point.tmx");
         player = currentMap.spawnPlayer();
-
-        // Initialize HUD.
-        damageIndicator = new DamageIndicator(gsm, getCamera(), 1.5f);
-        messageArea = new MessageArea(gsm, 6, 3f);
-        hud = new HUD(gsm, player);
+        statusBars.setPlayer(player);
     }
 
 
@@ -128,18 +121,20 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
                 player.crouch();
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 if (player.getCurrentPortal() != null && !player.isSetToKill()) {
-                    shade.addAction(Actions.sequence(Actions.fadeIn(.3f), new RunnableAction() {
+                    gameEventManager.fireEvent(new PortalUsedEvent());
+
+                    Timer.schedule(new Timer.Task() {
                         @Override
                         public void run() {
                             Portal currentPortal = player.getCurrentPortal();
                             int targetPortalID = currentPortal.getTargetPortalID();
 
+                            // Set the new map and reposition the player at the position of the target portal's body.
                             setGameMap(currentPortal.getTargetMap());
-
-                            // Reposition the player at the position of the target portal's body.
                             player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
                         }
-                    }, Actions.fadeOut(.85f)));
+                    }, ScreenFadeSystem.FADEIN_DURATION);
+
                 }
             }
         }
@@ -153,9 +148,7 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
         enemies.forEach((Character c) -> c.update(delta));
         player.update(delta);
-        hud.update(delta);
-        messageArea.update(delta);
-        damageIndicator.update(delta);
+
 
         if (CameraShake.getShakeTimeLeft() > 0){
             CameraShake.update(Gdx.graphics.getDeltaTime());
@@ -178,24 +171,12 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
         engine.update(delta);
 
-
-
         // Render characters.
         getBatch().setProjectionMatrix(getCamera().combined);
         getBatch().begin();
         enemies.forEach((Character c) -> c.draw(getBatch()));
         player.draw(getBatch());
         getBatch().end();
-
-        getBatch().setProjectionMatrix(damageIndicator.getCamera().combined);
-        damageIndicator.draw();
-
-        getBatch().setProjectionMatrix(messageArea.getCamera().combined);
-        messageArea.draw();
-
-        // Set our batch to now draw what the Hud camera sees.
-        getBatch().setProjectionMatrix(hud.getCamera().combined);
-        hud.draw();
 
         // Draw all actors on this stage.
         this.draw();
@@ -218,7 +199,7 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     public void dispose() {
         //renderer.dispose();
         //b2dr.dispose();
-        hud.dispose();
+        //statusBars.dispose();
         currentMap.dispose();
         world.dispose();
         player.dispose();
@@ -257,8 +238,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
         gameEventManager.fireEvent(new MapChangedEvent(currentMap));
 
-        // Update shade size to make fade out/in work correctly.
-        shade.setSize(getCurrentMap().getMapWidth(), getCurrentMap().getMapHeight());
 
         // TODO: Don't respawn enemies whenever a map loads.
         enemies = currentMap.spawnNPCs();
@@ -280,8 +259,8 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     }
 
     @Override
-    public MessageArea getMessageArea() {
-        return messageArea;
+    public NotificationArea getNotificationArea() {
+        return notificationArea;
     }
 
     @Override

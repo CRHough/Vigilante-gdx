@@ -5,6 +5,8 @@ import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,14 +16,14 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class DamageIndicator extends Stage {
 
-    private GameStateManager gsm;
+    private BitmapFont font;
     private Camera gameScreenCamera;
     private float damageTextLifetime;
 
-    public DamageIndicator(GameStateManager gsm, Camera gameScreenCamera, float damageTextLifetime) {
-        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
+    public DamageIndicator(Batch batch, BitmapFont font, Camera gameScreenCamera, float damageTextLifetime) {
+        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), batch);
 
-        this.gsm = gsm;
+        this.font = font;
         this.gameScreenCamera = gameScreenCamera;
         this.damageTextLifetime = damageTextLifetime;
     }
@@ -41,7 +43,7 @@ public class DamageIndicator extends Stage {
         // Display the new message.
         // Rename Message later! It can be reused for displaying on-screens texts, so
         // the name should be more generic.
-        Message indicator = new Message(Integer.toString(damage), new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE), damageTextLifetime);
+        Message indicator = new Message(Integer.toString(damage), new Label.LabelStyle(font, Color.WHITE), damageTextLifetime);
 
         // Convert the coordinate from world to screens.
         Vector3 worldCoordinates = new Vector3(c.getB2Body().getPosition().x, c.getB2Body().getPosition().y, 0);

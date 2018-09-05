@@ -44,7 +44,7 @@ public class BottomMenu extends Stage {
         this.player = player;
 
         // Initializes player hud Texture and TextureRegions.
-        bottomMenuTexture = gameStateManager.getAssets().get("Interface/HUD/hud.png");
+        bottomMenuTexture = gameStateManager.getAssets().get("Interface/StatusBars/hud.png");
         background = new TextureRegion(bottomMenuTexture, 0, 36, 120, 23);
         button = new TextureRegion(bottomMenuTexture, 0, 59, 24, 15);
         inventory = new TextureRegion(bottomMenuTexture, 0, 83, 148, 182);

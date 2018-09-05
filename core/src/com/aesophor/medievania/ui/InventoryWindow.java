@@ -36,7 +36,7 @@ public class InventoryWindow extends Stage {
         this.player = player;
         
         // Initializes player hud Texture and TextureRegions.
-        hudTexture = gameStateManager.getAssets().get("Interface/HUD/hud.png");
+        hudTexture = gameStateManager.getAssets().get("Interface/StatusBars/hud.png");
         barsBackground = new TextureRegion(hudTexture, 0, 4, 100, 32);
         healthBar = new TextureRegion(hudTexture, 0, 0, 1, 4);
         staminaBar = new TextureRegion(hudTexture, 1, 0, 1, 4);

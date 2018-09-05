@@ -3,7 +3,7 @@ package com.aesophor.medievania;
 import com.aesophor.medievania.character.Player;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.ui.DamageIndicator;
-import com.aesophor.medievania.ui.MessageArea;
+import com.aesophor.medievania.ui.NotificationArea;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.physics.box2d.World;
@@ -17,7 +17,7 @@ public interface GameWorldManager extends Disposable {
     public AssetManager getAssets();
     public TmxMapLoader getMapLoader();
 
-    public MessageArea getMessageArea();
+    public NotificationArea getNotificationArea();
     public DamageIndicator getDamageIndicator();
 
     public GameMap getCurrentMap();

@@ -1,24 +1,25 @@
 package com.aesophor.medievania.ui;
 
-import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class MessageArea extends Stage {
+public class NotificationArea extends Stage {
 
-    private GameStateManager gsm;
+    private BitmapFont font;
     private int messageQueueSize;
     private float messageLifetime;
 
-    public MessageArea(GameStateManager gsm, int messageQueueSize, float messageLifetime) {
-        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
-        this.gsm = gsm;
+    public NotificationArea(Batch batch, BitmapFont font, int messageQueueSize, float messageLifetime) {
+        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), batch);
 
+        this.font = font;
         this.messageQueueSize = messageQueueSize;
         this.messageLifetime = messageLifetime;
     }
@@ -36,7 +37,7 @@ public class MessageArea extends Stage {
         // Display the new message.
         // Rename Message later! It can be reused for displaying on-screens texts, so
         // the name should be more generic.
-        Message newMsg = new Message(content, new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE), messageLifetime);
+        Message newMsg = new Message(content, new Label.LabelStyle(font, Color.WHITE), messageLifetime);
         newMsg.setPosition(10f, 0f);
         newMsg.addAction(Actions.moveBy(0f, 10f, .2f));
         addActor(newMsg);

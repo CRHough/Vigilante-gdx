@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class HUD extends Stage {
+public class StatusBars extends Stage {
 
     private static final String SKIN_FILE = "interface/skin/medievania_skin.json";
     private static int barLength = 50; // pixel
@@ -32,10 +32,13 @@ public class HUD extends Stage {
     
     private Table hudTable;
     private Table barTable;
+
+    public StatusBars(GameStateManager gsm) {
+        this(gsm, null);
+    }
     
-    public HUD(GameStateManager gsm, Player player) {
+    public StatusBars(GameStateManager gsm, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
-        this.gsm = gsm;
         this.player = player;
 
         skin = gsm.getAssets().get(SKIN_FILE);
@@ -77,8 +80,12 @@ public class HUD extends Stage {
         addActor(hudTable);
         addActor(barTable);
     }
-    
-    
+
+
+    public void setPlayer(Player player) {
+        this.player = player;
+    }
+
     public void update(float delta) {
         healthBarImage.setScaleX(barLength * player.getHealth() / 100f); // 100 is only temporary (player's full heatlh is 100)
     }

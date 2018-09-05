@@ -15,6 +15,7 @@ public class GameEventManager {
 
         // List of handlers for various events.
         listeners.put(GameEventType.MAP_CHANGED, new Array<>());
+        listeners.put(GameEventType.PORTAL_USED, new Array<>());
         listeners.put(GameEventType.MAINGAME_SCREEN_RESIZED, new Array<>());
     }
 
