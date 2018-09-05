@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class HUD extends Stage {
 
-    private static final String SKIN_FILE = "Interface/Skin/medievania_skin.json";
+    private static final String SKIN_FILE = "interface/skin/medievania_skin.json";
     private static int barLength = 50; // pixel
     
     private GameStateManager gsm;
@@ -41,7 +41,7 @@ public class HUD extends Stage {
         skin = gsm.getAssets().get(SKIN_FILE);
         
         // Initializes player hud Texture and TextureRegions.
-        hudTexture = gsm.getAssets().get("Interface/HUD/hud.png");
+        hudTexture = gsm.getAssets().get("interface/hud/hud.png");
         barsBackground = new TextureRegion(hudTexture, 0, 4, 100, 32);
         healthBar = new TextureRegion(hudTexture, 0, 0, 1, 4);
         staminaBar = new TextureRegion(hudTexture, 1, 0, 1, 4);

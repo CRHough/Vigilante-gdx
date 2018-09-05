@@ -18,7 +18,8 @@ import com.badlogic.gdx.utils.Queue;
 public abstract class Character extends Sprite implements Disposable {
 
     public enum State { IDLE, RUNNING, JUMPING, FALLING, CROUCHING, ATTACKING, KILLED };
-    
+
+
     protected Character.State currentState;
     protected Character.State previousState;
 
@@ -76,7 +77,7 @@ public abstract class Character extends Sprite implements Disposable {
     protected Character lockedOnTarget;
     protected Character inRangeTarget;
 
-    protected Queue<Actor> damageIndicators;
+    protected Queue<Actor> damageIndicators; // not removing expired ones yet.
 
     public Character(Texture texture, World currentWorld, float x, float y) {
         super(texture);

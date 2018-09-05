@@ -34,7 +34,7 @@ public class MessageArea extends Stage {
         }
 
         // Display the new message.
-        // Rename Message later! It can be reused for displaying on-screen texts, so
+        // Rename Message later! It can be reused for displaying on-screens texts, so
         // the name should be more generic.
         Message newMsg = new Message(content, new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE), messageLifetime);
         newMsg.setPosition(10f, 0f);

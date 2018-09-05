@@ -1,6 +1,5 @@
 package com.aesophor.medievania.util;
 
-import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;

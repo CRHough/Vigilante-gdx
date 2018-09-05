@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 
 public class Player extends Character implements Humanoid, Controllable {
     
-    private static final String TEXTURE_FILE = "Character/Bandit/Bandit.png";
+    private static final String TEXTURE_FILE = "character/bandit/Bandit.png";
 
     private GameWorldManager gameWorldManager;
     private Portal currentPortal;
@@ -45,12 +45,12 @@ public class Player extends Character implements Humanoid, Controllable {
         killedAnimation = Utils.createAnimation(getTexture(), 24f / Constants.PPM,  0, 5,  0,      0,  80, 80);
         
         // Sounds.
-        footstepSound = gameWorldManager.getAssets().get("Sound/FX/Player/footstep.mp3");
-        hurtSound = gameWorldManager.getAssets().get("Sound/FX/Player/hurt.wav");
-        deathSound = gameWorldManager.getAssets().get("Sound/FX/Player/death.mp3");
-        weaponSwingSound = gameWorldManager.getAssets().get("Sound/FX/Player/weapon_swing.ogg", Sound.class);
-        weaponHitSound = gameWorldManager.getAssets().get("Sound/FX/Player/weapon_hit.ogg", Sound.class);
-        jumpSound = gameWorldManager.getAssets().get("Sound/FX/Player/jump.wav", Sound.class);
+        footstepSound = gameWorldManager.getAssets().get("sfx/player/footstep.mp3");
+        hurtSound = gameWorldManager.getAssets().get("sfx/player/hurt.wav");
+        deathSound = gameWorldManager.getAssets().get("sfx/player/death.mp3");
+        weaponSwingSound = gameWorldManager.getAssets().get("sfx/player/weapon_swing.ogg", Sound.class);
+        weaponHitSound = gameWorldManager.getAssets().get("sfx/player/weapon_hit.ogg", Sound.class);
+        jumpSound = gameWorldManager.getAssets().get("sfx/player/jump.wav", Sound.class);
 
         // Create body and fixtures.
         defineBody();

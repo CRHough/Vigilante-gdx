@@ -39,11 +39,11 @@ public class DamageIndicator extends Stage {
         }
 
         // Display the new message.
-        // Rename Message later! It can be reused for displaying on-screen texts, so
+        // Rename Message later! It can be reused for displaying on-screens texts, so
         // the name should be more generic.
         Message indicator = new Message(Integer.toString(damage), new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE), damageTextLifetime);
 
-        // Convert the coordinate from world to screen.
+        // Convert the coordinate from world to screens.
         Vector3 worldCoordinates = new Vector3(c.getB2Body().getPosition().x, c.getB2Body().getPosition().y, 0);
         gameScreenCamera.project(worldCoordinates);
 
