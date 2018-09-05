@@ -5,9 +5,13 @@ import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Player;
 import com.aesophor.medievania.GameWorldManager;
 import com.aesophor.medievania.GameStateManager;
+import com.aesophor.medievania.event.*;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
+import com.aesophor.medievania.system.B2DebugRendererSystem;
+import com.aesophor.medievania.system.B2LightsSystem;
+import com.aesophor.medievania.system.TiledMapRendererSystem;
 import com.aesophor.medievania.ui.DamageIndicator;
 import com.aesophor.medievania.ui.HUD;
 import com.aesophor.medievania.ui.MessageArea;
@@ -15,16 +19,15 @@ import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.CameraShake;
 import com.aesophor.medievania.util.Utils;
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.RunnableAction;
@@ -33,10 +36,10 @@ import com.badlogic.gdx.utils.Array;
 
 public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
+    private PooledEngine engine;
+    private GameEventManager gameEventManager;
+
     private final AssetManager assets;
-    private final RayHandler rayHandler;
-    private final OrthogonalTiledMapRenderer renderer;
-    private final Box2DDebugRenderer b2dr;
     private final TmxMapLoader mapLoader;
 
     private final DamageIndicator damageIndicator;
@@ -53,7 +56,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     public MainGameScreen(GameStateManager gsm) {
         super(gsm);
         assets = gsm.getAssets();
-        rayHandler = new RayHandler(null);
 
         // Since we will be rendering TiledMaps, we should scale the viewport with PPM.
         getViewport().setWorldSize(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
@@ -61,6 +63,13 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         // Initialize the world, and register the world contact listener.
         world = new World(new Vector2(0, Constants.GRAVITY), true);
         world.setContactListener(new WorldContactListener());
+
+        engine = new PooledEngine();
+        engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera()));
+        engine.addSystem(new B2DebugRendererSystem(world, getCamera()));
+        engine.addSystem(new B2LightsSystem(world, getCamera()));
+
+        gameEventManager = GameEventManager.getInstance();
 
         // Initialize shade to provide fade in/out effects later.
         // The shade is drawn atop everything, with only its transparency being adjusted.
@@ -70,8 +79,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         addActor(shade);
 
         // Initialize the OrthogonalTiledMapRenderer to render our map.
-        renderer = new OrthogonalTiledMapRenderer(null, 1 / Constants.PPM);
-        b2dr = new Box2DDebugRenderer();
         mapLoader = new TmxMapLoader();
 
         // Load the map and spawn player.
@@ -138,12 +145,12 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         }
     }
 
+
     public void update(float delta) {
         handleInput(delta);
 
         world.step(1/60f, 6, 2);
 
-        rayHandler.update();
         enemies.forEach((Character c) -> c.update(delta));
         player.update(delta);
         hud.update(delta);
@@ -160,9 +167,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         // Make sure to bound the camera within the TiledMap.
         CameraUtils.boundCamera(getCamera(), getCurrentMap());
 
-        // Tell our renderer to draw only what our camera can see.
-        renderer.setView((OrthographicCamera) getCamera());
-
         // Update all actors in this stage.
         this.act(delta);
     }
@@ -172,13 +176,9 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         update(delta);
         gsm.clearScreen();
 
-        // Render game map.
-        renderer.render();
-        if (Constants.DEBUG == true) b2dr.render(world, getCamera().combined);
+        engine.update(delta);
 
-        // Render box2d lights.
-        rayHandler.setCombinedMatrix(getCamera().combined);
-        rayHandler.render();
+
 
         // Render characters.
         getBatch().setProjectionMatrix(getCamera().combined);
@@ -205,18 +205,19 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     public void resize(int width, int height) {
         super.resize(width, height);
 
+        damageIndicator.getViewport().update(width, height);
+
         int viewportX = getViewport().getScreenX();
         int viewportY = getViewport().getScreenY();
         int viewportWidth = getViewport().getScreenWidth();
         int viewportHeight = getViewport().getScreenHeight();
-        rayHandler.useCustomViewport(viewportX, viewportY, viewportWidth, viewportHeight);
-        damageIndicator.getViewport().update(width, height);
+        gameEventManager.fireEvent(new MainGameScreenResizeEvent(viewportX, viewportY, viewportWidth, viewportHeight));
     }
 
     @Override
     public void dispose() {
-        renderer.dispose();
-        b2dr.dispose();
+        //renderer.dispose();
+        //b2dr.dispose();
         hud.dispose();
         currentMap.dispose();
         world.dispose();
@@ -235,7 +236,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         if (currentMap != null) {
             // Stop the background music, lights and dispose previous GameMap.
             currentMap.getBackgroundMusic().stop();
-            rayHandler.removeAll();
             currentMap.dispose();
 
             // Destroy all bodies except player's body.
@@ -254,11 +254,8 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         currentMap = new GameMap(this, gameMapFile);
         currentMap.playBackgroundMusic();
 
-        // Update the RayHandler.
-        rayHandler.setWorld(world);
 
-        // Sets the OrthogonalTiledMapRenderer to show our new map.
-        renderer.setMap(currentMap.getTiledMap());
+        gameEventManager.fireEvent(new MapChangedEvent(currentMap));
 
         // Update shade size to make fade out/in work correctly.
         shade.setSize(getCurrentMap().getMapWidth(), getCurrentMap().getMapHeight());
@@ -275,11 +272,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     @Override
     public AssetManager getAssets() {
         return assets;
-    }
-
-    @Override
-    public RayHandler getRayHandler() {
-        return rayHandler;
     }
 
     @Override

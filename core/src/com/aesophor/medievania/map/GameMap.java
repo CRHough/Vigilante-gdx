@@ -44,11 +44,8 @@ public class GameMap implements Disposable {
         backgroundMusic = gameWorldManager.getAssets().get((String) tiledMap.getProperties().get("backgroundMusic"));
         brightness = (Float) tiledMap.getProperties().get("brightness");
 
-        // Update brightness according to this map.
-        gameWorldManager.getRayHandler().setAmbientLight(brightness);
-        
         // Create bodies in the world according to each map layer.
-        TiledObjectUtils.parseLayers(gameWorldManager.getWorld(), gameWorldManager.getRayHandler(), this);
+        TiledObjectUtils.parseLayers(gameWorldManager.getWorld(), this);
     }
 
     
@@ -82,6 +79,10 @@ public class GameMap implements Disposable {
     
     public Music getBackgroundMusic() {
         return backgroundMusic;
+    }
+
+    public float getBrightness() {
+        return brightness;
     }
 
     public Array<Portal> getPortals() {

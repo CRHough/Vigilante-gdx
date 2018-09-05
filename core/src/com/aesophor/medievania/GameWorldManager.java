@@ -1,6 +1,5 @@
 package com.aesophor.medievania;
 
-import box2dLight.RayHandler;
 import com.aesophor.medievania.character.Player;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.ui.DamageIndicator;
@@ -16,7 +15,6 @@ public interface GameWorldManager extends Disposable {
 
     public World getWorld();
     public AssetManager getAssets();
-    public RayHandler getRayHandler();
     public TmxMapLoader getMapLoader();
 
     public MessageArea getMessageArea();

@@ -30,16 +30,15 @@ public class TiledObjectUtils {
     /**
      * Parses the layers of the specified TiledMap, and creates the corresponding bodies.
      * @param world the world where all layer bodies will be built.
-     * @param rayHandler the RayHandler to handle lighting.
      * @param gameMap the tiled map to parse.
      */
-    public static void parseLayers(World world, RayHandler rayHandler, GameMap gameMap) {
+    public static void parseLayers(World world, GameMap gameMap) {
         createPolylines(world, gameMap, GameMapLayer.GROUND, CategoryBits.GROUND, GROUND_COLLIDABLE, Constants.GROUND_FRICTION);
         createRectangles(world, gameMap, GameMapLayer.PLATFORM, CategoryBits.PLATFORM, PLATFORM_COLLIDABLE, Constants.GROUND_FRICTION);
         createPolylines(world, gameMap, GameMapLayer.WALL, CategoryBits.WALL, WALL_COLLIDABLE, 0);
         createPolylines(world, gameMap, GameMapLayer.CLIFF_MARKER, CategoryBits.CLIFF_MARKER, CLIFF_MARKER_COLLIDABLE, 0);
         createPortals(world, gameMap, GameMapLayer.PORTAL);
-        createLightSources(rayHandler, gameMap, GameMapLayer.LIGHT_SOURCE);
+        //createLightSources(rayHandler, gameMap, GameMapLayer.LIGHT_SOURCE);
     }
 
     private static void createRectangles(World world, GameMap gameMap, GameMapLayer layer,
@@ -125,7 +124,7 @@ public class TiledObjectUtils {
         }
     }
 
-    private static void createLightSources(RayHandler rayHandler, GameMap gameMap, GameMapLayer layer) {
+    public static void createLightSources(RayHandler rayHandler, GameMap gameMap, GameMapLayer layer) {
         MapObjects mapObjects = gameMap.getTiledMap().getLayers().get(layer.ordinal()).getObjects();
 
         for (RectangleMapObject o : mapObjects.getByType(RectangleMapObject.class)) {
