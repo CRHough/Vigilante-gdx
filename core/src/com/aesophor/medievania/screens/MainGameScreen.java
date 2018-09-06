@@ -4,6 +4,7 @@ import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.GameWorldManager;
 import com.aesophor.medievania.character.Character;
 import com.aesophor.medievania.character.Player;
+import com.aesophor.medievania.component.B2BodyComponent;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.MainGameScreenResizeEvent;
 import com.aesophor.medievania.event.MapChangedEvent;
@@ -18,6 +19,8 @@ import com.aesophor.medievania.ui.NotificationArea;
 import com.aesophor.medievania.util.CameraShake;
 import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.box2d.BodyBuilder;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -70,7 +73,9 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         // Initialize PooledEngine and systems.
         engine = new PooledEngine();
         engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera())); // Renders TiledMap textures.
-        //engine.addSystem(new EntityRendererSystem());                                   // Renders entities (player/enemies/obj)
+        engine.addSystem(new CharacterRendererSystem(world));                           // Renders entities (player/enemies/obj)
+        //engine.addSystem(new CharacterAISystem());
+        //engine.addSystem(new PlayerControlSystem());
         engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                // Renders physics debug profiles.
         engine.addSystem(new B2LightsSystem(world, getCamera()));                       // Renders Dynamic box2d lights.
         engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicator));       // Renders damage indicators.
@@ -92,7 +97,7 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
-            Constants.DEBUG = (Constants.DEBUG) ? false : true;
+            engine.getSystem(B2DebugRendererSystem.class).setProcessing(false);
         }
 
 
@@ -233,9 +238,7 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         currentMap = new GameMap(this, gameMapFile);
         currentMap.playBackgroundMusic();
 
-
         gameEventManager.fireEvent(new MapChangedEvent(currentMap));
-
 
         // TODO: Don't respawn enemies whenever a map loads.
         enemies = currentMap.spawnNPCs();

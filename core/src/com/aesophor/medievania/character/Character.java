@@ -1,42 +1,28 @@
 package com.aesophor.medievania.character;
 
-import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.component.*;
 import com.aesophor.medievania.util.CategoryBits;
-import com.aesophor.medievania.util.box2d.BodyBuilder;
+import com.aesophor.medievania.util.Constants;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Queue;
 
-public abstract class Character extends Sprite implements Disposable {
+public abstract class Character extends Entity implements Disposable {
 
-    public enum State { IDLE, RUNNING, JUMPING, FALLING, CROUCHING, ATTACKING, KILLED };
+    protected CharacterStatsComponent cc;
+    protected B2BodyComponent bc;
+    protected SpriteComponent spc;
 
-
-    protected Character.State currentState;
-    protected Character.State previousState;
+    protected AnimationComponent ac;
+    protected StateComponent stc;
 
     protected World currentWorld;
-    protected BodyBuilder bodyBuilder;
-    protected Body b2body;
-    protected Fixture bodyFixture;
-    protected Fixture meleeWeaponFixture;
-    protected Fixture feetFixture;
-    
-    protected TextureRegion idleAnimation; // Change to Animation later.
-    protected Animation<TextureRegion> runAnimation;
-    protected Animation<TextureRegion> jumpAnimation;
-    protected Animation<TextureRegion> fallAnimation;
-    protected Animation<TextureRegion> crouchAnimation;
-    protected Animation<TextureRegion> attackAnimation;
-    protected Animation<TextureRegion> killedAnimation;
     
     protected Music footstepSound;
     protected Sound hurtSound;
@@ -44,34 +30,6 @@ public abstract class Character extends Sprite implements Disposable {
     protected Sound weaponSwingSound;
     protected Sound weaponHitSound;
     protected Sound jumpSound;
-    
-    protected float stateTimer;
-    protected boolean isAlerted;
-    protected boolean facingRight;
-    protected boolean isJumping;
-    protected boolean isOnPlatform;
-    protected boolean isAttacking;
-    protected boolean isCrouching;
-    protected boolean isInvincible;
-    protected boolean isKilled;
-    protected boolean setToKill;
-
-    protected String name;
-    protected int level;
-    protected int exp;
-    protected int health;
-    protected int stamina;
-    protected int magicka;
-
-    protected float bodyHeight;
-    protected float bodyWidth;
-
-    protected float movementSpeed;
-    protected float jumpHeight;
-    protected float attackForce;
-    protected float attackTime;
-    protected int attackRange;
-    protected int attackDamage;
 
     protected BehavioralModel behavioralModel;
     protected Character lockedOnTarget;
@@ -80,115 +38,23 @@ public abstract class Character extends Sprite implements Disposable {
     protected Queue<Actor> damageIndicators; // not removing expired ones yet.
 
     public Character(Texture texture, World currentWorld, float x, float y) {
-        super(texture);
         this.currentWorld = currentWorld;
-        setPosition(x, y);
 
-        bodyBuilder = new BodyBuilder(currentWorld);
+        cc = new CharacterStatsComponent();
+        ac = new AnimationComponent();
+        bc = new B2BodyComponent(currentWorld);
+        spc = new SpriteComponent(texture, x, y);
+        stc = new StateComponent(State.IDLE);
+
         behavioralModel = new BehavioralModel(this);
-        
-        currentState = Character.State.IDLE;
-        previousState = Character.State.IDLE;
-        facingRight = true;
 
         damageIndicators = new Queue<>();
     }
 
-    
-    public void update(float delta) {
-        if (!isKilled) {
-            // If the character's health has reached zero but hasn't die yet,
-            // it means that the killedAnimation is not fully played.
-            // So here we'll play it until it's finished.
-            if (setToKill) {
-                setRegion(getFrame(delta));
-                
-                // Set killed to true to prevent further rendering updates.
-                if (killedAnimation.isAnimationFinished(stateTimer)) {
-                    currentWorld.destroyBody(b2body);
-                    isKilled = true;
-                }
-            } else {
-                setRegion(getFrame(delta));
-                
-                // Set isAttacking back to false, implying attack has complete.
-                if (isAttacking && stateTimer >= attackTime) {
-                    isAttacking = false;
-                    stateTimer = 0;
-                }
-            }
-
-            float textureX = b2body.getPosition().x - getWidth() / 2;
-            float textureY = b2body.getPosition().y - getHeight() / 2 + (10 / Constants.PPM);
-            setPosition(textureX, textureY);
-        }
-    }
-    
-    private TextureRegion getFrame(float delta) {
-        previousState = currentState;
-        currentState = getState();
-        
-        TextureRegion textureRegion;
-        switch (currentState) {
-            case RUNNING:
-                textureRegion = runAnimation.getKeyFrame(stateTimer, true);
-                break;
-            case JUMPING:
-                textureRegion = jumpAnimation.getKeyFrame(stateTimer, false);
-                break;
-            case FALLING:
-                textureRegion = fallAnimation.getKeyFrame(stateTimer, false);
-                break;
-            case CROUCHING:
-                textureRegion = crouchAnimation.getKeyFrame(stateTimer, false);
-                break;
-            case ATTACKING:
-                textureRegion = attackAnimation.getKeyFrame(stateTimer, false);
-                break;
-            case KILLED:
-                textureRegion = killedAnimation.getKeyFrame(stateTimer, false);
-                break;
-            case IDLE:
-            default:
-                textureRegion = idleAnimation;
-                break;
-        }
-        
-        if (!facingRight && !textureRegion.isFlipX()) {
-            textureRegion.flip(true, false);
-            CircleShape shape = (CircleShape) meleeWeaponFixture.getShape();
-            shape.setPosition(new Vector2(-attackRange / Constants.PPM, 0));
-        } else if (facingRight && textureRegion.isFlipX()) {
-            textureRegion.flip(true, false);
-            CircleShape shape = (CircleShape) meleeWeaponFixture.getShape();
-            shape.setPosition(new Vector2(attackRange / Constants.PPM, 0));
-        }
-        
-        stateTimer = (currentState != previousState) ? 0 : stateTimer + delta;
-        return textureRegion;
-    }
-    
-    private Character.State getState() {
-        if (setToKill) {
-            return Character.State.KILLED;
-        } else if (isAttacking) {
-            return Character.State.ATTACKING;
-        } else if (isJumping) {
-            return Character.State.JUMPING;
-        } else if (b2body.getLinearVelocity().y < -.5f) {
-            return Character.State.FALLING;
-        } else if (isCrouching) {
-            return Character.State.CROUCHING;
-        } else if (b2body.getLinearVelocity().x > .01f || b2body.getLinearVelocity().x < -.01f) {
-            return Character.State.RUNNING;
-        } else {
-            return Character.State.IDLE;
-        }
-    }
 
     protected void defineBody(BodyDef.BodyType type, short bodyCategoryBits, short bodyMaskBits, short feetMaskBits, short meleeWeaponMaskBits) {
-        b2body = bodyBuilder.type(type)
-                .position(getX(), getY(), Constants.PPM)
+        bc.body = bc.bodyBuilder.type(type)
+                .position(spc.sprite.getX(), spc.sprite.getY(), Constants.PPM)
                 .buildBody();
 
         createBodyFixture(bodyCategoryBits, bodyMaskBits);
@@ -196,22 +62,31 @@ public abstract class Character extends Sprite implements Disposable {
         createMeleeWeaponFixture(meleeWeaponMaskBits);
     }
 
+    /**
+     * Builds body fixture based on this character's body width and height.
+     * @param categoryBits category bits of body fixture.
+     * @param maskBits defines which objects the body fixture can collide with.
+     */
     protected void createBodyFixture(short categoryBits, short maskBits) {
-        bodyFixture = bodyBuilder.newRectangleFixture(b2body.getPosition(), bodyWidth / 2, bodyHeight / 2, Constants.PPM)
+        bc.bodyFixture = bc.bodyBuilder.newRectangleFixture(bc.body.getPosition(), cc.bodyWidth / 2, cc.bodyHeight / 2, Constants.PPM)
                 .categoryBits(categoryBits)
                 .maskBits(maskBits)
                 .setUserData(this)
                 .buildFixture();
     }
 
+    /**
+     * Builds feet fixture which is a bit lower than the body fixture.
+     * @param maskBits defines which objects the feet fixture can collide with.
+     */
     protected void createFeetFixture(short maskBits) {
         Vector2[] feetPolyVertices = new Vector2[4];
-        feetPolyVertices[0] =  new Vector2(-bodyWidth / 2 + 1, -bodyHeight / 2);
-        feetPolyVertices[1] =  new Vector2(bodyWidth / 2 - 1, -bodyHeight / 2);
-        feetPolyVertices[2] =  new Vector2(-bodyWidth / 2 + 1, -bodyHeight / 2 - 2);
-        feetPolyVertices[3] =  new Vector2(bodyWidth / 2 - 1, -bodyHeight / 2 - 2);
+        feetPolyVertices[0] = new Vector2(-cc.bodyWidth / 2 + 1, -cc.bodyHeight / 2);
+        feetPolyVertices[1] = new Vector2(cc.bodyWidth / 2 - 1, -cc.bodyHeight / 2);
+        feetPolyVertices[2] = new Vector2(-cc.bodyWidth / 2 + 1, -cc.bodyHeight / 2 - 2);
+        feetPolyVertices[3] = new Vector2(cc.bodyWidth / 2 - 1, -cc.bodyHeight / 2 - 2);
 
-        feetFixture = bodyBuilder.newPolygonFixture(feetPolyVertices, Constants.PPM)
+        bc.feetFixture = bc.bodyBuilder.newPolygonFixture(feetPolyVertices, Constants.PPM)
                 .categoryBits(CategoryBits.FEET)
                 .maskBits(maskBits)
                 .isSensor(true)
@@ -220,9 +95,9 @@ public abstract class Character extends Sprite implements Disposable {
     }
 
     protected void createMeleeWeaponFixture(short maskBits) {
-        Vector2 meleeAttackFixturePosition = new Vector2(attackRange, 0);
+        Vector2 meleeAttackFixturePosition = new Vector2(cc.attackRange, 0);
 
-        meleeWeaponFixture = bodyBuilder.newCircleFixture(meleeAttackFixturePosition, attackRange, Constants.PPM)
+        bc.meleeWeaponFixture = bc.bodyBuilder.newCircleFixture(meleeAttackFixturePosition, cc.attackRange, Constants.PPM)
                 .categoryBits(CategoryBits.MELEE_WEAPON)
                 .maskBits(maskBits)
                 .isSensor(true)

@@ -1,10 +1,12 @@
 package com.aesophor.medievania.character;
 
+import com.aesophor.medievania.component.State;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -16,27 +18,36 @@ public class Knight extends Enemy implements Humanoid {
     public Knight(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
 
-        name = "Castle guard";
-        bodyWidth = 10;
-        bodyHeight = 34;
+        cc.name = "Castle guard";
+        cc.bodyWidth = 10;
+        cc.bodyHeight = 34;
 
-        health = 100;
-        movementSpeed = .20f;
-        jumpHeight = 3.5f;
-        attackForce = 1.2f;
-        attackTime = 1.2f;
-        attackRange = 14;
-        attackDamage = 25;
+        cc.health = 100;
+        cc.movementSpeed = .20f;
+        cc.jumpHeight = 3.5f;
+        cc.attackForce = 1.2f;
+        cc.attackTime = 1.2f;
+        cc.attackRange = 14;
+        cc.attackDamage = 25;
         
         // Knight stand animation.
-        idleAnimation = new TextureRegion(getTexture(), 8 * 42, 1 * 42, 42, 42);
-        runAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        jumpAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        fallAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        crouchAnimation = Utils.createAnimation(getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        attackAnimation = Utils.createAnimation(getTexture(), 10f / Constants.PPM, 0, 9, 0, 0, 42, 42);
-        killedAnimation = Utils.createAnimation(getTexture(), 24f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
-        
+        Animation<TextureRegion> idleAnimation = Utils.createAnimation(spc.sprite.getTexture(), 10f / Constants.PPM, 0, 0, 8 * 42, 1 * 42, 42, 42);
+        Animation<TextureRegion> runAnimation = Utils.createAnimation(spc.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(spc.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> fallAnimation = Utils.createAnimation(spc.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(spc.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> attackAnimation = Utils.createAnimation(spc.sprite.getTexture(), 10f / Constants.PPM, 0, 9, 0, 0, 42, 42);
+        Animation<TextureRegion> killedAnimation = Utils.createAnimation(spc.sprite.getTexture(), 24f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
+
+        ac.animations.put(State.IDLE, idleAnimation);
+        ac.animations.put(State.RUNNING, runAnimation);
+        ac.animations.put(State.JUMPING, jumpAnimation);
+        ac.animations.put(State.FALLING, fallAnimation);
+        ac.animations.put(State.CROUCHING, crouchAnimation);
+        ac.animations.put(State.ATTACKING, attackAnimation);
+        ac.animations.put(State.KILLED, killedAnimation);
+
+
         // Sounds.
         footstepSound = assets.get("sfx/player/footstep.mp3");
         hurtSound = assets.get("sfx/player/hurt.wav");
@@ -52,11 +63,9 @@ public class Knight extends Enemy implements Humanoid {
         short weaponMaskBits = CategoryBits.PLAYER | CategoryBits.OBJECT;
 
         defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
-        
-        setBounds(0, 0, 50 / Constants.PPM, 50 / Constants.PPM);
-        setRegion(idleAnimation);
-        
-        facingRight = false;
+
+        spc.sprite.setBounds(0, 0, 50 / Constants.PPM, 50 / Constants.PPM);
+        stc.facingRight = false;
     }
 
 }

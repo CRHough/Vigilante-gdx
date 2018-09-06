@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 public class AnimationComponent implements Component {
 
-    public HashMap<StateComponent.State, Animation<TextureRegion>> animations;
+    public HashMap<State, Animation<TextureRegion>> animations;
 
     public AnimationComponent() {
         animations = new HashMap<>();
