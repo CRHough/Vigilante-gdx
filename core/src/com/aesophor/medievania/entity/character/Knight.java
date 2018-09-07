@@ -24,7 +24,7 @@ public class Knight extends Enemy implements Humanoid {
         stats.bodyHeight = 34;
 
         stats.health = 100;
-        stats.movementSpeed = .2f;
+        stats.movementSpeed = .15f;
         stats.jumpHeight = 3.5f;
         stats.attackForce = 1.2f;
         stats.attackTime = 2.4f;

@@ -46,8 +46,8 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
         // Initialize damage indicators and notificationArea area.
         statusBars = new StatusBars(gsm);
-        damageIndicator = new DamageIndicator(this, gsm.getFont().getDefaultFont(), 3f);
-        notificationArea = new NotificationArea(getBatch(), gsm.getFont().getDefaultFont(), 6, 6f);
+        damageIndicator = new DamageIndicator(getBatch(), gsm.getFont().getDefaultFont(), getCamera(), 1.5f);
+        notificationArea = new NotificationArea(getBatch(), gsm.getFont().getDefaultFont(), 6, 4f);
 
         // Load the map and spawn player.
         mapLoader = new TmxMapLoader();
@@ -63,7 +63,7 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         engine.addSystem(new PlayerControlSystem());                                    // Handles player controls.
         engine.addSystem(new EnemyAISystem());                                          // Handles NPC behaviors.
         engine.addSystem(new GameMapManagementSystem(this, world));   // Used to set current GameMap.
-        engine.addSystem(new DamageIndicatorSystem(this, damageIndicator));       // Renders damage indicators.
+        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicator));       // Renders damage indicators.
         engine.addSystem(new NotificationSystem(getBatch(), notificationArea));         // Renders Notifications.
         engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));           // Renders player status bars.
         engine.addSystem(new ScreenFadeSystem(getBatch()));                             // Renders screen fade effects.
