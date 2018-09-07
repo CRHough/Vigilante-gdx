@@ -1,6 +1,6 @@
 package com.aesophor.medievania.component;
 
-import com.aesophor.medievania.character.Character;
+import com.aesophor.medievania.entity.character.Character;
 import com.badlogic.ashley.core.Component;
 
 public class CombatTargetComponent implements Component {

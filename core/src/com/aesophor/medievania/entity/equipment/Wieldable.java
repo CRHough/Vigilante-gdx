@@ -1,4 +1,4 @@
-package com.aesophor.medievania.equipment;
+package com.aesophor.medievania.entity.equipment;
 
 public interface Wieldable extends Equippable {
 

@@ -72,7 +72,7 @@ public class CharacterRendererSystem extends IteratingSystem {
             }
 
             float textureX = b2body.body.getPosition().x - sprite.sprite.getWidth() / 2;
-            float textureY = b2body.body.getPosition().y - sprite.sprite.getHeight() / 2 + (10 / Constants.PPM);
+            float textureY = b2body.body.getPosition().y - sprite.sprite.getHeight() / 2 + (8 / Constants.PPM);
             sprite.sprite.setPosition(textureX, textureY);
         }
 

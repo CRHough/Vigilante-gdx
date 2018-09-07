@@ -4,36 +4,36 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-public class OnScreenText extends Label {
+public class TimedLabel extends Label {
 
     private float lifetime;
     private float timer;
 
-    public OnScreenText(CharSequence text, Skin skin, float lifetime) {
+    public TimedLabel(CharSequence text, Skin skin, float lifetime) {
         super(text, skin);
         this.lifetime = lifetime;
     }
 
-    public OnScreenText(CharSequence text, Skin skin, String styleName, float lifetime) {
+    public TimedLabel(CharSequence text, Skin skin, String styleName, float lifetime) {
         super(text, skin, styleName);
         this.lifetime = lifetime;
     }
 
-    /** Creates a message label, using a {@link LabelStyle} that has a BitmapFont with the specified name
+    /** Creates a timed label, using a {@link LabelStyle} that has a BitmapFont with the specified name
      * from the skin and the specified color. */
-    public OnScreenText(CharSequence text, Skin skin, String fontName, Color color, float lifetime) {
+    public TimedLabel(CharSequence text, Skin skin, String fontName, Color color, float lifetime) {
         super(text, skin, fontName, color);
         this.lifetime = lifetime;
     }
 
-    /** Creates a label, using a {@link LabelStyle} that has a BitmapFont with the specified name
+    /** Creates a timed label, using a {@link LabelStyle} that has a BitmapFont with the specified name
      * and the specified color from the skin. */
-    public OnScreenText(CharSequence text, Skin skin, String fontName, String colorName, float lifetime) {
+    public TimedLabel(CharSequence text, Skin skin, String fontName, String colorName, float lifetime) {
         super(text, skin, fontName, colorName);
         this.lifetime = lifetime;
     }
 
-    public OnScreenText(CharSequence text, LabelStyle style, float lifetime) {
+    public TimedLabel(CharSequence text, LabelStyle style, float lifetime) {
         super(text, style);
         this.lifetime = lifetime;
     }

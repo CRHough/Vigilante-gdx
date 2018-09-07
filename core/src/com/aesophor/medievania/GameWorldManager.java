@@ -1,7 +1,6 @@
 package com.aesophor.medievania;
 
-import com.aesophor.medievania.character.Player;
-import com.aesophor.medievania.map.GameMap;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.ui.DamageIndicator;
 import com.aesophor.medievania.ui.NotificationArea;
 import com.badlogic.ashley.core.PooledEngine;

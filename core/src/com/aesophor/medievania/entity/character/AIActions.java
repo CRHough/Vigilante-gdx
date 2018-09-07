@@ -1,10 +1,10 @@
-package com.aesophor.medievania.character;
+package com.aesophor.medievania.entity.character;
 
 import java.util.concurrent.ThreadLocalRandom;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.math.Vector2;
 
-public class BehavioralModel {
+public class AIActions {
 
     private enum Direction { LEFT, RIGHT };
 
@@ -23,7 +23,7 @@ public class BehavioralModel {
     private float lastTraveledDistance;
     private float calculateDistanceTimer;
 
-    public BehavioralModel(Character character) {
+    public AIActions(Character character) {
         this.character = character;
         lastStoppedPosition = new Vector2();
     }

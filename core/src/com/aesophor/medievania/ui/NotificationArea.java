@@ -35,9 +35,9 @@ public class NotificationArea extends Stage {
         }
 
         // Display the new message.
-        // Rename OnScreenText later! It can be reused for displaying on-screens texts, so
+        // Rename TimedLabel later! It can be reused for displaying on-screens texts, so
         // the name should be more generic.
-        OnScreenText newMsg = new OnScreenText(content, new Label.LabelStyle(font, Color.WHITE), messageLifetime);
+        TimedLabel newMsg = new TimedLabel(content, new Label.LabelStyle(font, Color.WHITE), messageLifetime);
         newMsg.setPosition(10f, 0f);
         newMsg.addAction(Actions.moveBy(0f, 10f, .2f));
         addActor(newMsg);
@@ -47,7 +47,7 @@ public class NotificationArea extends Stage {
     public void update(float delta) {
         // If any previous message has expired
         for (Actor message : getActors()) {
-            OnScreenText m = ((OnScreenText) message);
+            TimedLabel m = ((TimedLabel) message);
             m.update(delta);
 
             if (m.hasExpired()) {

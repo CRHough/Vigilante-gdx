@@ -1,8 +1,8 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.character.Player;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.PlayerComponent;
+import com.aesophor.medievania.component.ControllableComponent;
 import com.aesophor.medievania.component.StateComponent;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.PortalUsedEvent;
@@ -15,7 +15,7 @@ import com.badlogic.gdx.Input;
 public class PlayerControlSystem extends IteratingSystem {
 
     public PlayerControlSystem() {
-        super(Family.all(PlayerComponent.class).get());
+        super(Family.all(ControllableComponent.class).get());
     }
 
 

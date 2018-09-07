@@ -1,7 +1,7 @@
-package com.aesophor.medievania.character;
+package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.GameWorldManager;
-import com.aesophor.medievania.component.PlayerComponent;
+import com.aesophor.medievania.component.ControllableComponent;
 import com.aesophor.medievania.component.SoundType;
 import com.aesophor.medievania.component.State;
 import com.aesophor.medievania.map.Portal;
@@ -17,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
-public class Player extends Character implements Humanoid, Controllable {
+public class Player extends Character implements Humanoid {
 
     private static final String TEXTURE_FILE = "character/bandit/Bandit.png";
 
@@ -28,7 +28,7 @@ public class Player extends Character implements Humanoid, Controllable {
         super(gameWorldManager.getAssets().get(TEXTURE_FILE), gameWorldManager.getWorld(), x, y);
         this.gameWorldManager = gameWorldManager;
 
-        add(new PlayerComponent());
+        add(new ControllableComponent());
 
         stats.name = "Michael";
         stats.bodyWidth = 10;
@@ -85,11 +85,6 @@ public class Player extends Character implements Humanoid, Controllable {
         super.defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
         sprite.sprite.setBounds(0, 0, 120 / Constants.PPM, 120 / Constants.PPM);
-    }
-
-    @Override
-    public void handleInput(float delta) {
-
     }
 
     public Portal getCurrentPortal() {

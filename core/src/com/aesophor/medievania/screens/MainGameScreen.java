@@ -2,11 +2,9 @@ package com.aesophor.medievania.screens;
 
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.GameWorldManager;
-import com.aesophor.medievania.character.Character;
-import com.aesophor.medievania.character.Player;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.MainGameScreenResizeEvent;
-import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.WorldContactListener;
 import com.aesophor.medievania.system.*;
 import com.aesophor.medievania.ui.DamageIndicator;
@@ -19,7 +17,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
@@ -31,8 +28,8 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     private final NotificationArea notificationArea;
 
     private final TmxMapLoader mapLoader;
-    private World world;
     private final Player player;
+    private World world;
 
     public MainGameScreen(GameStateManager gsm) {
         super(gsm);
@@ -49,34 +46,34 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
         // Initialize damage indicators and notificationArea area.
         statusBars = new StatusBars(gsm);
-        damageIndicator = new DamageIndicator(getBatch(), gsm.getFont().getDefaultFont(), getCamera(), 1.5f);
-        notificationArea = new NotificationArea(getBatch(), gsm.getFont().getDefaultFont(), 6, .3f);
+        damageIndicator = new DamageIndicator(this, gsm.getFont().getDefaultFont(), 3f);
+        notificationArea = new NotificationArea(getBatch(), gsm.getFont().getDefaultFont(), 6, 6f);
 
         // Load the map and spawn player.
         mapLoader = new TmxMapLoader();
 
         // Here I employ Entity-Component-System because it makes the layout of my code cleaner.
-        // Tasks are independently spreaded into different systems/layers and can be added/removed on demand.
+        // Tasks are independently spread into different systems/layers and can be added/removed on demand.
         engine = new PooledEngine();
         engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera())); // Renders TiledMap textures.
         engine.addSystem(new CharacterRendererSystem(getBatch(), getCamera(), world));  // Renders entities (player/npcs/obj)
-        engine.addSystem(new CameraSystem(getCamera(), null, null)); // Camera shake / lerp to target.
-        engine.addSystem(new CharacterAISystem());                                      // Handles NPC behaviors.
-        engine.addSystem(new PlayerControlSystem());                                    // Handles player controls.
         engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                // Renders physics debug profiles.
         engine.addSystem(new B2LightsSystem(world, getCamera()));                       // Renders Dynamic box2d lights.
+        engine.addSystem(new CameraSystem(getCamera(), null, null)); // Camera shake / lerp to target.
+        engine.addSystem(new PlayerControlSystem());                                    // Handles player controls.
+        engine.addSystem(new EnemyAISystem());                                          // Handles NPC behaviors.
         engine.addSystem(new GameMapManagementSystem(this, world));   // Used to set current GameMap.
-        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicator));       // Renders damage indicators.
+        engine.addSystem(new DamageIndicatorSystem(this, damageIndicator));       // Renders damage indicators.
         engine.addSystem(new NotificationSystem(getBatch(), notificationArea));         // Renders Notifications.
         engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));           // Renders player status bars.
-        engine.addSystem(new ScreenFadeSystem(this));                   // Renders screen fade effects. (not suitable for ECS ?)
-        
+        engine.addSystem(new ScreenFadeSystem(getBatch()));                             // Renders screen fade effects.
+
         //player = getCurrentMap().spawnPlayer();
         player = new Player(this, 30, 100);
         engine.addEntity(player);
 
-        engine.getSystem(GameMapManagementSystem.class).registerPlayer(player);
         engine.getSystem(CameraSystem.class).registerPlayer(player);
+        engine.getSystem(GameMapManagementSystem.class).registerPlayer(player);
         engine.getSystem(PlayerStatusBarsSystem.class).registerPlayer(player);
     }
 

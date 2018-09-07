@@ -1,6 +1,6 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.character.Character;
+import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.component.*;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
@@ -8,10 +8,15 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
-public class CharacterAISystem extends IteratingSystem {
+public class EnemyAISystem extends IteratingSystem {
 
-    public CharacterAISystem() {
-        super(Family.all(CharacterAIComponent.class).get());
+    private StateComponent state;
+    private B2BodyComponent b2body;
+    private CharacterStatsComponent stats;
+    private CombatTargetComponent targets;
+
+    public EnemyAISystem() {
+        super(Family.all(EnemyAIComponent.class).get());
     }
 
 
@@ -20,10 +25,10 @@ public class CharacterAISystem extends IteratingSystem {
         Character c = (entity instanceof Character) ? (Character) entity : null;
         if (c == null) return;
 
-        StateComponent state = Mappers.STATE.get(entity);
-        B2BodyComponent b2body = Mappers.B2BODY.get(entity);
-        CharacterStatsComponent stats = Mappers.CHARACTER_STATS.get(entity);
-        CombatTargetComponent targets = Mappers.COMBAT_TARGET.get(entity);
+        state = Mappers.STATE.get(entity);
+        b2body = Mappers.B2BODY.get(entity);
+        stats = Mappers.CHARACTER_STATS.get(entity);
+        targets = Mappers.COMBAT_TARGET.get(entity);
 
 
         if (state.setToKill) return;
@@ -46,14 +51,14 @@ public class CharacterAISystem extends IteratingSystem {
                 float targetPositionX = targetB2Body.body.getPosition().x;
 
                 if (Utils.getDistance(selfPositionX, targetPositionX) >= stats.attackRange * 2 / Constants.PPM) {
-                    c.getBehavioralModel().moveTowardTarget(targets.lockedOnTarget);
+                    c.getAIActions().moveTowardTarget(targets.lockedOnTarget);
 
                     // Jump if it gets stucked while moving toward the lockedOnTarget.
-                    c.getBehavioralModel().jumpIfStucked(delta, .1f);
+                    c.getAIActions().jumpIfStucked(delta, .1f);
                 }
             }
         } else {
-            c.getBehavioralModel().moveRandomly(delta, 0, 5, 0, 5);
+            c.getAIActions().moveRandomly(delta, 0, 5, 0, 5);
         }
     }
 

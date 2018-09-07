@@ -38,7 +38,6 @@ public class TiledObjectUtils {
         createPolylines(world, gameMap, GameMapLayer.WALL, CategoryBits.WALL, WALL_COLLIDABLE, 0);
         createPolylines(world, gameMap, GameMapLayer.CLIFF_MARKER, CategoryBits.CLIFF_MARKER, CLIFF_MARKER_COLLIDABLE, 0);
         createPortals(world, gameMap, GameMapLayer.PORTAL);
-        //createLightSources(rayHandler, gameMap, GameMapLayer.LIGHT_SOURCE);
     }
 
     private static void createRectangles(World world, GameMap gameMap, GameMapLayer layer,

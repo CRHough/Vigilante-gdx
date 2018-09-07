@@ -1,6 +1,6 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.character.Player;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.MapChangedEvent;

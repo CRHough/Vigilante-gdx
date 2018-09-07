@@ -1,8 +1,8 @@
 package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.GameWorldManager;
-import com.aesophor.medievania.character.Character;
-import com.aesophor.medievania.character.Player;
+import com.aesophor.medievania.entity.character.Character;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.MapChangedEvent;
@@ -54,6 +54,8 @@ public class GameMapManagementSystem extends EntitySystem {
      * @param gameMapFile path to the .tmx tiled map.
      */
     public void setGameMap(String gameMapFile) {
+        gameWorldManager.getEngine().clearPools();
+
         // Dispose previous map data if there is any.
         if (currentMap != null) {
             // Stop the background music, lights and dispose previous GameMap.

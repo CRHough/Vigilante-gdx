@@ -1,9 +1,9 @@
 package com.aesophor.medievania.map;
 
-import com.aesophor.medievania.character.Enemy;
+import com.aesophor.medievania.entity.character.Enemy;
 import com.aesophor.medievania.util.CategoryBits;
-import com.aesophor.medievania.character.Character;
-import com.aesophor.medievania.character.Player;
+import com.aesophor.medievania.entity.character.Character;
+import com.aesophor.medievania.entity.character.Player;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -61,7 +61,7 @@ public class WorldContactListener implements ContactListener {
             // When an NPC hits a cliff marker, reverse the NPC's current direction.
             case CategoryBits.ENEMY | CategoryBits.CLIFF_MARKER:
                 enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
-                enemy.getBehavioralModel().reverseDirection();
+                enemy.getAIActions().reverseDirection();
                 break;
 
             // Set enemy as player's current target (so player can inflict damage to enemy).

@@ -1,4 +1,4 @@
-package com.aesophor.medievania.character;
+package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.*;
 import com.aesophor.medievania.util.CategoryBits;
@@ -21,7 +21,7 @@ public abstract class Character extends Entity implements Disposable {
     protected CharacterStatsComponent stats;
     protected CombatTargetComponent targets;
 
-    protected BehavioralModel behavioralModel;
+    protected AIActions AIActions;
     protected Queue<Actor> damageIndicators; // not removing expired ones yet.
 
     public Character(Texture texture, World currentWorld, float x, float y) {
@@ -40,7 +40,7 @@ public abstract class Character extends Entity implements Disposable {
         add(state);
         add(targets);
 
-        behavioralModel = new BehavioralModel(this);
+        AIActions = new AIActions(this);
         damageIndicators = new Queue<>();
     }
 
@@ -223,8 +223,8 @@ public abstract class Character extends Entity implements Disposable {
     }
 
 
-    public BehavioralModel getBehavioralModel() {
-        return behavioralModel;
+    public AIActions getAIActions() {
+        return AIActions;
     }
 
     public Queue<Actor> getDamageIndicators() {

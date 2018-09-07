@@ -1,4 +1,4 @@
-package com.aesophor.medievania.character;
+package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.SoundType;
 import com.aesophor.medievania.component.State;
@@ -24,21 +24,21 @@ public class Knight extends Enemy implements Humanoid {
         stats.bodyHeight = 34;
 
         stats.health = 100;
-        stats.movementSpeed = .20f;
+        stats.movementSpeed = .2f;
         stats.jumpHeight = 3.5f;
         stats.attackForce = 1.2f;
-        stats.attackTime = 1.2f;
+        stats.attackTime = 2.4f;
         stats.attackRange = 14;
         stats.attackDamage = 25;
 
         // Knight stand animations.
         Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 0, 0, 8 * 42, 1 * 42, 42, 42);
-        Animation<TextureRegion> runAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> runAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 24f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
         Animation<TextureRegion> jumpAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
         Animation<TextureRegion> fallAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
         Animation<TextureRegion> crouchAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        Animation<TextureRegion> attackAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 0, 9, 0, 0, 42, 42);
-        Animation<TextureRegion> killedAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 24f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> attackAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 24f / Constants.PPM, 0, 9, 0, 0, 42, 42);
+        Animation<TextureRegion> killedAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 32f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
 
         animations.animations.put(State.IDLE, idleAnimation);
         animations.animations.put(State.RUNNING, runAnimation);

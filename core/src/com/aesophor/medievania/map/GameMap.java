@@ -1,9 +1,9 @@
 package com.aesophor.medievania.map;
 
 import com.aesophor.medievania.GameWorldManager;
-import com.aesophor.medievania.character.Character;
-import com.aesophor.medievania.character.Knight;
-import com.aesophor.medievania.character.Player;
+import com.aesophor.medievania.entity.character.Character;
+import com.aesophor.medievania.entity.character.Knight;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.util.box2d.TiledObjectUtils;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.maps.MapObject;
