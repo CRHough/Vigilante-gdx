@@ -10,11 +10,6 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 public class CharacterAISystem extends IteratingSystem {
 
-    private StateComponent state;
-    private B2BodyComponent b2body;
-    private CharacterStatsComponent stats;
-    private CombatTargetComponent targets;
-
     public CharacterAISystem() {
         super(Family.all(CharacterAIComponent.class).get());
     }
@@ -25,10 +20,10 @@ public class CharacterAISystem extends IteratingSystem {
         Character c = (entity instanceof Character) ? (Character) entity : null;
         if (c == null) return;
 
-        state = Mappers.STATE.get(entity);
-        b2body = Mappers.B2BODY.get(entity);
-        stats = Mappers.CHARACTER_STATS.get(entity);
-        targets = Mappers.COMBAT_TARGET.get(entity);
+        StateComponent state = Mappers.STATE.get(entity);
+        B2BodyComponent b2body = Mappers.B2BODY.get(entity);
+        CharacterStatsComponent stats = Mappers.CHARACTER_STATS.get(entity);
+        CombatTargetComponent targets = Mappers.COMBAT_TARGET.get(entity);
 
 
         if (state.setToKill) return;

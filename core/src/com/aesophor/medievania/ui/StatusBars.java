@@ -82,7 +82,7 @@ public class StatusBars extends Stage {
     }
 
 
-    public void registerPlayer(Player player) {
+    public void setPlayer(Player player) {
         this.player = player;
     }
 

@@ -1,30 +1,25 @@
 package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.character.Player;
-import com.aesophor.medievania.component.CharacterStatsComponent;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.PlayerComponent;
 import com.aesophor.medievania.component.StateComponent;
+import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.PortalUsedEvent;
-import com.aesophor.medievania.map.Portal;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.utils.Timer;
 
 public class PlayerControlSystem extends IteratingSystem {
-
-    private StateComponent state;
 
     public PlayerControlSystem() {
         super(Family.all(PlayerComponent.class).get());
     }
 
 
-    private void handleInput(Player player) {
+    private void handleInput(Player player, StateComponent state) {
         if (state.isSetToKill()) {
             return;
         }
@@ -55,21 +50,7 @@ public class PlayerControlSystem extends IteratingSystem {
                 player.crouch();
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 if (player.getCurrentPortal() != null && !state.isSetToKill()) {
-                    /*
-                    gameEventManager.fireEvent(new PortalUsedEvent());
-
-                    Timer.schedule(new Timer.Task() {
-                        @Override
-                        public void run() {
-                            Portal currentPortal = player.getCurrentPortal();
-                            int targetPortalID = currentPortal.getTargetPortalID();
-
-                            // Set the new map and reposition the player at the position of the target portal's body.
-                            setGameMap(currentPortal.getTargetMap());
-                            player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
-                        }
-                    }, ScreenFadeSystem.FADEIN_DURATION);
-                    */
+                    GameEventManager.getInstance().fireEvent(new PortalUsedEvent(player.getCurrentPortal()));
                 }
             }
         }
@@ -77,8 +58,7 @@ public class PlayerControlSystem extends IteratingSystem {
 
     @Override
     public void processEntity(Entity entity, float delta) {
-        state = Mappers.STATE.get(entity);
-        handleInput((Player) entity);
+        handleInput((Player) entity, Mappers.STATE.get(entity));
     }
 
 }

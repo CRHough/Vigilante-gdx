@@ -30,6 +30,7 @@ public class Player extends Character implements Humanoid, Controllable {
 
         add(new PlayerComponent());
 
+        stats.name = "Michael";
         stats.bodyWidth = 10;
         stats.bodyHeight = 34;
 

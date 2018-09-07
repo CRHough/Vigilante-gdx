@@ -236,4 +236,9 @@ public abstract class Character extends Entity implements Disposable {
         sounds.sounds.values().forEach(s -> s.dispose());
     }
 
+    @Override
+    public String toString() {
+        return stats.name;
+    }
+
 }
