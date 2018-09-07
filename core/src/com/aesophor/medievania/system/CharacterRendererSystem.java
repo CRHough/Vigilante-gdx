@@ -5,6 +5,8 @@ import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
@@ -12,19 +14,32 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class CharacterRendererSystem extends IteratingSystem {
 
+    private Batch batch;
+    private Camera camera;
     private World world;
 
-    private CharacterStatsComponent stats;
-    private B2BodyComponent b2body;
-    private SpriteComponent sprite;
+    private CharacterStatsComponent stats;  // health, magicka, stamina, exp... etc.
+    private B2BodyComponent b2body;         // box2d bodybuilder, body and fixtures.
+    private SpriteComponent sprite;         // character's sprite.
+    private AnimationComponent animations;  // character's animations.
+    private StateComponent state;           // character's state.
 
-    private AnimationComponent animations;
-    private StateComponent state;
+    public CharacterRendererSystem(Batch batch, Camera camera, World world) {
+        super(Family.all(SpriteComponent.class).get()); // look into this later?
 
-    public CharacterRendererSystem(World world) {
-        super(Family.all(CharacterStatsComponent.class).get()); // look into this later?
+        this.batch = batch;
+        this.camera = camera;
+        this.world = world;
     }
 
+
+    @Override
+    public void update(float delta) {
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        super.update(delta);
+        batch.end();
+    }
 
     @Override
     protected void processEntity(Entity entity, float delta) {
@@ -42,14 +57,14 @@ public class CharacterRendererSystem extends IteratingSystem {
                 sprite.sprite.setRegion(getFrame(delta));
 
                 // Set killed to true to prevent further rendering updates.
-                if (animations.animations.get(State.KILLED).isAnimationFinished(state.time)) {
+                if (animations.get(State.KILLED).isAnimationFinished(state.time)) {
                     world.destroyBody(b2body.body);
                     state.killed = true;
                 }
             } else {
                 sprite.sprite.setRegion(getFrame(delta));
 
-                // Set isAttacking back to false, implying attack has complete.
+                // Set attacking back to false, implying the attack has completed.
                 if (state.attacking && state.time >= stats.attackTime) {
                     state.attacking = false;
                     state.time = 0;
@@ -62,6 +77,7 @@ public class CharacterRendererSystem extends IteratingSystem {
         }
 
         sprite.sprite.setRegion(getFrame(delta));
+        sprite.sprite.draw(batch);
     }
 
     /**
@@ -75,26 +91,26 @@ public class CharacterRendererSystem extends IteratingSystem {
         TextureRegion textureRegion;
         switch (state.getCurrentState()) {
             case RUNNING:
-                textureRegion = animations.animations.get(State.RUNNING).getKeyFrame(state.time, true);
+                textureRegion = animations.get(State.RUNNING).getKeyFrame(state.time, true);
                 break;
             case JUMPING:
-                textureRegion = animations.animations.get(State.JUMPING).getKeyFrame(state.time, false);
+                textureRegion = animations.get(State.JUMPING).getKeyFrame(state.time, false);
                 break;
             case FALLING:
-                textureRegion = animations.animations.get(State.FALLING).getKeyFrame(state.time, false);
+                textureRegion = animations.get(State.FALLING).getKeyFrame(state.time, false);
                 break;
             case CROUCHING:
-                textureRegion = animations.animations.get(State.CROUCHING).getKeyFrame(state.time, false);
+                textureRegion = animations.get(State.CROUCHING).getKeyFrame(state.time, false);
                 break;
             case ATTACKING:
-                textureRegion = animations.animations.get(State.ATTACKING).getKeyFrame(state.time, false);
+                textureRegion = animations.get(State.ATTACKING).getKeyFrame(state.time, false);
                 break;
             case KILLED:
-                textureRegion = animations.animations.get(State.KILLED).getKeyFrame(state.time, false);
+                textureRegion = animations.get(State.KILLED).getKeyFrame(state.time, false);
                 break;
             case IDLE:
             default:
-                textureRegion = animations.animations.get(State.IDLE).getKeyFrame(state.time, true);
+                textureRegion = animations.get(State.IDLE).getKeyFrame(state.time, true);
                 break;
         }
 

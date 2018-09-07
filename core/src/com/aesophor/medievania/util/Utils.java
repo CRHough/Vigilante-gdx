@@ -44,7 +44,7 @@ public class Utils {
     }
     
     /**
-     * Create animation by extracting a set of TextureRegion from the specified Texture.
+     * Create animations by extracting a set of TextureRegion from the specified Texture.
      * Note that the all sprites must be on the same row.
      * @param texture The Texture from which to extract TextureRegion
      * @param frameDuration The time between frames in seconds.
@@ -55,7 +55,7 @@ public class Utils {
      * @param offsetY The y offset to apply in order to reach the first frame.
      * @param width The width of the TextureRegion. May be negative to flip the sprite when drawn.
      * @param height The height of the TextureRegion. May be negative to flip the sprite when drawn.
-     * @return Extracted animation.
+     * @return Extracted animations.
      */
     public static Animation<TextureRegion> createAnimation(Texture texture, float frameDuration,
             int firstFrameCount, int lastFrameCount, int offsetX, int offsetY, int width, int height) {

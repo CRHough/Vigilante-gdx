@@ -40,4 +40,11 @@ public class ScreenFadeSystem extends EntitySystem {
         });
     }
 
+
+    @Override
+    public void update(float delta) {
+        mainGameStage.act(delta);
+        mainGameStage.draw();
+    }
+
 }

@@ -9,6 +9,7 @@ public class Mappers {
     public static final ComponentMapper<B2BodyComponent> B2BODY;
     public static final ComponentMapper<SpriteComponent> SPRITE;
     public static final ComponentMapper<StateComponent> STATE;
+    public static final ComponentMapper<CombatTargetComponent> COMBAT_TARGET;
 
     static {
         CHARACTER_STATS = ComponentMapper.getFor(CharacterStatsComponent.class);
@@ -16,6 +17,7 @@ public class Mappers {
         B2BODY = ComponentMapper.getFor(B2BodyComponent.class);
         SPRITE = ComponentMapper.getFor(SpriteComponent.class);
         STATE = ComponentMapper.getFor(StateComponent.class);
+        COMBAT_TARGET = ComponentMapper.getFor(CombatTargetComponent.class);
     }
 
 }

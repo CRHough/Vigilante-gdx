@@ -3,12 +3,9 @@ package com.aesophor.medievania.screens;
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.GameWorldManager;
 import com.aesophor.medievania.character.Character;
+import com.aesophor.medievania.character.Enemy;
 import com.aesophor.medievania.character.Player;
-import com.aesophor.medievania.component.B2BodyComponent;
-import com.aesophor.medievania.event.GameEventManager;
-import com.aesophor.medievania.event.MainGameScreenResizeEvent;
-import com.aesophor.medievania.event.MapChangedEvent;
-import com.aesophor.medievania.event.PortalUsedEvent;
+import com.aesophor.medievania.event.*;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.map.WorldContactListener;
@@ -19,8 +16,6 @@ import com.aesophor.medievania.ui.NotificationArea;
 import com.aesophor.medievania.util.CameraShake;
 import com.aesophor.medievania.util.CameraUtils;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.box2d.BodyBuilder;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -32,6 +27,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+
+import java.util.EventListener;
 
 public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
@@ -73,9 +70,9 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         // Initialize PooledEngine and systems.
         engine = new PooledEngine();
         engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera())); // Renders TiledMap textures.
-        engine.addSystem(new CharacterRendererSystem(world));                           // Renders entities (player/enemies/obj)
-        //engine.addSystem(new CharacterAISystem());
-        //engine.addSystem(new PlayerControlSystem());
+        engine.addSystem(new CharacterRendererSystem(getBatch(), getCamera(), world));  // Renders entities (player/enemies/obj)
+        engine.addSystem(new CharacterAISystem());
+        engine.addSystem(new PlayerControlSystem());
         engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                // Renders physics debug profiles.
         engine.addSystem(new B2LightsSystem(world, getCamera()));                       // Renders Dynamic box2d lights.
         engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicator));       // Renders damage indicators.
@@ -87,63 +84,14 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         mapLoader = new TmxMapLoader();
         setGameMap("map/starting_point.tmx");
         player = currentMap.spawnPlayer();
-        statusBars.setPlayer(player);
+        engine.addEntity(player);
+
+        statusBars.registerPlayer(player);
     }
 
 
     public void handleInput(float delta) {
-        if (player.isSetToKill()) {
-            return;
-        }
 
-        if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
-            engine.getSystem(B2DebugRendererSystem.class).setProcessing(false);
-        }
-
-
-        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
-            player.swingWeapon();
-        }
-
-        if (player.isCrouching() && !Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            player.getUp();
-        }
-
-        // When player is attacking, movement is disabled.
-        if (!player.isAttacking()) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
-                if (player.isCrouching()) {
-                    player.jumpDown();
-                } else {
-                    player.jump();
-                }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-
-            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                player.moveRight();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                player.moveLeft();
-            } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                player.crouch();
-            } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                if (player.getCurrentPortal() != null && !player.isSetToKill()) {
-                    gameEventManager.fireEvent(new PortalUsedEvent());
-
-                    Timer.schedule(new Timer.Task() {
-                        @Override
-                        public void run() {
-                            Portal currentPortal = player.getCurrentPortal();
-                            int targetPortalID = currentPortal.getTargetPortalID();
-
-                            // Set the new map and reposition the player at the position of the target portal's body.
-                            setGameMap(currentPortal.getTargetMap());
-                            player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
-                        }
-                    }, ScreenFadeSystem.FADEIN_DURATION);
-
-                }
-            }
-        }
     }
 
 
@@ -151,9 +99,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         handleInput(delta);
 
         world.step(1/60f, 6, 2);
-
-        enemies.forEach((Character c) -> c.update(delta));
-        player.update(delta);
 
         if (CameraShake.getShakeTimeLeft() > 0){
             CameraShake.update(Gdx.graphics.getDeltaTime());
@@ -164,33 +109,20 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
         // Make sure to bound the camera within the TiledMap.
         CameraUtils.boundCamera(getCamera(), getCurrentMap());
-
-        // Update all actors in this stage.
-        this.act(delta);
     }
 
     @Override
     public void render(float delta) {
         update(delta);
         gsm.clearScreen();
-
         engine.update(delta);
-
-        // Render characters.
-        getBatch().setProjectionMatrix(getCamera().combined);
-        getBatch().begin();
-        enemies.forEach((Character c) -> c.draw(getBatch()));
-        player.draw(getBatch());
-        getBatch().end();
-
-        // Draw all actors on this stage.
-        this.draw();
     }
 
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
 
+        // Fire a screen-resize event to update the viewport of DamageIndicator and RayHandler.
         int viewportX = getViewport().getScreenX();
         int viewportY = getViewport().getScreenY();
         int viewportWidth = getViewport().getScreenWidth();
@@ -242,6 +174,7 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
         // TODO: Don't respawn enemies whenever a map loads.
         enemies = currentMap.spawnNPCs();
+        enemies.forEach(e -> engine.addEntity(e));
     }
 
     @Override

@@ -36,7 +36,39 @@ public class StateComponent implements Component {
     public void setCurrentState(State newState) {
         this.previousState = this.currentState;
         this.currentState = newState;
-        time = .0f;
+    }
+
+
+    public boolean isAttacking() {
+        return attacking;
+    }
+
+    public boolean isCrouching() {
+        return crouching;
+    }
+
+    public boolean isInvincible() {
+        return invincible;
+    }
+
+    public boolean isSetToKill() {
+        return setToKill;
+    }
+
+    public boolean isKilled() {
+        return killed;
+    }
+
+    public boolean isJumping() {
+        return jumping;
+    }
+
+    public boolean isOnPlatform() {
+        return onPlatform;
+    }
+
+    public boolean facingRight() {
+        return facingRight;
     }
 
 }
