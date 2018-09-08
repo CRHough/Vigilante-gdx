@@ -112,7 +112,7 @@ public class Player extends Character implements Humanoid {
 
         super.inflictDamage(c, damage);
 
-        gameWorldManager.getDamageIndicator().show(c, damage);
+        gameWorldManager.getDamageIndicatorFactory().show(c, damage);
         gameWorldManager.getNotificationArea().show(String.format("You dealt %d pts damage to %s", damage, c.getName()));
         CameraShake.shake(8 / Constants.PPM, .1f);
 

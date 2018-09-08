@@ -35,9 +35,7 @@ public class NotificationArea extends Stage {
         }
 
         // Display the new message.
-        // Rename TimedLabel later! It can be reused for displaying on-screens texts, so
-        // the name should be more generic.
-        TimedLabel newMsg = new TimedLabel(content, new Label.LabelStyle(font, Color.WHITE), messageLifetime);
+        TimedLabel newMsg = new Notification(content, new Label.LabelStyle(font, Color.WHITE), messageLifetime);
         newMsg.setPosition(10f, 0f);
         newMsg.addAction(Actions.moveBy(0f, 10f, .2f));
         addActor(newMsg);

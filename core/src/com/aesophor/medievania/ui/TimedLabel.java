@@ -4,10 +4,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-public class TimedLabel extends Label {
+public abstract class TimedLabel extends Label {
 
-    private float lifetime;
-    private float timer;
+    protected float lifetime;
+    protected float timer;
 
     public TimedLabel(CharSequence text, Skin skin, float lifetime) {
         super(text, skin);

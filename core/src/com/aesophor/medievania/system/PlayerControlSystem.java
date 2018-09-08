@@ -40,8 +40,8 @@ public class PlayerControlSystem extends IteratingSystem {
                 } else {
                     player.jump();
                 }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-
+            } else if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
+                player.forwardRush();
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.moveRight();
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {

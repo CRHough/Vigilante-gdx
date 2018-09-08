@@ -22,7 +22,6 @@ public abstract class Character extends Entity implements Disposable {
     protected CombatTargetComponent targets;
 
     protected AIActions AIActions;
-    protected Queue<Actor> damageIndicators; // not removing expired ones yet.
 
     public Character(Texture texture, World currentWorld, float x, float y) {
         stats = new CharacterStatsComponent();
@@ -41,7 +40,6 @@ public abstract class Character extends Entity implements Disposable {
         add(targets);
 
         AIActions = new AIActions(this);
-        damageIndicators = new Queue<>();
     }
 
 
@@ -112,6 +110,13 @@ public abstract class Character extends Entity implements Disposable {
 
         if (b2body.body.getLinearVelocity().x <= stats.movementSpeed * 2) {
             b2body.body.applyLinearImpulse(new Vector2(stats.movementSpeed, 0), b2body.body.getWorldCenter(), true);
+        }
+    }
+
+    public void forwardRush() {
+        if (b2body.body.getLinearVelocity().x <= stats.movementSpeed * 2 && b2body.body.getLinearVelocity().x >= -stats.movementSpeed * 2) {
+            float rushForce = (state.facingRight) ? stats.movementSpeed * 5 : -stats.movementSpeed * 5;
+            b2body.body.applyLinearImpulse(new Vector2(rushForce, 0), b2body.body.getWorldCenter(), true);
         }
     }
 
@@ -225,10 +230,6 @@ public abstract class Character extends Entity implements Disposable {
 
     public AIActions getAIActions() {
         return AIActions;
-    }
-
-    public Queue<Actor> getDamageIndicators() {
-        return damageIndicators;
     }
 
     @Override
