@@ -68,7 +68,6 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 player = (Player) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
-                System.out.println("adding: " + enemy);
                 player.addInRangeTarget(enemy);
                 break;
 
@@ -76,7 +75,6 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
-                System.out.println("adding: " + player);
                 enemy.addInRangeTarget(player);
                 break;
                 
@@ -126,7 +124,6 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 player = (Player) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
-                System.out.println("removing: " + enemy);
                 player.removeInRangeTarget(enemy);
                 break;
 
@@ -134,7 +131,6 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
                 enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
-                System.out.println("removing: " + player);
                 enemy.removeInRangeTarget(player);
                 break;
                 

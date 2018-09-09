@@ -8,7 +8,7 @@ import com.aesophor.medievania.event.MainGameScreenResizeEvent;
 import com.aesophor.medievania.map.WorldContactListener;
 import com.aesophor.medievania.system.*;
 import com.aesophor.medievania.ui.DamageIndicatorFactory;
-import com.aesophor.medievania.ui.NotificationArea;
+import com.aesophor.medievania.ui.NotificationFactory;
 import com.aesophor.medievania.ui.StatusBars;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.PooledEngine;
@@ -25,7 +25,7 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
 
     private final StatusBars statusBars;
     private final DamageIndicatorFactory damageIndicatorFactory;
-    private final NotificationArea notificationArea;
+    private final NotificationFactory notificationFactory;
 
     private final TmxMapLoader mapLoader;
     private final Player player;
@@ -44,10 +44,10 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         world = new World(new Vector2(0, Constants.GRAVITY), true);
         world.setContactListener(new WorldContactListener());
 
-        // Initialize damage indicators and notificationArea area.
+        // Initialize damage indicators and notificationFactory area.
         statusBars = new StatusBars(gsm);
         damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), gsm.getFont().getDefaultFont(), getCamera(), 1.5f);
-        notificationArea = new NotificationArea(getBatch(), gsm.getFont().getDefaultFont(), 6, 4f);
+        notificationFactory = new NotificationFactory(getBatch(), gsm.getFont().getDefaultFont(), 6, 4f);
 
         // Load the map and spawn player.
         mapLoader = new TmxMapLoader();
@@ -64,7 +64,7 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         engine.addSystem(new EnemyAISystem());                                          // Handles NPC behaviors.
         engine.addSystem(new GameMapManagementSystem(this, world));   // Used to set current GameMap.
         engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorFactory));       // Renders damage indicators.
-        engine.addSystem(new NotificationSystem(getBatch(), notificationArea));         // Renders Notifications.
+        engine.addSystem(new NotificationSystem(getBatch(), notificationFactory));         // Renders Notifications.
         engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));           // Renders player status bars.
         engine.addSystem(new ScreenFadeSystem(getBatch()));                             // Renders screen fade effects.
 
@@ -128,8 +128,8 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
     }
 
     @Override
-    public NotificationArea getNotificationArea() {
-        return notificationArea;
+    public NotificationFactory getNotificationFactory() {
+        return notificationFactory;
     }
 
     @Override

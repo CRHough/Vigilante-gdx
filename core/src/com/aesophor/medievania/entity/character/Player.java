@@ -34,7 +34,7 @@ public class Player extends Character implements Humanoid {
         stats.bodyWidth = 10;
         stats.bodyHeight = 34;
 
-        stats.health = 200;
+        stats.health = 100;
         stats.movementSpeed = .3f;
         stats.jumpHeight = 3f;
         stats.attackForce = 1f;
@@ -108,17 +108,17 @@ public class Player extends Character implements Humanoid {
     public void inflictDamage(Character c, int damage) {
         if ((state.facingRight && c.state.facingRight()) || (!state.facingRight && !c.state.facingRight())) {
             damage *= 2;
-            gameWorldManager.getNotificationArea().show("Critical hit!");
+            gameWorldManager.getNotificationFactory().show("Critical hit!");
         }
 
         super.inflictDamage(c, damage);
 
         gameWorldManager.getDamageIndicatorFactory().show(c, damage);
-        gameWorldManager.getNotificationArea().show(String.format("You dealt %d pts damage to %s", damage, c.getName()));
+        gameWorldManager.getNotificationFactory().show(String.format("You dealt %d pts damage to %s", damage, c.getName()));
         CameraShake.shake(8 / Constants.PPM, .1f);
 
         if (c.state.isSetToKill()) {
-            gameWorldManager.getNotificationArea().show(String.format("You earned 10 exp."));
+            gameWorldManager.getNotificationFactory().show(String.format("You earned 10 exp."));
         }
     }
 

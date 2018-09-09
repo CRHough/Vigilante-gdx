@@ -13,12 +13,6 @@ public abstract class Enemy extends Character {
 
 
     @Override
-    public void inflictDamage(Character c, int damage) {
-        super.inflictDamage(c, damage);
-        //addInRangeTarget(null);
-    }
-
-    @Override
     public void receiveDamage(int damage) {
         super.receiveDamage(damage);
         state.alerted = true;

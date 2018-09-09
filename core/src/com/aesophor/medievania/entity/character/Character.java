@@ -72,8 +72,8 @@ public abstract class Character extends Entity implements Disposable {
         Vector2[] feetPolyVertices = new Vector2[4];
         feetPolyVertices[0] = new Vector2(-stats.bodyWidth / 2 + 1, -stats.bodyHeight / 2);
         feetPolyVertices[1] = new Vector2(stats.bodyWidth / 2 - 1, -stats.bodyHeight / 2);
-        feetPolyVertices[2] = new Vector2(-stats.bodyWidth / 2 + 1, -stats.bodyHeight / 2 - 2);
-        feetPolyVertices[3] = new Vector2(stats.bodyWidth / 2 - 1, -stats.bodyHeight / 2 - 2);
+        feetPolyVertices[2] = new Vector2(-stats.bodyWidth / 2 + 1, -stats.bodyHeight / 2 - 1);
+        feetPolyVertices[3] = new Vector2(stats.bodyWidth / 2 - 1, -stats.bodyHeight / 2 - 1);
 
         b2body.feetFixture = b2body.bodyBuilder.newPolygonFixture(feetPolyVertices, Constants.PPM)
                 .categoryBits(CategoryBits.FEET)
@@ -151,13 +151,15 @@ public abstract class Character extends Entity implements Disposable {
         if (!state.isAttacking()) {
             state.attacking = true;
 
+            // A character can have multiple inRangeTargets which are stored as an array.
+            // When an inRangeTarget dies, the target will be removed from the array.
             if (targets.hasInRangeTarget() && !targets.inRangeTargets.first().state.isInvincible() && !targets.inRangeTargets.first().state.isSetToKill()) {
                 setLockedOnTarget(targets.inRangeTargets.first());
                 targets.inRangeTargets.first().setLockedOnTarget(this);
 
                 inflictDamage(targets.inRangeTargets.first(), stats.attackDamage);
 
-                if (targets.lockedOnTarget.getComponent(StateComponent.class).setToKill) {
+                if (targets.inRangeTargets.first().getComponent(StateComponent.class).setToKill) {
                     targets.inRangeTargets.removeValue(targets.inRangeTargets.first(), false);
                 }
 
@@ -228,12 +230,10 @@ public abstract class Character extends Entity implements Disposable {
 
     public void addInRangeTarget(Character enemy) {
         targets.inRangeTargets.add(enemy);
-        System.out.println(targets.inRangeTargets);
     }
 
     public void removeInRangeTarget(Character enemy) {
         targets.inRangeTargets.removeValue(enemy, false);
-        System.out.println(targets.inRangeTargets);
     }
 
 

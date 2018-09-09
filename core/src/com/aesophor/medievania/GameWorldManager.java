@@ -2,7 +2,7 @@ package com.aesophor.medievania;
 
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.ui.DamageIndicatorFactory;
-import com.aesophor.medievania.ui.NotificationArea;
+import com.aesophor.medievania.ui.NotificationFactory;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -15,7 +15,7 @@ public interface GameWorldManager extends Disposable {
     public AssetManager getAssets();
     public TmxMapLoader getMapLoader();
 
-    public NotificationArea getNotificationArea();
+    public NotificationFactory getNotificationFactory();
     public DamageIndicatorFactory getDamageIndicatorFactory();
 
     public PooledEngine getEngine();
