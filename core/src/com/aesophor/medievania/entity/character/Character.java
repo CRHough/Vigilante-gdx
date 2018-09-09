@@ -7,9 +7,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.Queue;
 
 public abstract class Character extends Entity implements Disposable {
 
@@ -153,11 +151,16 @@ public abstract class Character extends Entity implements Disposable {
         if (!state.isAttacking()) {
             state.attacking = true;
 
-            if (targets.hasInRangeTarget() && !targets.inRangeTarget.state.isInvincible() && !targets.inRangeTarget.state.isSetToKill()) {
-                setLockedOnTarget(targets.inRangeTarget);
-                targets.inRangeTarget.setLockedOnTarget(this);
+            if (targets.hasInRangeTarget() && !targets.inRangeTargets.first().state.isInvincible() && !targets.inRangeTargets.first().state.isSetToKill()) {
+                setLockedOnTarget(targets.inRangeTargets.first());
+                targets.inRangeTargets.first().setLockedOnTarget(this);
 
-                inflictDamage(targets.inRangeTarget, stats.attackDamage);
+                inflictDamage(targets.inRangeTargets.first(), stats.attackDamage);
+
+                if (targets.lockedOnTarget.getComponent(StateComponent.class).setToKill) {
+                    targets.inRangeTargets.removeValue(targets.inRangeTargets.first(), false);
+                }
+
                 sounds.get(SoundType.WEAPON_HIT).play();
             }
 
@@ -223,8 +226,14 @@ public abstract class Character extends Entity implements Disposable {
         targets.lockedOnTarget = enemy;
     }
 
-    public void setInRangeTarget(Character enemy) {
-        targets.inRangeTarget = enemy;
+    public void addInRangeTarget(Character enemy) {
+        targets.inRangeTargets.add(enemy);
+        System.out.println(targets.inRangeTargets);
+    }
+
+    public void removeInRangeTarget(Character enemy) {
+        targets.inRangeTargets.removeValue(enemy, false);
+        System.out.println(targets.inRangeTargets);
     }
 
 

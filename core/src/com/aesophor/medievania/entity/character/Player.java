@@ -34,7 +34,7 @@ public class Player extends Character implements Humanoid {
         stats.bodyWidth = 10;
         stats.bodyHeight = 34;
 
-        stats.health = 100;
+        stats.health = 200;
         stats.movementSpeed = .3f;
         stats.jumpHeight = 3f;
         stats.attackForce = 1f;
@@ -102,6 +102,7 @@ public class Player extends Character implements Humanoid {
     public void reposition(float x, float y) {
         b2body.body.setTransform(x, y, 0);
     }
+
 
     @Override
     public void inflictDamage(Character c, int damage) {

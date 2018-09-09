@@ -15,7 +15,7 @@ public abstract class Enemy extends Character {
     @Override
     public void inflictDamage(Character c, int damage) {
         super.inflictDamage(c, damage);
-        setInRangeTarget(null);
+        //addInRangeTarget(null);
     }
 
     @Override

@@ -67,8 +67,6 @@ public class DamageIndicatorFactory extends Stage {
             DamageIndicator indicator = ((DamageIndicator) i);
             indicator.update(delta);
 
-            System.out.println(damageIndicators);
-
             if (indicator.hasExpired() && damageIndicators.get(indicator.getCharacter()) != null) {
                 indicator.addAction(Actions.sequence(Actions.fadeOut(.5f), Actions.removeActor()));
                 damageIndicators.get(indicator.getCharacter()).removeValue(indicator, true);

@@ -2,18 +2,24 @@ package com.aesophor.medievania.component;
 
 import com.aesophor.medievania.entity.character.Character;
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.utils.Array;
 
 public class CombatTargetComponent implements Component {
 
     public Character lockedOnTarget;
-    public Character inRangeTarget;
+    public Array<Character> inRangeTargets;
+
+    public CombatTargetComponent() {
+        inRangeTargets = new Array<>();
+    }
+
 
     public boolean hasLockedOnTarget() {
         return lockedOnTarget != null;
     }
 
     public boolean hasInRangeTarget() {
-        return inRangeTarget != null;
+        return inRangeTargets.size > 0;
     }
 
 }

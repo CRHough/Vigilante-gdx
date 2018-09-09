@@ -68,14 +68,16 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 player = (Player) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
-                player.setInRangeTarget(enemy);
+                System.out.println("adding: " + enemy);
+                player.addInRangeTarget(enemy);
                 break;
 
             // Set player as enemy's current target (so enemy can inflict damage to player).
             case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
-                enemy.setInRangeTarget(player);
+                System.out.println("adding: " + player);
+                enemy.addInRangeTarget(player);
                 break;
                 
             default:
@@ -123,13 +125,17 @@ public class WorldContactListener implements ContactListener {
             // Clear player's current target (so player cannot inflict damage to enemy from a distance).
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 player = (Player) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
-                player.setInRangeTarget(null);
+                enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
+                System.out.println("removing: " + enemy);
+                player.removeInRangeTarget(enemy);
                 break;
 
             // Clear enemy's current target (so enemy cannot inflict damage to player from a distance).
             case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
                 enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
-                enemy.setInRangeTarget(null);
+                player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
+                System.out.println("removing: " + player);
+                enemy.removeInRangeTarget(player);
                 break;
                 
             default:
