@@ -2,8 +2,8 @@ package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
-import com.aesophor.medievania.event.MapChangedEvent;
-import com.aesophor.medievania.event.PortalUsedEvent;
+import com.aesophor.medievania.event.map.MapChangedEvent;
+import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.aesophor.medievania.ui.Shade;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.graphics.g2d.Batch;

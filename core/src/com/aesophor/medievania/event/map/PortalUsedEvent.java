@@ -1,5 +1,7 @@
-package com.aesophor.medievania.event;
+package com.aesophor.medievania.event.map;
 
+import com.aesophor.medievania.event.GameEvent;
+import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.map.Portal;
 
 public class PortalUsedEvent extends GameEvent {

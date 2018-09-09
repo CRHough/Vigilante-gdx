@@ -1,10 +1,9 @@
 package com.aesophor.medievania.screens;
 
 import com.aesophor.medievania.GameStateManager;
-import com.aesophor.medievania.GameWorldManager;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
-import com.aesophor.medievania.event.MainGameScreenResizeEvent;
+import com.aesophor.medievania.event.screen.MainGameScreenResizeEvent;
 import com.aesophor.medievania.map.WorldContactListener;
 import com.aesophor.medievania.system.*;
 import com.aesophor.medievania.ui.DamageIndicatorFactory;
@@ -12,24 +11,16 @@ import com.aesophor.medievania.ui.NotificationFactory;
 import com.aesophor.medievania.ui.StatusBars;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.PooledEngine;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class MainGameScreen extends AbstractScreen implements GameWorldManager {
+public class MainGameScreen extends AbstractScreen {
 
     private final GameEventManager gameEventManager;
     private final PooledEngine engine;
-
-    private final StatusBars statusBars;
-    private final DamageIndicatorFactory damageIndicatorFactory;
-    private final NotificationFactory notificationFactory;
-
-    private final TmxMapLoader mapLoader;
     private final Player player;
-    private World world;
+    private final World world;
 
     public MainGameScreen(GameStateManager gsm) {
         super(gsm);
@@ -45,12 +36,9 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         world.setContactListener(new WorldContactListener());
 
         // Initialize damage indicators and notificationFactory area.
-        statusBars = new StatusBars(gsm);
-        damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), gsm.getFont().getDefaultFont(), getCamera(), 1.5f);
-        notificationFactory = new NotificationFactory(getBatch(), gsm.getFont().getDefaultFont(), 6, 4f);
-
-        // Load the map and spawn player.
-        mapLoader = new TmxMapLoader();
+        StatusBars statusBars = new StatusBars(gsm);
+        DamageIndicatorFactory damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), gsm.getFont().getDefaultFont(), getCamera(), 1.2f);
+        NotificationFactory notificationFactory = new NotificationFactory(getBatch(), gsm.getFont().getDefaultFont(), 6, 4f);
 
         // Here I employ Entity-Component-System because it makes the layout of my code cleaner.
         // Tasks are independently spread into different systems/layers and can be added/removed on demand.
@@ -62,14 +50,14 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         engine.addSystem(new CameraSystem(getCamera(), null, null)); // Camera shake / lerp to target.
         engine.addSystem(new PlayerControlSystem());                                    // Handles player controls.
         engine.addSystem(new EnemyAISystem());                                          // Handles NPC behaviors.
-        engine.addSystem(new GameMapManagementSystem(this, world));   // Used to set current GameMap.
-        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorFactory));       // Renders damage indicators.
-        engine.addSystem(new NotificationSystem(getBatch(), notificationFactory));         // Renders Notifications.
+        engine.addSystem(new GameMapManagementSystem(engine, gsm.getAssets(), world));  // Used to set current GameMap.
+        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorFactory));// Renders damage indicators.
+        engine.addSystem(new NotificationSystem(getBatch(), notificationFactory));      // Renders Notifications.
         engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));           // Renders player status bars.
         engine.addSystem(new ScreenFadeSystem(getBatch()));                             // Renders screen fade effects.
 
         //player = getCurrentMap().spawnPlayer();
-        player = new Player(this, 30, 100);
+        player = new Player(gsm.getAssets(), world, 30, 100);
         engine.addEntity(player);
 
         engine.getSystem(CameraSystem.class).registerPlayer(player);
@@ -110,41 +98,6 @@ public class MainGameScreen extends AbstractScreen implements GameWorldManager {
         world.dispose();
         player.dispose();
         //npcs.forEach((Character c) -> c.dispose());
-    }
-
-    @Override
-    public World getWorld() {
-        return world;
-    }
-
-    @Override
-    public AssetManager getAssets() {
-        return gsm.getAssets();
-    }
-
-    @Override
-    public TmxMapLoader getMapLoader() {
-        return mapLoader;
-    }
-
-    @Override
-    public NotificationFactory getNotificationFactory() {
-        return notificationFactory;
-    }
-
-    @Override
-    public DamageIndicatorFactory getDamageIndicatorFactory() {
-        return damageIndicatorFactory;
-    }
-
-    @Override
-    public Player getPlayer() {
-        return player;
-    }
-
-    @Override
-    public PooledEngine getEngine() {
-        return engine;
     }
 
 }

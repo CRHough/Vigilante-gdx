@@ -1,19 +1,19 @@
 package com.aesophor.medievania.entity.character;
 
-import com.aesophor.medievania.GameWorldManager;
 import com.aesophor.medievania.component.ControllableComponent;
 import com.aesophor.medievania.component.SoundType;
 import com.aesophor.medievania.component.State;
 import com.aesophor.medievania.map.Portal;
-import com.aesophor.medievania.util.CameraShake;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
@@ -21,12 +21,10 @@ public class Player extends Character implements Humanoid {
 
     private static final String TEXTURE_FILE = "character/bandit/Bandit.png";
 
-    private GameWorldManager gameWorldManager;
     private Portal currentPortal;
 
-    public Player(GameWorldManager gameWorldManager, float x, float y) {
-        super(gameWorldManager.getAssets().get(TEXTURE_FILE), gameWorldManager.getWorld(), x, y);
-        this.gameWorldManager = gameWorldManager;
+    public Player(AssetManager assets, World world, float x, float y) {
+        super(assets.get(TEXTURE_FILE), world, x, y);
 
         add(new ControllableComponent());
 
@@ -43,7 +41,6 @@ public class Player extends Character implements Humanoid {
         stats.attackDamage = 25;
 
         // Create animations by extracting frames from the spritesheet.
-        // CLEAN IT UP LATER !!!
         Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 0, 0, 7 * 80, 2 * 80, 80, 80);
         Animation<TextureRegion> runAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 20f / Constants.PPM, 0, 7,  0, 3 * 80,  80, 80);
         Animation<TextureRegion> jumpAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 0, 3,  0, 1 * 80,  80, 80);
@@ -63,11 +60,11 @@ public class Player extends Character implements Humanoid {
 
         // Sounds.
         //Sound footstepSound = gameWorldManager.getAssets().get("sfx/player/footstep.mp3");
-        Sound hurtSound = gameWorldManager.getAssets().get("sfx/player/hurt.wav");
-        Sound deathSound = gameWorldManager.getAssets().get("sfx/player/death.mp3");
-        Sound weaponSwingSound = gameWorldManager.getAssets().get("sfx/player/weapon_swing.ogg", Sound.class);
-        Sound weaponHitSound = gameWorldManager.getAssets().get("sfx/player/weapon_hit.ogg", Sound.class);
-        Sound jumpSound = gameWorldManager.getAssets().get("sfx/player/jump.wav", Sound.class);
+        Sound hurtSound = assets.get("sfx/player/hurt.wav");
+        Sound deathSound = assets.get("sfx/player/death.mp3");
+        Sound weaponSwingSound = assets.get("sfx/player/weapon_swing.ogg", Sound.class);
+        Sound weaponHitSound = assets.get("sfx/player/weapon_hit.ogg", Sound.class);
+        Sound jumpSound = assets.get("sfx/player/jump.wav", Sound.class);
 
         //sounds.put(SoundType.FOOTSTEP, footstepSound);
         sounds.put(SoundType.JUMP, jumpSound);
@@ -103,43 +100,19 @@ public class Player extends Character implements Humanoid {
         b2body.body.setTransform(x, y, 0);
     }
 
-
     @Override
-    public void inflictDamage(Character c, int damage) {
-        if ((state.facingRight && c.state.facingRight()) || (!state.facingRight && !c.state.facingRight())) {
-            damage *= 2;
-            gameWorldManager.getNotificationFactory().show("Critical hit!");
-        }
+    public void receiveDamage(Character source, int damage) {
+        super.receiveDamage(source, damage);
+        state.invincible = true;
 
-        super.inflictDamage(c, damage);
-
-        gameWorldManager.getDamageIndicatorFactory().show(c, damage);
-        gameWorldManager.getNotificationFactory().show(String.format("You dealt %d pts damage to %s", damage, c.getName()));
-        CameraShake.shake(8 / Constants.PPM, .1f);
-
-        if (c.state.isSetToKill()) {
-            gameWorldManager.getNotificationFactory().show(String.format("You earned 10 exp."));
-        }
-    }
-
-    @Override
-    public void receiveDamage(int damage) {
-        super.receiveDamage(damage);
-
-        // Sets the player to be untouchable for a while.
-        if (!state.invincible) {
-            CameraShake.shake(8 / Constants.PPM, .1f);
-            state.invincible = true;
-
-            Timer.schedule(new Task() {
-                @Override
-                public void run() {
-                    if (!state.setToKill) {
-                        state.invincible = false;
-                    }
+        Timer.schedule(new Task() {
+            @Override
+            public void run() {
+                if (!state.setToKill) {
+                    state.invincible = false;
                 }
-            }, 3f);
-        }
+            }
+        }, 3f);
     }
 
 }

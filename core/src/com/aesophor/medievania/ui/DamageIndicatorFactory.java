@@ -3,6 +3,7 @@ package com.aesophor.medievania.ui;
 import java.util.Map;
 import java.util.HashMap;
 import com.aesophor.medievania.entity.character.Character;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
@@ -22,7 +23,7 @@ public class DamageIndicatorFactory extends Stage {
     private static final float DELTA_Y = 10f;
 
     private static final float MOVE_UP_DURATION = .2f;
-    private static final float FADE_OUT_DURATION = 5f;
+    private static final float FADE_OUT_DURATION = .2f;
 
     private BitmapFont font;
     private Camera gameScreenCamera;
@@ -56,7 +57,8 @@ public class DamageIndicatorFactory extends Stage {
         Vector3 screenCoordinates = gameScreenCamera.project(worldCoordinates);
 
         // Display the new damage indicator.
-        DamageIndicator indicator = new DamageIndicator(Integer.toString(damage), new Label.LabelStyle(font, Color.WHITE), damageTextLifetime, c);
+        Color color = (c instanceof Player) ? Color.RED : Color.WHITE;
+        DamageIndicator indicator = new DamageIndicator(Integer.toString(damage), new Label.LabelStyle(font, color), damageTextLifetime, c);
         float positionX = screenCoordinates.x * Constants.V_WIDTH / getViewport().getScreenWidth();
         float positionY = screenCoordinates.y * Constants.V_HEIGHT / getViewport().getScreenHeight();
         indicator.setPosition(positionX, positionY);

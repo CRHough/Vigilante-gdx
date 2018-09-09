@@ -1,4 +1,7 @@
-package com.aesophor.medievania.event;
+package com.aesophor.medievania.event.screen;
+
+import com.aesophor.medievania.event.GameEvent;
+import com.aesophor.medievania.event.GameEventType;
 
 public class MainGameScreenResizeEvent extends GameEvent {
 
@@ -9,7 +12,6 @@ public class MainGameScreenResizeEvent extends GameEvent {
 
     public MainGameScreenResizeEvent(int viewportX, int viewportY, int viewportWidth, int viewportHeight) {
         super(GameEventType.MAINGAME_SCREEN_RESIZED);
-
         this.viewportX = viewportX;
         this.viewportY = viewportY;
         this.viewportWidth = viewportWidth;

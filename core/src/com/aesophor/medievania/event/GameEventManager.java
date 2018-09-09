@@ -13,10 +13,9 @@ public class GameEventManager {
     private GameEventManager() {
         listeners = new HashMap<>();
 
-        // List of handlers for various events.
-        listeners.put(GameEventType.MAP_CHANGED, new Array<>());
-        listeners.put(GameEventType.PORTAL_USED, new Array<>());
-        listeners.put(GameEventType.MAINGAME_SCREEN_RESIZED, new Array<>());
+        for (GameEventType gameEventType : GameEventType.values()) {
+            listeners.put(gameEventType, new Array<>());
+        }
     }
 
     public static GameEventManager getInstance() {

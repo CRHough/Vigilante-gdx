@@ -3,10 +3,12 @@ package com.aesophor.medievania.system;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
-import com.aesophor.medievania.event.MapChangedEvent;
+import com.aesophor.medievania.event.combat.InflictDamageEvent;
+import com.aesophor.medievania.event.map.MapChangedEvent;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.util.CameraShake;
 import com.aesophor.medievania.util.CameraUtils;
+import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
@@ -24,6 +26,12 @@ public class CameraSystem extends EntitySystem {
 
         GameEventManager.getInstance().addEventListener(GameEventType.MAP_CHANGED, (MapChangedEvent e) -> {
             this.currentMap = e.getNewGameMap();
+        });
+
+        GameEventManager.getInstance().addEventListener(GameEventType.INFLICT_DAMAGE, (InflictDamageEvent e) -> {
+            if (e.getTarget().equals(this.player) || e.getTarget().equals(this.player)) {
+                CameraShake.shake(8 / Constants.PPM, .1f);
+            }
         });
     }
 

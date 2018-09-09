@@ -5,7 +5,7 @@ import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.ControllableComponent;
 import com.aesophor.medievania.component.StateComponent;
 import com.aesophor.medievania.event.GameEventManager;
-import com.aesophor.medievania.event.PortalUsedEvent;
+import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.maps.MapObjects;
 import com.badlogic.gdx.maps.objects.PolylineMapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -19,6 +20,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class TiledObjectUtils {
 
+    public static final TmxMapLoader tmxMapLoader = new TmxMapLoader();
+
     private static final boolean GROUND_COLLIDABLE = true;
     private static final boolean PLATFORM_COLLIDABLE = true;
     private static final boolean WALL_COLLIDABLE = true;
@@ -26,6 +29,7 @@ public class TiledObjectUtils {
 
     private static final Color LIGHT_COLOR = Color.ORANGE;
     private static final float LIGHT_DISTANCE = 80;
+
 
     /**
      * Parses the layers of the specified TiledMap, and creates the corresponding bodies.

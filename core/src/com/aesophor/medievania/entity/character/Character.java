@@ -1,6 +1,8 @@
 package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.*;
+import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.combat.InflictDamageEvent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.Entity;
@@ -171,14 +173,16 @@ public abstract class Character extends Entity implements Disposable {
         }
     }
 
-    public void inflictDamage(Character c, int damage) {
-        c.receiveDamage(damage);
-        c.knockedBack((state.facingRight) ? stats.attackForce : -stats.attackForce);
+    public void inflictDamage(Character target, int damage) {
+        target.receiveDamage(this, damage);
+        target.knockedBack((state.facingRight) ? stats.attackForce : -stats.attackForce);
     }
 
-    public void receiveDamage(int damage) {
+    public void receiveDamage(Character source, int damage) {
         if (!state.invincible) {
             stats.health -= damage;
+
+            GameEventManager.getInstance().fireEvent(new InflictDamageEvent(source, this, damage));
 
             if (stats.health <= 0) {
                 setCategoryBits(b2body.bodyFixture, CategoryBits.DESTROYED);
