@@ -70,7 +70,7 @@ public class MainMenuScreen extends AbstractScreen {
         draw();
     }
     
-    public void handleInput(float dt) {
+    public void handleInput(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             if (currentItem > 0) {
                 keyPressSound.play();
@@ -99,7 +99,7 @@ public class MainMenuScreen extends AbstractScreen {
                 Gdx.app.exit();
                 break;
             default:
-                Gdx.app.log("Main menu", "Unknown selected item. This shouldn't have happened!");
+                Gdx.app.log("Main menu", "Unknown selected item!");
                 break;
         }
     }

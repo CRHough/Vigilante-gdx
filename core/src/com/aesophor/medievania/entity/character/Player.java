@@ -3,6 +3,7 @@ package com.aesophor.medievania.entity.character;
 import com.aesophor.medievania.component.ControllableComponent;
 import com.aesophor.medievania.component.SoundType;
 import com.aesophor.medievania.component.State;
+import com.aesophor.medievania.component.StatsRegenerationComponent;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
@@ -27,12 +28,16 @@ public class Player extends Character implements Humanoid {
         super(assets.get(TEXTURE_FILE), world, x, y);
 
         add(new ControllableComponent());
+        add(new StatsRegenerationComponent(5, 10, 10));
 
         stats.name = "Michael";
         stats.bodyWidth = 10;
         stats.bodyHeight = 34;
 
-        stats.health = 100;
+        stats.health = stats.fullHealth = 100;
+        stats.stamina = stats.fullStamina = 100;
+        stats.magicka = stats.fullMagicka = 100;
+
         stats.movementSpeed = .3f;
         stats.jumpHeight = 3f;
         stats.attackForce = 1f;
@@ -98,6 +103,12 @@ public class Player extends Character implements Humanoid {
 
     public void reposition(float x, float y) {
         b2body.body.setTransform(x, y, 0);
+    }
+
+    @Override
+    public void swingWeapon() {
+        super.swingWeapon();
+        stats.stamina -= 10;
     }
 
     @Override

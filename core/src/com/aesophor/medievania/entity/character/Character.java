@@ -181,6 +181,7 @@ public abstract class Character extends Entity implements Disposable {
     public void receiveDamage(Character source, int damage) {
         if (!state.invincible) {
             stats.health -= damage;
+            // add a listener here to intercept all changes to character stats.
 
             GameEventManager.getInstance().fireEvent(new InflictDamageEvent(source, this, damage));
 
@@ -255,4 +256,7 @@ public abstract class Character extends Entity implements Disposable {
         return stats.name;
     }
 
+    public int getStamina() {
+        return stats.stamina;
+    }
 }

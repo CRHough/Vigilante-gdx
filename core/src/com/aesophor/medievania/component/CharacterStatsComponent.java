@@ -7,6 +7,11 @@ public class CharacterStatsComponent implements Component {
     public String name;
     public int level;
     public int exp;
+
+    public int fullHealth;
+    public int fullStamina;
+    public int fullMagicka;
+
     public int health;
     public int stamina;
     public int magicka;

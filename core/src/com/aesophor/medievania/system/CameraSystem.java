@@ -53,5 +53,4 @@ public class CameraSystem extends EntitySystem {
         this.player = player;
     }
 
-
 }

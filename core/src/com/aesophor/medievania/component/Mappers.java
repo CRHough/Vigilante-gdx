@@ -11,6 +11,7 @@ public class Mappers {
     public static final ComponentMapper<StateComponent> STATE;
     public static final ComponentMapper<CombatTargetComponent> COMBAT_TARGET;
     public static final ComponentMapper<EnemyAIComponent> CHARACTER_AI;
+    public static final ComponentMapper<StatsRegenerationComponent> REGENERATION;
 
     static {
         CHARACTER_STATS = ComponentMapper.getFor(CharacterStatsComponent.class);
@@ -20,6 +21,7 @@ public class Mappers {
         STATE = ComponentMapper.getFor(StateComponent.class);
         COMBAT_TARGET = ComponentMapper.getFor(CombatTargetComponent.class);
         CHARACTER_AI = ComponentMapper.getFor(EnemyAIComponent.class);
+        REGENERATION = ComponentMapper.getFor(StatsRegenerationComponent.class);
     }
 
 }

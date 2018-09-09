@@ -49,6 +49,7 @@ public class MainGameScreen extends AbstractScreen {
         engine.addSystem(new B2LightsSystem(world, getCamera()));                       // Renders Dynamic box2d lights.
         engine.addSystem(new CameraSystem(getCamera(), null, null)); // Camera shake / lerp to target.
         engine.addSystem(new PlayerControlSystem());                                    // Handles player controls.
+        engine.addSystem(new StatsRegenerationSystem());                                // Stats regeneration (health...etc)
         engine.addSystem(new EnemyAISystem());                                          // Handles NPC behaviors.
         engine.addSystem(new GameMapManagementSystem(engine, gsm.getAssets(), world));  // Used to set current GameMap.
         engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorFactory));// Renders damage indicators.

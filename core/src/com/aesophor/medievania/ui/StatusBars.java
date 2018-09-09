@@ -147,6 +147,7 @@ public class StatusBars extends Stage {
 
     public void update(float delta) {
         healthBarImage.setScaleX(barLength * player.getHealth() / 100f); // 100 is only temporary (player's full heatlh is 100)
+        staminaBarImage.setScaleX(barLength * player.getStamina() / 100f);
         //healthBarPadImage.setX(healthBarImage.getX() + barLength * player.getHealth() / 100f);
         healthBarPadImage.setX(healthBarImage.getX() + healthBarImage.getScaleX());
         staminaBarPadImage.setX(staminaBarImage.getX() + staminaBarImage.getScaleX());
