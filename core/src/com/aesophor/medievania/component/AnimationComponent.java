@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class AnimationComponent implements Component {
 
-    public Map<State, Animation<TextureRegion>> animations;
+    private final Map<State, Animation<TextureRegion>> animations;
 
     public AnimationComponent() {
         animations = new HashMap<>();

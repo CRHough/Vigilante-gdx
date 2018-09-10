@@ -12,7 +12,7 @@ public class EnemyAISystem extends IteratingSystem {
 
     private StateComponent state;
     private B2BodyComponent b2body;
-    private CharacterStatsComponent stats;
+    private StatsComponent stats;
     private CombatTargetComponent targets;
 
     public EnemyAISystem() {
@@ -54,7 +54,7 @@ public class EnemyAISystem extends IteratingSystem {
                 float selfPositionX = b2body.body.getPosition().x;
                 float targetPositionX = targetB2Body.body.getPosition().x;
 
-                if (Utils.getDistance(selfPositionX, targetPositionX) >= stats.attackRange * 2 / Constants.PPM) {
+                if (Utils.getDistance(selfPositionX, targetPositionX) >= stats.getAttackRange() * 2 / Constants.PPM) {
                     c.getAIActions().moveTowardTarget(targets.lockedOnTarget);
 
                     // Jump if it gets stucked while moving toward the lockedOnTarget.

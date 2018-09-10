@@ -19,17 +19,21 @@ public class Knight extends Enemy implements Humanoid {
     public Knight(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
 
-        stats.name = "Castle guard";
-        stats.bodyWidth = 10;
-        stats.bodyHeight = 34;
+        stats.setName("Castle guard");
+        stats.setBodyWidth(10);
+        stats.setBodyHeight(34);
 
-        stats.health = 100;
-        stats.movementSpeed = .15f;
-        stats.jumpHeight = 3.5f;
-        stats.attackForce = 1.2f;
-        stats.attackTime = 2.4f;
-        stats.attackRange = 14;
-        stats.attackDamage = 25;
+        stats.modFullHealth(100);
+        stats.modFullStamina(100);
+        stats.modHealth(100);
+        stats.modStamina(100);
+
+        stats.setMovementSpeed(.15f);
+        stats.setJumpHeight(3.5f);
+        stats.setAttackForce(1.2f);
+        stats.setAttackTime(2.4f);
+        stats.setAttackRange(14);
+        stats.setAttackDamage(25);
 
         // Knight stand animations.
         Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 0, 0, 8 * 42, 1 * 42, 42, 42);
@@ -40,13 +44,13 @@ public class Knight extends Enemy implements Humanoid {
         Animation<TextureRegion> attackAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 24f / Constants.PPM, 0, 9, 0, 0, 42, 42);
         Animation<TextureRegion> killedAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 32f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
 
-        animations.animations.put(State.IDLE, idleAnimation);
-        animations.animations.put(State.RUNNING, runAnimation);
-        animations.animations.put(State.JUMPING, jumpAnimation);
-        animations.animations.put(State.FALLING, fallAnimation);
-        animations.animations.put(State.CROUCHING, crouchAnimation);
-        animations.animations.put(State.ATTACKING, attackAnimation);
-        animations.animations.put(State.KILLED, killedAnimation);
+        animations.put(State.IDLE, idleAnimation);
+        animations.put(State.RUNNING, runAnimation);
+        animations.put(State.JUMPING, jumpAnimation);
+        animations.put(State.FALLING, fallAnimation);
+        animations.put(State.CROUCHING, crouchAnimation);
+        animations.put(State.ATTACKING, attackAnimation);
+        animations.put(State.KILLED, killedAnimation);
 
 
         // Sounds.

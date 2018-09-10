@@ -18,13 +18,13 @@ public abstract class Character extends Entity implements Disposable {
     protected B2BodyComponent b2body;
     protected StateComponent state;
     protected SoundComponent sounds;
-    protected CharacterStatsComponent stats;
+    protected StatsComponent stats;
     protected CombatTargetComponent targets;
 
     protected AIActions AIActions;
 
     public Character(Texture texture, World currentWorld, float x, float y) {
-        stats = new CharacterStatsComponent();
+        stats = new StatsComponent();
         animations = new AnimationComponent();
         b2body = new B2BodyComponent(currentWorld);
         sprite = new SpriteComponent(texture, x, y);
@@ -59,7 +59,7 @@ public abstract class Character extends Entity implements Disposable {
      * @param maskBits defines which objects the body fixture can collide with.
      */
     protected void createBodyFixture(short categoryBits, short maskBits) {
-        b2body.bodyFixture = b2body.bodyBuilder.newRectangleFixture(b2body.body.getPosition(), stats.bodyWidth / 2, stats.bodyHeight / 2, Constants.PPM)
+        b2body.bodyFixture = b2body.bodyBuilder.newRectangleFixture(b2body.body.getPosition(), stats.getBodyWidth() / 2, stats.getBodyHeight() / 2, Constants.PPM)
                 .categoryBits(categoryBits)
                 .maskBits(maskBits)
                 .setUserData(this)
@@ -72,10 +72,10 @@ public abstract class Character extends Entity implements Disposable {
      */
     protected void createFeetFixture(short maskBits) {
         Vector2[] feetPolyVertices = new Vector2[4];
-        feetPolyVertices[0] = new Vector2(-stats.bodyWidth / 2 + 1, -stats.bodyHeight / 2);
-        feetPolyVertices[1] = new Vector2(stats.bodyWidth / 2 - 1, -stats.bodyHeight / 2);
-        feetPolyVertices[2] = new Vector2(-stats.bodyWidth / 2 + 1, -stats.bodyHeight / 2 - 1);
-        feetPolyVertices[3] = new Vector2(stats.bodyWidth / 2 - 1, -stats.bodyHeight / 2 - 1);
+        feetPolyVertices[0] = new Vector2(-stats.getBodyWidth() / 2 + 1, -stats.getBodyHeight() / 2);
+        feetPolyVertices[1] = new Vector2(stats.getBodyWidth() / 2 - 1, -stats.getBodyHeight() / 2);
+        feetPolyVertices[2] = new Vector2(-stats.getBodyWidth() / 2 + 1, -stats.getBodyHeight() / 2 - 1);
+        feetPolyVertices[3] = new Vector2(stats.getBodyWidth() / 2 - 1, -stats.getBodyHeight() / 2 - 1);
 
         b2body.feetFixture = b2body.bodyBuilder.newPolygonFixture(feetPolyVertices, Constants.PPM)
                 .categoryBits(CategoryBits.FEET)
@@ -86,9 +86,9 @@ public abstract class Character extends Entity implements Disposable {
     }
 
     protected void createMeleeWeaponFixture(short maskBits) {
-        Vector2 meleeAttackFixturePosition = new Vector2(stats.attackRange, 0);
+        Vector2 meleeAttackFixturePosition = new Vector2(stats.getAttackRange(), 0);
 
-        b2body.meleeWeaponFixture = b2body.bodyBuilder.newCircleFixture(meleeAttackFixturePosition, stats.attackRange, Constants.PPM)
+        b2body.meleeWeaponFixture = b2body.bodyBuilder.newCircleFixture(meleeAttackFixturePosition, stats.getAttackRange(), Constants.PPM)
                 .categoryBits(CategoryBits.MELEE_WEAPON)
                 .maskBits(maskBits)
                 .isSensor(true)
@@ -100,22 +100,22 @@ public abstract class Character extends Entity implements Disposable {
     public void moveLeft() {
         state.facingRight = false;
 
-        if (b2body.body.getLinearVelocity().x >= -stats.movementSpeed * 2) {
-            b2body.body.applyLinearImpulse(new Vector2(-stats.movementSpeed, 0), b2body.body.getWorldCenter(), true);
+        if (b2body.body.getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
+            b2body.body.applyLinearImpulse(new Vector2(-stats.getMovementSpeed(), 0), b2body.body.getWorldCenter(), true);
         }
     }
 
     public void moveRight() {
         state.facingRight = true;
 
-        if (b2body.body.getLinearVelocity().x <= stats.movementSpeed * 2) {
-            b2body.body.applyLinearImpulse(new Vector2(stats.movementSpeed, 0), b2body.body.getWorldCenter(), true);
+        if (b2body.body.getLinearVelocity().x <= stats.getMovementSpeed() * 2) {
+            b2body.body.applyLinearImpulse(new Vector2(stats.getMovementSpeed(), 0), b2body.body.getWorldCenter(), true);
         }
     }
 
     public void forwardRush() {
-        if (b2body.body.getLinearVelocity().x <= stats.movementSpeed * 2 && b2body.body.getLinearVelocity().x >= -stats.movementSpeed * 2) {
-            float rushForce = (state.facingRight) ? stats.movementSpeed * 5 : -stats.movementSpeed * 5;
+        if (b2body.body.getLinearVelocity().x <= stats.getMovementSpeed() * 2 && b2body.body.getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
+            float rushForce = (state.facingRight) ? stats.getMovementSpeed() * 5 : -stats.getMovementSpeed() * 5;
             b2body.body.applyLinearImpulse(new Vector2(rushForce, 0), b2body.body.getWorldCenter(), true);
         }
     }
@@ -124,7 +124,7 @@ public abstract class Character extends Entity implements Disposable {
         if (!state.jumping) {
             state.jumping = true;
 
-            getB2Body().applyLinearImpulse(new Vector2(0, stats.jumpHeight), b2body.body.getWorldCenter(), true);
+            getB2Body().applyLinearImpulse(new Vector2(0, stats.getJumpHeight()), b2body.body.getWorldCenter(), true);
             sounds.get(SoundType.JUMP).play();
         }
     }
@@ -153,13 +153,15 @@ public abstract class Character extends Entity implements Disposable {
         if (!state.isAttacking()) {
             state.attacking = true;
 
+            stats.modStamina(-10);
+
             // A character can have multiple inRangeTargets which are stored as an array.
             // When an inRangeTarget dies, the target will be removed from the array.
             if (targets.hasInRangeTarget() && !targets.inRangeTargets.first().state.isInvincible() && !targets.inRangeTargets.first().state.isSetToKill()) {
                 setLockedOnTarget(targets.inRangeTargets.first());
                 targets.inRangeTargets.first().setLockedOnTarget(this);
 
-                inflictDamage(targets.inRangeTargets.first(), stats.attackDamage);
+                inflictDamage(targets.inRangeTargets.first(), stats.getAttackDamage());
 
                 if (targets.inRangeTargets.first().getComponent(StateComponent.class).setToKill) {
                     targets.inRangeTargets.removeValue(targets.inRangeTargets.first(), false);
@@ -175,17 +177,16 @@ public abstract class Character extends Entity implements Disposable {
 
     public void inflictDamage(Character target, int damage) {
         target.receiveDamage(this, damage);
-        target.knockedBack((state.facingRight) ? stats.attackForce : -stats.attackForce);
+        target.knockedBack((state.facingRight) ? stats.getAttackForce() : -stats.getAttackForce());
     }
 
     public void receiveDamage(Character source, int damage) {
         if (!state.invincible) {
-            stats.health -= damage;
-            // add a listener here to intercept all changes to character stats.
+            stats.modHealth(-damage);
 
             GameEventManager.getInstance().fireEvent(new InflictDamageEvent(source, this, damage));
 
-            if (stats.health <= 0) {
+            if (stats.getHealth() == 0) {
                 setCategoryBits(b2body.bodyFixture, CategoryBits.DESTROYED);
                 state.setToKill = true;
                 sounds.get(SoundType.DEATH).play();
@@ -211,12 +212,8 @@ public abstract class Character extends Entity implements Disposable {
         return b2body.body;
     }
 
-    public String getName() {
-        return stats.name;
-    }
-
     public int getHealth() {
-        return stats.health;
+        return stats.getHealth();
     }
 
 
@@ -253,10 +250,10 @@ public abstract class Character extends Entity implements Disposable {
 
     @Override
     public String toString() {
-        return stats.name;
+        return stats.getName();
     }
 
     public int getStamina() {
-        return stats.stamina;
+        return stats.getStamina();
     }
 }

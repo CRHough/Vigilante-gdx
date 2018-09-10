@@ -24,7 +24,7 @@ public class PlayerControlSystem extends IteratingSystem {
             return;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
             player.swingWeapon();
         }
 

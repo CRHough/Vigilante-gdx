@@ -28,22 +28,23 @@ public class Player extends Character implements Humanoid {
         super(assets.get(TEXTURE_FILE), world, x, y);
 
         add(new ControllableComponent());
-        add(new StatsRegenerationComponent(5, 10, 10));
+        add(new StatsRegenerationComponent(1f, 1, 5, 5));
 
-        stats.name = "Michael";
-        stats.bodyWidth = 10;
-        stats.bodyHeight = 34;
+        stats.setName("Michael");
+        stats.setBodyWidth(10);
+        stats.setBodyHeight(34);
 
-        stats.health = stats.fullHealth = 100;
-        stats.stamina = stats.fullStamina = 100;
-        stats.magicka = stats.fullMagicka = 100;
+        stats.modFullHealth(100);
+        stats.modFullStamina(100);
+        stats.modHealth(100);
+        stats.modStamina(100);
 
-        stats.movementSpeed = .3f;
-        stats.jumpHeight = 3f;
-        stats.attackForce = 1f;
-        stats.attackTime = 1.8f;
-        stats.attackRange = 15;
-        stats.attackDamage = 25;
+        stats.setMovementSpeed(.3f);
+        stats.setJumpHeight(3f);
+        stats.setAttackForce(1f);
+        stats.setAttackTime(1.8f);
+        stats.setAttackRange(15);
+        stats.setAttackDamage(25);
 
         // Create animations by extracting frames from the spritesheet.
         Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 0, 0, 7 * 80, 2 * 80, 80, 80);
@@ -103,12 +104,6 @@ public class Player extends Character implements Humanoid {
 
     public void reposition(float x, float y) {
         b2body.body.setTransform(x, y, 0);
-    }
-
-    @Override
-    public void swingWeapon() {
-        super.swingWeapon();
-        stats.stamina -= 10;
     }
 
     @Override

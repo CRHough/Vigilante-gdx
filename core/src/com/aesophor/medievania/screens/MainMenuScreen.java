@@ -9,7 +9,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
@@ -19,8 +18,10 @@ public class MainMenuScreen extends AbstractScreen {
     private static final String BACKGROUND_TEXTURE_FILE = "interface/mainmenu_bg.png";
     private static final String BACKGROUND_MUSIC_FILE = "music";
     private static final String KEY_PRESS_SOUND_FILE = "sfx/ui/click.wav";
+
+    private static final String COPYRIGHT_NOTICE = "Aesophor Gameworks - Build: 10 Sep 2018 (pre-alpha)";
     
-    private Skin skin;
+    //private Skin skin;
     private Texture backgroundTexture;
     
     private Music backgroundMusic;
@@ -33,7 +34,7 @@ public class MainMenuScreen extends AbstractScreen {
     public MainMenuScreen(Medievania gsm) {
         super(gsm);
         
-        skin = gsm.getAssets().get(SKIN_FILE);
+        //skin = gsm.getAssets().get(SKIN_FILE);
         backgroundTexture = gsm.getAssets().get(BACKGROUND_TEXTURE_FILE);
         keyPressSound = gsm.getAssets().get(KEY_PRESS_SOUND_FILE);
         
@@ -41,15 +42,23 @@ public class MainMenuScreen extends AbstractScreen {
         labels = new Label[menuItems.length];
         
         Table labelTable = new Table();
-        labelTable.bottom().right().padRight(30f).padBottom(30f);
+        labelTable.center().padTop(50f);
         labelTable.setFillParent(true);
         
         for (int i = 0; i < menuItems.length; i++) {
-            labels[i] = new Label(menuItems[i], skin);
-            labelTable.add(labels[i]).padTop(5f).align(Align.right).row();
+            labels[i] = new Label(menuItems[i], new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE));
+            labelTable.add(labels[i]).padTop(5f).row();
         }
+
+        Table footerTable = new Table();
+        footerTable.bottom().padBottom(15f);
+        footerTable.setFillParent(true);
+        Label copyrightLabel = new Label(COPYRIGHT_NOTICE, new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE));
+        copyrightLabel.setAlignment(Align.center);
+        footerTable.add(copyrightLabel);
         
         addActor(labelTable);
+        addActor(footerTable);
     }
     
     

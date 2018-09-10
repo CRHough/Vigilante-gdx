@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.ComponentMapper;
 
 public class Mappers {
 
-    public static final ComponentMapper<CharacterStatsComponent> CHARACTER_STATS;
+    public static final ComponentMapper<StatsComponent> CHARACTER_STATS;
     public static final ComponentMapper<AnimationComponent> ANIMATION;
     public static final ComponentMapper<B2BodyComponent> B2BODY;
     public static final ComponentMapper<SpriteComponent> SPRITE;
@@ -14,7 +14,7 @@ public class Mappers {
     public static final ComponentMapper<StatsRegenerationComponent> REGENERATION;
 
     static {
-        CHARACTER_STATS = ComponentMapper.getFor(CharacterStatsComponent.class);
+        CHARACTER_STATS = ComponentMapper.getFor(StatsComponent.class);
         ANIMATION = ComponentMapper.getFor(AnimationComponent.class);
         B2BODY = ComponentMapper.getFor(B2BodyComponent.class);
         SPRITE = ComponentMapper.getFor(SpriteComponent.class);

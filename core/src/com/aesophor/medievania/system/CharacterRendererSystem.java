@@ -18,7 +18,7 @@ public class CharacterRendererSystem extends IteratingSystem {
     private Camera camera;
     private World world;
 
-    private CharacterStatsComponent stats;  // health, magicka, stamina, exp... etc.
+    private StatsComponent stats;  // health, magicka, stamina, exp... etc.
     private B2BodyComponent b2body;         // box2d bodybuilder, body and fixtures.
     private SpriteComponent sprite;         // character's sprite.
     private AnimationComponent animations;  // character's animations.
@@ -65,7 +65,7 @@ public class CharacterRendererSystem extends IteratingSystem {
                 sprite.sprite.setRegion(getFrame(delta));
 
                 // Set attacking back to false, implying the attack has completed.
-                if (state.attacking && state.time >= stats.attackTime) {
+                if (state.attacking && state.time >= stats.getAttackTime()) {
                     state.attacking = false;
                     state.time = 0;
                 }
@@ -117,11 +117,11 @@ public class CharacterRendererSystem extends IteratingSystem {
         if (!state.facingRight && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
             CircleShape shape = (CircleShape) b2body.meleeWeaponFixture.getShape();
-            shape.setPosition(new Vector2(-stats.attackRange / Constants.PPM, 0));
+            shape.setPosition(new Vector2(-stats.getAttackRange() / Constants.PPM, 0));
         } else if (state.facingRight && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
             CircleShape shape = (CircleShape) b2body.meleeWeaponFixture.getShape();
-            shape.setPosition(new Vector2(stats.attackRange / Constants.PPM, 0));
+            shape.setPosition(new Vector2(stats.getAttackRange() / Constants.PPM, 0));
         }
 
         state.time = (state.getCurrentState() != state.getPreviousState()) ? 0 : state.time + delta;
