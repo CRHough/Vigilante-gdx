@@ -6,8 +6,8 @@ import com.badlogic.gdx.utils.Array;
 
 public class CombatTargetComponent implements Component {
 
-    public Character lockedOnTarget;
-    public Array<Character> inRangeTargets;
+    private Character lockedOnTarget;
+    private Array<Character> inRangeTargets;
 
     public CombatTargetComponent() {
         inRangeTargets = new Array<>();
@@ -22,4 +22,19 @@ public class CombatTargetComponent implements Component {
         return inRangeTargets.size > 0;
     }
 
+    public Character getLockedOnTarget() {
+        return lockedOnTarget;
+    }
+
+    public void setLockedOnTarget(Character lockedOnTarget) {
+        this.lockedOnTarget = lockedOnTarget;
+    }
+
+    public Array<Character> getInRangeTargets() {
+        return inRangeTargets;
+    }
+
+    public void setInRangeTargets(Array<Character> inRangeTargets) {
+        this.inRangeTargets = inRangeTargets;
+    }
 }

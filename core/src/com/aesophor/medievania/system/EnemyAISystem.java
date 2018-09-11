@@ -40,22 +40,22 @@ public class EnemyAISystem extends IteratingSystem {
                 c.swingWeapon();
 
                 // If the target's heath reaches zero, unset lockedOnTarget and it will stop attacking.
-                if (targets.lockedOnTarget.getComponent(StateComponent.class).setToKill) {
+                if (targets.getLockedOnTarget().getComponent(StateComponent.class).setToKill) {
                     if (targets.hasInRangeTarget()) {
-                        targets.lockedOnTarget = targets.inRangeTargets.first();
+                        targets.setLockedOnTarget(targets.getInRangeTargets().first());
                     } else {
-                        targets.lockedOnTarget = null;
+                        targets.setLockedOnTarget(null);
                     }
                 }
             } else {
                 // If the target isn't within melee attack range, move toward it until it can be attacked.
-                B2BodyComponent targetB2Body = Mappers.B2BODY.get(targets.lockedOnTarget);
+                B2BodyComponent targetB2Body = Mappers.B2BODY.get(targets.getLockedOnTarget());
 
-                float selfPositionX = b2body.body.getPosition().x;
-                float targetPositionX = targetB2Body.body.getPosition().x;
+                float selfPositionX = b2body.getBody().getPosition().x;
+                float targetPositionX = targetB2Body.getBody().getPosition().x;
 
                 if (Utils.getDistance(selfPositionX, targetPositionX) >= stats.getAttackRange() * 2 / Constants.PPM) {
-                    c.getAIActions().moveTowardTarget(targets.lockedOnTarget);
+                    c.getAIActions().moveTowardTarget(targets.getLockedOnTarget());
 
                     // Jump if it gets stucked while moving toward the lockedOnTarget.
                     c.getAIActions().jumpIfStucked(delta, .1f);

@@ -8,14 +8,55 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class B2BodyComponent implements Component {
 
-    public BodyBuilder bodyBuilder;
-    public Body body;
-    public Fixture bodyFixture;
-    public Fixture feetFixture;
-    public Fixture meleeWeaponFixture;
+    private BodyBuilder bodyBuilder;
+    private Body body;
+    private Fixture bodyFixture;
+    private Fixture feetFixture;
+    private Fixture meleeWeaponFixture;
 
     public B2BodyComponent(World world) {
         bodyBuilder = new BodyBuilder(world);
+    }
+
+
+    public BodyBuilder getBodyBuilder() {
+        return bodyBuilder;
+    }
+
+    public void setBodyBuilder(BodyBuilder bodyBuilder) {
+        this.bodyBuilder = bodyBuilder;
+    }
+
+    public Body getBody() {
+        return body;
+    }
+
+    public void setBody(Body body) {
+        this.body = body;
+    }
+
+    public Fixture getBodyFixture() {
+        return bodyFixture;
+    }
+
+    public void setBodyFixture(Fixture bodyFixture) {
+        this.bodyFixture = bodyFixture;
+    }
+
+    public Fixture getFeetFixture() {
+        return feetFixture;
+    }
+
+    public void setFeetFixture(Fixture feetFixture) {
+        this.feetFixture = feetFixture;
+    }
+
+    public Fixture getMeleeWeaponFixture() {
+        return meleeWeaponFixture;
+    }
+
+    public void setMeleeWeaponFixture(Fixture meleeWeaponFixture) {
+        this.meleeWeaponFixture = meleeWeaponFixture;
     }
 
 }

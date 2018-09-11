@@ -58,7 +58,7 @@ public class CharacterRendererSystem extends IteratingSystem {
 
                 // Set killed to true to prevent further rendering updates.
                 if (animations.get(State.KILLED).isAnimationFinished(state.time)) {
-                    world.destroyBody(b2body.body);
+                    world.destroyBody(b2body.getBody());
                     state.killed = true;
                 }
             } else {
@@ -71,8 +71,8 @@ public class CharacterRendererSystem extends IteratingSystem {
                 }
             }
 
-            float textureX = b2body.body.getPosition().x - sprite.sprite.getWidth() / 2;
-            float textureY = b2body.body.getPosition().y - sprite.sprite.getHeight() / 2 + (8 / Constants.PPM);
+            float textureX = b2body.getBody().getPosition().x - sprite.sprite.getWidth() / 2;
+            float textureY = b2body.getBody().getPosition().y - sprite.sprite.getHeight() / 2 + (8 / Constants.PPM);
             sprite.sprite.setPosition(textureX, textureY);
         }
 
@@ -116,11 +116,11 @@ public class CharacterRendererSystem extends IteratingSystem {
 
         if (!state.facingRight && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-            CircleShape shape = (CircleShape) b2body.meleeWeaponFixture.getShape();
+            CircleShape shape = (CircleShape) b2body.getMeleeWeaponFixture().getShape();
             shape.setPosition(new Vector2(-stats.getAttackRange() / Constants.PPM, 0));
         } else if (state.facingRight && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
-            CircleShape shape = (CircleShape) b2body.meleeWeaponFixture.getShape();
+            CircleShape shape = (CircleShape) b2body.getMeleeWeaponFixture().getShape();
             shape.setPosition(new Vector2(stats.getAttackRange() / Constants.PPM, 0));
         }
 
@@ -139,11 +139,11 @@ public class CharacterRendererSystem extends IteratingSystem {
             return State.ATTACKING;
         } else if (state.jumping) {
             return State.JUMPING;
-        } else if (b2body.body.getLinearVelocity().y < -.5f) {
+        } else if (b2body.getBody().getLinearVelocity().y < -.5f) {
             return State.FALLING;
         } else if (state.crouching) {
             return State.CROUCHING;
-        } else if (b2body.body.getLinearVelocity().x > .01f || b2body.body.getLinearVelocity().x < -.01f) {
+        } else if (b2body.getBody().getLinearVelocity().x > .01f || b2body.getBody().getLinearVelocity().x < -.01f) {
             return State.RUNNING;
         } else {
             return State.IDLE;

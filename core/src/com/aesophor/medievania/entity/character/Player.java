@@ -28,7 +28,7 @@ public class Player extends Character implements Humanoid {
         super(assets.get(TEXTURE_FILE), world, x, y);
 
         add(new ControllableComponent());
-        add(new StatsRegenerationComponent(1f, 1, 5, 5));
+        add(new StatsRegenerationComponent(3f, 1, 10, 10));
 
         stats.setName("Michael");
         stats.setBodyWidth(10);
@@ -99,11 +99,11 @@ public class Player extends Character implements Humanoid {
     }
 
     public void reposition(Vector2 position) {
-        b2body.body.setTransform(position, 0);
+        b2body.getBody().setTransform(position, 0);
     }
 
     public void reposition(float x, float y) {
-        b2body.body.setTransform(x, y, 0);
+        b2body.getBody().setTransform(x, y, 0);
     }
 
     @Override
