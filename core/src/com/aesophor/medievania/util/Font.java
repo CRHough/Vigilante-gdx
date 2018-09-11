@@ -1,13 +1,10 @@
 package com.aesophor.medievania.util;
 
 import com.aesophor.medievania.GameStateManager;
-import com.badlogic.gdx.assets.loaders.FileHandleResolver;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
-import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 
 public class Font {
 
@@ -19,21 +16,19 @@ public class Font {
     public Font(GameStateManager gsm) {
         this.gsm = gsm;
 
-        FileHandleResolver resolver = new InternalFileHandleResolver();
-        gsm.getAssets().setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
-        gsm.getAssets().setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));
-
-        // Next, let's define the params and then load our bigger font
-        FreeTypeFontLoaderParameter font = new FreeTypeFontLoaderParameter();
-        font.fontFileName = FONT_FILE;
-        font.fontParameters.size = 16;
-        gsm.getAssets().load(FONT_FILE, BitmapFont.class, font);
-        gsm.getAssets().finishLoading();
-
-        defaultFont = gsm.getAssets().get(FONT_FILE, BitmapFont.class);
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_FILE));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 16;
+        parameter.borderColor = Color.BLACK;
+        parameter.borderWidth = 1.1f;
+        //parameter.shadowColor = Color.BLACK;
+        //parameter.shadowOffsetY = 1;
+        defaultFont = generator.generateFont(parameter);
+        generator.dispose();
     }
 
     public BitmapFont getDefaultFont() {
         return defaultFont;
     }
+
 }

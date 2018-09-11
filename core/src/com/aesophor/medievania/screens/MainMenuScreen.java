@@ -16,10 +16,10 @@ public class MainMenuScreen extends AbstractScreen {
     
     private static final String SKIN_FILE = "interface/skin/medievania_skin.json";
     private static final String BACKGROUND_TEXTURE_FILE = "interface/mainmenu_bg.png";
-    private static final String BACKGROUND_MUSIC_FILE = "music";
+    private static final String BACKGROUND_MUSIC_FILE = "music/main_menu.wav";
     private static final String KEY_PRESS_SOUND_FILE = "sfx/ui/click.wav";
 
-    private static final String COPYRIGHT_NOTICE = "Aesophor Gameworks - Build: 10 Sep 2018 (pre-alpha)";
+    private static final String COPYRIGHT_NOTICE = "Aesophor Gameworks - Build: 9/10/2018 (pre-alpha)";
     
     //private Skin skin;
     private Texture backgroundTexture;
@@ -35,6 +35,7 @@ public class MainMenuScreen extends AbstractScreen {
         super(gsm);
         
         //skin = gsm.getAssets().get(SKIN_FILE);
+        backgroundMusic = gsm.getAssets().get(BACKGROUND_MUSIC_FILE);
         backgroundTexture = gsm.getAssets().get(BACKGROUND_TEXTURE_FILE);
         keyPressSound = gsm.getAssets().get(KEY_PRESS_SOUND_FILE);
         
@@ -59,6 +60,10 @@ public class MainMenuScreen extends AbstractScreen {
         
         addActor(labelTable);
         addActor(footerTable);
+
+        backgroundMusic.setLooping(true);
+        backgroundMusic.setVolume(.7f);
+        backgroundMusic.play();
     }
     
     
@@ -98,6 +103,7 @@ public class MainMenuScreen extends AbstractScreen {
     public void select() {
         switch (currentItem) {
             case 0:
+                backgroundMusic.stop();
                 gsm.showScreen(Screens.GAME);
                 break;
             case 1:
@@ -117,7 +123,7 @@ public class MainMenuScreen extends AbstractScreen {
     public void dispose() {
         super.dispose();
         backgroundTexture.dispose();
-        //backgroundMusic.dispose();
+        backgroundMusic.dispose();
         keyPressSound.dispose();
     }
 

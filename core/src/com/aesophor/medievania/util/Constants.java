@@ -6,8 +6,8 @@ public final class Constants {
 
     // Graphics constants
     public static final float PPM = 100;
-    public static final int V_WIDTH = 600;
-    public static final int V_HEIGHT = 300;
+    public static final int V_WIDTH = 700;
+    public static final int V_HEIGHT = 350;
     
     // Physics constants
     public static final int GRAVITY = -10;
