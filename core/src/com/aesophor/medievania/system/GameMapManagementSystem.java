@@ -12,7 +12,6 @@ import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.event.map.MapChangedEvent;
 import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.aesophor.medievania.map.GameMap;
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.assets.AssetManager;

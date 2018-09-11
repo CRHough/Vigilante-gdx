@@ -83,7 +83,7 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.PLAYER | CategoryBits.ITEM:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 item = (Item) getTargetFixture(CategoryBits.ITEM, fixtureA, fixtureB).getUserData();
-                player.getPickupItemTargetComponent().setInRangeItem(item);
+                player.getPickupItemTargetComponent().addInRangeItems(item);
                 break;
                 
             default:
@@ -146,7 +146,7 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.PLAYER | CategoryBits.ITEM:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 item = (Item) getTargetFixture(CategoryBits.ITEM, fixtureA, fixtureB).getUserData();
-                player.getPickupItemTargetComponent().setInRangeItem(null);
+                player.getPickupItemTargetComponent().removeInRangeItems(item);
                 break;
                 
             default:

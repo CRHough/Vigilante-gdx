@@ -75,6 +75,7 @@ public class Player extends Character {
         Sound weaponSwingSound = assets.get("sfx/player/weapon_swing.ogg", Sound.class);
         Sound weaponHitSound = assets.get("sfx/player/weapon_hit.ogg", Sound.class);
         Sound jumpSound = assets.get("sfx/player/jump.wav", Sound.class);
+        Sound itemPickedupSound = assets.get("sfx/player/pickup_item.mp3", Sound.class);
 
         //sounds.put(SoundType.FOOTSTEP, footstepSound);
         sounds.put(SoundType.JUMP, jumpSound);
@@ -82,6 +83,7 @@ public class Player extends Character {
         sounds.put(SoundType.DEATH, deathSound);
         sounds.put(SoundType.WEAPON_SWING, weaponSwingSound);
         sounds.put(SoundType.WEAPON_HIT, weaponHitSound);
+        sounds.put(SoundType.ITEM_PICKEDUP, itemPickedupSound);
 
 
         // Create body and fixtures.
@@ -111,6 +113,7 @@ public class Player extends Character {
         world.destroyBody(Mappers.B2BODY.get(item).getBody());
         GameEventManager.getInstance().fireEvent(new ItemPickedUpEvent(item));
         System.out.println(inventory);
+        sounds.get(SoundType.ITEM_PICKEDUP).play();
     }
 
     public void reposition(Vector2 position) {

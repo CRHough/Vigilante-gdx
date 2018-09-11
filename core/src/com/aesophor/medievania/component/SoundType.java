@@ -7,6 +7,7 @@ public enum SoundType {
     HURT,
     DEATH,
     WEAPON_SWING,
-    WEAPON_HIT;
+    WEAPON_HIT,
+    ITEM_PICKEDUP;
 
 }

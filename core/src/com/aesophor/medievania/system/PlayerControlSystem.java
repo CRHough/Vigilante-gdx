@@ -45,9 +45,8 @@ public class PlayerControlSystem extends IteratingSystem {
                     player.jump();
                 }
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-                System.out.println("picking up item");
                 if (player.getPickupItemTargetComponent().hasInRangeItem()) {
-                    player.pickup(player.getPickupItemTargetComponent().getInRangeItem());
+                    player.pickup(player.getPickupItemTargetComponent().getInRangeItems().first());
                 }
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.moveRight();
