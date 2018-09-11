@@ -1,6 +1,7 @@
 package com.aesophor.medievania.map;
 
 import com.aesophor.medievania.entity.character.Enemy;
+import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Player;
@@ -24,6 +25,7 @@ public class WorldContactListener implements ContactListener {
         Player player;
         Enemy enemy;
         Portal portal;
+        Item item;
 
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
@@ -77,6 +79,12 @@ public class WorldContactListener implements ContactListener {
                 enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
                 enemy.addInRangeTarget(player);
                 break;
+
+            case CategoryBits.PLAYER | CategoryBits.ITEM:
+                player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
+                item = (Item) getTargetFixture(CategoryBits.ITEM, fixtureA, fixtureB).getUserData();
+                player.getPickupItemTargetComponent().setInRangeItem(item);
+                break;
                 
             default:
                 break;
@@ -90,6 +98,7 @@ public class WorldContactListener implements ContactListener {
         Player player;
         Enemy enemy;
         Portal portal;
+        Item item;
 
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
@@ -132,6 +141,12 @@ public class WorldContactListener implements ContactListener {
                 enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 enemy.removeInRangeTarget(player);
+                break;
+
+            case CategoryBits.PLAYER | CategoryBits.ITEM:
+                player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
+                item = (Item) getTargetFixture(CategoryBits.ITEM, fixtureA, fixtureB).getUserData();
+                player.getPickupItemTargetComponent().setInRangeItem(null);
                 break;
                 
             default:

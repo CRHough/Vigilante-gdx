@@ -8,14 +8,18 @@ import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
+import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 
 public class PlayerControlSystem extends IteratingSystem {
 
-    public PlayerControlSystem() {
+    private final PooledEngine engine;
+
+    public PlayerControlSystem(PooledEngine engine) {
         super(Family.all(ControllableComponent.class).get());
+        this.engine = engine;
     }
 
 
@@ -40,8 +44,11 @@ public class PlayerControlSystem extends IteratingSystem {
                 } else {
                     player.jump();
                 }
-            } else if (Gdx.input.isKeyPressed(Input.Keys.Z)) {
-                player.forwardRush();
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
+                System.out.println("picking up item");
+                if (player.getPickupItemTargetComponent().hasInRangeItem()) {
+                    player.pickup(player.getPickupItemTargetComponent().getInRangeItem());
+                }
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.moveRight();
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {

@@ -1,9 +1,9 @@
 package com.aesophor.medievania.entity.character;
 
-import com.aesophor.medievania.component.ControllableComponent;
-import com.aesophor.medievania.component.SoundType;
-import com.aesophor.medievania.component.State;
-import com.aesophor.medievania.component.StatsRegenerationComponent;
+import com.aesophor.medievania.component.*;
+import com.aesophor.medievania.entity.item.Item;
+import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
@@ -18,15 +18,19 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
-public class Player extends Character implements Humanoid {
+public class Player extends Character {
 
     private static final String TEXTURE_FILE = "character/bandit/Bandit.png";
 
+    private PickupItemTargetComponent pickupItemTargetComponent;
     private Portal currentPortal;
 
     public Player(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
 
+        pickupItemTargetComponent = new PickupItemTargetComponent();
+
+        add(pickupItemTargetComponent);
         add(new ControllableComponent());
         add(new StatsRegenerationComponent(3f, 1, 10, 10));
 
@@ -47,13 +51,13 @@ public class Player extends Character implements Humanoid {
         stats.setAttackDamage(25);
 
         // Create animations by extracting frames from the spritesheet.
-        Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 0, 0, 7 * 80, 2 * 80, 80, 80);
-        Animation<TextureRegion> runAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 20f / Constants.PPM, 0, 7,  0, 3 * 80,  80, 80);
-        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 0, 3,  0, 1 * 80,  80, 80);
-        Animation<TextureRegion> fallAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 4, 4,  0, 1 * 80,  80, 80);
-        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 5, 5,  0, 1 * 80,  80, 80);
-        Animation<TextureRegion> attackAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 20f / Constants.PPM, 1, 6,  0, 2 * 80,  80, 80);
-        Animation<TextureRegion> killedAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 30f / Constants.PPM, 0, 5,  0,      0,  80, 80);
+        Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 0, 0, 7 * 80, 2 * 80, 80, 80);
+        Animation<TextureRegion> runAnimation = Utils.createAnimation(sprite.getTexture(), 20f / Constants.PPM, 0, 7,  0, 3 * 80,  80, 80);
+        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 0, 3,  0, 1 * 80,  80, 80);
+        Animation<TextureRegion> fallAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 4, 4,  0, 1 * 80,  80, 80);
+        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 5, 5,  0, 1 * 80,  80, 80);
+        Animation<TextureRegion> attackAnimation = Utils.createAnimation(sprite.getTexture(), 20f / Constants.PPM, 1, 6,  0, 2 * 80,  80, 80);
+        Animation<TextureRegion> killedAnimation = Utils.createAnimation(sprite.getTexture(), 30f / Constants.PPM, 0, 5,  0,      0,  80, 80);
 
         animations.put(State.IDLE, idleAnimation);
         animations.put(State.RUNNING, runAnimation);
@@ -82,12 +86,12 @@ public class Player extends Character implements Humanoid {
 
         // Create body and fixtures.
         short bodyCategoryBits = CategoryBits.PLAYER;
-        short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON;
+        short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON | CategoryBits.ITEM;
         short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
         super.defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
-        sprite.sprite.setBounds(0, 0, 120 / Constants.PPM, 120 / Constants.PPM);
+        sprite.setBounds(0, 0, 120 / Constants.PPM, 120 / Constants.PPM);
     }
 
     public Portal getCurrentPortal() {
@@ -96,6 +100,17 @@ public class Player extends Character implements Humanoid {
 
     public void setCurrentPortal(Portal currentPortal) {
         this.currentPortal = currentPortal;
+    }
+
+    public PickupItemTargetComponent getPickupItemTargetComponent() {
+        return pickupItemTargetComponent;
+    }
+
+    public void pickup(Item item) {
+        inventory.get(item.getItemType()).add(item);
+        world.destroyBody(Mappers.B2BODY.get(item).getBody());
+        GameEventManager.getInstance().fireEvent(new ItemPickedUpEvent(item));
+        System.out.println(inventory);
     }
 
     public void reposition(Vector2 position) {
@@ -109,13 +124,13 @@ public class Player extends Character implements Humanoid {
     @Override
     public void receiveDamage(Character source, int damage) {
         super.receiveDamage(source, damage);
-        state.invincible = true;
+        state.setInvincible(true);
 
         Timer.schedule(new Task() {
             @Override
             public void run() {
-                if (!state.setToKill) {
-                    state.invincible = false;
+                if (!state.isSetToKill()) {
+                    state.setInvincible(false);
                 }
             }
         }, 3f);

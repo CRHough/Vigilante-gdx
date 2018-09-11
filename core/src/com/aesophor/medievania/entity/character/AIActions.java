@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 public class AIActions {
 
-    private enum Direction { LEFT, RIGHT };
+    private enum Direction { LEFT, RIGHT }
 
 
     private Character character;

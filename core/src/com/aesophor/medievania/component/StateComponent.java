@@ -6,18 +6,17 @@ public class StateComponent implements Component {
 
     private State previousState;
     private State currentState;
-    public float time;
-    public boolean isLooping;
+    private float time;
 
-    public boolean alerted;
-    public boolean facingRight;
-    public boolean jumping;
-    public boolean onPlatform;
-    public boolean attacking;
-    public boolean crouching;
-    public boolean invincible;
-    public boolean killed;
-    public boolean setToKill;
+    private boolean alerted;
+    private boolean facingRight;
+    private boolean jumping;
+    private boolean onPlatform;
+    private boolean attacking;
+    private boolean crouching;
+    private boolean invincible;
+    private boolean killed;
+    private boolean setToKill;
 
     public StateComponent(State defaultState) {
         this.currentState = defaultState;
@@ -38,6 +37,26 @@ public class StateComponent implements Component {
         this.currentState = newState;
     }
 
+    public float getTime() {
+        return time;
+    }
+
+    public void update(float delta) {
+        time += delta;
+    }
+
+    public void resetTime() {
+        time = 0;
+    }
+
+
+    public boolean isAlerted() {
+        return alerted;
+    }
+
+    public boolean facingRight() {
+        return facingRight;
+    }
 
     public boolean isAttacking() {
         return attacking;
@@ -67,8 +86,40 @@ public class StateComponent implements Component {
         return onPlatform;
     }
 
-    public boolean facingRight() {
-        return facingRight;
+
+    public void setAlerted(boolean alerted) {
+        this.alerted = alerted;
     }
 
+    public void setFacingRight(boolean facingRight) {
+        this.facingRight = facingRight;
+    }
+
+    public void setJumping(boolean jumping) {
+        this.jumping = jumping;
+    }
+
+    public void setOnPlatform(boolean onPlatform) {
+        this.onPlatform = onPlatform;
+    }
+
+    public void setAttacking(boolean attacking) {
+        this.attacking = attacking;
+    }
+
+    public void setCrouching(boolean crouching) {
+        this.crouching = crouching;
+    }
+
+    public void setInvincible(boolean invincible) {
+        this.invincible = invincible;
+    }
+
+    public void setKilled(boolean killed) {
+        this.killed = killed;
+    }
+
+    public void setSetToKill(boolean setToKill) {
+        this.setToKill = setToKill;
+    }
 }

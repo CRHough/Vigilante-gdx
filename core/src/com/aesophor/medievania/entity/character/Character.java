@@ -6,6 +6,7 @@ import com.aesophor.medievania.event.combat.InflictDamageEvent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -20,17 +21,23 @@ public abstract class Character extends Entity implements Disposable {
     protected SoundComponent sounds;
     protected StatsComponent stats;
     protected CombatTargetComponent targets;
+    protected InventoryComponent inventory;
 
     protected AIActions AIActions;
 
-    public Character(Texture texture, World currentWorld, float x, float y) {
+    protected World world;
+
+    public Character(Texture texture, World world, float x, float y) {
+        this.world = world;
+
         stats = new StatsComponent();
         animations = new AnimationComponent();
-        b2body = new B2BodyComponent(currentWorld);
+        b2body = new B2BodyComponent(world);
         sprite = new SpriteComponent(texture, x, y);
         state = new StateComponent(State.IDLE);
         sounds = new SoundComponent();
         targets = new CombatTargetComponent();
+        inventory = new InventoryComponent();
 
         add(stats);
         add(animations);
@@ -38,6 +45,7 @@ public abstract class Character extends Entity implements Disposable {
         add(sprite);
         add(state);
         add(targets);
+        add(inventory);
 
         AIActions = new AIActions(this);
     }
@@ -45,7 +53,7 @@ public abstract class Character extends Entity implements Disposable {
 
     protected void defineBody(BodyDef.BodyType type, short bodyCategoryBits, short bodyMaskBits, short feetMaskBits, short meleeWeaponMaskBits) {
         Body body = b2body.getBodyBuilder().type(type)
-                .position(sprite.sprite.getX(), sprite.sprite.getY(), Constants.PPM)
+                .position(sprite.getX(), sprite.getY(), Constants.PPM)
                 .buildBody();
 
         b2body.setBody(body);
@@ -105,7 +113,7 @@ public abstract class Character extends Entity implements Disposable {
 
 
     public void moveLeft() {
-        state.facingRight = false;
+        state.setFacingRight(false);
 
         if (b2body.getBody().getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
             b2body.getBody().applyLinearImpulse(new Vector2(-stats.getMovementSpeed(), 0), b2body.getBody().getWorldCenter(), true);
@@ -113,7 +121,7 @@ public abstract class Character extends Entity implements Disposable {
     }
 
     public void moveRight() {
-        state.facingRight = true;
+        state.setFacingRight(true);
 
         if (b2body.getBody().getLinearVelocity().x <= stats.getMovementSpeed() * 2) {
             b2body.getBody().applyLinearImpulse(new Vector2(stats.getMovementSpeed(), 0), b2body.getBody().getWorldCenter(), true);
@@ -122,14 +130,14 @@ public abstract class Character extends Entity implements Disposable {
 
     public void forwardRush() {
         if (b2body.getBody().getLinearVelocity().x <= stats.getMovementSpeed() * 2 && b2body.getBody().getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
-            float rushForce = (state.facingRight) ? stats.getMovementSpeed() * 5 : -stats.getMovementSpeed() * 5;
+            float rushForce = (state.facingRight()) ? stats.getMovementSpeed() * 5 : -stats.getMovementSpeed() * 5;
             b2body.getBody().applyLinearImpulse(new Vector2(rushForce, 0), b2body.getBody().getWorldCenter(), true);
         }
     }
 
     public void jump() {
-        if (!state.jumping) {
-            state.jumping = true;
+        if (!state.isJumping()) {
+            state.setJumping(true);
 
             getB2Body().applyLinearImpulse(new Vector2(0, stats.getJumpHeight()), b2body.getBody().getWorldCenter(), true);
             sounds.get(SoundType.JUMP).play();
@@ -137,28 +145,28 @@ public abstract class Character extends Entity implements Disposable {
     }
 
     public void jumpDown() {
-        if (state.onPlatform) {
-            state.onPlatform = false;
+        if (state.isOnPlatform()) {
+            state.setOnPlatform(false);
             b2body.getBody().setTransform(b2body.getBody().getPosition().x, b2body.getBody().getPosition().y - 8f / Constants.PPM, 0);
         }
     }
 
     public void crouch() {
-        if (!state.crouching) {
-            state.crouching = true;
+        if (!state.isCrouching()) {
+            state.setCrouching(true);
         }
     }
 
     public void getUp() {
-        if (state.crouching) {
-            state.crouching = false;
+        if (state.isCrouching()) {
+            state.setCrouching(false);
         }
     }
 
 
     public void swingWeapon() {
         if (!state.isAttacking()) {
-            state.attacking = true;
+            state.setAttacking(true);
 
             stats.modStamina(-10);
 
@@ -170,7 +178,7 @@ public abstract class Character extends Entity implements Disposable {
 
                 inflictDamage(targets.getInRangeTargets().first(), stats.getAttackDamage());
 
-                if (targets.getInRangeTargets().first().getComponent(StateComponent.class).setToKill) {
+                if (targets.getInRangeTargets().first().getComponent(StateComponent.class).isSetToKill()) {
                     targets.getInRangeTargets().removeValue(targets.getInRangeTargets().first(), false);
                 }
 
@@ -184,18 +192,18 @@ public abstract class Character extends Entity implements Disposable {
 
     public void inflictDamage(Character target, int damage) {
         target.receiveDamage(this, damage);
-        target.knockedBack((state.facingRight) ? stats.getAttackForce() : -stats.getAttackForce());
+        target.knockedBack((state.facingRight()) ? stats.getAttackForce() : -stats.getAttackForce());
     }
 
     public void receiveDamage(Character source, int damage) {
-        if (!state.invincible) {
+        if (!state.isInvincible()) {
             stats.modHealth(-damage);
 
             GameEventManager.getInstance().fireEvent(new InflictDamageEvent(source, this, damage));
 
             if (stats.getHealth() == 0) {
                 setCategoryBits(b2body.getBodyFixture(), CategoryBits.DESTROYED);
-                state.setToKill = true;
+                state.setSetToKill(true);
                 sounds.get(SoundType.DEATH).play();
             } else {
                 sounds.get(SoundType.HURT).play();
@@ -223,13 +231,17 @@ public abstract class Character extends Entity implements Disposable {
         return stats.getHealth();
     }
 
+    public int getStamina() {
+        return stats.getStamina();
+    }
+
 
     public void setIsJumping(boolean jumping) {
-        state.jumping = jumping;
+        state.setJumping(jumping);
     }
 
     public void setIsOnPlatform(boolean onPlatform) {
-        state.onPlatform = onPlatform;
+        state.setOnPlatform(onPlatform);
     }
 
 
@@ -252,16 +264,12 @@ public abstract class Character extends Entity implements Disposable {
 
     @Override
     public void dispose() {
-        sounds.sounds.values().forEach(s -> s.dispose());
+        sounds.values().forEach(s -> s.dispose());
     }
 
     @Override
     public String toString() {
         return stats.getName();
-    }
-
-    public int getStamina() {
-        return stats.getStamina();
     }
 
 }

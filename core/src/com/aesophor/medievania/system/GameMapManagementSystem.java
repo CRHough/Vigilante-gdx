@@ -1,15 +1,22 @@
 package com.aesophor.medievania.system;
 
+import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Player;
+import com.aesophor.medievania.entity.item.Item;
+import com.aesophor.medievania.entity.item.equipment.Axe;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
+import com.aesophor.medievania.event.combat.EnemyDiedEvent;
+import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.event.map.MapChangedEvent;
 import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.aesophor.medievania.map.GameMap;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
@@ -42,6 +49,18 @@ public class GameMapManagementSystem extends EntitySystem {
                     player.reposition(currentMap.getPortals().get(targetPortalID).getBody().getPosition());
                 }
             }, ScreenFadeSystem.FADEIN_DURATION);
+        });
+
+        GameEventManager.getInstance().addEventListener(GameEventType.ENEMY_DIED, (EnemyDiedEvent e) -> {
+            // Clean up this part later...
+            Item item = new Axe(assets.get("item/RusticAxe.png"), world, e.getEnemy().getB2Body().getPosition().x * 100, e.getEnemy().getB2Body().getPosition().y * 100);
+            Body body = Mappers.B2BODY.get(item).getBody();
+            body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
+            engine.addEntity(item);
+        });
+
+        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
+            engine.removeEntity(e.getItem());
         });
 
         setGameMap("map/starting_point.tmx");

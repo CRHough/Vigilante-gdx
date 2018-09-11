@@ -1,7 +1,7 @@
 package com.aesophor.medievania;
 
-import com.aesophor.medievania.screens.AbstractScreen;
-import com.aesophor.medievania.screens.Screens;
+import com.aesophor.medievania.screen.AbstractScreen;
+import com.aesophor.medievania.screen.Screens;
 import com.aesophor.medievania.util.Font;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -51,25 +51,25 @@ public class Medievania extends Game implements GameStateManager {
     
     /**
      * Shows the specified Screen.
-     * @param s screens to show.
+     * @param s screen to show.
      */
     @Override
     public void showScreen(Screens s) {
-        // Get current screens to dispose it
+        // Get current screen to dispose it
         Screen currentScreen = getScreen();
  
-        // Show new screens
+        // Show new screen
         AbstractScreen newScreen = s.newScreen(this);
         setScreen(newScreen);
  
-        // Dispose previous screens
+        // Dispose previous screen
         if (currentScreen != null) {
             currentScreen.dispose();
         }
     }
     
     /**
-     * Clears the screens with pure black.
+     * Clears the screen with pure black.
      */
     @Override
     public void clearScreen() {

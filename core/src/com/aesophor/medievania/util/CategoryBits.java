@@ -12,7 +12,8 @@ public class CategoryBits {
     public static final short PLAYER = 64;
     public static final short ENEMY = 128;
     public static final short OBJECT = 256;
-    public static final short MELEE_WEAPON = 512;
-    public static final short DESTROYED = 1024;
+    public static final short ITEM = 512;
+    public static final short MELEE_WEAPON = 1024;
+    public static final short DESTROYED = 2048;
     
 }

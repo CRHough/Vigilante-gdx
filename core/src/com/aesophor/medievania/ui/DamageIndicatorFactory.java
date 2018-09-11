@@ -52,7 +52,7 @@ public class DamageIndicatorFactory extends Stage {
             i.addAction(Actions.moveBy(DELTA_X, DELTA_Y, MOVE_UP_DURATION));
         }
 
-        // Convert the coordinate from world to screens.
+        // Convert the coordinate from world to screen.
         Vector3 worldCoordinates = new Vector3(c.getB2Body().getPosition().x, c.getB2Body().getPosition().y, 0);
         Vector3 screenCoordinates = gameScreenCamera.project(worldCoordinates);
 

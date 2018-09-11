@@ -16,7 +16,7 @@ public class EnemyAISystem extends IteratingSystem {
     private CombatTargetComponent targets;
 
     public EnemyAISystem() {
-        super(Family.all(EnemyAIComponent.class).get());
+        super(Family.all(CharacterAIComponent.class).get());
     }
 
 
@@ -31,16 +31,16 @@ public class EnemyAISystem extends IteratingSystem {
         targets = Mappers.COMBAT_TARGET.get(entity);
 
 
-        if (state.setToKill) return;
+        if (state.isSetToKill()) return;
 
-        if (state.alerted && targets.hasLockedOnTarget()) {
+        if (state.isAlerted() && targets.hasLockedOnTarget()) {
             // Is the target within melee attack range?
             if (targets.hasInRangeTarget()) {
                 // If yes, swing its weapon.
                 c.swingWeapon();
 
                 // If the target's heath reaches zero, unset lockedOnTarget and it will stop attacking.
-                if (targets.getLockedOnTarget().getComponent(StateComponent.class).setToKill) {
+                if (targets.getLockedOnTarget().getComponent(StateComponent.class).isSetToKill()) {
                     if (targets.hasInRangeTarget()) {
                         targets.setLockedOnTarget(targets.getInRangeTargets().first());
                     } else {

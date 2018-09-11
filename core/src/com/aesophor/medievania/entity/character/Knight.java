@@ -2,6 +2,8 @@ package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.SoundType;
 import com.aesophor.medievania.component.State;
+import com.aesophor.medievania.entity.item.Item;
+import com.aesophor.medievania.entity.item.equipment.Axe;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
@@ -11,10 +13,17 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
-public class Knight extends Enemy implements Humanoid {
+public class Knight extends Enemy {
 
     private static final String TEXTURE_FILE = "character/knight/Knight.png";
+    private static final Array<Class<?>> droppableItems;
+
+    static {
+        droppableItems = new Array<>();
+        droppableItems.add(Axe.class);
+    }
 
     public Knight(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
@@ -36,13 +45,13 @@ public class Knight extends Enemy implements Humanoid {
         stats.setAttackDamage(25);
 
         // Knight stand animations.
-        Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 10f / Constants.PPM, 0, 0, 8 * 42, 1 * 42, 42, 42);
-        Animation<TextureRegion> runAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 24f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        Animation<TextureRegion> fallAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        Animation<TextureRegion> attackAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 24f / Constants.PPM, 0, 9, 0, 0, 42, 42);
-        Animation<TextureRegion> killedAnimation = Utils.createAnimation(sprite.sprite.getTexture(), 32f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 0, 0, 8 * 42, 1 * 42, 42, 42);
+        Animation<TextureRegion> runAnimation = Utils.createAnimation(sprite.getTexture(), 24f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> fallAnimation = Utils.createAnimation(sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> attackAnimation = Utils.createAnimation(sprite.getTexture(), 24f / Constants.PPM, 0, 9, 0, 0, 42, 42);
+        Animation<TextureRegion> killedAnimation = Utils.createAnimation(sprite.getTexture(), 32f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
 
         animations.put(State.IDLE, idleAnimation);
         animations.put(State.RUNNING, runAnimation);
@@ -76,8 +85,8 @@ public class Knight extends Enemy implements Humanoid {
 
         defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
-        sprite.sprite.setBounds(0, 0, 50 / Constants.PPM, 50 / Constants.PPM);
-        state.facingRight = false;
+        sprite.setBounds(0, 0, 50 / Constants.PPM, 50 / Constants.PPM);
+        state.setFacingRight(false);
     }
 
 }
