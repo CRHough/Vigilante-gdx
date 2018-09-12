@@ -21,7 +21,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class BottomMenu extends Stage {
 
-    private GameStateManager gameStateManager;
     private Player player;
 
     private Texture bottomMenuTexture;
@@ -40,11 +39,10 @@ public class BottomMenu extends Stage {
 
     public BottomMenu(GameStateManager gameStateManager, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gameStateManager.getBatch());
-        this.gameStateManager = gameStateManager;
         this.player = player;
 
         // Initializes player hud Texture and TextureRegions.
-        bottomMenuTexture = gameStateManager.getAssets().get("Interface/StatusBars/hud.png");
+        bottomMenuTexture = gameStateManager.getAssets().get("interface/hud/hud_new.png");
         background = new TextureRegion(bottomMenuTexture, 0, 36, 120, 23);
         button = new TextureRegion(bottomMenuTexture, 0, 59, 24, 15);
         inventory = new TextureRegion(bottomMenuTexture, 0, 83, 148, 182);

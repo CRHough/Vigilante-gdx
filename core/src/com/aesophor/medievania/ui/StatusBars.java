@@ -25,14 +25,11 @@ public class StatusBars extends Stage {
     
     private Texture hudTexture;
     private TextureRegion barsBackground;
-    private TextureRegion barsPadLeft;
     private TextureRegion barsPadRight;
     private TextureRegion healthBar;
     private TextureRegion staminaBar;
     private TextureRegion magickaBar;
-
     private TextureRegion extraItem;
-
 
     private Image healthBarImage;
     private Image healthBarPadImage;
