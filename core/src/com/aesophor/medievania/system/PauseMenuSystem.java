@@ -1,7 +1,7 @@
 package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.entity.character.Player;
-import com.aesophor.medievania.ui.PauseMenu;
+import com.aesophor.medievania.ui.pausemenu.PauseMenu;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.graphics.g2d.Batch;
 

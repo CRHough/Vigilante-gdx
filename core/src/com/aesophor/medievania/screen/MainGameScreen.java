@@ -7,6 +7,7 @@ import com.aesophor.medievania.event.screen.MainGameScreenResizeEvent;
 import com.aesophor.medievania.map.WorldContactListener;
 import com.aesophor.medievania.system.*;
 import com.aesophor.medievania.ui.*;
+import com.aesophor.medievania.ui.pausemenu.PauseMenu;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;

@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class Font {
 
-    private static final String FONT_FILE = "interface/font/Vormgevers.ttf";
+    private static final String FONT_FILE = "interface/font/m5x7.ttf";
     private static BitmapFont defaultFont;
 
     private GameStateManager gsm;
@@ -18,7 +18,7 @@ public class Font {
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_FILE));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 16;
+        parameter.size = 15;
         parameter.borderColor = Color.BLACK;
         parameter.borderWidth = 1.1f;
         //parameter.shadowColor = Color.BLACK;

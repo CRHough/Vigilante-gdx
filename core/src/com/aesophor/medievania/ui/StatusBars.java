@@ -124,7 +124,7 @@ public class StatusBars extends Stage {
         textTable.padTop(23f).padLeft(49f);
 
         BitmapFont font = gsm.getFont().getDefaultFont();
-        font.getData().setScale(.8f);
+        //font.getData().setScale(.8f);
         weaponIconImage = new Image(weaponIcon);
         weaponNameLabel = new Label("Rustic Axe", new Label.LabelStyle(font, Color.WHITE));
 
