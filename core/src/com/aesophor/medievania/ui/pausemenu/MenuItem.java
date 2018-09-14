@@ -22,18 +22,23 @@ public enum MenuItem {
     private static Array<Label> labels;
     private static int currentItemIdx;
 
-    private Table table;
+    private final Array<Table> tables;
+
+    private MenuItem() {
+        tables = new Array<>();
+    }
+
 
     public Texture getBackgroundTexture() {
-        return ((MenuItemTable) table).getBackgroundTexture();
+        return ((MenuItemTable) tables.first()).getBackgroundTexture();
     }
 
-    public Table getTable() {
-        return table;
+    public Array<Table> getTables() {
+        return tables;
     }
 
-    public void setTable(MenuItemTable table) {
-        this.table = (Table) table;
+    public void addTable(MenuItemTable table) {
+        tables.add((Table) table);
     }
 
     @Override
@@ -81,21 +86,20 @@ public enum MenuItem {
 
     /**
      * Handles input for currently selected menu item.
-     * @param delta
+     * @param delta delta time.
      */
     public void handleInput(float delta) {
-        ((MenuItemTable) table).handleInput(delta);
+        tables.forEach(table -> ((MenuItemTable) table).handleInput(delta));
     }
 
     /**
-     * Shows the table of the specified target menu item. Other tables will be invisible.
+     * Shows all tables of the specified target menu item. Tables that belong to any menu item
+     * other than the currently selected one will be invisible.
      * @param target menu item to show.
      */
     public static void show(MenuItem target) {
         for (MenuItem item : MenuItem.values()) {
-            if (item.getTable() != null) {
-                item.getTable().setVisible(item == target);
-            }
+            item.getTables().forEach(table -> table.setVisible(item == target));
         }
     }
 

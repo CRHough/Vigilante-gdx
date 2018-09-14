@@ -26,6 +26,11 @@ public class StatsComponent implements Component {
     private int attackRange;
     private int attackDamage;
 
+    public StatsComponent() {
+        level = 1;
+    }
+
+
     public String getName() {
         return name;
     }
