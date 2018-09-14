@@ -10,7 +10,8 @@ import com.badlogic.gdx.utils.Align;
 
 public class StatsTable extends Table {
 
-    private static final float ROW_HEIGHT = 6f;
+    private static final float TITLE_BODY_GAP = 3f;
+    private static final float SECTION_GAP = 8f;
 
     private final Texture statsBackground;
 
@@ -67,7 +68,7 @@ public class StatsTable extends Table {
         lukLabel = new Label("20", whiteLabelStyle);
 
         //healthLabel = new Label("", )
-        setBounds(380, 50 + 3, statsBackground.getWidth(), statsBackground.getHeight());
+        setBounds(380, 46 + 3, statsBackground.getWidth(), statsBackground.getHeight());
 
         padLeft(8f);
 
@@ -76,8 +77,8 @@ public class StatsTable extends Table {
         columnDefaults(0).width(80f);
         defaults().height(16f);
 
-        add(nameLabel).left().spaceBottom(3f);
-        add(levelLabel).right().spaceBottom(3f).row();
+        add(nameLabel).left().spaceBottom(TITLE_BODY_GAP);
+        add(levelLabel).right().spaceBottom(TITLE_BODY_GAP).row();
 
         add(new Label("HEALTH", greyLabelStyle)).left();
         add(healthLabel).right().row();
@@ -86,8 +87,8 @@ public class StatsTable extends Table {
         add(new Label("MAGICKA", greyLabelStyle)).left();
         add(magickaLabel).right().row();
 
-        add(new Label("ATTACK RANGE", greyLabelStyle)).left().padTop(8f);
-        add(attackRangeLabel).align(Align.right).padTop(8f).row();
+        add(new Label("ATTACK RANGE", greyLabelStyle)).left().padTop(SECTION_GAP);
+        add(attackRangeLabel).align(Align.right).padTop(SECTION_GAP).row();
         add(new Label("ATTACK SPEED", greyLabelStyle)).left();
         add(attackSpeedLabel).align(Align.right).row();
         add(new Label("WALK SPEED", greyLabelStyle)).left();
@@ -95,8 +96,8 @@ public class StatsTable extends Table {
         add(new Label("JUMP HEIGHT", greyLabelStyle)).left();
         add(jumpHeightLabel).align(Align.right).row();
 
-        add(new Label("STR", greyLabelStyle)).left().padTop(8f);
-        add(strLabel).align(Align.right).padTop(8f).row();
+        add(new Label("STR", greyLabelStyle)).left().padTop(SECTION_GAP);
+        add(strLabel).align(Align.right).padTop(SECTION_GAP).row();
         add(new Label("DEX", greyLabelStyle)).left();
         add(dexLabel).align(Align.right).row();
         add(new Label("INT", greyLabelStyle)).left();
@@ -106,7 +107,7 @@ public class StatsTable extends Table {
     }
 
 
-    public Texture getStatsBackground() {
+    public Texture getBackgroundTexture() {
         return statsBackground;
     }
 

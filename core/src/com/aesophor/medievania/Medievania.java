@@ -31,6 +31,10 @@ public class Medievania extends Game implements GameStateManager {
         assets.load("interface/hud/hud.png", Texture.class);
         assets.load("interface/pause.png", Texture.class);
         assets.load("interface/stats_bg.png", Texture.class);
+        assets.load("interface/inventory_bg.png", Texture.class);
+        assets.load("interface/label_normal.png", Texture.class);
+        assets.load("interface/label_selected.png", Texture.class);
+
         assets.load("character/bandit/Bandit.png", Texture.class);
         assets.load("character/knight/Knight.png", Texture.class);
         assets.load("item/RusticAxe.png", Texture.class);

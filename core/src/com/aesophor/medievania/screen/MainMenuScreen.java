@@ -26,9 +26,9 @@ public class MainMenuScreen extends AbstractScreen {
     
     private Music backgroundMusic;
     private Sound keyPressSound;
-    
-    private Label[] labels;
+
     private String[] menuItems;
+    private Label[] itemLabels;
     private int currentItem;
     
     public MainMenuScreen(Medievania gsm) {
@@ -39,16 +39,18 @@ public class MainMenuScreen extends AbstractScreen {
         backgroundTexture = gsm.getAssets().get(BACKGROUND_TEXTURE_FILE);
         keyPressSound = gsm.getAssets().get(KEY_PRESS_SOUND_FILE);
         
-        menuItems = new String[] {"New Game", "Load Game", "Credits", "End"};
-        labels = new Label[menuItems.length];
+
         
         Table labelTable = new Table();
         labelTable.center().padTop(50f);
         labelTable.setFillParent(true);
+
+        menuItems = new String[] {"New Game", "Load Game", "Credits", "End"};
+        itemLabels = new Label[menuItems.length];
         
         for (int i = 0; i < menuItems.length; i++) {
-            labels[i] = new Label(menuItems[i], new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE));
-            labelTable.add(labels[i]).padTop(5f).row();
+            itemLabels[i] = new Label(menuItems[i], new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE));
+            labelTable.add(itemLabels[i]).padTop(5f).row();
         }
 
         Table footerTable = new Table();
@@ -76,9 +78,9 @@ public class MainMenuScreen extends AbstractScreen {
         gsm.getBatch().draw(backgroundTexture, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
         gsm.getBatch().end();
         
-        for (int i = 0; i < labels.length; i++) {
-            if (i == currentItem) labels[i].setColor(Color.RED);
-            else labels[i].setColor(Color.WHITE);
+        for (int i = 0; i < itemLabels.length; i++) {
+            if (i == currentItem) itemLabels[i].setColor(Color.RED);
+            else itemLabels[i].setColor(Color.WHITE);
         }
         
         draw();
