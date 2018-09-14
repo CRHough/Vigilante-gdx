@@ -1,7 +1,7 @@
 package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
-import com.badlogic.gdx.graphics.Color;
+import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -46,26 +46,24 @@ public class StatsTable extends Table {
         setFillParent(true);
 
         BitmapFont bitmapFont = gsm.getFont().getDefaultFont();
-        Label.LabelStyle whiteLabelStyle = new Label.LabelStyle(bitmapFont, Color.WHITE);
-        Label.LabelStyle greyLabelStyle = new Label.LabelStyle(bitmapFont, Color.GRAY);
-        Label.LabelStyle redLabelStyle = new Label.LabelStyle(bitmapFont, Color.FIREBRICK);
 
-        nameLabel = new Label("MARCUS", whiteLabelStyle);
-        levelLabel = new Label("Level 10", redLabelStyle);
 
-        healthLabel = new Label("50 / 100", whiteLabelStyle);
-        staminaLabel = new Label("100 / 100", whiteLabelStyle);
-        magickaLabel = new Label("100 / 100", whiteLabelStyle);
+        nameLabel = new Label("MARCUS", LabelStyles.WHITE);
+        levelLabel = new Label("Level 10", LabelStyles.RED);
 
-        attackRangeLabel = new Label("100%", whiteLabelStyle);
-        attackSpeedLabel = new Label("100%", whiteLabelStyle);
-        walkSpeedLabel = new Label("100%", whiteLabelStyle);
-        jumpHeightLabel = new Label("100%", whiteLabelStyle);
+        healthLabel = new Label("50 / 100", LabelStyles.WHITE);
+        staminaLabel = new Label("100 / 100", LabelStyles.WHITE);
+        magickaLabel = new Label("100 / 100", LabelStyles.WHITE);
 
-        strLabel = new Label("7", whiteLabelStyle);
-        dexLabel = new Label("12", whiteLabelStyle);
-        intLabel = new Label("9", whiteLabelStyle);
-        lukLabel = new Label("20", whiteLabelStyle);
+        attackRangeLabel = new Label("100%", LabelStyles.WHITE);
+        attackSpeedLabel = new Label("100%", LabelStyles.WHITE);
+        walkSpeedLabel = new Label("100%", LabelStyles.WHITE);
+        jumpHeightLabel = new Label("100%", LabelStyles.WHITE);
+
+        strLabel = new Label("7", LabelStyles.WHITE);
+        dexLabel = new Label("12", LabelStyles.WHITE);
+        intLabel = new Label("9", LabelStyles.WHITE);
+        lukLabel = new Label("20", LabelStyles.WHITE);
 
         //healthLabel = new Label("", )
         setBounds(380, 46 + 3, statsBackground.getWidth(), statsBackground.getHeight());
@@ -80,29 +78,29 @@ public class StatsTable extends Table {
         add(nameLabel).left().spaceBottom(TITLE_BODY_GAP);
         add(levelLabel).right().spaceBottom(TITLE_BODY_GAP).row();
 
-        add(new Label("HEALTH", greyLabelStyle)).left();
+        add(new Label("HEALTH", LabelStyles.GRAY)).left();
         add(healthLabel).right().row();
-        add(new Label("STAMINA", greyLabelStyle)).left();
+        add(new Label("STAMINA", LabelStyles.GRAY)).left();
         add(staminaLabel).right().row();
-        add(new Label("MAGICKA", greyLabelStyle)).left();
+        add(new Label("MAGICKA", LabelStyles.GRAY)).left();
         add(magickaLabel).right().row();
 
-        add(new Label("ATTACK RANGE", greyLabelStyle)).left().padTop(SECTION_GAP);
+        add(new Label("ATTACK RANGE", LabelStyles.GRAY)).left().padTop(SECTION_GAP);
         add(attackRangeLabel).align(Align.right).padTop(SECTION_GAP).row();
-        add(new Label("ATTACK SPEED", greyLabelStyle)).left();
+        add(new Label("ATTACK SPEED", LabelStyles.GRAY)).left();
         add(attackSpeedLabel).align(Align.right).row();
-        add(new Label("WALK SPEED", greyLabelStyle)).left();
+        add(new Label("WALK SPEED", LabelStyles.GRAY)).left();
         add(walkSpeedLabel).align(Align.right).row();
-        add(new Label("JUMP HEIGHT", greyLabelStyle)).left();
+        add(new Label("JUMP HEIGHT", LabelStyles.GRAY)).left();
         add(jumpHeightLabel).align(Align.right).row();
 
-        add(new Label("STR", greyLabelStyle)).left().padTop(SECTION_GAP);
+        add(new Label("STR", LabelStyles.GRAY)).left().padTop(SECTION_GAP);
         add(strLabel).align(Align.right).padTop(SECTION_GAP).row();
-        add(new Label("DEX", greyLabelStyle)).left();
+        add(new Label("DEX", LabelStyles.GRAY)).left();
         add(dexLabel).align(Align.right).row();
-        add(new Label("INT", greyLabelStyle)).left();
+        add(new Label("INT", LabelStyles.GRAY)).left();
         add(intLabel).align(Align.right).row();
-        add(new Label("LUK", greyLabelStyle)).left();
+        add(new Label("LUK", LabelStyles.GRAY)).left();
         add(lukLabel).align(Align.right).row();
     }
 

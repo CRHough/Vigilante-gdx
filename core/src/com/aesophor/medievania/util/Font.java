@@ -27,7 +27,7 @@ public class Font {
         generator.dispose();
     }
 
-    public BitmapFont getDefaultFont() {
+    public static BitmapFont getDefaultFont() {
         return defaultFont;
     }
 

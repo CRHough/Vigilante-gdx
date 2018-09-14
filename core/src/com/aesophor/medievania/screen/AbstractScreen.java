@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public abstract class AbstractScreen extends Stage implements Screen {
     
     protected GameStateManager gsm;
+    protected boolean paused;
     
     protected AbstractScreen(GameStateManager gsm) {
         // Note that this default constructor does NOT scale the viewport with PPM!
@@ -24,7 +25,17 @@ public abstract class AbstractScreen extends Stage implements Screen {
     public void resize(int width, int height) {
         getViewport().update(width, height, true);
     }
-    
+
+    @Override
+    public void pause() {
+        paused = true;
+    }
+
+    @Override
+    public void resume() {
+        paused = false;
+    }
+
     @Override
     public void dispose() {
         super.dispose();
@@ -32,7 +43,5 @@ public abstract class AbstractScreen extends Stage implements Screen {
 
     @Override public void show() {}
     @Override public void hide() {}
-    @Override public void pause() {}
-    @Override public void resume() {}
 
 }

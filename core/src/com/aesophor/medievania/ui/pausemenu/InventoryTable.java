@@ -35,19 +35,19 @@ public class InventoryTable extends Table {
         defaults().padRight(LABEL_GAP);
         Stack equipLabelStack = new Stack();
         equipLabelStack.add(new Image(normalLabelTexture));
-        equipLabelStack.add(new Label("EQUIP", whiteLabelStyle));
+        equipLabelStack.add(new Label(" EQUIP ", whiteLabelStyle));
 
         Stack consumableLabelStack = new Stack();
         consumableLabelStack.add(new Image(normalLabelTexture));
-        consumableLabelStack.add(new Label("CONSUMABLE", whiteLabelStyle));
+        consumableLabelStack.add(new Label("  USE ", whiteLabelStyle));
 
         Stack miscLabelStack = new Stack();
         miscLabelStack.add(new Image(normalLabelTexture));
-        miscLabelStack.add(new Label("MISC", whiteLabelStyle));
+        miscLabelStack.add(new Label(" MISC ", whiteLabelStyle));
 
         Stack specialLabelStack = new Stack();
         specialLabelStack.add(new Image(normalLabelTexture));
-        specialLabelStack.add(new Label("SPECIAL", whiteLabelStyle));
+        specialLabelStack.add(new Label(" SPECIAL ", whiteLabelStyle));
 
         add(equipLabelStack);
         add(consumableLabelStack);

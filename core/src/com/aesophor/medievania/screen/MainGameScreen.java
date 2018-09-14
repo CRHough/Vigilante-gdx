@@ -51,21 +51,21 @@ public class MainGameScreen extends AbstractScreen {
         // Tasks are independently spread into different systems/layers and can be added/removed on demand.
         engine = new PooledEngine();
         engine.addSystem(new PhysicsSystem(world));
-        engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera())); // Renders TiledMap textures.
-        engine.addSystem(new AnimatedSpriteRendererSystem(getBatch(), getCamera(), world));  // Renders entities (player/npcs/obj)
+        engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera()));     // Renders TiledMap textures.
+        engine.addSystem(new AnimatedSpriteRendererSystem(getBatch(), getCamera(), world)); // Renders entities (player/npcs/obj)
         engine.addSystem(new StaticSpriteRendererSystem(getBatch(), getCamera(), world));
-        engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                // Renders physics debug profiles.
-        engine.addSystem(new B2LightsSystem(world, getCamera()));                       // Renders Dynamic box2d lights.
-        engine.addSystem(new CameraSystem(getCamera(), null, null)); // Camera shake / lerp to target.
-        engine.addSystem(new PlayerControlSystem(engine));                              // Handles player controls.
-        engine.addSystem(new StatsRegenerationSystem());                                // Stats regeneration (health...etc)
-        engine.addSystem(new EnemyAISystem());                                          // Handles NPC behaviors.
-        engine.addSystem(new GameMapManagementSystem(engine, gsm.getAssets(), world));  // Used to set current GameMap.
-        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorFactory));// Renders damage indicators.
-        engine.addSystem(new NotificationSystem(getBatch(), notificationFactory));      // Renders Notifications.
-        engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));           // Renders player status bars.
-        engine.addSystem(new PauseMenuSystem(getBatch(), pauseMenu));                   // Pause Menu.
-        engine.addSystem(new ScreenFadeSystem(getBatch()));                             // Renders screen fade effects.
+        engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                    // Renders physics debug profiles.
+        engine.addSystem(new B2LightsSystem(world, getCamera()));                           // Renders Dynamic box2d lights.
+        engine.addSystem(new CameraSystem(getCamera(), null, null));     // Camera shake / lerp to target.
+        engine.addSystem(new PlayerControlSystem(engine));                                  // Handles player controls.
+        engine.addSystem(new StatsRegenerationSystem());                                    // Stats regeneration (health...etc)
+        engine.addSystem(new EnemyAISystem());                                              // Handles NPC behaviors.
+        engine.addSystem(new GameMapManagementSystem(engine, gsm.getAssets(), world));      // Used to set current GameMap.
+        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorFactory));    // Renders damage indicators.
+        engine.addSystem(new NotificationSystem(getBatch(), notificationFactory));          // Renders Notifications.
+        engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));               // Renders player status bars.
+        engine.addSystem(new PauseMenuSystem(getBatch(), pauseMenu));                       // Pause Menu.
+        engine.addSystem(new ScreenFadeSystem(getBatch()));                                 // Renders screen fade effects.
 
 
         engine.addEntity(player);
@@ -80,17 +80,11 @@ public class MainGameScreen extends AbstractScreen {
 
     public void update(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            EntitySystem pauseMenuSys = engine.getSystem(PauseMenuSystem.class);
-            pauseMenuSys.setProcessing(!pauseMenuSys.checkProcessing());
-
-            EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
-            aiSys.setProcessing(!aiSys.checkProcessing());
-
-            EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
-            playerControlSys.setProcessing(!playerControlSys.checkProcessing());
-
-            EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
-            physicsSys.setProcessing(!physicsSys.checkProcessing());
+            if (!paused) {
+                pause();
+            } else {
+                resume();
+            }
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) {
@@ -116,6 +110,36 @@ public class MainGameScreen extends AbstractScreen {
         int viewportWidth = getViewport().getScreenWidth();
         int viewportHeight = getViewport().getScreenHeight();
         gameEventManager.fireEvent(new MainGameScreenResizeEvent(viewportX, viewportY, viewportWidth, viewportHeight));
+    }
+
+    @Override
+    public void pause() {
+        super.pause();
+
+        EntitySystem pauseMenuSys = engine.getSystem(PauseMenuSystem.class);
+        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
+        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
+        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
+
+        pauseMenuSys.setProcessing(true);
+        aiSys.setProcessing(false);
+        playerControlSys.setProcessing(false);
+        physicsSys.setProcessing(false);
+    }
+
+    @Override
+    public void resume() {
+        super.resume();
+
+        EntitySystem pauseMenuSys = engine.getSystem(PauseMenuSystem.class);
+        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
+        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
+        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
+
+        pauseMenuSys.setProcessing(false);
+        aiSys.setProcessing(true);
+        playerControlSys.setProcessing(true);
+        physicsSys.setProcessing(true);
     }
 
     @Override
