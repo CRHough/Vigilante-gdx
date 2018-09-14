@@ -10,7 +10,7 @@ public class Axe extends Item {
     private int baseDamage = 25;
 
     public Axe(Texture texture, World world, float x, float y) {
-        super(ItemType.EQUIPMENT, texture, world, x, y);
+        super(ItemType.EQUIP, texture, world, x, y);
     }
 
     @Override

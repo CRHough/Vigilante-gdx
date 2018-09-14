@@ -2,9 +2,9 @@ package com.aesophor.medievania.component;
 
 public enum ItemType {
 
-    EQUIPMENT,      // 0
-    CONSUMABLE,     // 1
-    MISC,           // 2
-    SPECIAL;        // 3
+    EQUIP,      // 0: Equipment
+    USE,        // 1: Consumables
+    MISC,       // 2: Misc
+    SPECIAL;    // 3: Special
 
 }

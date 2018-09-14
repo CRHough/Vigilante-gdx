@@ -9,6 +9,7 @@ import com.aesophor.medievania.system.*;
 import com.aesophor.medievania.ui.*;
 import com.aesophor.medievania.ui.pausemenu.PauseMenu;
 import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.Font;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
@@ -36,15 +37,13 @@ public class MainGameScreen extends AbstractScreen {
         // Initialize the world, and register the world contact listener.
         world = new World(new Vector2(0, Constants.GRAVITY), true);
         world.setContactListener(new WorldContactListener());
+        player = new Player(gsm.getAssets(), world, 30, 100);
 
         // Initialize damage indicators and notificationFactory area.
         StatusBars statusBars = new StatusBars(gsm);
-        PauseMenu pauseMenu = new PauseMenu(gsm);
-        DamageIndicatorFactory damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), gsm.getFont().getDefaultFont(), getCamera(), 1.2f);
-        NotificationFactory notificationFactory = new NotificationFactory(getBatch(), gsm.getFont().getDefaultFont(), 6, 4f);
-
-        //player = getCurrentMap().spawnPlayer();
-        player = new Player(gsm.getAssets(), world, 30, 100);
+        PauseMenu pauseMenu = new PauseMenu(gsm, player);
+        DamageIndicatorFactory damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), Font.getDefaultFont(), getCamera(), 1.2f);
+        NotificationFactory notificationFactory = new NotificationFactory(getBatch(), Font.getDefaultFont(), 6, 4f);
 
 
         // Here I employ Entity-Component-System because it makes the layout of my code cleaner.
@@ -70,7 +69,6 @@ public class MainGameScreen extends AbstractScreen {
 
         engine.addEntity(player);
         engine.getSystem(CameraSystem.class).registerPlayer(player);
-        engine.getSystem(PauseMenuSystem.class).registerPlayer(player);
         engine.getSystem(GameMapManagementSystem.class).registerPlayer(player);
         engine.getSystem(PlayerStatusBarsSystem.class).registerPlayer(player);
 

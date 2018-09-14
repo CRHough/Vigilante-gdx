@@ -1,6 +1,5 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.ui.pausemenu.PauseMenu;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -21,10 +20,6 @@ public class PauseMenuSystem extends EntitySystem {
         batch.setProjectionMatrix(pauseMenu.getCamera().combined);
         pauseMenu.update(delta);
         pauseMenu.draw();
-    }
-
-    public void registerPlayer(Player player) {
-        pauseMenu.setPlayer(player);
     }
 
 }

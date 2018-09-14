@@ -1,14 +1,16 @@
 package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
+import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.StatsComponent;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
-public class StatsTable extends Table {
+public class StatsTable extends Table implements MenuItemTable {
 
     private static final float TITLE_BODY_GAP = 3f;
     private static final float SECTION_GAP = 8f;
@@ -36,24 +38,21 @@ public class StatsTable extends Table {
     private Label intLabel;
     private Label lukLabel;
 
-    public StatsTable(GameStateManager gsm) {
+    public StatsTable(GameStateManager gsm, Player player) {
         statsBackground = gsm.getAssets().get("interface/stats_bg.png");
 
-        //top().right().padRight(75f).padTop(35f);
-        //setPosition(420f, 350f);
         bottom().left();
-        //setPosition(420f, 262f);
         setFillParent(true);
 
-        BitmapFont bitmapFont = gsm.getFont().getDefaultFont();
+        StatsComponent stats = Mappers.CHARACTER_STATS.get(player);
 
 
-        nameLabel = new Label("MARCUS", LabelStyles.WHITE);
-        levelLabel = new Label("Level 10", LabelStyles.RED);
+        nameLabel = new Label(stats.getName(), LabelStyles.WHITE);
+        levelLabel = new Label(String.format("Level %d", stats.getLevel()), LabelStyles.RED);
 
-        healthLabel = new Label("50 / 100", LabelStyles.WHITE);
-        staminaLabel = new Label("100 / 100", LabelStyles.WHITE);
-        magickaLabel = new Label("100 / 100", LabelStyles.WHITE);
+        healthLabel = new Label(String.format("%d / %d", stats.getHealth(), stats.getFullHealth()), LabelStyles.WHITE);
+        staminaLabel = new Label(String.format("%d / %d", stats.getStamina(), stats.getFullStamina()), LabelStyles.WHITE);
+        magickaLabel = new Label(String.format("%d / %d", stats.getMagicka(), stats.getFullMagicka()), LabelStyles.WHITE);
 
         attackRangeLabel = new Label("100%", LabelStyles.WHITE);
         attackSpeedLabel = new Label("100%", LabelStyles.WHITE);
@@ -65,9 +64,7 @@ public class StatsTable extends Table {
         intLabel = new Label("9", LabelStyles.WHITE);
         lukLabel = new Label("20", LabelStyles.WHITE);
 
-        //healthLabel = new Label("", )
         setBounds(380, 46 + 3, statsBackground.getWidth(), statsBackground.getHeight());
-
         padLeft(8f);
 
 
@@ -105,6 +102,12 @@ public class StatsTable extends Table {
     }
 
 
+    @Override
+    public void handleInput(float delta) {
+
+    }
+
+    @Override
     public Texture getBackgroundTexture() {
         return statsBackground;
     }

@@ -13,39 +13,45 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class PauseMenu extends Stage {
 
     private final GameStateManager gsm;
-    private Player player;
+    private final Texture background;
 
-    private Texture background;
+    private final StatsTable statsTable;
 
-    private StatsTable statsTable;
-    private InventoryTable inventoryTable;
-
-    public PauseMenu(GameStateManager gsm) {
+    public PauseMenu(GameStateManager gsm, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
         this.gsm = gsm;
 
         background = gsm.getAssets().get("interface/pause.png");
 
-        Table optionsTable = new Table();
-        optionsTable.top().padTop(10f);
-        optionsTable.defaults().padRight(30f);
-        optionsTable.setFillParent(true);
+        Table menuItemHeaderTable = new Table();
+        menuItemHeaderTable.top().padTop(10f);
+        menuItemHeaderTable.defaults().padRight(30f);
+        menuItemHeaderTable.setFillParent(true);
+        MenuItem.buildLabels().forEach(menuItemHeaderTable::add);
 
-        MenuItem.buildLabels().forEach(optionsTable::add);
+        statsTable = new StatsTable(gsm, player);
 
-        statsTable = new StatsTable(gsm); // pass player into StatsTable.
-        inventoryTable = new InventoryTable(gsm);
+        MenuItem.INVENTORY.setTable(new InventoryTable(gsm));
+        //MenuItem.EQUIPMENT.setTable();
+        //MenuItem.SKILLS.setTable();
+        //MenuItem.JOURNAL.setTable();
+        //MenuItem.OPTIONS.setTable();
 
-        addActor(optionsTable);
+        addActor(menuItemHeaderTable);
         addActor(statsTable);
-        addActor(inventoryTable);
+
+        addActor(MenuItem.INVENTORY.getTable());
     }
 
 
     private void handleInput(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             MenuItem.next();
-            show(MenuItem.current());
+            MenuItem.show(MenuItem.current());
+        }
+
+        if (MenuItem.current().getTable() != null) {
+            MenuItem.current().handleInput(delta);
         }
     }
 
@@ -56,38 +62,12 @@ public class PauseMenu extends Stage {
         gsm.getBatch().begin();
         gsm.getBatch().draw(background, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
         gsm.getBatch().draw(statsTable.getBackgroundTexture(), 380, 46);
-        if (MenuItem.current() == MenuItem.INVENTORY) gsm.getBatch().draw(inventoryTable.getBackgroundTexture(), 50, 46);
+        if (MenuItem.current().getTable() != null) {
+            gsm.getBatch().draw(MenuItem.current().getBackgroundTexture(), 50, 46);
+        }
         gsm.getBatch().end();
 
         MenuItem.updateLabelColors();
-    }
-
-    private void show(MenuItem currentItem) {
-        switch (currentItem) {
-            case INVENTORY:
-                inventoryTable.setVisible(true);
-                break;
-
-            case EQUIPMENT:
-                inventoryTable.setVisible(false);
-                break;
-
-            case SKILLS:
-                break;
-
-            case JOURNAL:
-                break;
-
-            case OPTIONS:
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
     }
 
 }
