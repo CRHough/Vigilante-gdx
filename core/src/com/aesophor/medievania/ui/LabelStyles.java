@@ -13,7 +13,7 @@ public class LabelStyles {
     static {
         WHITE = new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE);
         GRAY = new Label.LabelStyle(Font.getDefaultFont(), Color.GRAY);
-        RED = new Label.LabelStyle(Font.getDefaultFont(), Color.FIREBRICK);
+        RED = new Label.LabelStyle(Font.getDefaultFont(), Color.MAROON);
     }
 
 }

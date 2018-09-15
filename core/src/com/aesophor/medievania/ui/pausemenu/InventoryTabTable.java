@@ -2,16 +2,16 @@ package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.component.ItemType;
+import com.aesophor.medievania.component.StatsComponent;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Stack;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.ArrayList;
 
 public class InventoryTabTable extends Table implements MenuItemTable {
 
@@ -28,7 +28,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
         }
 
         public void setSelected(boolean selected) {
-            getChildren().first().setColor((selected) ? Color.FIREBRICK : Color.WHITE);
+            getChildren().first().setColor((selected) ? Color.MAROON : Color.WHITE);
         }
 
     }

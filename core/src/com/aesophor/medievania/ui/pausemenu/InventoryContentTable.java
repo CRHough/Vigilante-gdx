@@ -1,7 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
-import com.aesophor.medievania.component.ItemType;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -38,14 +37,15 @@ public class InventoryContentTable extends Table implements MenuItemTable {
     private Array<InventoryItem> items;
     private int currentItemIdx;
 
+    private int navigateUpCounter;
+    private int navigateDownCounter;
+
     public InventoryContentTable(GameStateManager gsm) {
         selectionTexture = gsm.getAssets().get("interface/selection.png");
 
         top().left();
         setPosition(50 + 8, -60);
         setFillParent(true);
-
-
 
         innerTable = new Table();
         innerTable.top().left();
@@ -54,7 +54,6 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         scrollPane.setOverscroll(false, false);
         add(scrollPane).width(260f).height(120f);
         row();
-
 
         // Ah fuck reflect the player's inventory here tomorrow I'm too tired today
         items = new Array<>();
@@ -82,12 +81,44 @@ public class InventoryContentTable extends Table implements MenuItemTable {
                 items.get(currentItemIdx).setSelected(false);
                 currentItemIdx--;
                 items.get(currentItemIdx).setSelected(true);
+
+                if (navigateDownCounter > 4) {
+                    navigateUpCounter = 0;
+                    navigateDownCounter--;
+                } else if (navigateDownCounter > 0 && navigateDownCounter <= 4) {
+                    navigateDownCounter--;
+                }
+
+                if (navigateUpCounter < 5) {
+                    navigateUpCounter++;
+                }
+
+                if (navigateUpCounter >= 5) {
+                    scrollPane.setScrollY(scrollPane.getScrollY() - 24f);
+                    navigateUpCounter--;
+                }
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             if (currentItemIdx < items.size - 1) {
                 items.get(currentItemIdx).setSelected(false);
                 currentItemIdx++;
                 items.get(currentItemIdx).setSelected(true);
+
+                if (navigateUpCounter > 4) {
+                    navigateDownCounter = 0;
+                    navigateUpCounter--;
+                } else if (navigateUpCounter > 0 && navigateUpCounter <= 4) {
+                    navigateUpCounter--;
+                }
+
+                if (navigateDownCounter < 5) {
+                    navigateDownCounter++;
+                }
+
+                if (navigateDownCounter >= 5) {
+                    scrollPane.setScrollY(scrollPane.getScrollY() + 24f);
+                    navigateDownCounter--;
+                }
             }
         }
     }
