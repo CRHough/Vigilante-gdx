@@ -2,33 +2,40 @@ package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.component.ItemType;
-import com.aesophor.medievania.component.StatsComponent;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-
-import java.util.ArrayList;
 
 public class InventoryTabTable extends Table implements MenuItemTable {
 
     private class Tab extends Stack {
 
-        private Image tabImage;
+        private Image regularTabImage;
+        private Image selectedTabImage;
         private Label titleLabel;
 
-        public Tab(Texture tabTexture, String title, Label.LabelStyle labelStyle) {
-            tabImage = new Image(tabTexture);
+        public Tab(Texture regularTabTexture, Texture selectedTabTexture, String title, Label.LabelStyle labelStyle) {
+            regularTabImage = new Image(regularTabTexture);
+            selectedTabImage = new Image(selectedTabTexture);
             titleLabel = new Label(title, labelStyle);
-            add(tabImage);
+            titleLabel.setAlignment(Align.center);
+            setSelected(false);
+
+            add(regularTabImage);
+            add(selectedTabImage);
             add(titleLabel);
         }
 
         public void setSelected(boolean selected) {
-            getChildren().first().setColor((selected) ? Color.MAROON : Color.WHITE);
+            selectedTabImage.setVisible(selected);
         }
 
     }
@@ -47,18 +54,16 @@ public class InventoryTabTable extends Table implements MenuItemTable {
         normalTabTexture = gsm.getAssets().get("interface/tab_normal.png");
         selectedTabTexture = gsm.getAssets().get("interface/tab_selected.png");
 
-
         top().left();
         setFillParent(true);
-        setBounds(50 + 2, -39, inventoryBackground.getWidth(), inventoryBackground.getHeight());
+        setBounds(50 + 2, -45, inventoryBackground.getWidth(), inventoryBackground.getHeight());
 
         defaults().padRight(LABEL_GAP);
 
         tabs = new Array<>(ItemType.values().length);
-        tabs.add(new Tab(normalTabTexture, " EQUIP ", LabelStyles.WHITE));
-        tabs.add(new Tab(normalTabTexture, "  USE ", LabelStyles.WHITE));
-        tabs.add(new Tab(normalTabTexture, " MISC ", LabelStyles.WHITE));
-        tabs.add(new Tab(normalTabTexture, " SPECIAL ", LabelStyles.WHITE));
+        for (ItemType itemType : ItemType.values()) {
+            tabs.add(new Tab(normalTabTexture, selectedTabTexture, itemType.name(), LabelStyles.WHITE));
+        }
 
         // Add all tabs to inventory table.
         tabs.forEach(this::add);

@@ -19,10 +19,10 @@ public class Font {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_FILE));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 15;
-        parameter.borderColor = Color.BLACK;
-        parameter.borderWidth = 1.1f;
-        //parameter.shadowColor = Color.BLACK;
-        //parameter.shadowOffsetY = 1;
+        //parameter.borderColor = Color.BLACK;
+        //parameter.borderWidth = 1.1f;
+        parameter.shadowColor = Color.BLACK;
+        parameter.shadowOffsetY = 1;
         defaultFont = generator.generateFont(parameter);
         generator.dispose();
     }

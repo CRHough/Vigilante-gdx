@@ -1,5 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
+import com.aesophor.medievania.ui.Colorscheme;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,7 +18,7 @@ public enum MenuItem {
 
 
     private static final Color HIGHLIGHT_ITEM_COLOR = Color.WHITE;
-    private static final Color REGULAR_ITEM_COLOR = Color.GRAY;
+    private static final Color REGULAR_ITEM_COLOR = Colorscheme.GREY;
 
     private static Array<Label> labels;
     private static int currentItemIdx;

@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class PauseMenu extends Stage {
 
+    private static final String PAUSE_MENU_BACKGROUND = "interface/pause.png";
+
     private final GameStateManager gsm;
     private final Texture background;
 
@@ -20,13 +22,12 @@ public class PauseMenu extends Stage {
     public PauseMenu(GameStateManager gsm, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
         this.gsm = gsm;
-        Gdx.input.setInputProcessor(this);
 
-        background = gsm.getAssets().get("interface/pause.png");
+        background = gsm.getAssets().get(PAUSE_MENU_BACKGROUND);
 
         Table menuItemHeaderTable = new Table();
-        menuItemHeaderTable.top().padTop(10f);
-        menuItemHeaderTable.defaults().padRight(30f);
+        menuItemHeaderTable.top().padTop(18f);
+        menuItemHeaderTable.defaults().spaceRight(30f);
         menuItemHeaderTable.setFillParent(true);
         MenuItem.buildLabels().forEach(menuItemHeaderTable::add);
 
@@ -39,28 +40,8 @@ public class PauseMenu extends Stage {
         //MenuItem.JOURNAL.setTables();
         //MenuItem.OPTIONS.setTables();
 
-
-
-        Table contentTable = new Table();
-        contentTable.top().left();
-        contentTable.setPosition(50 + 8, -55);
-        contentTable.setFillParent(true);
-
-        /*
-        contentTable.defaults().padTop(5f);
-        contentTable.add(new Label("Alucard's Sword", LabelStyles.WHITE)).left().row();
-        contentTable.add(new Label("Club", LabelStyles.WHITE)).left().row();
-        contentTable.add(new Label("Quilted Mail", LabelStyles.WHITE)).left().row();
-        contentTable.add(new Label("Alucard's Sword", LabelStyles.WHITE)).left().row();
-        contentTable.add(new Label("Club", LabelStyles.WHITE)).left().row();
-        contentTable.add(new Label("Quilted Mail", LabelStyles.WHITE)).left().row();
-*/
-        addActor(contentTable);
-
-
         addActor(menuItemHeaderTable);
         addActor(statsTable);
-
         MenuItem.INVENTORY.getTables().forEach(this::addActor);
     }
 
@@ -82,9 +63,9 @@ public class PauseMenu extends Stage {
 
         gsm.getBatch().begin();
         gsm.getBatch().draw(background, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
-        gsm.getBatch().draw(statsTable.getBackgroundTexture(), 380, 46);
+        gsm.getBatch().draw(statsTable.getBackgroundTexture(), 380, 40);
         if (MenuItem.current().getTables().size > 0) {
-            gsm.getBatch().draw(MenuItem.current().getBackgroundTexture(), 50, 46);
+            gsm.getBatch().draw(MenuItem.current().getBackgroundTexture(), 50, 40);
         }
         gsm.getBatch().end();
 

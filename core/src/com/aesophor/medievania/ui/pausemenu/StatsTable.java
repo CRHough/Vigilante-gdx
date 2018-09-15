@@ -43,13 +43,13 @@ public class StatsTable extends Table implements MenuItemTable {
         statsBackground = gsm.getAssets().get("interface/stats_bg.png");
 
         top().right();
-        setPosition(-statsBackground.getWidth() / 2, -(300 - statsBackground.getHeight()) / 2 + 11);
+        setPosition(-statsBackground.getWidth() / 2 - 5, -(300 - statsBackground.getHeight()) / 2 + 5);
         setFillParent(true);
 
         StatsComponent stats = Mappers.CHARACTER_STATS.get(player);
 
 
-        nameLabel = new Label(stats.getName(), LabelStyles.WHITE);
+        nameLabel = new Label(stats.getName().toUpperCase(), LabelStyles.WHITE);
         levelLabel = new Label(String.format("Level %d", stats.getLevel()), LabelStyles.RED);
 
         healthLabel = new Label(String.format("%d / %d", stats.getHealth(), stats.getFullHealth()), LabelStyles.WHITE);
@@ -66,7 +66,6 @@ public class StatsTable extends Table implements MenuItemTable {
         intLabel = new Label("9", LabelStyles.WHITE);
         lukLabel = new Label("20", LabelStyles.WHITE);
 
-        //setBounds(380, 46 + 3, statsBackground.getWidth(), statsBackground.getHeight());
         padLeft(8f);
 
 
