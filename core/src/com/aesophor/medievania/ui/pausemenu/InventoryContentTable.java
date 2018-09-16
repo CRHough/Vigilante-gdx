@@ -15,6 +15,7 @@ import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
@@ -56,7 +57,8 @@ public class InventoryContentTable extends Table implements MenuItemTable {
 
     private final InventoryTabTable inventoryTabTable;
 
-    private Texture selectionTexture;
+    private final Texture selectionTexture;
+    private final Sound clickSound;
 
     private ScrollPane scrollPane;
     private Table contentTable;
@@ -72,6 +74,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         this.inventoryTabTable = inventoryTabTable;
 
         selectionTexture = gsm.getAssets().get("interface/selection.png");
+        clickSound = gsm.getAssets().get("sfx/ui/click.wav", Sound.class);
 
         top().left();
         setPosition(50 + 8, -66);
@@ -194,6 +197,8 @@ public class InventoryContentTable extends Table implements MenuItemTable {
                     scrollPane.setScrollY(scrollPane.getScrollY() - 24f);
                     navigateUpCounter--;
                 }
+
+                clickSound.play();
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             if (currentItemIdx < items.size - 1) {
@@ -214,6 +219,8 @@ public class InventoryContentTable extends Table implements MenuItemTable {
                     scrollPane.setScrollY(scrollPane.getScrollY() + 24f);
                     navigateDownCounter--;
                 }
+
+                clickSound.play();
             }
         }
     }

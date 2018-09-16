@@ -7,6 +7,7 @@ import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -53,6 +54,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
     private final Texture inventoryBackground;
     private final Texture normalTabTexture;
     private final Texture selectedTabTexture;
+    private final Sound clickSound;
 
     private Array<Tab> tabs;
     private int currentItemIdx;
@@ -61,6 +63,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
         inventoryBackground = gsm.getAssets().get("interface/inventory_bg.png");
         normalTabTexture = gsm.getAssets().get("interface/tab_normal.png");
         selectedTabTexture = gsm.getAssets().get("interface/tab_selected.png");
+        clickSound = gsm.getAssets().get("sfx/ui/click.wav", Sound.class);
 
         top().left();
         setFillParent(true);
@@ -92,6 +95,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
                 currentItemIdx--;
                 tabs.get(currentItemIdx).setSelected(true);
                 GameEventManager.getInstance().fireEvent(new InventoryTabChangedEvent(tabs.get(currentItemIdx).getType()));
+                clickSound.play();
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             if (currentItemIdx < ItemType.values().length - 1) {
@@ -99,6 +103,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
                 currentItemIdx++;
                 tabs.get(currentItemIdx).setSelected(true);
                 GameEventManager.getInstance().fireEvent(new InventoryTabChangedEvent(tabs.get(currentItemIdx).getType()));
+                clickSound.play();
             }
         }
     }

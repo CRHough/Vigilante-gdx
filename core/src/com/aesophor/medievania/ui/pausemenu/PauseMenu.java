@@ -5,6 +5,7 @@ import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -16,6 +17,7 @@ public class PauseMenu extends Stage {
 
     private final GameStateManager gsm;
     private final Texture background;
+    private final Sound clickSound;
 
     private final StatsTable statsTable;
 
@@ -24,6 +26,7 @@ public class PauseMenu extends Stage {
         this.gsm = gsm;
 
         background = gsm.getAssets().get(PAUSE_MENU_BACKGROUND);
+        clickSound = gsm.getAssets().get("sfx/ui/click.wav", Sound.class);
 
         Table menuItemHeaderTable = new Table();
         menuItemHeaderTable.top().padTop(18f);
@@ -53,6 +56,7 @@ public class PauseMenu extends Stage {
         if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
             MenuItem.next();
             MenuItem.show(MenuItem.current());
+            clickSound.play();
         }
 
         if (MenuItem.current().getTables().size > 0) {

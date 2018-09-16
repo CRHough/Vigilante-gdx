@@ -1,7 +1,5 @@
 package com.aesophor.medievania;
 
-import com.aesophor.medievania.component.ItemDataComponent;
-import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.entity.item.ItemDataManager;
 import com.aesophor.medievania.screen.AbstractScreen;
 import com.aesophor.medievania.screen.Screens;
@@ -16,8 +14,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 
 public class Medievania extends Game implements GameStateManager {
     

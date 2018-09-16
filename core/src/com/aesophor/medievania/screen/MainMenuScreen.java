@@ -2,6 +2,7 @@ package com.aesophor.medievania.screen;
 
 import com.aesophor.medievania.Medievania;
 import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.Font;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
@@ -13,15 +14,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
 public class MainMenuScreen extends AbstractScreen {
-    
-    private static final String SKIN_FILE = "interface/skin/medievania_skin.json";
+
     private static final String BACKGROUND_TEXTURE_FILE = "interface/mainmenu_bg.png";
     private static final String BACKGROUND_MUSIC_FILE = "music/main_menu.wav";
     private static final String KEY_PRESS_SOUND_FILE = "sfx/ui/click.wav";
 
     private static final String COPYRIGHT_NOTICE = "Aesophor Gameworks - Build: 9/10/2018 (pre-alpha)";
-    
-    //private Skin skin;
+
     private Texture backgroundTexture;
     
     private Music backgroundMusic;
@@ -33,12 +32,10 @@ public class MainMenuScreen extends AbstractScreen {
     
     public MainMenuScreen(Medievania gsm) {
         super(gsm);
-        
-        //skin = gsm.getAssets().getDroppableItems(SKIN_FILE);
+
         backgroundMusic = gsm.getAssets().get(BACKGROUND_MUSIC_FILE);
         backgroundTexture = gsm.getAssets().get(BACKGROUND_TEXTURE_FILE);
         keyPressSound = gsm.getAssets().get(KEY_PRESS_SOUND_FILE);
-        
 
         
         Table labelTable = new Table();
@@ -49,14 +46,14 @@ public class MainMenuScreen extends AbstractScreen {
         itemLabels = new Label[menuItems.length];
         
         for (int i = 0; i < menuItems.length; i++) {
-            itemLabels[i] = new Label(menuItems[i], new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE));
+            itemLabels[i] = new Label(menuItems[i], new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
             labelTable.add(itemLabels[i]).padTop(5f).row();
         }
 
         Table footerTable = new Table();
         footerTable.bottom().padBottom(15f);
         footerTable.setFillParent(true);
-        Label copyrightLabel = new Label(COPYRIGHT_NOTICE, new Label.LabelStyle(gsm.getFont().getDefaultFont(), Color.WHITE));
+        Label copyrightLabel = new Label(COPYRIGHT_NOTICE, new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
         copyrightLabel.setAlignment(Align.center);
         footerTable.add(copyrightLabel);
         
@@ -126,7 +123,7 @@ public class MainMenuScreen extends AbstractScreen {
         super.dispose();
         backgroundTexture.dispose();
         backgroundMusic.dispose();
-        keyPressSound.dispose();
+        //keyPressSound.dispose();
     }
 
 }
