@@ -113,12 +113,12 @@ public class TiledObjectUtils {
             // position a character at a specific portal, we can use something like
             // "Portal p = player.getCurrentPortal();"
             // "int targetPortalID = p.getTargetPortalID();"
-            // "character.reposition( currentMap.getPortals().get(targetPortalID).getBody().getPosition() );".
+            // "character.reposition( currentMap.getPortals().getDroppableItems(targetPortalID).getBody().getPosition() );".
             Portal portal = new Portal(targetMap, targetPortalID, body);
             gameMap.getPortals().add(portal);
 
             // The same portal object is set as UserData, so when a character collides with
-            // a portal body, then we can get that portal by using "character.getCurrentPortal()"
+            // a portal body, then we can getDroppableItems that portal by using "character.getCurrentPortal()"
             bodyBuilder.newRectangleFixture(centerPos, rect.getWidth() / 2, rect.getHeight() / 2, Constants.PPM)
                     .categoryBits(CategoryBits.PORTAL)
                     .isSensor(true)

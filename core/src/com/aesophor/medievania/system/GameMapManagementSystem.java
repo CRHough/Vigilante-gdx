@@ -56,7 +56,7 @@ public class GameMapManagementSystem extends EntitySystem {
         GameEventManager.getInstance().addEventListener(GameEventType.ENEMY_DIED, (EnemyDiedEvent e) -> {
             DroppableItemsComponent droppableItems = Mappers.DROP_ITEMS.get(e.getEnemy());
 
-            droppableItems.get().forEach((itemName, dropChance) -> {
+            droppableItems.getDroppableItems().forEach((itemName, dropChance) -> {
                 if (Utils.randomInt(0, 100) / 100f <= dropChance) {
                     Item item = spawn(itemName, world, e.getEnemy().getB2Body().getPosition().x, e.getEnemy().getB2Body().getPosition().y);
                     Body body = Mappers.B2BODY.get(item).getBody();

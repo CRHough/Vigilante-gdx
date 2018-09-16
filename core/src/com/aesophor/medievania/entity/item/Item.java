@@ -29,6 +29,7 @@ public class Item extends Entity implements Disposable {
         sounds = new SoundComponent();
         type = ItemType.values()[itemData.getType()];
 
+        add(itemData);
         add(sprite);
         add(b2body);
         add(sounds);

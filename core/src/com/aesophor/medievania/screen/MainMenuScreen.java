@@ -34,7 +34,7 @@ public class MainMenuScreen extends AbstractScreen {
     public MainMenuScreen(Medievania gsm) {
         super(gsm);
         
-        //skin = gsm.getAssets().get(SKIN_FILE);
+        //skin = gsm.getAssets().getDroppableItems(SKIN_FILE);
         backgroundMusic = gsm.getAssets().get(BACKGROUND_MUSIC_FILE);
         backgroundTexture = gsm.getAssets().get(BACKGROUND_TEXTURE_FILE);
         keyPressSound = gsm.getAssets().get(KEY_PRESS_SOUND_FILE);

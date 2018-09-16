@@ -2,10 +2,11 @@ package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.component.ItemType;
+import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -18,14 +19,17 @@ public class InventoryTabTable extends Table implements MenuItemTable {
 
     private class Tab extends Stack {
 
+        private ItemType type;
         private Image regularTabImage;
         private Image selectedTabImage;
         private Label titleLabel;
 
-        public Tab(Texture regularTabTexture, Texture selectedTabTexture, String title, Label.LabelStyle labelStyle) {
+        public Tab(ItemType type, Texture regularTabTexture, Texture selectedTabTexture, Label.LabelStyle labelStyle) {
+            this.type = type;
+
             regularTabImage = new Image(regularTabTexture);
             selectedTabImage = new Image(selectedTabTexture);
-            titleLabel = new Label(title, labelStyle);
+            titleLabel = new Label(type.name(), labelStyle);
             titleLabel.setAlignment(Align.center);
             setSelected(false);
 
@@ -36,6 +40,10 @@ public class InventoryTabTable extends Table implements MenuItemTable {
 
         public void setSelected(boolean selected) {
             selectedTabImage.setVisible(selected);
+        }
+
+        public ItemType getType() {
+            return type;
         }
 
     }
@@ -62,7 +70,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
 
         tabs = new Array<>(ItemType.values().length);
         for (ItemType itemType : ItemType.values()) {
-            tabs.add(new Tab(normalTabTexture, selectedTabTexture, itemType.name(), LabelStyles.WHITE));
+            tabs.add(new Tab(itemType, normalTabTexture, selectedTabTexture, LabelStyles.WHITE));
         }
 
         // Add all tabs to inventory table.
@@ -72,6 +80,10 @@ public class InventoryTabTable extends Table implements MenuItemTable {
     }
 
 
+    public ItemType getSelectedTabType() {
+        return tabs.get(currentItemIdx).getType();
+    }
+
     @Override
     public void handleInput(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
@@ -79,12 +91,14 @@ public class InventoryTabTable extends Table implements MenuItemTable {
                 tabs.get(currentItemIdx).setSelected(false);
                 currentItemIdx--;
                 tabs.get(currentItemIdx).setSelected(true);
+                GameEventManager.getInstance().fireEvent(new InventoryTabChangedEvent(tabs.get(currentItemIdx).getType()));
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             if (currentItemIdx < ItemType.values().length - 1) {
                 tabs.get(currentItemIdx).setSelected(false);
                 currentItemIdx++;
                 tabs.get(currentItemIdx).setSelected(true);
+                GameEventManager.getInstance().fireEvent(new InventoryTabChangedEvent(tabs.get(currentItemIdx).getType()));
             }
         }
     }

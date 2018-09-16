@@ -7,6 +7,9 @@ public enum GameEventType {
     MAINGAME_SCREEN_RESIZED,    // 2
     HEALTH_CHANGED,             // 3
     ENEMY_DIED,                 // 4
-    ITEM_PICKED_UP;             // 5
+    ITEM_PICKED_UP,             // 5
+
+    INVENTORY_TAB_CHANGED,      // 6
+    INVNEOTRY_ITEM_CHANGED,     // 7
 
 }

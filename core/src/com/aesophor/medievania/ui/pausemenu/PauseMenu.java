@@ -33,8 +33,11 @@ public class PauseMenu extends Stage {
 
         statsTable = new StatsTable(gsm, player);
 
-        MenuItem.INVENTORY.addTable(new InventoryTabTable(gsm));
-        MenuItem.INVENTORY.addTable(new InventoryContentTable(gsm));
+        InventoryTabTable inventoryTabTable = new InventoryTabTable(gsm);
+        InventoryContentTable inventoryContentTable = new InventoryContentTable(gsm, player, inventoryTabTable);
+
+        MenuItem.INVENTORY.addTable(inventoryTabTable);
+        MenuItem.INVENTORY.addTable(inventoryContentTable);
         //MenuItem.EQUIPMENT.setTables();
         //MenuItem.SKILLS.setTables();
         //MenuItem.JOURNAL.setTables();

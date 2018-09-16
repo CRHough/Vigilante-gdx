@@ -69,7 +69,7 @@ public class Player extends Character {
 
 
         // Sounds.
-        //Sound footstepSound = gameWorldManager.getAssets().get("sfx/player/footstep.mp3");
+        //Sound footstepSound = gameWorldManager.getAssets().getDroppableItems("sfx/player/footstep.mp3");
         Sound hurtSound = assets.get("sfx/player/hurt.wav");
         Sound deathSound = assets.get("sfx/player/death.mp3");
         Sound weaponSwingSound = assets.get("sfx/player/weapon_swing.ogg", Sound.class);

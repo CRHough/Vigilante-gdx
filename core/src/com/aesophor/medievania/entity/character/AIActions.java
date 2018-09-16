@@ -76,7 +76,7 @@ public class AIActions {
                     break;
             }
 
-            // Make sure the character doesn't get stucked somewhere along the way.
+            // Make sure the character doesn't getDroppableItems stucked somewhere along the way.
             jumpIfStucked(delta, .1f);
 
             moveTimer += delta;

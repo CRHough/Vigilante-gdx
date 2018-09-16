@@ -20,7 +20,7 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void beginContact(Contact contact) {
-        // Some variables that might get reused for several times.
+        // Some variables that might getDroppableItems reused for several times.
         Character character;
         Player player;
         Enemy enemy;
@@ -93,7 +93,7 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        // Some variables that might get reused for several times.
+        // Some variables that might getDroppableItems reused for several times.
         Character character;
         Player player;
         Enemy enemy;

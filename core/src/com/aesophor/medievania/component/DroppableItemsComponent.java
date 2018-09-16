@@ -17,7 +17,7 @@ public class DroppableItemsComponent implements Component {
         droppableItems.put(itemName, dropChance);
     }
 
-    public Map<String, Float> get() {
+    public Map<String, Float> getDroppableItems() {
         return droppableItems;
     }
 

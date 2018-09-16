@@ -36,7 +36,7 @@ public class Knight extends Enemy {
         stats.setAttackDamage(25);
 
         // Droppable items.
-        droppableItemsComponent.put("Rusty Axe", .5f);
+        droppableItemsComponent.put("Rusty Axe", 1f);
 
         // Knight stand animations.
         Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 0, 0, 8 * 42, 1 * 42, 42, 42);
@@ -57,7 +57,7 @@ public class Knight extends Enemy {
 
 
         // Sounds.
-        //Sound footstepSound = assets.get("sfx/player/footstep.mp3");
+        //Sound footstepSound = assets.getDroppableItems("sfx/player/footstep.mp3");
         Sound hurtSound = assets.get("sfx/player/hurt.wav");
         Sound deathSound = assets.get("sfx/player/death.mp3");
         Sound weaponSwingSound = assets.get("sfx/player/weapon_swing.ogg", Sound.class);
