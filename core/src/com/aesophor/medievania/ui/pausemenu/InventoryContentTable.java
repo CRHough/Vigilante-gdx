@@ -60,21 +60,21 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         // Ah fuck reflect the player's inventory here tomorrow I'm too tired today
         items = new Array<>();
         innerTable.defaults().spaceTop(5f).left();
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 1", LabelStyles.WHITE));
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 2", LabelStyles.WHITE));
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 3", LabelStyles.WHITE));
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 4", LabelStyles.WHITE));
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 5", LabelStyles.WHITE));
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 6", LabelStyles.WHITE));
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 7", LabelStyles.WHITE));
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 8", LabelStyles.WHITE));
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 9", LabelStyles.WHITE));
-        items.add(new InventoryItem(selectionTexture, "Alucard's Sword 10", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Rusty Saber", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Chain Mail", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Leather Boots", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Hide Gauntlets", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Crimson Cape", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Some stuff", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Some other stuff", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Another stuff", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Unamed itemData", LabelStyles.WHITE));
+        items.add(new InventoryItem(selectionTexture, "Doge", LabelStyles.WHITE));
 
         items.forEach(item -> innerTable.add(item).row());
         items.first().setSelected(true);
 
-        itemDesc = new Label("A vampiric sword flowing with blood magic.", LabelStyles.WHITE);
+        itemDesc = new Label("A broken saber that needs repair.", LabelStyles.WHITE);
         itemDesc.setWrap(true);
         add(itemDesc).width(270f).top().left().spaceTop(13f);
     }
@@ -84,7 +84,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
     public void handleInput(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
             if (currentItemIdx > 0) {
-                // Highlight the previous item.
+                // Highlight the previous itemData.
                 items.get(currentItemIdx).setSelected(false);
                 currentItemIdx--;
                 items.get(currentItemIdx).setSelected(true);
@@ -104,7 +104,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             if (currentItemIdx < items.size - 1) {
-                // Highlight the next item.
+                // Highlight the next itemData.
                 items.get(currentItemIdx).setSelected(false);
                 currentItemIdx++;
                 items.get(currentItemIdx).setSelected(true);

@@ -32,7 +32,7 @@ public abstract class Character extends Entity implements Disposable {
         stats = new StatsComponent();
         animations = new AnimationComponent();
         b2body = new B2BodyComponent(world);
-        sprite = new SpriteComponent(texture, x, y);
+        sprite = new SpriteComponent(texture, x * Constants.PPM, y * Constants.PPM);
         state = new StateComponent(State.IDLE);
         sounds = new SoundComponent();
         targets = new CombatTargetComponent();

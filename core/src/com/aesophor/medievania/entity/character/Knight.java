@@ -2,8 +2,6 @@ package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.SoundType;
 import com.aesophor.medievania.component.State;
-import com.aesophor.medievania.entity.item.Item;
-import com.aesophor.medievania.entity.item.equipment.Axe;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
@@ -13,17 +11,10 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
-import com.badlogic.gdx.utils.Array;
 
 public class Knight extends Enemy {
 
     private static final String TEXTURE_FILE = "character/knight/Knight.png";
-    private static final Array<Class<?>> droppableItems;
-
-    static {
-        droppableItems = new Array<>();
-        droppableItems.add(Axe.class);
-    }
 
     public Knight(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
@@ -43,6 +34,9 @@ public class Knight extends Enemy {
         stats.setAttackTime(2.4f);
         stats.setAttackRange(14);
         stats.setAttackDamage(25);
+
+        // Droppable items.
+        droppableItemsComponent.put("Rusty Axe", .5f);
 
         // Knight stand animations.
         Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 0, 0, 8 * 42, 1 * 42, 42, 42);

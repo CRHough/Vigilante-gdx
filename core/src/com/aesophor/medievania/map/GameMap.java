@@ -3,6 +3,7 @@ package com.aesophor.medievania.map;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Knight;
 import com.aesophor.medievania.entity.character.Player;
+import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.box2d.TiledObjectUtils;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 
 public class GameMap implements Disposable {
 
@@ -58,7 +60,7 @@ public class GameMap implements Disposable {
         MapObject object = tiledMap.getLayers().get(GameMapLayer.PLAYER.ordinal()).getObjects().getByType(RectangleMapObject.class).get(0);
         Rectangle rect = ((RectangleMapObject) object).getRectangle();
         
-        return new Player(assets, world, rect.getX(), rect.getY());
+        return new Player(assets, world, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM);
     }
     
     public Array<Character> spawnNPCs() {
@@ -66,7 +68,7 @@ public class GameMap implements Disposable {
         
         for (MapObject object : tiledMap.getLayers().get(GameMapLayer.NPCS.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            knights.add(new Knight(assets, world, rect.getX(), rect.getY()));
+            knights.add(new Knight(assets, world, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
         }
         
         return knights;

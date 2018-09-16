@@ -116,7 +116,7 @@ public class MainMenuScreen extends AbstractScreen {
                 Gdx.app.exit();
                 break;
             default:
-                Gdx.app.log("Main menu", "Unknown selected item!");
+                Gdx.app.log("Main menu", "Unknown selected itemData!");
                 break;
         }
     }

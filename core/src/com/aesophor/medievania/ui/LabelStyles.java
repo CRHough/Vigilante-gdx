@@ -6,8 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class LabelStyles {
 
-
-
     public static final Label.LabelStyle WHITE;
     public static final Label.LabelStyle GRAY;
     public static final Label.LabelStyle RED;

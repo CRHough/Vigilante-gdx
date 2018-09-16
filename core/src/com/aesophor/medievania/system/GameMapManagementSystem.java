@@ -1,10 +1,10 @@
 package com.aesophor.medievania.system;
 
+import com.aesophor.medievania.component.DroppableItemsComponent;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
-import com.aesophor.medievania.entity.item.equipment.Axe;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.combat.EnemyDiedEvent;
@@ -12,6 +12,7 @@ import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.event.map.MapChangedEvent;
 import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.aesophor.medievania.map.GameMap;
+import com.aesophor.medievania.util.Utils;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.assets.AssetManager;
@@ -20,6 +21,8 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
+
+import java.lang.reflect.InvocationTargetException;
 
 public class GameMapManagementSystem extends EntitySystem {
 
@@ -51,11 +54,16 @@ public class GameMapManagementSystem extends EntitySystem {
         });
 
         GameEventManager.getInstance().addEventListener(GameEventType.ENEMY_DIED, (EnemyDiedEvent e) -> {
-            // Clean up this part later...
-            Item item = new Axe(assets.get("item/RusticAxe.png"), world, e.getEnemy().getB2Body().getPosition().x * 100, e.getEnemy().getB2Body().getPosition().y * 100);
-            Body body = Mappers.B2BODY.get(item).getBody();
-            body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
-            engine.addEntity(item);
+            DroppableItemsComponent droppableItems = Mappers.DROP_ITEMS.get(e.getEnemy());
+
+            droppableItems.get().forEach((itemName, dropChance) -> {
+                if (Utils.randomInt(0, 100) / 100f <= dropChance) {
+                    Item item = spawn(itemName, world, e.getEnemy().getB2Body().getPosition().x, e.getEnemy().getB2Body().getPosition().y);
+                    Body body = Mappers.B2BODY.get(item).getBody();
+                    body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
+                    engine.addEntity(item);
+                }
+            });
         });
 
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
@@ -109,6 +117,21 @@ public class GameMapManagementSystem extends EntitySystem {
         // TODO: Don't respawn enemies whenever a map loads.
         npcs = currentMap.spawnNPCs();
         npcs.forEach(engine::addEntity);
+    }
+
+    public Item spawn(String itemName, World world, float x, float y) {
+        Item item = null;
+
+        try {
+            item = (Item) Class.forName("com.aesophor.medievania.entity.item.Item")
+                    .getConstructor(String.class, World.class, Float.class, Float.class)
+                    .newInstance(itemName, world, x, y);
+        } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+
+        return item;
     }
 
 }

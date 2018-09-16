@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 public class Utils {
     
     private static Array<TextureRegion> frames = new Array<>();
@@ -66,6 +68,16 @@ public class Utils {
         }
         
         return new Animation<>(frameDuration, frames);
+    }
+
+    /**
+     * Generates a random integer between the specified min and max value.
+     * @param min minimum value of the integer.
+     * @param max maximum value of the integer.
+     * @return randomly generated integer.
+     */
+    public static int randomInt(int min, int max) {
+        return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
     
 }

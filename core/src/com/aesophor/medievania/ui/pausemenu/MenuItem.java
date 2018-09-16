@@ -48,15 +48,15 @@ public enum MenuItem {
     }
 
     /**
-     * Gets currently selected menu item.
-     * @return currently selected menu item.
+     * Gets currently selected menu itemData.
+     * @return currently selected menu itemData.
      */
     public static MenuItem current() {
         return MenuItem.values()[currentItemIdx];
     }
 
     /**
-     * Forward to the next item in the menu. If it reaches the end, it will wrap around.
+     * Forward to the next itemData in the menu. If it reaches the end, it will wrap around.
      */
     public static void next() {
         currentItemIdx++;
@@ -65,7 +65,7 @@ public enum MenuItem {
 
     /**
      * Builds an array of labels from all available menu items.
-     * @return an array of menu item labels.
+     * @return an array of menu itemData labels.
      */
     public static Array<Label> buildLabels() {
         labels = new Array<>(MenuItem.values().length);
@@ -76,7 +76,7 @@ public enum MenuItem {
     }
 
     /**
-     * Updates menu item label colors. The currently selected item's label will be highlighted.
+     * Updates menu itemData label colors. The currently selected itemData's label will be highlighted.
      */
     public static void updateLabelColors() {
         for (int i = 0; i < labels.size; i++) {
@@ -86,7 +86,7 @@ public enum MenuItem {
     }
 
     /**
-     * Handles input for currently selected menu item.
+     * Handles input for currently selected menu itemData.
      * @param delta delta time.
      */
     public void handleInput(float delta) {
@@ -94,9 +94,9 @@ public enum MenuItem {
     }
 
     /**
-     * Shows all tables of the specified target menu item. Tables that belong to any menu item
+     * Shows all tables of the specified target menu itemData. Tables that belong to any menu itemData
      * other than the currently selected one will be invisible.
-     * @param target menu item to show.
+     * @param target menu itemData to show.
      */
     public static void show(MenuItem target) {
         for (MenuItem item : MenuItem.values()) {

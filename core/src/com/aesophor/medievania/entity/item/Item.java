@@ -1,9 +1,6 @@
 package com.aesophor.medievania.entity.item;
 
-import com.aesophor.medievania.component.B2BodyComponent;
-import com.aesophor.medievania.component.ItemType;
-import com.aesophor.medievania.component.SoundComponent;
-import com.aesophor.medievania.component.SpriteComponent;
+import com.aesophor.medievania.component.*;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.Entity;
@@ -14,22 +11,23 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
 
-public abstract class Item extends Entity implements Disposable {
+public class Item extends Entity implements Disposable {
 
     protected static final int itemWidth = 16;
     protected static final int itemHeight = 16;
 
-    protected final ItemType itemType;
-    protected SpriteComponent sprite;
-    protected B2BodyComponent b2body;
-    protected SoundComponent sounds;
+    protected final ItemDataComponent itemData;
+    protected final SpriteComponent sprite;
+    protected final B2BodyComponent b2body;
+    protected final SoundComponent sounds;
+    protected final ItemType type;
 
-    public Item(ItemType itemType, Texture texture, World currentWorld, float x, float y) {
-        this.itemType = itemType;
-
-        sprite = new SpriteComponent(texture, x, y);
-        b2body = new B2BodyComponent(currentWorld);
+    public Item(String itemName, World world, Float x, Float y) {
+        itemData = ItemDataManager.getInstance().get(itemName);
+        sprite = new SpriteComponent(new Texture(itemData.getImage()), x * Constants.PPM, y * Constants.PPM);
+        b2body = new B2BodyComponent(world);
         sounds = new SoundComponent();
+        type = ItemType.values()[itemData.getType()];
 
         add(sprite);
         add(b2body);
@@ -53,7 +51,7 @@ public abstract class Item extends Entity implements Disposable {
     }
 
     /**
-     * Builds body fixture based on this item's body width and height.
+     * Builds body fixture based on this itemData's body width and height.
      * @param categoryBits category bits of body fixture.
      * @param maskBits defines which objects the body fixture can collide with.
      */
@@ -75,13 +73,18 @@ public abstract class Item extends Entity implements Disposable {
     }
 
 
-    public ItemType getItemType() {
-        return itemType;
+    public ItemType getType() {
+        return type;
     }
 
     @Override
     public String toString() {
         return "Rustic Axe";
+    }
+
+    @Override
+    public void dispose() {
+
     }
 
 }

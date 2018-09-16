@@ -109,7 +109,7 @@ public class Player extends Character {
     }
 
     public void pickup(Item item) {
-        inventory.get(item.getItemType()).add(item);
+        inventory.get(item.getType()).add(item);
         world.destroyBody(Mappers.B2BODY.get(item).getBody());
         GameEventManager.getInstance().fireEvent(new ItemPickedUpEvent(item));
         System.out.println(inventory);
