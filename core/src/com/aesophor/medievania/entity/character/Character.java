@@ -263,6 +263,7 @@ public abstract class Character extends Entity implements Disposable {
 
     @Override
     public void dispose() {
+        //sprite.dispose();
         sounds.values().forEach(s -> s.dispose());
     }
 

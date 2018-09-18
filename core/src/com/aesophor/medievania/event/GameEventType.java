@@ -10,6 +10,6 @@ public enum GameEventType {
     ITEM_PICKED_UP,             // 5
 
     INVENTORY_TAB_CHANGED,      // 6
-    INVNEOTRY_ITEM_CHANGED,     // 7
+    INVENTORY_ITEM_CHANGED,     // 7
 
 }

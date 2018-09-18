@@ -123,7 +123,7 @@ public class MainMenuScreen extends AbstractScreen {
         super.dispose();
         backgroundTexture.dispose();
         backgroundMusic.dispose();
-        //keyPressSound.dispose();
+        keyPressSound.dispose();
     }
 
 }

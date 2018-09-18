@@ -85,7 +85,7 @@ public class Item extends Entity implements Disposable {
 
     @Override
     public void dispose() {
-
+        sprite.dispose();
     }
 
 }

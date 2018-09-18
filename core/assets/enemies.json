@@ -1,0 +1,26 @@
+{
+  "Castle Guard": {
+    "class": "com.aesophor.medievania.component.EnemyDataComponent",
+    "image": "character/knight/Knight.png",
+    "stats": {
+      "class": "com.aesophor.medievania.component.StatsComponent",
+      "name": "Castle Guard",
+      "level": 1,
+      "exp": 10,
+      "fullHealth": 100,
+      "fullStamina": 100,
+      "fullMagicka": 100,
+      "bodyHeight": 34,
+      "bodyWidth": 10,
+      "movementSpeed": 0.15,
+      "jumpHeight": 3.5,
+      "attackForce": 1.2,
+      "attackTime": 2.4,
+      "attackRange": 14,
+      "attackDamage": 25
+    },
+    "items": {
+      "Rusty Axe": 1
+    }
+  }
+}

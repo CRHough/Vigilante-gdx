@@ -28,8 +28,8 @@ public class GameMapManagementSystem extends EntitySystem {
 
     private PooledEngine engine;
     private AssetManager assets;
-    private World world;
     private GameMap currentMap;
+    private World world;
 
     private Player player;
     private Array<Character> npcs;
@@ -41,7 +41,10 @@ public class GameMapManagementSystem extends EntitySystem {
 
         npcs = new Array<>();
 
+        // When the player used a portal, first we set the new (target) map as current map,
+        // and then place the player's body at "the portal on the other side" which is another portal.
         GameEventManager.getInstance().addEventListener(GameEventType.PORTAL_USED, (PortalUsedEvent e) -> {
+            // Set the new map until the fade in effect ends.
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
@@ -53,11 +56,13 @@ public class GameMapManagementSystem extends EntitySystem {
             }, ScreenFadeSystem.FADEIN_DURATION);
         });
 
+        // When an enemy dies, enumerate through all of its droppable items and
+        // decide whether the item should be dropped according to its drop rate.
         GameEventManager.getInstance().addEventListener(GameEventType.ENEMY_DIED, (EnemyDiedEvent e) -> {
             DroppableItemsComponent droppableItems = Mappers.DROP_ITEMS.get(e.getEnemy());
 
-            droppableItems.getDroppableItems().forEach((itemName, dropChance) -> {
-                if (Utils.randomInt(0, 100) / 100f <= dropChance) {
+            droppableItems.getDroppableItems().forEach((itemName, dropRate) -> {
+                if (Utils.randomInt(0, 100) / 100f <= dropRate) {
                     Item item = spawn(itemName, world, e.getEnemy().getB2Body().getPosition().x, e.getEnemy().getB2Body().getPosition().y);
                     Body body = Mappers.B2BODY.get(item).getBody();
                     body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
@@ -66,8 +71,10 @@ public class GameMapManagementSystem extends EntitySystem {
             });
         });
 
+        // Remove the item entity from the engine once it has been picked up.
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
             engine.removeEntity(e.getItem());
+            e.getItem().dispose();
         });
 
         setGameMap("map/starting_point.tmx");
@@ -79,7 +86,7 @@ public class GameMapManagementSystem extends EntitySystem {
 
 
     /**
-     * Sets the speicified GameMap as the current one.
+     * Sets the specified GameMap as the current one.
      * @param gameMapFile path to the .tmx tiled map.
      */
     public void setGameMap(String gameMapFile) {

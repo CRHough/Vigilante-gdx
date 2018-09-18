@@ -9,7 +9,7 @@ public class InventoryItemChangedEvent extends GameEvent {
     private final Item newItem;
 
     public InventoryItemChangedEvent(Item newItem) {
-        super(GameEventType.INVNEOTRY_ITEM_CHANGED);
+        super(GameEventType.INVENTORY_ITEM_CHANGED);
         this.newItem = newItem;
     }
 

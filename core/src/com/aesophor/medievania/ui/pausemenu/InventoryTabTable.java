@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class InventoryTabTable extends Table implements MenuItemTable {
 
-    private class Tab extends Stack {
+    private static class Tab extends Stack {
 
         private ItemType type;
         private Image regularTabImage;

@@ -117,7 +117,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         });
 
         // Display the description of the newly selected item.
-        GameEventManager.getInstance().addEventListener(GameEventType.INVNEOTRY_ITEM_CHANGED, (InventoryItemChangedEvent e) -> {
+        GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_ITEM_CHANGED, (InventoryItemChangedEvent e) -> {
             ItemDataComponent itemData = Mappers.ITEM_DATA.get(e.getNewItem());
             itemDesc.setText(itemData.getDesc());
         });

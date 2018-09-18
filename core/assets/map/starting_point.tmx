@@ -109,8 +109,16 @@
   <object id="64" x="32" y="128.333" width="16" height="15.3333"/>
  </objectgroup>
  <objectgroup name="NPCS">
-  <object id="66" x="336.333" y="224.333" width="15.6667" height="15.3333"/>
-  <object id="67" x="512.667" y="257.333" width="15" height="14.6667"/>
+  <object id="66" x="336.333" y="224.333" width="15.6667" height="15.3333">
+   <properties>
+    <property name="name" value="Castle Guard"/>
+   </properties>
+  </object>
+  <object id="67" x="512.667" y="257.333" width="15" height="14.6667">
+   <properties>
+    <property name="name" value="Castle Guard"/>
+   </properties>
+  </object>
  </objectgroup>
  <layer name="Background" width="60" height="20">
   <data encoding="base64" compression="zlib">

@@ -30,6 +30,30 @@ public class StatsComponent implements Component {
         level = 1;
     }
 
+    public StatsComponent(StatsComponent s) {
+        name = s.getName();
+        level = s.getLevel();
+        exp = s.getExp();
+
+        fullHealth = s.getFullHealth();
+        fullStamina = s.getFullStamina();
+        fullMagicka = s.getFullMagicka();
+
+        modHealth(fullHealth);
+        modStamina(fullStamina);
+        modMagicka(fullMagicka);
+
+        bodyHeight = s.getBodyHeight();
+        bodyWidth = s.getBodyWidth();
+
+        movementSpeed = s.getMovementSpeed();
+        jumpHeight = s.getJumpHeight();
+        attackForce = s.getAttackForce();
+        attackTime = s.getAttackTime();
+        attackRange = s.getAttackRange();
+        attackDamage = s.getAttackDamage();
+    }
+
 
     public String getName() {
         return name;

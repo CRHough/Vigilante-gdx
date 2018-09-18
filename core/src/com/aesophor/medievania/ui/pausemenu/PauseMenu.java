@@ -26,6 +26,7 @@ public class PauseMenu extends Stage {
         this.gsm = gsm;
 
         background = gsm.getAssets().get(PAUSE_MENU_BACKGROUND);
+        gsm.getAssets().load("sfx/ui/click.wav", Sound.class); // assets should be loaded elsewhere.
         clickSound = gsm.getAssets().get("sfx/ui/click.wav", Sound.class);
 
         Table menuItemHeaderTable = new Table();

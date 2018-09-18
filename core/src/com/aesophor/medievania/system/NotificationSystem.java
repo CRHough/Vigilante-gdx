@@ -17,7 +17,7 @@ public class NotificationSystem extends EntitySystem {
         this.notificationFactory = notificationFactory;
 
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
-            notificationFactory.show(String.format("You have gained an itemData. (%s)", e.getItem().toString()));
+            notificationFactory.show(String.format("You have gained an item. (%s)", e.getItem().toString()));
         });
     }
 

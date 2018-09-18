@@ -12,9 +12,14 @@ public class DroppableItemsComponent implements Component {
         droppableItems = new HashMap<>();
     }
 
+    public DroppableItemsComponent(HashMap<String, Float> droppableItems) {
+        this();
+        droppableItems.forEach(this.droppableItems::put);
+    }
 
-    public void put(String itemName, float dropChance) {
-        droppableItems.put(itemName, dropChance);
+
+    public void put(String itemName, float dropRate) {
+        droppableItems.put(itemName, dropRate);
     }
 
     public Map<String, Float> getDroppableItems() {
