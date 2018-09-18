@@ -3,6 +3,7 @@ package com.aesophor.medievania.entity.character;
 import com.aesophor.medievania.component.*;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.combat.CharacterKilledEvent;
 import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.util.CategoryBits;
@@ -122,6 +123,15 @@ public class Player extends Character {
 
     public void reposition(float x, float y) {
         b2body.getBody().setTransform(x, y, 0);
+    }
+
+    @Override
+    public void inflictDamage(Character target, int damage) {
+        super.inflictDamage(target, damage);
+
+        if (Mappers.STATE.get(target).isSetToKill()) {
+            GameEventManager.getInstance().fireEvent(new CharacterKilledEvent(this, target));
+        }
     }
 
     @Override

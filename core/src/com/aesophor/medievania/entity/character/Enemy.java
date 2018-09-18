@@ -1,8 +1,6 @@
 package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.*;
-import com.aesophor.medievania.event.GameEventManager;
-import com.aesophor.medievania.event.combat.EnemyDiedEvent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
@@ -81,10 +79,6 @@ public class Enemy extends Character {
     public void receiveDamage(Character source, int damage) {
         super.receiveDamage(source, damage);
         state.setAlerted(true);
-
-        if (stats.getHealth() == 0) {
-            GameEventManager.getInstance().fireEvent(new EnemyDiedEvent(this));
-        }
     }
 
 }

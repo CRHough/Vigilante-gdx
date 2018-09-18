@@ -6,7 +6,7 @@ public enum GameEventType {
     PORTAL_USED,                // 1
     MAINGAME_SCREEN_RESIZED,    // 2
     HEALTH_CHANGED,             // 3
-    ENEMY_DIED,                 // 4
+    CHARACTER_KILLED,                 // 4
     ITEM_PICKED_UP,             // 5
 
     INVENTORY_TAB_CHANGED,      // 6

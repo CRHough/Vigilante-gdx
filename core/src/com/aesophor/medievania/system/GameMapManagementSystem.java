@@ -7,7 +7,7 @@ import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
-import com.aesophor.medievania.event.combat.EnemyDiedEvent;
+import com.aesophor.medievania.event.combat.CharacterKilledEvent;
 import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.event.map.MapChangedEvent;
 import com.aesophor.medievania.event.map.PortalUsedEvent;
@@ -58,12 +58,12 @@ public class GameMapManagementSystem extends EntitySystem {
 
         // When an enemy dies, enumerate through all of its droppable items and
         // decide whether the item should be dropped according to its drop rate.
-        GameEventManager.getInstance().addEventListener(GameEventType.ENEMY_DIED, (EnemyDiedEvent e) -> {
-            DroppableItemsComponent droppableItems = Mappers.DROP_ITEMS.get(e.getEnemy());
+        GameEventManager.getInstance().addEventListener(GameEventType.CHARACTER_KILLED, (CharacterKilledEvent e) -> {
+            DroppableItemsComponent droppableItems = Mappers.DROP_ITEMS.get(e.getDeceased());
 
             droppableItems.getDroppableItems().forEach((itemName, dropRate) -> {
                 if (Utils.randomInt(0, 100) / 100f <= dropRate) {
-                    Item item = spawn(itemName, world, e.getEnemy().getB2Body().getPosition().x, e.getEnemy().getB2Body().getPosition().y);
+                    Item item = spawn(itemName, world, e.getDeceased().getB2Body().getPosition().x, e.getDeceased().getB2Body().getPosition().y);
                     Body body = Mappers.B2BODY.get(item).getBody();
                     body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
                     engine.addEntity(item);

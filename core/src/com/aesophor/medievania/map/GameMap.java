@@ -63,15 +63,15 @@ public class GameMap implements Disposable {
     }
     
     public Array<Character> spawnNPCs() {
-        Array<Character> knights = new Array<>();
+        Array<Character> npcs = new Array<>();
         
         for (MapObject object : tiledMap.getLayers().get(GameMapLayer.NPCS.ordinal()).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
             String enemyName = (String) object.getProperties().get("name");
-            knights.add(new Enemy(enemyName, assets, world, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
+            npcs.add(new Enemy(enemyName, assets, world, rect.getX() / Constants.PPM, rect.getY() / Constants.PPM));
         }
         
-        return knights;
+        return npcs;
     }
     
     
