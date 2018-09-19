@@ -1,6 +1,7 @@
 package com.aesophor.medievania;
 
 import com.aesophor.medievania.entity.character.EnemyDataManager;
+import com.aesophor.medievania.entity.item.EquipmentDataManager;
 import com.aesophor.medievania.entity.item.ItemDataManager;
 import com.aesophor.medievania.screen.AbstractScreen;
 import com.aesophor.medievania.screen.Screens;
@@ -26,6 +27,7 @@ public class Medievania extends Game implements GameStateManager {
         this.assets = new AssetManager();
 
         ItemDataManager.getInstance().load("items.json");
+        EquipmentDataManager.getInstance().load("equipment.json");
         EnemyDataManager.getInstance().load("enemies.json");
 
         assets.load("interface/mainmenu_bg.png", Texture.class);

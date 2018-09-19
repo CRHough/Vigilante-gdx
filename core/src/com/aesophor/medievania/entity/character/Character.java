@@ -1,5 +1,8 @@
 package com.aesophor.medievania.entity.character;
 
+import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.equipment.EquipmentType;
+import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.component.sound.SoundComponent;
 import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.component.character.*;
@@ -27,6 +30,7 @@ public abstract class Character extends Entity implements Disposable {
     protected StatsComponent stats;
     protected CombatTargetComponent targets;
     protected InventoryComponent inventory;
+    protected EquipmentSlotsComponent equipmentSlots;
 
     protected AIActions AIActions;
 
@@ -43,6 +47,7 @@ public abstract class Character extends Entity implements Disposable {
         sounds = new SoundComponent();
         targets = new CombatTargetComponent();
         inventory = new InventoryComponent();
+        equipmentSlots = new EquipmentSlotsComponent();
 
         add(stats);
         add(animations);
@@ -51,6 +56,7 @@ public abstract class Character extends Entity implements Disposable {
         add(state);
         add(targets);
         add(inventory);
+        add(equipmentSlots);
 
         AIActions = new AIActions(this);
     }
@@ -118,9 +124,18 @@ public abstract class Character extends Entity implements Disposable {
 
 
     public void equip(Item item) {
-        if (item.getComponent(EquipmentSlotsComponent.class) != null) {
+        InventoryComponent inventory = Mappers.INVENTORY.get(this);
+        EquipmentSlotsComponent equipmentSlots = Mappers.EQUIPMENT_SLOTS.get(this);
+        EquipmentType equipmentType = Mappers.EQUIPMENT_DATA.get(item).getType();
 
+        // If this equipment slot has already been occupied, add the previously item back to inventory
+        // and equip the new equipment.
+        if (equipmentSlots.has(equipmentType)) {
+            inventory.add(equipmentSlots.get(equipmentType));
         }
+
+        inventory.remove(item);
+        equipmentSlots.equip(item);
     }
 
     public void moveLeft() {

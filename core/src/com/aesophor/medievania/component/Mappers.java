@@ -1,6 +1,7 @@
 package com.aesophor.medievania.component;
 
 import com.aesophor.medievania.component.character.*;
+import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.item.ItemDataComponent;
@@ -20,8 +21,10 @@ public class Mappers {
     public static final ComponentMapper<CharacterAIComponent> CHARACTER_AI;
     public static final ComponentMapper<StatsRegenerationComponent> REGENERATION;
     public static final ComponentMapper<InventoryComponent> INVENTORY;
+    public static final ComponentMapper<EquipmentSlotsComponent> EQUIPMENT_SLOTS;
     public static final ComponentMapper<DroppableItemsComponent> DROP_ITEMS;
     public static final ComponentMapper<ItemDataComponent> ITEM_DATA;
+    public static final ComponentMapper<EquipmentDataComponent> EQUIPMENT_DATA;
 
     static {
         STATS = ComponentMapper.getFor(StatsComponent.class);
@@ -35,8 +38,10 @@ public class Mappers {
         CHARACTER_AI = ComponentMapper.getFor(CharacterAIComponent.class);
         REGENERATION = ComponentMapper.getFor(StatsRegenerationComponent.class);
         INVENTORY = ComponentMapper.getFor(InventoryComponent.class);
+        EQUIPMENT_SLOTS = ComponentMapper.getFor(EquipmentSlotsComponent.class);
         DROP_ITEMS = ComponentMapper.getFor(DroppableItemsComponent.class);
         ITEM_DATA = ComponentMapper.getFor(ItemDataComponent.class);
+        EQUIPMENT_DATA = ComponentMapper.getFor(EquipmentDataComponent.class);
     }
 
 }

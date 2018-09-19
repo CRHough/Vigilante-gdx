@@ -1,79 +1,35 @@
 package com.aesophor.medievania.component.character;
 
+import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.equipment.EquipmentType;
 import com.aesophor.medievania.entity.item.Item;
 import com.badlogic.ashley.core.Component;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EquipmentSlotsComponent implements Component {
 
-    private Item headGear;
-    private Item armor;
-    private Item gauntlets;
-    private Item boots;
-    private Item cape;
-
-    private Item leftHandedWeapon;
-    private Item rightHandedWeapon;
+    private final Map<EquipmentType, Item> equipment;
 
     public EquipmentSlotsComponent() {
+        equipment = new HashMap<>();
 
+        for (EquipmentType type : EquipmentType.values()) {
+            equipment.put(type, null);
+        }
     }
 
 
-    public Item getHeadGear() {
-        return headGear;
+    public Item get(EquipmentType type) {
+        return equipment.get(type);
     }
 
-    public Item getArmor() {
-        return armor;
+    public void equip(Item item) {
+        equipment.put(Mappers.EQUIPMENT_DATA.get(item).getType(), item);
     }
 
-    public Item getGauntlets() {
-        return gauntlets;
-    }
-
-    public Item getBoots() {
-        return boots;
-    }
-
-    public Item getCape() {
-        return cape;
-    }
-
-    public Item getLeftHandedWeapon() {
-        return leftHandedWeapon;
-    }
-
-    public Item getRightHandedWeapon() {
-        return rightHandedWeapon;
-    }
-
-
-    public void setHeadGear(Item headGear) {
-        this.headGear = headGear;
-    }
-
-    public void setArmor(Item armor) {
-        this.armor = armor;
-    }
-
-    public void setGauntlets(Item gauntlets) {
-        this.gauntlets = gauntlets;
-    }
-
-    public void setBoots(Item boots) {
-        this.boots = boots;
-    }
-
-    public void setCape(Item cape) {
-        this.cape = cape;
-    }
-
-    public void setLeftHandedWeapon(Item leftHandedWeapon) {
-        this.leftHandedWeapon = leftHandedWeapon;
-    }
-
-    public void setRightHandedWeapon(Item rightHandedWeapon) {
-        this.rightHandedWeapon = rightHandedWeapon;
+    public boolean has(EquipmentType type) {
+        return equipment.get(type) != null;
     }
 
 }

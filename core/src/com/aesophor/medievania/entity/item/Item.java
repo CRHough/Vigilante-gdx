@@ -34,6 +34,9 @@ public class Item extends Entity implements Disposable {
         type = itemData.getType();
 
         add(itemData);
+        if (type == ItemType.EQUIP) {
+            add(EquipmentDataManager.getInstance().get(itemName));
+        }
         add(sprite);
         add(b2body);
         add(sounds);

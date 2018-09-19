@@ -16,6 +16,11 @@ public class StatsComponent implements Component {
     private int stamina;
     private int magicka;
 
+    private int _str;
+    private int _dex;
+    private int _int;
+    private int _luk;
+
     private float bodyHeight;
     private float bodyWidth;
 
