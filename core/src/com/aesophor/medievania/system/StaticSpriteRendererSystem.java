@@ -1,9 +1,9 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.component.AnimationComponent;
-import com.aesophor.medievania.component.B2BodyComponent;
+import com.aesophor.medievania.component.graphics.AnimationComponent;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.SpriteComponent;
+import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;

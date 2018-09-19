@@ -1,9 +1,11 @@
 package com.aesophor.medievania.system;
 
+import com.aesophor.medievania.component.character.PickupItemTargetComponent;
+import com.aesophor.medievania.component.character.PortalTargetComponent;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.ControllableComponent;
-import com.aesophor.medievania.component.StateComponent;
+import com.aesophor.medievania.component.character.ControllableComponent;
+import com.aesophor.medievania.component.character.StateComponent;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.badlogic.ashley.core.Entity;
@@ -45,8 +47,9 @@ public class PlayerControlSystem extends IteratingSystem {
                     player.jump();
                 }
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-                if (player.getPickupItemTargetComponent().hasInRangeItem()) {
-                    player.pickup(player.getPickupItemTargetComponent().getInRangeItems().first());
+                PickupItemTargetComponent pickupItemTarget = Mappers.PICKUP_ITEM_TARGETS.get(player);
+                if (pickupItemTarget.hasInRangeItem()) {
+                    player.pickup(pickupItemTarget.getInRangeItems().first());
                 }
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.moveRight();
@@ -55,8 +58,9 @@ public class PlayerControlSystem extends IteratingSystem {
             } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 player.crouch();
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-                if (player.getCurrentPortal() != null && !state.isSetToKill()) {
-                    GameEventManager.getInstance().fireEvent(new PortalUsedEvent(player.getCurrentPortal()));
+                PortalTargetComponent portalTarget = Mappers.PORTAL_TARGET.get(player);
+                if (portalTarget != null && !state.isSetToKill()) {
+                    GameEventManager.getInstance().fireEvent(new PortalUsedEvent(portalTarget.getInRangePortal()));
                 }
             }
         }

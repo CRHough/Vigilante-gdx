@@ -19,7 +19,7 @@ public class NotificationSystem extends EntitySystem {
         this.notificationFactory = notificationFactory;
 
         GameEventManager.getInstance().addEventListener(GameEventType.CHARACTER_KILLED, (CharacterKilledEvent e) -> {
-            int expGained = Mappers.CHARACTER_STATS.get(e.getDeceased()).getExp();
+            int expGained = Mappers.STATS.get(e.getDeceased()).getExp();
             notificationFactory.show(String.format("You have gained experience. (%d)", expGained));
         });
 

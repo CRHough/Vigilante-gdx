@@ -1,6 +1,6 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.component.DroppableItemsComponent;
+import com.aesophor.medievania.component.character.DroppableItemsComponent;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Player;

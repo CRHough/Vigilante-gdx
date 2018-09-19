@@ -1,5 +1,6 @@
 package com.aesophor.medievania.map;
 
+import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.entity.character.Enemy;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.util.CategoryBits;
@@ -49,7 +50,7 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.PLAYER | CategoryBits.PORTAL:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 portal = (Portal) getTargetFixture(CategoryBits.PORTAL, fixtureA, fixtureB).getUserData();
-                player.setCurrentPortal(portal);
+                Mappers.PORTAL_TARGET.get(player).setInRangePortal(portal);
                 break;
 
 
@@ -83,7 +84,7 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.PLAYER | CategoryBits.ITEM:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 item = (Item) getTargetFixture(CategoryBits.ITEM, fixtureA, fixtureB).getUserData();
-                player.getPickupItemTargetComponent().addInRangeItems(item);
+                Mappers.PICKUP_ITEM_TARGETS.get(player).addInRangeItems(item);
                 break;
                 
             default:
@@ -97,7 +98,6 @@ public class WorldContactListener implements ContactListener {
         Character character;
         Player player;
         Enemy enemy;
-        Portal portal;
         Item item;
 
         Fixture fixtureA = contact.getFixtureA();
@@ -125,7 +125,7 @@ public class WorldContactListener implements ContactListener {
             // When player leaves the portal, unregister the portal from the player.
             case CategoryBits.PLAYER | CategoryBits.PORTAL:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
-                player.setCurrentPortal(null);
+                Mappers.PORTAL_TARGET.get(player).setInRangePortal(null);
                 break;
 
 
@@ -146,7 +146,7 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.PLAYER | CategoryBits.ITEM:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 item = (Item) getTargetFixture(CategoryBits.ITEM, fixtureA, fixtureB).getUserData();
-                player.getPickupItemTargetComponent().removeInRangeItems(item);
+                Mappers.PICKUP_ITEM_TARGETS.get(player).removeInRangeItems(item);
                 break;
                 
             default:

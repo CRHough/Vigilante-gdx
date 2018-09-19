@@ -1,6 +1,8 @@
 package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.*;
+import com.aesophor.medievania.component.sound.SoundType;
+import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.combat.CharacterKilledEvent;
@@ -23,16 +25,12 @@ public class Player extends Character {
 
     private static final String TEXTURE_FILE = "character/bandit/Bandit.png";
 
-    private PickupItemTargetComponent pickupItemTargetComponent;
-    private Portal currentPortal;
-
     public Player(AssetManager assets, World world, float x, float y) {
         super(assets.get(TEXTURE_FILE), world, x, y);
 
-        pickupItemTargetComponent = new PickupItemTargetComponent();
-
-        add(pickupItemTargetComponent);
+        add(new PickupItemTargetComponent());
         add(new ControllableComponent());
+        add(new PortalTargetComponent());
         add(new EquipmentSlotsComponent());
         add(new StatsRegenerationComponent(3f, 1, 10, 10));
 
@@ -96,18 +94,6 @@ public class Player extends Character {
         super.defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
         sprite.setBounds(0, 0, 120 / Constants.PPM, 120 / Constants.PPM);
-    }
-
-    public Portal getCurrentPortal() {
-        return currentPortal;
-    }
-
-    public void setCurrentPortal(Portal currentPortal) {
-        this.currentPortal = currentPortal;
-    }
-
-    public PickupItemTargetComponent getPickupItemTargetComponent() {
-        return pickupItemTargetComponent;
     }
 
     public void pickup(Item item) {

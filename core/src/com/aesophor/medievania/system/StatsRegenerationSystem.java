@@ -1,8 +1,8 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.component.StatsComponent;
+import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.StatsRegenerationComponent;
+import com.aesophor.medievania.component.character.StatsRegenerationComponent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -19,7 +19,7 @@ public class StatsRegenerationSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float delta) {
-        charStats = Mappers.CHARACTER_STATS.get(entity);
+        charStats = Mappers.STATS.get(entity);
         regeneration = Mappers.REGENERATION.get(entity);
 
         if (regeneration.hasElapsed()) {

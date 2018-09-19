@@ -46,14 +46,14 @@ public class MainMenuScreen extends AbstractScreen {
         itemLabels = new Label[menuItems.length];
         
         for (int i = 0; i < menuItems.length; i++) {
-            itemLabels[i] = new Label(menuItems[i], new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
+            itemLabels[i] = new Label(menuItems[i], new Label.LabelStyle(Font.REGULAR, Color.WHITE));
             labelTable.add(itemLabels[i]).padTop(5f).row();
         }
 
         Table footerTable = new Table();
         footerTable.bottom().padBottom(15f);
         footerTable.setFillParent(true);
-        Label copyrightLabel = new Label(COPYRIGHT_NOTICE, new Label.LabelStyle(Font.getDefaultFont(), Color.WHITE));
+        Label copyrightLabel = new Label(COPYRIGHT_NOTICE, new Label.LabelStyle(Font.REGULAR, Color.WHITE));
         copyrightLabel.setAlignment(Align.center);
         footerTable.add(copyrightLabel);
         
@@ -123,7 +123,7 @@ public class MainMenuScreen extends AbstractScreen {
         super.dispose();
         backgroundTexture.dispose();
         backgroundMusic.dispose();
-        keyPressSound.dispose();
+        //keyPressSound.dispose();
     }
 
 }

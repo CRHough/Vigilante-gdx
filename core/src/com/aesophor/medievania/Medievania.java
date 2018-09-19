@@ -42,6 +42,7 @@ public class Medievania extends Game implements GameStateManager {
         assets.load("item/RusticAxe.png", Texture.class);
         assets.load("music/main_menu.wav", Music.class);
         assets.load("music/village01.mp3", Music.class);
+        assets.load("sfx/inventory/open_and_close.wav", Sound.class);
         assets.load("sfx/player/hurt.wav", Sound.class);
         assets.load("sfx/player/death.mp3", Sound.class);
         assets.load("sfx/player/weapon_swing.ogg", Sound.class);

@@ -1,6 +1,10 @@
 package com.aesophor.medievania.entity.item;
 
-import com.aesophor.medievania.component.*;
+import com.aesophor.medievania.component.sound.SoundComponent;
+import com.aesophor.medievania.component.graphics.SpriteComponent;
+import com.aesophor.medievania.component.item.ItemDataComponent;
+import com.aesophor.medievania.component.item.ItemType;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.Entity;

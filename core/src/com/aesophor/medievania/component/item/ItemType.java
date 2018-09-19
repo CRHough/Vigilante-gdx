@@ -1,4 +1,4 @@
-package com.aesophor.medievania.component;
+package com.aesophor.medievania.component.item;
 
 public enum ItemType {
 

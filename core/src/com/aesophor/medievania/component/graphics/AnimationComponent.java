@@ -1,5 +1,6 @@
-package com.aesophor.medievania.component;
+package com.aesophor.medievania.component.graphics;
 
+import com.aesophor.medievania.component.character.State;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;

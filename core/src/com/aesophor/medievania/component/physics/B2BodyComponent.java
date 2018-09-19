@@ -1,4 +1,4 @@
-package com.aesophor.medievania.component;
+package com.aesophor.medievania.component.physics;
 
 import com.aesophor.medievania.util.box2d.BodyBuilder;
 import com.badlogic.ashley.core.Component;

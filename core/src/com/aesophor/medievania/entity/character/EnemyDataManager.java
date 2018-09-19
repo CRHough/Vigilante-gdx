@@ -1,6 +1,6 @@
 package com.aesophor.medievania.entity.character;
 
-import com.aesophor.medievania.component.EnemyDataComponent;
+import com.aesophor.medievania.component.character.EnemyDataComponent;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 import java.util.HashMap;

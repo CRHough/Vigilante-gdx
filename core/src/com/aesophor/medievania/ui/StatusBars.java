@@ -1,5 +1,6 @@
 package com.aesophor.medievania.ui;
 
+import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.util.Constants;
@@ -11,7 +12,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
@@ -19,9 +19,7 @@ public class StatusBars extends Stage {
 
     private static int barLength = 75; // pixel
 
-    private GameStateManager gsm;
     private Player player;
-    private Skin skin;
     
     private Texture hudTexture;
     private TextureRegion barsBackground;
@@ -121,8 +119,7 @@ public class StatusBars extends Stage {
         //textTable.padTop(49f).padLeft(91f);
         textTable.padTop(23f).padLeft(49f);
 
-        BitmapFont font = Font.getDefaultFont();
-        //font.getData().setScale(.8f);
+        BitmapFont font = Font.REGULAR;
         weaponIconImage = new Image(weaponIcon);
         weaponNameLabel = new Label("Rustic Axe", new Label.LabelStyle(font, Color.WHITE));
 
@@ -141,9 +138,13 @@ public class StatusBars extends Stage {
     }
 
     public void update(float delta) {
-        healthBarImage.setScaleX(barLength * player.getHealth() / 100f); // 100 is only temporary (player's full heatlh is 100)
-        staminaBarImage.setScaleX(barLength * player.getStamina() / 100f);
-        //healthBarPadImage.setX(healthBarImage.getX() + barLength * player.getHealth() / 100f);
+        int fullHealth = Mappers.STATS.get(player).getFullHealth();
+        int fullStamina = Mappers.STATS.get(player).getFullStamina();
+        int fullMagicka = Mappers.STATS.get(player).getFullMagicka();
+
+        healthBarImage.setScaleX(barLength * player.getHealth() / fullHealth); // 100 is only temporary (player's full heatlh is 100)
+        staminaBarImage.setScaleX(barLength * player.getStamina() / fullStamina);
+        //healthBarPadImage.setX(healthBarImage.getX() + barLength * player.getHealth() / fullMagicka);
         healthBarPadImage.setX(healthBarImage.getX() + healthBarImage.getScaleX());
         staminaBarPadImage.setX(staminaBarImage.getX() + staminaBarImage.getScaleX());
         magickaBarPadImage.setX(magickaBarImage.getX() + magickaBarImage.getScaleX());

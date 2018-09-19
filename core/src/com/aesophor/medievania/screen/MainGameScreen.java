@@ -14,6 +14,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -24,6 +25,8 @@ public class MainGameScreen extends AbstractScreen {
     private final PooledEngine engine;
     private final Player player;
     private final World world;
+
+    private final Sound pauseSound;
 
     public MainGameScreen(GameStateManager gsm) {
         super(gsm);
@@ -42,8 +45,8 @@ public class MainGameScreen extends AbstractScreen {
         // Initialize damage indicators and notificationFactory area.
         StatusBars statusBars = new StatusBars(gsm);
         PauseMenu pauseMenu = new PauseMenu(gsm, player);
-        DamageIndicatorFactory damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), Font.getDefaultFont(), getCamera(), 1.2f);
-        NotificationFactory notificationFactory = new NotificationFactory(getBatch(), Font.getDefaultFont(), 6, 4f);
+        DamageIndicatorFactory damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), Font.REGULAR, getCamera(), 1.2f);
+        NotificationFactory notificationFactory = new NotificationFactory(getBatch(), Font.REGULAR, 6, 4f);
 
 
         // Here I employ Entity-Component-System because it makes the layout of my code cleaner.
@@ -73,6 +76,8 @@ public class MainGameScreen extends AbstractScreen {
         engine.getSystem(PlayerStatusBarsSystem.class).registerPlayer(player);
 
         engine.getSystem(PauseMenuSystem.class).setProcessing(false);
+
+        pauseSound = gsm.getAssets().get("sfx/inventory/open_and_close.wav");
     }
 
 
@@ -123,6 +128,8 @@ public class MainGameScreen extends AbstractScreen {
         aiSys.setProcessing(false);
         playerControlSys.setProcessing(false);
         physicsSys.setProcessing(false);
+
+        pauseSound.play();
     }
 
     @Override
@@ -138,6 +145,8 @@ public class MainGameScreen extends AbstractScreen {
         aiSys.setProcessing(true);
         playerControlSys.setProcessing(true);
         physicsSys.setProcessing(true);
+
+        pauseSound.play();
     }
 
     @Override

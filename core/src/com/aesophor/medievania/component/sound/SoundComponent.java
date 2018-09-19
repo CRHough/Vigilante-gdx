@@ -1,4 +1,4 @@
-package com.aesophor.medievania.component;
+package com.aesophor.medievania.component.sound;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.audio.Sound;

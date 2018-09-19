@@ -1,5 +1,10 @@
 package com.aesophor.medievania.system;
 
+import com.aesophor.medievania.component.character.CharacterAIComponent;
+import com.aesophor.medievania.component.character.CombatTargetComponent;
+import com.aesophor.medievania.component.character.StateComponent;
+import com.aesophor.medievania.component.character.StatsComponent;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.component.*;
 import com.aesophor.medievania.util.Constants;
@@ -27,8 +32,8 @@ public class EnemyAISystem extends IteratingSystem {
 
         state = Mappers.STATE.get(entity);
         b2body = Mappers.B2BODY.get(entity);
-        stats = Mappers.CHARACTER_STATS.get(entity);
-        targets = Mappers.COMBAT_TARGET.get(entity);
+        stats = Mappers.STATS.get(entity);
+        targets = Mappers.COMBAT_TARGETS.get(entity);
 
 
         if (state.isSetToKill()) return;

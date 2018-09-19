@@ -1,6 +1,11 @@
 package com.aesophor.medievania.entity.character;
 
-import com.aesophor.medievania.component.*;
+import com.aesophor.medievania.component.sound.SoundComponent;
+import com.aesophor.medievania.component.sound.SoundType;
+import com.aesophor.medievania.component.character.*;
+import com.aesophor.medievania.component.graphics.AnimationComponent;
+import com.aesophor.medievania.component.graphics.SpriteComponent;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.combat.InflictDamageEvent;

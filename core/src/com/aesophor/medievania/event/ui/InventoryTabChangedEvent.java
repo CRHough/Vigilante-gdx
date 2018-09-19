@@ -1,6 +1,6 @@
 package com.aesophor.medievania.event.ui;
 
-import com.aesophor.medievania.component.ItemType;
+import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.event.GameEvent;
 import com.aesophor.medievania.event.GameEventType;
 

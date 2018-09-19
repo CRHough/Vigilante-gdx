@@ -1,6 +1,7 @@
 package com.aesophor.medievania.entity.character;
 
-import com.aesophor.medievania.component.*;
+import com.aesophor.medievania.component.sound.SoundType;
+import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;

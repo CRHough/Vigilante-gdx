@@ -70,7 +70,7 @@ public enum MenuItem {
     public static Array<Label> buildLabels() {
         labels = new Array<>(MenuItem.values().length);
         for (MenuItem item : MenuItem.values()) {
-            labels.add(new Label(item.toString(), LabelStyles.WHITE));
+            labels.add(new Label(item.toString(), LabelStyles.WHITE_HEADER));
         }
         return labels;
     }

@@ -1,9 +1,9 @@
 {
   "Castle Guard": {
-    "class": "com.aesophor.medievania.component.EnemyDataComponent",
+    "class": "com.aesophor.medievania.component.character.EnemyDataComponent",
     "image": "character/knight/Knight.png",
     "stats": {
-      "class": "com.aesophor.medievania.component.StatsComponent",
+      "class": "com.aesophor.medievania.component.character.StatsComponent",
       "name": "Castle Guard",
       "level": 1,
       "exp": 10,

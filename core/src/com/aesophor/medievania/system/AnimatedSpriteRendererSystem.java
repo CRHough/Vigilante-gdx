@@ -1,6 +1,12 @@
 package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.component.*;
+import com.aesophor.medievania.component.character.State;
+import com.aesophor.medievania.component.character.StateComponent;
+import com.aesophor.medievania.component.character.StatsComponent;
+import com.aesophor.medievania.component.graphics.AnimationComponent;
+import com.aesophor.medievania.component.graphics.SpriteComponent;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
@@ -43,7 +49,7 @@ public class AnimatedSpriteRendererSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float delta) {
-        stats = Mappers.CHARACTER_STATS.get(entity);
+        stats = Mappers.STATS.get(entity);
         b2body = Mappers.B2BODY.get(entity);
         sprite = Mappers.SPRITE.get(entity);
         animations = Mappers.ANIMATION.get(entity);

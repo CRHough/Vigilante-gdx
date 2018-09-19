@@ -1,9 +1,9 @@
 package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
-import com.aesophor.medievania.component.InventoryComponent;
-import com.aesophor.medievania.component.ItemDataComponent;
-import com.aesophor.medievania.component.ItemType;
+import com.aesophor.medievania.component.character.InventoryComponent;
+import com.aesophor.medievania.component.item.ItemDataComponent;
+import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
@@ -98,7 +98,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         // Shows all equipment in player inventory by default.
         populate(ItemType.EQUIP, player);
 
-        itemDesc = new Label("", LabelStyles.WHITE);
+        itemDesc = new Label("", LabelStyles.WHITE_REGULAR);
         itemDesc.setWrap(true);
         add(itemDesc).width(270f).top().left().spaceTop(13f);
 
@@ -133,7 +133,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         InventoryComponent inventory = Mappers.INVENTORY.get(player);
 
         inventory.get(type).forEach(item -> {
-            InventoryContentTable.InventoryItem i = new InventoryItem(item, selectionTexture, LabelStyles.WHITE);
+            InventoryContentTable.InventoryItem i = new InventoryItem(item, selectionTexture, LabelStyles.WHITE_REGULAR);
             items.add(i);
             contentTable.add(i).row();
         });
@@ -149,7 +149,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
      * @param item item to add.
      */
     public void add(Item item) {
-        InventoryContentTable.InventoryItem i = new InventoryItem(item, selectionTexture, LabelStyles.WHITE);
+        InventoryContentTable.InventoryItem i = new InventoryItem(item, selectionTexture, LabelStyles.WHITE_REGULAR);
 
         items.add(i);
         contentTable.add(i).row();

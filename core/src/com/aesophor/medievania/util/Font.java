@@ -7,25 +7,32 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 public class Font {
 
-    private static final String FONT_FILE = "interface/font/EquipmentPro.ttf";
-    private static BitmapFont defaultFont;
+    private static final String HEADER_FONT = "interface/font/MatchupPro.ttf";
+    private static final String REGULAR_FONT = "interface/font/bitrod-regular.ttf";
+
+    public static final BitmapFont HEADER;
+    public static final BitmapFont REGULAR;
 
     static {
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(FONT_FILE));
+        // Initialize Header font.
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(HEADER_FONT));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 15;
-        parameter.borderColor = Color.CLEAR;
-        parameter.borderWidth = 1.1f;
+        parameter.size = 16;
         parameter.shadowColor = Color.BLACK;
         parameter.shadowOffsetY = 1;
-        defaultFont = generator.generateFont(parameter);
-        defaultFont.getData().setScale(.7f);
+        HEADER = generator.generateFont(parameter);
         generator.dispose();
-    }
+
+        // Initialize Regular font.
+        generator = new FreeTypeFontGenerator(Gdx.files.internal(REGULAR_FONT));
+        parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 16;
+        parameter.shadowColor = Color.BLACK;
+        parameter.shadowOffsetY = 1;
+        REGULAR = generator.generateFont(parameter);
+        generator.dispose();
 
 
-    public static BitmapFont getDefaultFont() {
-        return defaultFont;
     }
 
 }

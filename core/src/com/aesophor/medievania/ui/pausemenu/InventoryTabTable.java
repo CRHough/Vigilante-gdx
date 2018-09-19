@@ -1,7 +1,7 @@
 package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
-import com.aesophor.medievania.component.ItemType;
+import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
 import com.aesophor.medievania.ui.LabelStyles;
@@ -73,7 +73,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
 
         tabs = new Array<>(ItemType.values().length);
         for (ItemType itemType : ItemType.values()) {
-            tabs.add(new Tab(itemType, normalTabTexture, selectedTabTexture, LabelStyles.WHITE));
+            tabs.add(new Tab(itemType, normalTabTexture, selectedTabTexture, LabelStyles.WHITE_HEADER));
         }
 
         // Add all tabs to inventory table.
