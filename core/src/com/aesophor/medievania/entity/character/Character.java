@@ -1,16 +1,17 @@
 package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.equipment.EquipmentType;
-import com.aesophor.medievania.component.item.ItemType;
-import com.aesophor.medievania.component.sound.SoundComponent;
-import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.component.character.*;
+import com.aesophor.medievania.component.equipment.EquipmentType;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
+import com.aesophor.medievania.component.sound.SoundComponent;
+import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.character.ItemEquippedEvent;
+import com.aesophor.medievania.event.character.ItemUnequippedEvent;
 import com.aesophor.medievania.event.combat.InflictDamageEvent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
@@ -128,15 +129,18 @@ public abstract class Character extends Entity implements Disposable {
         EquipmentSlotsComponent equipmentSlots = Mappers.EQUIPMENT_SLOTS.get(this);
         EquipmentType equipmentType = Mappers.EQUIPMENT_DATA.get(item).getType();
 
-        // If this equipment slot has already been occupied, add the previously item back to inventory
-        // and equip the new equipment.
+        // If this equipment slot has already been occupied, add the previously item back to inventory first.
         if (equipmentSlots.has(equipmentType)) {
             inventory.add(equipmentSlots.get(equipmentType));
+            GameEventManager.getInstance().fireEvent(new ItemUnequippedEvent(equipmentSlots.get(equipmentType)));
         }
 
+        // Equip the new item.
         inventory.remove(item);
         equipmentSlots.equip(item);
+        GameEventManager.getInstance().fireEvent(new ItemEquippedEvent(item));
     }
+
 
     public void moveLeft() {
         state.setFacingRight(false);

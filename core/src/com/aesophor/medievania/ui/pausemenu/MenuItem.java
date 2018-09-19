@@ -48,6 +48,15 @@ public enum MenuItem {
     }
 
     /**
+     * Handles input for currently selected menu itemData.
+     * @param delta delta time.
+     */
+    public void handleInput(float delta) {
+        tables.forEach(table -> ((MenuItemTable) table).handleInput(delta));
+    }
+
+
+    /**
      * Gets currently selected menu itemData.
      * @return currently selected menu itemData.
      */
@@ -83,14 +92,6 @@ public enum MenuItem {
             if (i == currentItemIdx) labels.get(i).setColor(HIGHLIGHT_ITEM_COLOR);
             else labels.get(i).setColor(REGULAR_ITEM_COLOR);
         }
-    }
-
-    /**
-     * Handles input for currently selected menu itemData.
-     * @param delta delta time.
-     */
-    public void handleInput(float delta) {
-        tables.forEach(table -> ((MenuItemTable) table).handleInput(delta));
     }
 
     /**

@@ -55,8 +55,6 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         }
     }
 
-    private final InventoryTabTable inventoryTabTable;
-
     private final Texture selectionTexture;
     private final Sound clickSound;
 
@@ -71,8 +69,6 @@ public class InventoryContentTable extends Table implements MenuItemTable {
     private Label itemDesc;
 
     public InventoryContentTable(GameStateManager gsm, Player player, InventoryTabTable inventoryTabTable) {
-        this.inventoryTabTable = inventoryTabTable;
-
         selectionTexture = gsm.getAssets().get("interface/selection.png");
         clickSound = gsm.getAssets().get("sfx/ui/click.wav", Sound.class);
 
@@ -90,8 +86,6 @@ public class InventoryContentTable extends Table implements MenuItemTable {
 
         currentItemIdx = -1;
 
-
-        // Ah fuck reflect the player's inventory here tomorrow I'm too tired today
         items = new Array<>();
         contentTable.defaults().spaceTop(5f).left();
 
@@ -103,14 +97,15 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         add(itemDesc).width(270f).top().left().spaceTop(13f);
 
 
-        // Ah I'll comment this later.
+        // Add the item which the player has just picked up to inventory content table
+        // iff currently selected tab matches the item type.
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
             if (inventoryTabTable.getSelectedTabType() == e.getItem().getType()) {
                 add(e.getItem());
             }
         });
 
-        // Repopulate inventory content table with the item type of the newly selected tab.
+        // Clear and re-populate inventory content table with the item type of the newly selected tab.
         GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_TAB_CHANGED, (InventoryTabChangedEvent e) -> {
             clear();
             populate(e.getNewTabItemType(), player);
@@ -229,4 +224,5 @@ public class InventoryContentTable extends Table implements MenuItemTable {
     public Texture getBackgroundTexture() {
         return null;
     }
+
 }

@@ -174,6 +174,23 @@ public class StatsComponent implements Component {
     }
 
 
+    public int getStr() {
+        return _str;
+    }
+
+    public int getDex() {
+        return _dex;
+    }
+
+    public int getInt() {
+        return _int;
+    }
+
+    public int getLuk() {
+        return _luk;
+    }
+
+
     public float getBodyHeight() {
         return bodyHeight;
     }
