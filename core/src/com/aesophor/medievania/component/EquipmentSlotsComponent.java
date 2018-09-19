@@ -3,7 +3,7 @@ package com.aesophor.medievania.component;
 import com.aesophor.medievania.entity.item.Item;
 import com.badlogic.ashley.core.Component;
 
-public class EquipmentComponent implements Component {
+public class EquipmentSlotsComponent implements Component {
 
     private Item headGear;
     private Item armor;
@@ -14,7 +14,7 @@ public class EquipmentComponent implements Component {
     private Item leftHandedWeapon;
     private Item rightHandedWeapon;
 
-    public EquipmentComponent() {
+    public EquipmentSlotsComponent() {
 
     }
 

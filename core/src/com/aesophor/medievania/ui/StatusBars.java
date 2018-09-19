@@ -3,6 +3,7 @@ package com.aesophor.medievania.ui;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.Font;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -16,7 +17,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class StatusBars extends Stage {
 
-    private static final String SKIN_FILE = "interface/skin/medievania_skin.json";
     private static int barLength = 75; // pixel
 
     private GameStateManager gsm;
@@ -57,8 +57,6 @@ public class StatusBars extends Stage {
     public StatusBars(GameStateManager gsm, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
         this.player = player;
-
-        skin = gsm.getAssets().get(SKIN_FILE);
         
         // Initializes player hud Texture and TextureRegions.
         hudTexture = gsm.getAssets().get("interface/hud/hud.png");
@@ -123,7 +121,7 @@ public class StatusBars extends Stage {
         //textTable.padTop(49f).padLeft(91f);
         textTable.padTop(23f).padLeft(49f);
 
-        BitmapFont font = gsm.getFont().getDefaultFont();
+        BitmapFont font = Font.getDefaultFont();
         //font.getData().setScale(.8f);
         weaponIconImage = new Image(weaponIcon);
         weaponNameLabel = new Label("Rustic Axe", new Label.LabelStyle(font, Color.WHITE));

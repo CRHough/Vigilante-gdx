@@ -18,13 +18,13 @@ public class NotificationSystem extends EntitySystem {
         this.batch = batch;
         this.notificationFactory = notificationFactory;
 
-        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
-            notificationFactory.show(String.format("You have gained an item. (%s)", e.getItem().toString()));
-        });
-
         GameEventManager.getInstance().addEventListener(GameEventType.CHARACTER_KILLED, (CharacterKilledEvent e) -> {
             int expGained = Mappers.CHARACTER_STATS.get(e.getDeceased()).getExp();
             notificationFactory.show(String.format("You have gained experience. (%d)", expGained));
+        });
+
+        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
+            notificationFactory.show(String.format("You have gained an item. (%s)", e.getItem().toString()));
         });
     }
 

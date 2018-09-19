@@ -21,7 +21,7 @@ public class InventoryComponent implements Component {
 
     // I should fire an inventoryChangedEvent in this class
 
-    public Map<ItemType, Array<Item>> getItems() {
+    public Map<ItemType, Array<Item>> getAllItems() {
         return items;
     }
 

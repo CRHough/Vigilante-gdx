@@ -33,6 +33,7 @@ public class Player extends Character {
 
         add(pickupItemTargetComponent);
         add(new ControllableComponent());
+        add(new EquipmentSlotsComponent());
         add(new StatsRegenerationComponent(3f, 1, 10, 10));
 
         stats.setName("Michael");

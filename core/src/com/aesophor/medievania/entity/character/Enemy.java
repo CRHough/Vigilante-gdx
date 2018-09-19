@@ -23,8 +23,8 @@ public class Enemy extends Character {
         stats = new StatsComponent(enemyData.getStats());
 
         add(enemyData);
+        add(stats); // override stats.
         add(new DroppableItemsComponent(enemyData.getItems()));
-        add(new StatsComponent(enemyData.getStats())); // override stats.
         add(new EnemyDataComponent());
         add(new CharacterAIComponent());
 

@@ -27,7 +27,7 @@ public class Item extends Entity implements Disposable {
         sprite = new SpriteComponent(new Texture(itemData.getImage()), x * Constants.PPM, y * Constants.PPM);
         b2body = new B2BodyComponent(world);
         sounds = new SoundComponent();
-        type = ItemType.values()[itemData.getType()];
+        type = itemData.getType();
 
         add(itemData);
         add(sprite);

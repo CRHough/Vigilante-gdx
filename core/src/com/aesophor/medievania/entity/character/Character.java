@@ -1,6 +1,7 @@
 package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.*;
+import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.combat.InflictDamageEvent;
 import com.aesophor.medievania.util.CategoryBits;
@@ -110,6 +111,12 @@ public abstract class Character extends Entity implements Disposable {
         b2body.setMeleeWeaponFixture(meleeWeaponFixture);
     }
 
+
+    public void equip(Item item) {
+        if (item.getComponent(EquipmentSlotsComponent.class) != null) {
+
+        }
+    }
 
     public void moveLeft() {
         state.setFacingRight(false);

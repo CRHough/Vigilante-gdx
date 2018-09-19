@@ -4,7 +4,6 @@ import com.aesophor.medievania.entity.character.EnemyDataManager;
 import com.aesophor.medievania.entity.item.ItemDataManager;
 import com.aesophor.medievania.screen.AbstractScreen;
 import com.aesophor.medievania.screen.Screens;
-import com.aesophor.medievania.util.Font;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -20,18 +19,15 @@ public class Medievania extends Game implements GameStateManager {
     
     private SpriteBatch batch;
     private AssetManager assets;
-    private Font font;
     
     @Override
     public void create () {
         this.batch = new SpriteBatch();
         this.assets = new AssetManager();
-        this.font = new Font(this);
 
         ItemDataManager.getInstance().load("items.json");
         EnemyDataManager.getInstance().load("enemies.json");
 
-        assets.load("interface/skin/medievania_skin.json", Skin.class);
         assets.load("interface/mainmenu_bg.png", Texture.class);
         assets.load("interface/hud/hud.png", Texture.class);
         assets.load("interface/pause.png", Texture.class);
@@ -107,15 +103,6 @@ public class Medievania extends Game implements GameStateManager {
     @Override
     public AssetManager getAssets() {
         return assets;
-    }
-
-    /**
-     * Gets the default font.
-     * @return default font.
-     */
-    @Override
-    public Font getFont() {
-        return font;
     }
     
     

@@ -4,18 +4,18 @@ import com.badlogic.ashley.core.Component;
 
 public class ItemDataComponent implements Component {
 
-    private String image;
     private Integer type;
+    private String image;
     private String name;
     private String desc;
 
 
-    public String getImage() {
-        return image;
+    public ItemType getType() {
+        return ItemType.values()[type];
     }
 
-    public Integer getType() {
-        return type;
+    public String getImage() {
+        return image;
     }
 
     public String getName() {
