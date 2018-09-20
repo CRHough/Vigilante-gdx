@@ -88,8 +88,4 @@ public class PauseMenu extends Stage {
         MenuItem.updateLabelColors();
     }
 
-    public DialogTable getDialogTable() {
-        return dialogTable;
-    }
-
 }

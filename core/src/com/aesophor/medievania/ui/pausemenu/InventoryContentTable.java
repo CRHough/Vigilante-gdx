@@ -8,11 +8,13 @@ import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
+import com.aesophor.medievania.event.character.EquipItemEvent;
 import com.aesophor.medievania.event.character.InventoryChangedEvent;
-import com.aesophor.medievania.event.character.ItemDiscardedEvent;
+import com.aesophor.medievania.event.character.DiscardItemEvent;
 import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.event.ui.InventoryItemChangedEvent;
 import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
+import com.aesophor.medievania.event.ui.PromptDiscardItemEvent;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -124,14 +126,23 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         });
 
         // Remove the item when the player has confirmed to discard it.
-        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_DISCARDED, (ItemDiscardedEvent e) -> {
+        GameEventManager.getInstance().addEventListener(GameEventType.DISCARD_ITEM, (DiscardItemEvent e) -> {
             Mappers.INVENTORY.get(player).remove(e.getItem());
+        });
+
+        GameEventManager.getInstance().addEventListener(GameEventType.EQUIP_ITEM, (EquipItemEvent e) -> {
+            player.equip(e.getItem());
         });
 
         // Whenever there's a change in inventory, refresh the list. (TODO: inventory onChange efficiency)
         GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_CHANGED, (InventoryChangedEvent e) -> {
             clear();
             populate(inventoryTabTable.getSelectedTabType(), player);
+        });
+
+
+        GameEventManager.getInstance().addEventListener(GameEventType.PROMPT_DISCARD_ITEM, (PromptDiscardItemEvent e) -> {
+            dialogTable.show("Do you want to discard this item?", "Yes", "No", new DiscardItemEvent(getSelectedItem()), null);
         });
     }
 
@@ -236,7 +247,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (getSelectedItem() != null) {
-                dialogTable.show("Do you want to discard this item?", "Yes", "No", new ItemDiscardedEvent(getSelectedItem()));
+                dialogTable.show("Action", "Equip", "Discard", new EquipItemEvent(getSelectedItem()), new PromptDiscardItemEvent());
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.event.GameEvent;
-import com.aesophor.medievania.event.GameEventListener;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.Gdx;
@@ -20,16 +19,16 @@ public class DialogTable extends Table implements MenuItemTable {
 
         private final Image image;
         private final Label text;
-        private GameEvent confirmEvent;
+        private GameEvent optionEvent;
 
         public DialogOption(Texture texture, String text) {
             this(texture, text, null);
         }
 
-        public DialogOption(Texture texture, String text, GameEvent confirmEvent) {
+        public DialogOption(Texture texture, String text, GameEvent optionEvent) {
             this.image = new Image(texture);
             this.text = new Label(text, LabelStyles.WHITE_REGULAR);
-            this.confirmEvent = confirmEvent;
+            this.optionEvent = optionEvent;
 
             this.padRight(10f);
             this.addActor(this.image);
@@ -39,12 +38,12 @@ public class DialogTable extends Table implements MenuItemTable {
         }
 
 
-        public GameEvent getConfirmEvent() {
-            return confirmEvent;
+        public GameEvent getOptionEvent() {
+            return optionEvent;
         }
 
-        public void setConfirmEvent(GameEvent confirmEvent) {
-            this.confirmEvent = confirmEvent;
+        public void setOptionEvent(GameEvent optionEvent) {
+            this.optionEvent = optionEvent;
         }
 
         public void setText(String text) {
@@ -88,12 +87,17 @@ public class DialogTable extends Table implements MenuItemTable {
     }
 
 
-    public void show(String message, String option1, String option2, GameEvent confirmEvent) {
+    public void show(String message, String option1, String option2, GameEvent option1Event, GameEvent option2Event) {
         this.message.setText(message);
-        this.options.get(0).setConfirmEvent(confirmEvent);
         this.options.get(0).setText(option1);
         this.options.get(1).setText(option2);
+        this.options.get(0).setOptionEvent(option1Event);
+        this.options.get(1).setOptionEvent(option2Event);
         setVisible(true);
+    }
+
+    public DialogOption getSelectedItem() {
+        return options.get(currentItemIdx);
     }
 
     @Override
@@ -111,11 +115,12 @@ public class DialogTable extends Table implements MenuItemTable {
                 options.get(currentItemIdx).setSelected(true);
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            GameEvent confirmEvent = options.get(currentItemIdx).getConfirmEvent();
-            if (confirmEvent != null) {
-                GameEventManager.getInstance().fireEvent(confirmEvent);
-            }
             setVisible(false);
+
+            GameEvent selectedOptionEvent = getSelectedItem().getOptionEvent();
+            if (selectedOptionEvent != null) {
+                GameEventManager.getInstance().fireEvent(selectedOptionEvent);
+            }
         }
     }
 

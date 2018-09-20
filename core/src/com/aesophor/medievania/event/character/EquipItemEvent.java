@@ -4,12 +4,12 @@ import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEvent;
 import com.aesophor.medievania.event.GameEventType;
 
-public class ItemDiscardedEvent extends GameEvent {
+public class EquipItemEvent extends GameEvent {
 
     private final Item item;
 
-    public ItemDiscardedEvent(Item item) {
-        super(GameEventType.ITEM_DISCARDED);
+    public EquipItemEvent(Item item) {
+        super(GameEventType.EQUIP_ITEM);
         this.item = item;
     }
 

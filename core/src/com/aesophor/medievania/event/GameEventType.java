@@ -14,6 +14,8 @@ public enum GameEventType {
     INVENTORY_CHANGED,          // 8
     INVENTORY_TAB_SELECTED,     // 9
     INVENTORY_ITEM_SELECTED,    // 10
-    ITEM_DISCARDED,             // 11
+    DISCARD_ITEM,               // 11
+    EQUIP_ITEM,                 // 12
+    PROMPT_DISCARD_ITEM,        // 13
 
 }
