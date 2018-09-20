@@ -162,6 +162,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         });
 
         if (items.size > 0) {
+            currentItemIdx = 0;
             items.first().setSelected(true);
             GameEventManager.getInstance().fireEvent(new InventoryItemChangedEvent(items.get(currentItemIdx).getItem()));
         }
