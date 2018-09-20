@@ -20,6 +20,7 @@ public class PauseMenu extends Stage {
     private final Sound clickSound;
 
     private final StatsTable statsTable;
+    private final DialogTable dialogTable;
 
     public PauseMenu(GameStateManager gsm, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
@@ -35,10 +36,12 @@ public class PauseMenu extends Stage {
         menuItemHeaderTable.setFillParent(true);
         MenuItem.buildLabels().forEach(menuItemHeaderTable::add);
 
-        statsTable = new StatsTable(gsm, player);
+        statsTable = new StatsTable(gsm.getAssets(), player);
+        dialogTable = new DialogTable(gsm.getAssets());
+        dialogTable.setVisible(false);
 
         InventoryTabTable inventoryTabTable = new InventoryTabTable(gsm);
-        InventoryContentTable inventoryContentTable = new InventoryContentTable(gsm, player, inventoryTabTable);
+        InventoryContentTable inventoryContentTable = new InventoryContentTable(gsm.getAssets(), player, inventoryTabTable, dialogTable);
 
         MenuItem.INVENTORY.addTable(inventoryTabTable);
         MenuItem.INVENTORY.addTable(inventoryContentTable);
@@ -49,19 +52,24 @@ public class PauseMenu extends Stage {
 
         addActor(menuItemHeaderTable);
         addActor(statsTable);
+        addActor(dialogTable);
         MenuItem.INVENTORY.getTables().forEach(this::addActor);
     }
 
 
     private void handleInput(float delta) {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
-            MenuItem.next();
-            MenuItem.show(MenuItem.current());
-            clickSound.play();
-        }
+        if (dialogTable.isVisible()) {
+            dialogTable.handleInput(delta);
+        } else {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
+                MenuItem.next();
+                MenuItem.show(MenuItem.current());
+                clickSound.play();
+            }
 
-        if (MenuItem.current().getTables().size > 0) {
-            MenuItem.current().handleInput(delta);
+            if (MenuItem.current().getTables().size > 0) {
+                MenuItem.current().handleInput(delta);
+            }
         }
     }
 
@@ -79,5 +87,18 @@ public class PauseMenu extends Stage {
 
         MenuItem.updateLabelColors();
     }
+
+    public DialogTable getDialogTable() {
+        return dialogTable;
+    }
+
+
+    /*
+    public boolean showDialog(String message, String option1, String option2) {
+        dialogTable.setVisible(true);
+        // block until user response
+        dialogTable.setVisible(false);
+    }
+    */
 
 }

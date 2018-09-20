@@ -132,13 +132,13 @@ public abstract class Character extends Entity implements Disposable {
         // If this equipment slot has already been occupied, add the previously item back to inventory first.
         if (equipmentSlots.has(equipmentType)) {
             inventory.add(equipmentSlots.get(equipmentType));
-            GameEventManager.getInstance().fireEvent(new ItemUnequippedEvent(equipmentSlots.get(equipmentType)));
+            GameEventManager.getInstance().fireEvent(new ItemUnequippedEvent(this, equipmentSlots.get(equipmentType)));
         }
 
         // Equip the new item.
         inventory.remove(item);
         equipmentSlots.equip(item);
-        GameEventManager.getInstance().fireEvent(new ItemEquippedEvent(item));
+        GameEventManager.getInstance().fireEvent(new ItemEquippedEvent(this, item));
     }
 
 
@@ -206,7 +206,9 @@ public abstract class Character extends Entity implements Disposable {
                 setLockedOnTarget(targets.getInRangeTargets().first());
                 targets.getInRangeTargets().first().setLockedOnTarget(this);
 
-                inflictDamage(targets.getInRangeTargets().first(), stats.getAttackDamage());
+                int baseDamage = stats.getBasePhysicalDamage();
+                int bonusDamage = (equipmentSlots.has(EquipmentType.WEAPON)) ? Mappers.EQUIPMENT_DATA.get(equipmentSlots.get(EquipmentType.WEAPON)).getBonusPhysicalDamage() : 0;
+                inflictDamage(targets.getInRangeTargets().first(), baseDamage + bonusDamage);
 
                 if (targets.getInRangeTargets().first().getComponent(StateComponent.class).isSetToKill()) {
                     targets.getInRangeTargets().removeValue(targets.getInRangeTargets().first(), false);

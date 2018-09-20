@@ -16,11 +16,14 @@ public class CharacterStatsSystem extends EntitySystem {
             StatsComponent stats = Mappers.STATS.get(e.getCharacter());
             EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
 
-
+            stats.setBasePhysicalDamage(stats.getBasePhysicalDamage() + equipmentData.getBonusPhysicalDamage());
         });
 
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_UNEQUIPPED, (ItemUnequippedEvent e) -> {
+            StatsComponent stats = Mappers.STATS.get(e.getCharacter());
+            EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
 
+            stats.setBasePhysicalDamage(stats.getBasePhysicalDamage() - equipmentData.getBonusPhysicalDamage());
         });
     }
 

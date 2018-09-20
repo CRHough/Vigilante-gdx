@@ -9,7 +9,7 @@ public class InventoryTabChangedEvent extends GameEvent {
     private final ItemType newTabItemType;
 
     public InventoryTabChangedEvent(ItemType newTabItemType) {
-        super(GameEventType.INVENTORY_TAB_CHANGED);
+        super(GameEventType.INVENTORY_TAB_SELECTED);
         this.newTabItemType = newTabItemType;
     }
 

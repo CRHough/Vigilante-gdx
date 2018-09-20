@@ -1,6 +1,5 @@
 package com.aesophor.medievania.ui.pausemenu;
 
-import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.component.character.InventoryComponent;
 import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.item.ItemType;
@@ -9,12 +8,15 @@ import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
+import com.aesophor.medievania.event.character.InventoryChangedEvent;
+import com.aesophor.medievania.event.character.ItemDiscardedEvent;
 import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.event.ui.InventoryItemChangedEvent;
 import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
 import com.aesophor.medievania.ui.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -33,13 +35,13 @@ public class InventoryContentTable extends Table implements MenuItemTable {
             this.item = item;
 
             ItemDataComponent itemData = Mappers.ITEM_DATA.get(item);
-            nameLabel = new Label(" " + itemData.getName() , labelStyle);
+            this.nameLabel = new Label(" " + itemData.getName() , labelStyle);
+            this.selectionImage = new Image(selectionTexture);
 
-            selectionImage = new Image(selectionTexture);
-            setSelected(false);
+            this.add(this.selectionImage);
+            this.add(nameLabel);
 
-            add(this.selectionImage);
-            add(nameLabel);
+            this.setSelected(false);
         }
 
         public void setSelected(boolean selected) {
@@ -55,6 +57,8 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         }
     }
 
+    private final DialogTable dialogTable;
+
     private final Texture selectionTexture;
     private final Sound clickSound;
 
@@ -68,9 +72,11 @@ public class InventoryContentTable extends Table implements MenuItemTable {
 
     private Label itemDesc;
 
-    public InventoryContentTable(GameStateManager gsm, Player player, InventoryTabTable inventoryTabTable) {
-        selectionTexture = gsm.getAssets().get("interface/selection.png");
-        clickSound = gsm.getAssets().get("sfx/ui/click.wav", Sound.class);
+    public InventoryContentTable(AssetManager assets, Player player, InventoryTabTable inventoryTabTable, DialogTable dialogTable) {
+        selectionTexture = assets.get("interface/selection.png");
+        clickSound = assets.get("sfx/ui/click.wav", Sound.class);
+
+        this.dialogTable = dialogTable;
 
         top().left();
         setPosition(50 + 8, -66);
@@ -106,15 +112,26 @@ public class InventoryContentTable extends Table implements MenuItemTable {
         });
 
         // Clear and re-populate inventory content table with the item type of the newly selected tab.
-        GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_TAB_CHANGED, (InventoryTabChangedEvent e) -> {
+        GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_TAB_SELECTED, (InventoryTabChangedEvent e) -> {
             clear();
             populate(e.getNewTabItemType(), player);
         });
 
         // Display the description of the newly selected item.
-        GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_ITEM_CHANGED, (InventoryItemChangedEvent e) -> {
+        GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_ITEM_SELECTED, (InventoryItemChangedEvent e) -> {
             ItemDataComponent itemData = Mappers.ITEM_DATA.get(e.getNewItem());
             itemDesc.setText(itemData.getDesc());
+        });
+
+        // Remove the item when the player has confirmed to discard it.
+        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_DISCARDED, (ItemDiscardedEvent e) -> {
+            Mappers.INVENTORY.get(player).remove(e.getItem());
+        });
+
+        // Whenever there's a change in inventory, refresh the list. (TODO: inventory onChange efficiency)
+        GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_CHANGED, (InventoryChangedEvent e) -> {
+            clear();
+            populate(inventoryTabTable.getSelectedTabType(), player);
         });
     }
 
@@ -216,6 +233,10 @@ public class InventoryContentTable extends Table implements MenuItemTable {
                 }
 
                 clickSound.play();
+            }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            if (getSelectedItem() != null) {
+                dialogTable.show("Do you want to discard this item?", "Yes", "No", new ItemDiscardedEvent(getSelectedItem()));
             }
         }
     }

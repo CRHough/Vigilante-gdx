@@ -2,6 +2,8 @@ package com.aesophor.medievania.component.character;
 
 import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.entity.item.Item;
+import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.character.InventoryChangedEvent;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Array;
 import java.util.HashMap;
@@ -27,10 +29,12 @@ public class InventoryComponent implements Component {
 
     public void add(Item item) {
         items.get(item.getType()).add(item);
+        GameEventManager.getInstance().fireEvent(new InventoryChangedEvent());
     }
 
     public void remove(Item item) {
         items.get(item.getType()).removeValue(item, false);
+        GameEventManager.getInstance().fireEvent(new InventoryChangedEvent());
     }
 
     @Override

@@ -7,7 +7,6 @@ import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.combat.CharacterKilledEvent;
 import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
-import com.aesophor.medievania.map.Portal;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
@@ -48,7 +47,7 @@ public class Player extends Character {
         stats.setAttackForce(1f);
         stats.setAttackTime(1.8f);
         stats.setAttackRange(15);
-        stats.setAttackDamage(25);
+        stats.setBasePhysicalDamage(100);
 
         // Create animations by extracting frames from the spritesheet.
         Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 0, 0, 7 * 80, 2 * 80, 80, 80);

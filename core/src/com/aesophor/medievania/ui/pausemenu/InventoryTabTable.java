@@ -27,16 +27,16 @@ public class InventoryTabTable extends Table implements MenuItemTable {
 
         public Tab(ItemType type, Texture regularTabTexture, Texture selectedTabTexture, Label.LabelStyle labelStyle) {
             this.type = type;
+            this.regularTabImage = new Image(regularTabTexture);
+            this.selectedTabImage = new Image(selectedTabTexture);
+            this.titleLabel = new Label(type.name(), labelStyle);
+            this.titleLabel.setAlignment(Align.center);
 
-            regularTabImage = new Image(regularTabTexture);
-            selectedTabImage = new Image(selectedTabTexture);
-            titleLabel = new Label(type.name(), labelStyle);
-            titleLabel.setAlignment(Align.center);
-            setSelected(false);
+            this.add(regularTabImage);
+            this.add(selectedTabImage);
+            this.add(titleLabel);
 
-            add(regularTabImage);
-            add(selectedTabImage);
-            add(titleLabel);
+            this.setSelected(false);
         }
 
         public void setSelected(boolean selected) {

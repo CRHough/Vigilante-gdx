@@ -29,7 +29,7 @@ public class StatsComponent implements Component {
     private float attackForce;
     private float attackTime;
     private int attackRange;
-    private int attackDamage;
+    private int basePhysicalDamage;
 
     public StatsComponent() {
         level = 1;
@@ -56,7 +56,8 @@ public class StatsComponent implements Component {
         attackForce = s.getAttackForce();
         attackTime = s.getAttackTime();
         attackRange = s.getAttackRange();
-        attackDamage = s.getAttackDamage();
+
+        basePhysicalDamage = s.getBasePhysicalDamage();
     }
 
 
@@ -247,12 +248,12 @@ public class StatsComponent implements Component {
         this.attackRange = attackRange;
     }
 
-    public int getAttackDamage() {
-        return attackDamage;
+    public int getBasePhysicalDamage() {
+        return basePhysicalDamage;
     }
 
-    public void setAttackDamage(int attackDamage) {
-        this.attackDamage = attackDamage;
+    public void setBasePhysicalDamage(int basePhysicalDamage) {
+        this.basePhysicalDamage = basePhysicalDamage;
     }
 
 }

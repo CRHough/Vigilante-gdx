@@ -17,7 +17,7 @@
       "attackForce": 1.2,
       "attackTime": 2.4,
       "attackRange": 14,
-      "attackDamage": 25
+      "basePhysicalDamage": 10
     },
     "items": {
       "Rusty Axe": 1

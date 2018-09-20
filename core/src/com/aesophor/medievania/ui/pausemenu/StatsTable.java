@@ -5,6 +5,7 @@ import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.ui.LabelStyles;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -38,8 +39,8 @@ public class StatsTable extends Table implements MenuItemTable {
     private Label intLabel;
     private Label lukLabel;
 
-    public StatsTable(GameStateManager gsm, Player player) {
-        statsBackground = gsm.getAssets().get("interface/stats_bg.png");
+    public StatsTable(AssetManager assets, Player player) {
+        statsBackground = assets.get("interface/stats_bg.png");
 
         top().right();
         setPosition(-statsBackground.getWidth() / 2 - 8, -(300 - statsBackground.getHeight()) / 2 + 5);
