@@ -16,6 +16,7 @@ public enum GameEventType {
     INVENTORY_ITEM_SELECTED,    // 10
     DISCARD_ITEM,               // 11
     EQUIP_ITEM,                 // 12
-    PROMPT_DISCARD_ITEM,        // 13
+    UNEQUIP_ITEM,               // 13
+    PROMPT_DISCARD_ITEM,        // 14
 
 }

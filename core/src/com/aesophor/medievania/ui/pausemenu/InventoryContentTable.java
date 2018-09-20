@@ -6,6 +6,7 @@ import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
+import com.aesophor.medievania.event.GameEvent;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.character.EquipItemEvent;
@@ -63,6 +64,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
 
     private final Texture selectionTexture;
     private final Sound clickSound;
+    private final Sound equipSound;
 
     private ScrollPane scrollPane;
     private Table contentTable;
@@ -76,6 +78,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
 
     public InventoryContentTable(AssetManager assets, Player player, InventoryTabTable inventoryTabTable, DialogTable dialogTable) {
         selectionTexture = assets.get("interface/selection.png");
+        equipSound = assets.get("sfx/inventory/equip.wav", Sound.class);
         clickSound = assets.get("sfx/ui/click.wav", Sound.class);
 
         this.dialogTable = dialogTable;
@@ -132,6 +135,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
 
         GameEventManager.getInstance().addEventListener(GameEventType.EQUIP_ITEM, (EquipItemEvent e) -> {
             player.equip(e.getItem());
+            equipSound.play();
         });
 
         // Whenever there's a change in inventory, refresh the list. (TODO: inventory onChange efficiency)
@@ -248,7 +252,7 @@ public class InventoryContentTable extends Table implements MenuItemTable {
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (getSelectedItem() != null) {
-                dialogTable.show("Action", "Equip", "Discard", new EquipItemEvent(getSelectedItem()), new PromptDiscardItemEvent());
+                dialogTable.show("", "Equip", "Discard", new EquipItemEvent(getSelectedItem()), new PromptDiscardItemEvent());
             }
         }
     }

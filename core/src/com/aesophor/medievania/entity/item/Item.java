@@ -87,7 +87,7 @@ public class Item extends Entity implements Disposable {
 
     @Override
     public String toString() {
-        return "Rustic Axe";
+        return itemData.getName();
     }
 
     @Override

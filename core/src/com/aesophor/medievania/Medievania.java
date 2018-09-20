@@ -37,7 +37,8 @@ public class Medievania extends Game implements GameStateManager {
         assets.load("interface/inventory_bg.png", Texture.class);
         assets.load("interface/tab_normal.png", Texture.class);
         assets.load("interface/tab_selected.png", Texture.class);
-        assets.load("interface/selection.png", Texture.class);
+        assets.load("interface/item_regular.png", Texture.class);
+        assets.load("interface/selection.png", Texture.class); // rename to item_selected later
         assets.load("interface/triangle.png", Texture.class);
 
         assets.load("character/bandit/Bandit.png", Texture.class);
@@ -46,6 +47,7 @@ public class Medievania extends Game implements GameStateManager {
         assets.load("music/main_menu.wav", Music.class);
         assets.load("music/village01.mp3", Music.class);
         assets.load("sfx/inventory/open_and_close.wav", Sound.class);
+        assets.load("sfx/inventory/equip.wav", Sound.class);
         assets.load("sfx/player/hurt.wav", Sound.class);
         assets.load("sfx/player/death.mp3", Sound.class);
         assets.load("sfx/player/weapon_swing.ogg", Sound.class);

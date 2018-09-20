@@ -1,7 +1,7 @@
 {
   "Rusty Axe": {
     "class": "com.aesophor.medievania.component.equipment.EquipmentDataComponent",
-    "type": 5,
+    "type": 0,
     "bonusPhysicalDamage": 25,
     "bonusMagicalDamage": 0,
     "bonusStr": 0,

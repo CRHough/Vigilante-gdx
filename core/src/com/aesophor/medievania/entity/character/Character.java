@@ -141,6 +141,10 @@ public abstract class Character extends Entity implements Disposable {
         GameEventManager.getInstance().fireEvent(new ItemEquippedEvent(this, item));
     }
 
+    public void unequip(Item item) {
+        
+    }
+
 
     public void moveLeft() {
         state.setFacingRight(false);

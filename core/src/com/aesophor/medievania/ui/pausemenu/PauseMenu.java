@@ -45,7 +45,7 @@ public class PauseMenu extends Stage {
 
         MenuItem.INVENTORY.addTable(inventoryTabTable);
         MenuItem.INVENTORY.addTable(inventoryContentTable);
-        //MenuItem.EQUIPMENT.setTables();
+        MenuItem.EQUIPMENT.addTable(new EquipmentTable(gsm.getAssets(), player));
         //MenuItem.SKILLS.setTables();
         //MenuItem.JOURNAL.setTables();
         //MenuItem.OPTIONS.setTables();
@@ -54,6 +54,9 @@ public class PauseMenu extends Stage {
         addActor(statsTable);
         addActor(dialogTable);
         MenuItem.INVENTORY.getTables().forEach(this::addActor);
+        MenuItem.EQUIPMENT.getTables().forEach(this::addActor);
+
+        MenuItem.show(MenuItem.current());
     }
 
 
@@ -80,7 +83,7 @@ public class PauseMenu extends Stage {
         gsm.getBatch().begin();
         gsm.getBatch().draw(background, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
         gsm.getBatch().draw(statsTable.getBackgroundTexture(), 380, 40);
-        if (MenuItem.current().getTables().size > 0) {
+        if (MenuItem.current().getTables().size > 0 && MenuItem.current().getBackgroundTexture() != null) {
             gsm.getBatch().draw(MenuItem.current().getBackgroundTexture(), 50, 40);
         }
         gsm.getBatch().end();

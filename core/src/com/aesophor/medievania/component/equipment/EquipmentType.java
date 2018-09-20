@@ -2,11 +2,11 @@ package com.aesophor.medievania.component.equipment;
 
 public enum EquipmentType {
 
-    HEADGEAR,   // 0
-    ARMOR,      // 1
-    GAUNTLETS,  // 2
-    BOOTS,      // 3
-    CAPE,       // 4
-    WEAPON;     // 5
+    WEAPON,     // 0
+    HEADGEAR,   // 1
+    ARMOR,      // 2
+    GAUNTLETS,  // 3
+    BOOTS,      // 4
+    CAPE;       // 5
 
 }

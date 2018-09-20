@@ -52,7 +52,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
     private static final float LABEL_GAP = 1f;
 
     private final Texture inventoryBackground;
-    private final Texture normalTabTexture;
+    private final Texture regularTabTexture;
     private final Texture selectedTabTexture;
     private final Sound clickSound;
 
@@ -61,7 +61,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
 
     public InventoryTabTable(GameStateManager gsm) {
         inventoryBackground = gsm.getAssets().get("interface/inventory_bg.png");
-        normalTabTexture = gsm.getAssets().get("interface/tab_normal.png");
+        regularTabTexture = gsm.getAssets().get("interface/tab_normal.png");
         selectedTabTexture = gsm.getAssets().get("interface/tab_selected.png");
         clickSound = gsm.getAssets().get("sfx/ui/click.wav", Sound.class);
 
@@ -73,7 +73,7 @@ public class InventoryTabTable extends Table implements MenuItemTable {
 
         tabs = new Array<>(ItemType.values().length);
         for (ItemType itemType : ItemType.values()) {
-            tabs.add(new Tab(itemType, normalTabTexture, selectedTabTexture, LabelStyles.WHITE_HEADER));
+            tabs.add(new Tab(itemType, regularTabTexture, selectedTabTexture, LabelStyles.WHITE_HEADER));
         }
 
         // Add all tabs to inventory table.
