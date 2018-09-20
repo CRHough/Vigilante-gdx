@@ -111,12 +111,10 @@ public class DialogTable extends Table implements MenuItemTable {
                 options.get(currentItemIdx).setSelected(true);
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            // This leaves some flexibility to add "cancel event" later (if I want to).
-            options.forEach(option -> {
-                if (option.getConfirmEvent() != null) {
-                    GameEventManager.getInstance().fireEvent(option.getConfirmEvent());
-                }
-            });
+            GameEvent confirmEvent = options.get(currentItemIdx).getConfirmEvent();
+            if (confirmEvent != null) {
+                GameEventManager.getInstance().fireEvent(confirmEvent);
+            }
             setVisible(false);
         }
     }

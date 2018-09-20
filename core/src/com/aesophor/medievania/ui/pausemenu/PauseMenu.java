@@ -92,13 +92,4 @@ public class PauseMenu extends Stage {
         return dialogTable;
     }
 
-
-    /*
-    public boolean showDialog(String message, String option1, String option2) {
-        dialogTable.setVisible(true);
-        // block until user response
-        dialogTable.setVisible(false);
-    }
-    */
-
 }
