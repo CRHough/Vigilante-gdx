@@ -2,9 +2,7 @@ package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
-import com.aesophor.medievania.component.equipment.EquipmentSlot;
 import com.aesophor.medievania.component.equipment.EquipmentType;
-import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
@@ -63,7 +61,7 @@ public class EquipmentTable extends Table implements MenuItemTable {
 
         public void setItem(Item item) {
             this.item = item;
-            this.equipmentNameLabel.setText((item != null) ? Mappers.ITEM_DATA.get(item).getName() + "  " : "----");
+            this.equipmentNameLabel.setText((item != null) ? Mappers.ITEM_DATA.get(item).getName() + "  " : "----" + "  ");
         }
 
         public EquipmentType getType() {
@@ -96,8 +94,9 @@ public class EquipmentTable extends Table implements MenuItemTable {
         setFillParent(true);
         setPosition(50 + 8, -60);
 
-        for (EquipmentSlot slot : EquipmentSlot.values()) {
-            items.add(new EquipmentItem(slot.getType(), regularItemTexture, selectedItemTexture, LabelStyles.WHITE_HEADER));
+
+        for (EquipmentType type : EquipmentType.values()) {
+            items.add(new EquipmentItem(type, regularItemTexture, selectedItemTexture, LabelStyles.WHITE_HEADER));
         }
 
         defaults().spaceTop(11f);
@@ -113,7 +112,7 @@ public class EquipmentTable extends Table implements MenuItemTable {
         GameEventManager.getInstance().addEventListener(GameEventType.UNEQUIP_ITEM, (UnequipItemEvent e) -> {
             EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
             items.get(equipmentData.getType().ordinal()).setItem(null);
-            player
+            player.unequip(e.getItem());
         });
     }
 
@@ -137,7 +136,11 @@ public class EquipmentTable extends Table implements MenuItemTable {
                 items.get(currentItemIdx).setSelected(true);
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            dialogTable.show("Unequip this item?", "Yes", "No", new UnequipItemEvent(getSelectedItem().getItem()), null);
+            if (getSelectedItem().getItem() != null) {
+                dialogTable.show("Unequip this item?", "Yes", "No", new UnequipItemEvent(getSelectedItem().getItem()), null);
+            } else {
+
+            }
         }
     }
 

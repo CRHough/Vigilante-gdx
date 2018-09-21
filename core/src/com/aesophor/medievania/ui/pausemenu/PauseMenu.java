@@ -40,12 +40,9 @@ public class PauseMenu extends Stage {
         dialogTable = new DialogTable(gsm.getAssets());
         dialogTable.setVisible(false);
 
-        InventoryTabTable inventoryTabTable = new InventoryTabTable(gsm);
-        InventoryContentTable inventoryContentTable = new InventoryContentTable(gsm.getAssets(), player, inventoryTabTable, dialogTable);
 
-        MenuItem.INVENTORY.addTable(inventoryTabTable);
-        MenuItem.INVENTORY.addTable(inventoryContentTable);
-        MenuItem.EQUIPMENT.addTable(new EquipmentTable(gsm.getAssets(), player));
+        MenuItem.INVENTORY.addTable(new InventoryTabPane(gsm.getAssets(), player, dialogTable));
+        MenuItem.EQUIPMENT.addTable(new EquipmentTable(gsm.getAssets(), player, dialogTable));
         //MenuItem.SKILLS.setTables();
         //MenuItem.JOURNAL.setTables();
         //MenuItem.OPTIONS.setTables();

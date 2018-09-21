@@ -28,8 +28,17 @@ public class EquipmentSlotsComponent implements Component {
         equipment.put(Mappers.EQUIPMENT_DATA.get(item).getType(), item);
     }
 
+    public void unequip(Item item) {
+        equipment.put(Mappers.EQUIPMENT_DATA.get(item).getType(), null);
+    }
+
     public boolean has(EquipmentType type) {
         return equipment.get(type) != null;
+    }
+
+    @Override
+    public String toString() {
+        return equipment.toString();
     }
 
 }

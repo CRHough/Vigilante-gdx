@@ -9,7 +9,7 @@ public class UnequipItemEvent extends GameEvent {
     private final Item item;
 
     public UnequipItemEvent(Item item) {
-        super(GameEventType.EQUIP_ITEM);
+        super(GameEventType.UNEQUIP_ITEM);
         this.item = item;
     }
 

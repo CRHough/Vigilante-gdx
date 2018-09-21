@@ -31,7 +31,7 @@ public abstract class Character extends Entity implements Disposable {
     protected StatsComponent stats;
     protected CombatTargetComponent targets;
     protected InventoryComponent inventory;
-    protected EquipmentSlotsComponent equipmentSlots;
+    //protected EquipmentSlotsComponent equipmentSlots;
 
     protected AIActions AIActions;
 
@@ -48,7 +48,6 @@ public abstract class Character extends Entity implements Disposable {
         sounds = new SoundComponent();
         targets = new CombatTargetComponent();
         inventory = new InventoryComponent();
-        equipmentSlots = new EquipmentSlotsComponent();
 
         add(stats);
         add(animations);
@@ -57,7 +56,7 @@ public abstract class Character extends Entity implements Disposable {
         add(state);
         add(targets);
         add(inventory);
-        add(equipmentSlots);
+        add(new EquipmentSlotsComponent());
 
         AIActions = new AIActions(this);
     }
@@ -139,10 +138,18 @@ public abstract class Character extends Entity implements Disposable {
         inventory.remove(item);
         equipmentSlots.equip(item);
         GameEventManager.getInstance().fireEvent(new ItemEquippedEvent(this, item));
+        //System.out.println(equipmentSlots.has(equipmentType));
     }
 
     public void unequip(Item item) {
-        
+        EquipmentType equipmentType = Mappers.EQUIPMENT_DATA.get(item).getType();
+
+        EquipmentSlotsComponent equipmentSlots = Mappers.EQUIPMENT_SLOTS.get(this);
+        if (equipmentSlots.has(equipmentType)) {
+            equipmentSlots.unequip(item);
+            inventory.add(item); // not being added to inventory...
+            GameEventManager.getInstance().fireEvent(new ItemUnequippedEvent(this, item));
+        }
     }
 
 
@@ -210,9 +217,7 @@ public abstract class Character extends Entity implements Disposable {
                 setLockedOnTarget(targets.getInRangeTargets().first());
                 targets.getInRangeTargets().first().setLockedOnTarget(this);
 
-                int baseDamage = stats.getBasePhysicalDamage();
-                int bonusDamage = (equipmentSlots.has(EquipmentType.WEAPON)) ? Mappers.EQUIPMENT_DATA.get(equipmentSlots.get(EquipmentType.WEAPON)).getBonusPhysicalDamage() : 0;
-                inflictDamage(targets.getInRangeTargets().first(), baseDamage + bonusDamage);
+                inflictDamage(targets.getInRangeTargets().first(), stats.getBasePhysicalDamage());
 
                 if (targets.getInRangeTargets().first().getComponent(StateComponent.class).isSetToKill()) {
                     targets.getInRangeTargets().removeValue(targets.getInRangeTargets().first(), false);

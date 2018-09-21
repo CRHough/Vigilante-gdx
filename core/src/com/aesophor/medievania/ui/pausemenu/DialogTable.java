@@ -117,6 +117,7 @@ public class DialogTable extends Table implements MenuItemTable {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             setVisible(false);
 
+            // Fire the user-specified event corresponding to user's choice.
             GameEvent selectedOptionEvent = getSelectedItem().getOptionEvent();
             if (selectedOptionEvent != null) {
                 GameEventManager.getInstance().fireEvent(selectedOptionEvent);

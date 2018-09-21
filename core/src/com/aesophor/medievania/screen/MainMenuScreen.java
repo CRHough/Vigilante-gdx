@@ -39,7 +39,7 @@ public class MainMenuScreen extends AbstractScreen {
 
         
         Table labelTable = new Table();
-        labelTable.center().padTop(50f);
+        labelTable.center().padTop(100f);
         labelTable.setFillParent(true);
 
         menuItems = new String[] {"New Game", "Load Game", "Credits", "End"};
