@@ -15,9 +15,8 @@ public class Enemy extends Character {
     public Enemy(String enemyName, AssetManager assets, World world, float x, float y) {
         super(enemyName, assets, world, x, y);
 
-        add(new DroppableItemsComponent(Mappers.CHARACTER_DATA.get(this).getItems()));
-        add(new CharacterDataComponent());
         add(new CharacterAIComponent());
+        add(new DroppableItemsComponent(Mappers.CHARACTER_DATA.get(this).getItems()));
 
         // Create body and fixtures.
         short bodyCategoryBits = CategoryBits.ENEMY;

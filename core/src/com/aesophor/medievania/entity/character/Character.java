@@ -27,34 +27,26 @@ import java.util.Arrays;
 
 public abstract class Character extends Entity implements Disposable {
 
-    protected AIActions AIActions;
-    protected World world;
+    private final AIActions AIActions;
 
     public Character(String name, AssetManager assets, World world, float x, float y) {
-        this.world = world;
+        AIActions = new AIActions(this);
 
         CharacterDataComponent characterData = CharacterDataManager.getInstance().get(name);
-        StatsComponent stats = new StatsComponent(characterData.getStats());
         AnimationComponent animations = new AnimationComponent();
-        B2BodyComponent b2body = new B2BodyComponent(world);
-        SpriteComponent sprite = new SpriteComponent(x * Constants.PPM, y * Constants.PPM);
-        StateComponent state = new StateComponent(State.IDLE);
         SoundComponent sounds = new SoundComponent();
-        CombatTargetComponent targets = new CombatTargetComponent();
-        InventoryComponent inventory = new InventoryComponent();
 
         add(characterData);
-        add(stats);
         add(animations);
-        add(b2body);
-        add(sprite);
-        add(state);
         add(sounds);
-        add(targets);
-        add(inventory);
+        add(new StatsComponent(characterData.getStats()));
+        add(new B2BodyComponent(world));
+        add(new SpriteComponent(x * Constants.PPM, y * Constants.PPM));
+        add(new StateComponent(State.IDLE));
+        add(new CombatTargetComponent());
+        add(new InventoryComponent());
         add(new EquipmentSlotsComponent());
-
-        AIActions = new AIActions(this);
+        add(new StatsRegenerationComponent(characterData.getStatsRegen()));
 
         // Initialize animations by extracting frames from the texture atlas.
         TextureAtlas atlas = assets.get(characterData.getAtlas());

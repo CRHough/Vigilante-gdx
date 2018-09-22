@@ -73,6 +73,12 @@
       "attackTime": 1.8,
       "attackRange": 15,
       "basePhysicalDamage": 100
+    },
+    "statsRegen": {
+      "class": "com.aesophor.medievania.component.character.StatsRegenerationComponent"
+      "healthRegenRate": 1,
+      "staminaRegenRate": 5,
+      "magickaRegenRate": 5
     }
   },
 
@@ -148,6 +154,12 @@
       "attackTime": 2.4,
       "attackRange": 14,
       "basePhysicalDamage": 10
+    },
+    "statsRegen": {
+      "class": "com.aesophor.medievania.component.character.StatsRegenerationComponent"
+      "healthRegenRate": 1,
+      "staminaRegenRate": 5,
+      "magickaRegenRate": 5
     },
     "items": {
       "Rusty Axe": 1

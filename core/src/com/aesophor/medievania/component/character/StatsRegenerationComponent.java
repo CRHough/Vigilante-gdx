@@ -4,17 +4,21 @@ import com.badlogic.ashley.core.Component;
 
 public class StatsRegenerationComponent implements Component {
 
-    private final float regenInterval;
+    private static final float REGEN_INTERVAL = 3;
+
     private int healthRegenRate;  // regen x points of health every n secs.
     private int staminaRegenRate; // regen y points of stamina every n secs.
     private int magickaRegenRate; // regen z points of magicka every n secs.
     private float timer;
 
-    public StatsRegenerationComponent(float regenInterval, int healthRegenRate, int staminaRegenRate, int magickaRegenRate) {
-        this.regenInterval = regenInterval;
-        this.healthRegenRate = healthRegenRate;
-        this.staminaRegenRate = staminaRegenRate;
-        this.magickaRegenRate = magickaRegenRate;
+    public StatsRegenerationComponent() {
+
+    }
+
+    public StatsRegenerationComponent(StatsRegenerationComponent statsRegen) {
+        this.healthRegenRate = statsRegen.getHealthRegenRate();
+        this.staminaRegenRate = statsRegen.getStaminaRegenRate();
+        this.magickaRegenRate = statsRegen.getMagickaRegenRate();
     }
 
 
@@ -23,7 +27,7 @@ public class StatsRegenerationComponent implements Component {
     }
 
     public boolean hasElapsed() {
-        return timer >= regenInterval;
+        return timer >= REGEN_INTERVAL;
     }
 
     public void resetTimer() {

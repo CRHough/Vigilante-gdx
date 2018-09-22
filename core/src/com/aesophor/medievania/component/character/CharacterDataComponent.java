@@ -32,6 +32,7 @@ public class CharacterDataComponent implements Component {
     private HashMap<String, String> soundData;
 
     private StatsComponent stats;
+    private StatsRegenerationComponent statsRegen;
     private HashMap<String, Float> items;
 
     public String getAtlas() {
@@ -64,6 +65,10 @@ public class CharacterDataComponent implements Component {
 
     public StatsComponent getStats() {
         return stats;
+    }
+
+    public StatsRegenerationComponent getStatsRegen() {
+        return statsRegen;
     }
 
     public HashMap<String, Float> getItems() {

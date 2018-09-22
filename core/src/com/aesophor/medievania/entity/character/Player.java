@@ -2,6 +2,7 @@ package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.*;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.sound.SoundComponent;
 import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.entity.item.Item;
@@ -26,7 +27,6 @@ public class Player extends Character {
         add(new ControllableComponent());
         add(new PortalTargetComponent());
         add(new EquipmentSlotsComponent());
-        add(new StatsRegenerationComponent(3f, 1, 10, 10));
 
         // Create body and fixtures.
         short bodyCategoryBits = CategoryBits.PLAYER;
@@ -39,11 +39,12 @@ public class Player extends Character {
     }
 
     public void pickup(Item item) {
+        B2BodyComponent itemB2Body = Mappers.B2BODY.get(item);
         InventoryComponent inventory = Mappers.INVENTORY.get(this);
         SoundComponent sounds = Mappers.SOUNDS.get(this);
 
         inventory.get(item.getType()).add(item);
-        world.destroyBody(Mappers.B2BODY.get(item).getBody());
+        itemB2Body.getWorld().destroyBody(itemB2Body.getBody());
         GameEventManager.getInstance().fireEvent(new ItemPickedUpEvent(item));
 
         sounds.get(SoundType.ITEM_PICKEDUP).play();

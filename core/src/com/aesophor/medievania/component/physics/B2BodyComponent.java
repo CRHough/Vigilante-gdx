@@ -35,6 +35,10 @@ public class B2BodyComponent implements Component {
         this.body = body;
     }
 
+    public World getWorld() {
+        return body.getWorld();
+    }
+
     public Fixture getBodyFixture() {
         return bodyFixture;
     }
