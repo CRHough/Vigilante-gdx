@@ -1,6 +1,6 @@
 package com.aesophor.medievania;
 
-import com.aesophor.medievania.entity.character.EnemyDataManager;
+import com.aesophor.medievania.entity.character.CharacterDataManager;
 import com.aesophor.medievania.entity.item.EquipmentDataManager;
 import com.aesophor.medievania.entity.item.ItemDataManager;
 import com.aesophor.medievania.screen.AbstractScreen;
@@ -14,7 +14,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class Medievania extends Game implements GameStateManager {
     
@@ -28,7 +28,7 @@ public class Medievania extends Game implements GameStateManager {
 
         ItemDataManager.getInstance().load("items.json");
         EquipmentDataManager.getInstance().load("equipment.json");
-        EnemyDataManager.getInstance().load("enemies.json");
+        CharacterDataManager.getInstance().load("characters.json");
 
         assets.load("interface/mainmenu_bg.png", Texture.class);
         assets.load("interface/hud/hud.png", Texture.class);
@@ -41,8 +41,11 @@ public class Medievania extends Game implements GameStateManager {
         assets.load("interface/selection.png", Texture.class); // rename to item_selected later
         assets.load("interface/triangle.png", Texture.class);
 
-        assets.load("character/bandit/Bandit.png", Texture.class);
-        assets.load("character/knight/Knight.png", Texture.class);
+        assets.load("character/bandit/Bandit.pack", TextureAtlas.class);
+        assets.load("character/knight/Knight.pack", TextureAtlas.class);
+
+        //assets.load("character/bandit/Bandit.png", Texture.class);
+        //assets.load("character/knight/Knight.png", Texture.class);
         assets.load("item/RusticAxe.png", Texture.class);
         assets.load("music/main_menu.wav", Music.class);
         assets.load("music/village01.mp3", Music.class);

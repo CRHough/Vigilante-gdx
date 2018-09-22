@@ -9,35 +9,35 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Enemy extends Character {
 
-    protected final EnemyDataComponent enemyData;
-
     public Enemy(String enemyName, AssetManager assets, World world, float x, float y) {
-        super(new Texture(EnemyDataManager.getInstance().get(enemyName).getImage()), world, x, y);
+        super(world, x, y);
 
-        enemyData = EnemyDataManager.getInstance().get(enemyName);
-        stats = new StatsComponent(enemyData.getStats());
+        characterData = CharacterDataManager.getInstance().get(enemyName);
+        stats = new StatsComponent(characterData.getStats());
 
-        add(enemyData);
+        add(characterData);
         add(stats); // override stats.
-        add(new DroppableItemsComponent(enemyData.getItems()));
-        add(new EnemyDataComponent());
+        add(new DroppableItemsComponent(characterData.getItems()));
+        add(new CharacterDataComponent());
         add(new CharacterAIComponent());
 
+        TextureAtlas atlas = assets.get(characterData.getAtlas());
 
         // Modify this later.
-        Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 0, 0, 8 * 42, 1 * 42, 42, 42);
-        Animation<TextureRegion> runAnimation = Utils.createAnimation(sprite.getTexture(), 24f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        Animation<TextureRegion> fallAnimation = Utils.createAnimation(sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(sprite.getTexture(), 12f / Constants.PPM, 0, 7, 0, 1 * 42, 42, 42);
-        Animation<TextureRegion> attackAnimation = Utils.createAnimation(sprite.getTexture(), 24f / Constants.PPM, 0, 9, 0, 0, 42, 42);
-        Animation<TextureRegion> killedAnimation = Utils.createAnimation(sprite.getTexture(), 32f / Constants.PPM, 12, 19, 0, 1 * 42, 42, 42);
+        Animation<TextureRegion> idleAnimation = Utils.createAnimation(atlas.findRegion("idle"), 30f / Constants.PPM, 0, 3, 0 * 42, 0 * 42, 42, 44);
+        Animation<TextureRegion> runAnimation = Utils.createAnimation(atlas.findRegion("run"), 24f / Constants.PPM, 0, 7, 0, 0 * 42, 42, 44);
+        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(atlas.findRegion("run"), 12f / Constants.PPM, 0, 7, 0, 0 * 42, 42, 44);
+        Animation<TextureRegion> fallAnimation = Utils.createAnimation(atlas.findRegion("run"), 12f / Constants.PPM, 0, 7, 0, 0 * 42, 42, 44);
+        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(atlas.findRegion("run"), 12f / Constants.PPM, 0, 7, 0, 0 * 42, 42, 44);
+        Animation<TextureRegion> attackAnimation = Utils.createAnimation(atlas.findRegion("attack"), 24f / Constants.PPM, 0, 9, 0, 0, 42, 44);
+        Animation<TextureRegion> killedAnimation = Utils.createAnimation(atlas.findRegion("killed"), 32f / Constants.PPM, 0, 8, 0, 0 * 42, 42, 44);
 
         animations.put(State.IDLE, idleAnimation);
         animations.put(State.RUNNING, runAnimation);

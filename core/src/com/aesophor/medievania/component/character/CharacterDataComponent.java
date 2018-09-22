@@ -3,14 +3,25 @@ package com.aesophor.medievania.component.character;
 import com.badlogic.ashley.core.Component;
 import java.util.HashMap;
 
-public class EnemyDataComponent implements Component {
+public class CharacterDataComponent implements Component {
 
-    private String image;
+    private String atlas;
+    private int textureOffsetX;
+    private int textureOffsetY;
+
     private StatsComponent stats;
     private HashMap<String, Float> items;
 
-    public String getImage() {
-        return image;
+    public String getAtlas() {
+        return atlas;
+    }
+
+    public int getTextureOffsetX() {
+        return textureOffsetX;
+    }
+
+    public int getTextureOffsetY() {
+        return textureOffsetY;
     }
 
     public StatsComponent getStats() {

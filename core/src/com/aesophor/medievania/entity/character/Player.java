@@ -13,6 +13,7 @@ import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -22,41 +23,31 @@ import com.badlogic.gdx.utils.Timer.Task;
 
 public class Player extends Character {
 
-    private static final String TEXTURE_FILE = "character/bandit/Bandit.png";
-
     public Player(AssetManager assets, World world, float x, float y) {
-        super(assets.get(TEXTURE_FILE), world, x, y);
+        super(world, x, y);
 
+        characterData = CharacterDataManager.getInstance().get("Player");
+        stats = new StatsComponent(characterData.getStats());
+
+        add(characterData);
+        add(stats); // override stats.
         add(new PickupItemTargetComponent());
         add(new ControllableComponent());
         add(new PortalTargetComponent());
         add(new EquipmentSlotsComponent());
         add(new StatsRegenerationComponent(3f, 1, 10, 10));
 
-        stats.setName("Michael");
-        stats.setBodyWidth(10);
-        stats.setBodyHeight(34);
 
-        stats.modFullHealth(100);
-        stats.modFullStamina(100);
-        stats.modHealth(100);
-        stats.modStamina(100);
-
-        stats.setMovementSpeed(.3f);
-        stats.setJumpHeight(3f);
-        stats.setAttackForce(1f);
-        stats.setAttackTime(1.8f);
-        stats.setAttackRange(15);
-        stats.setBasePhysicalDamage(100);
+        TextureAtlas atlas = assets.get(characterData.getAtlas());
 
         // Create animations by extracting frames from the spritesheet.
-        Animation<TextureRegion> idleAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 0, 0, 7 * 80, 2 * 80, 80, 80);
-        Animation<TextureRegion> runAnimation = Utils.createAnimation(sprite.getTexture(), 20f / Constants.PPM, 0, 7,  0, 3 * 80,  80, 80);
-        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 0, 3,  0, 1 * 80,  80, 80);
-        Animation<TextureRegion> fallAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 4, 4,  0, 1 * 80,  80, 80);
-        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(sprite.getTexture(), 10f / Constants.PPM, 5, 5,  0, 1 * 80,  80, 80);
-        Animation<TextureRegion> attackAnimation = Utils.createAnimation(sprite.getTexture(), 20f / Constants.PPM, 1, 6,  0, 2 * 80,  80, 80);
-        Animation<TextureRegion> killedAnimation = Utils.createAnimation(sprite.getTexture(), 30f / Constants.PPM, 0, 5,  0,      0,  80, 80);
+        Animation<TextureRegion> idleAnimation = Utils.createAnimation(atlas.findRegion("idle"), 22f / Constants.PPM, 0, 5, 0, 0 * 80, 80, 80);
+        Animation<TextureRegion> runAnimation = Utils.createAnimation(atlas.findRegion("run"), 17f / Constants.PPM, 0, 7,  0, 0 * 80,  80, 80);
+        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(atlas.findRegion("jump"), 10f / Constants.PPM, 0, 3,  0, 0 * 80,  80, 80);
+        Animation<TextureRegion> fallAnimation = Utils.createAnimation(atlas.findRegion("jump"), 10f / Constants.PPM, 4, 4,  0, 0 * 80,  80, 80);
+        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(atlas.findRegion("jump"), 10f / Constants.PPM, 5, 5,  0, 0 * 80,  80, 80);
+        Animation<TextureRegion> attackAnimation = Utils.createAnimation(atlas.findRegion("attack"), 20f / Constants.PPM, 1, 6,  0, 0 * 80,  80, 80);
+        Animation<TextureRegion> killedAnimation = Utils.createAnimation(atlas.findRegion("killed"), 30f / Constants.PPM, 0, 5,  0,      0,  80, 80);
 
         animations.put(State.IDLE, idleAnimation);
         animations.put(State.RUNNING, runAnimation);
@@ -92,7 +83,7 @@ public class Player extends Character {
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
         super.defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
-        sprite.setBounds(0, 0, 120 / Constants.PPM, 120 / Constants.PPM);
+        sprite.setBounds(0, 0, 115 / Constants.PPM, 110 / Constants.PPM);
     }
 
     public void pickup(Item item) {

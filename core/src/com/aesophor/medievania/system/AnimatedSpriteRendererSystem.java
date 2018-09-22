@@ -1,6 +1,7 @@
 package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.component.*;
+import com.aesophor.medievania.component.character.CharacterDataComponent;
 import com.aesophor.medievania.component.character.State;
 import com.aesophor.medievania.component.character.StateComponent;
 import com.aesophor.medievania.component.character.StatsComponent;
@@ -24,6 +25,7 @@ public class AnimatedSpriteRendererSystem extends IteratingSystem {
     private Camera camera;
     private World world;
 
+    private CharacterDataComponent characterData;
     private StatsComponent stats;           // health, magicka, stamina, exp... etc.
     private B2BodyComponent b2body;         // box2d bodybuilder, body and fixtures.
     private SpriteComponent sprite;         // character's sprite.
@@ -49,6 +51,7 @@ public class AnimatedSpriteRendererSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float delta) {
+        characterData = Mappers.CHARACTER_DATA.get(entity);
         stats = Mappers.STATS.get(entity);
         b2body = Mappers.B2BODY.get(entity);
         sprite = Mappers.SPRITE.get(entity);
@@ -77,8 +80,11 @@ public class AnimatedSpriteRendererSystem extends IteratingSystem {
                 }
             }
 
-            float textureX = b2body.getBody().getPosition().x - sprite.getWidth() / 2;
-            float textureY = b2body.getBody().getPosition().y - sprite.getHeight() / 2 + (8 / Constants.PPM);
+            float textureOffsetX = characterData.getTextureOffsetX();
+            float textureOffsetY = characterData.getTextureOffsetY();
+
+            float textureX = b2body.getBody().getPosition().x - sprite.getWidth() / 2 + (textureOffsetX / Constants.PPM);
+            float textureY = b2body.getBody().getPosition().y - sprite.getHeight() / 2 + (textureOffsetY / Constants.PPM);
             sprite.setPosition(textureX, textureY);
         }
 

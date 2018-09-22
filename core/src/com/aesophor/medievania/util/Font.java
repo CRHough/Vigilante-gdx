@@ -31,8 +31,6 @@ public class Font {
         parameter.shadowOffsetY = 1;
         REGULAR = generator.generateFont(parameter);
         generator.dispose();
-
-
     }
 
 }

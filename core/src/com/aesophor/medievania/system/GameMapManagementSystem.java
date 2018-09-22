@@ -66,7 +66,7 @@ public class GameMapManagementSystem extends EntitySystem {
 
             droppableItems.getDroppableItems().forEach((itemName, dropRate) -> {
                 if (Utils.randomInt(0, 100) / 100f <= dropRate) {
-                    Item item = spawn(itemName, world, e.getDeceased().getB2Body().getPosition().x, e.getDeceased().getB2Body().getPosition().y);
+                    Item item = spawnItem(itemName, world, e.getDeceased().getB2Body().getPosition().x, e.getDeceased().getB2Body().getPosition().y);
                     Body body = Mappers.B2BODY.get(item).getBody();
                     body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
                     engine.addEntity(item);
@@ -147,7 +147,7 @@ public class GameMapManagementSystem extends EntitySystem {
         npcs.forEach(engine::addEntity);
     }
 
-    public Item spawn(String itemName, World world, float x, float y) {
+    public Item spawnItem(String itemName, World world, float x, float y) {
         Item item = null;
 
         try {

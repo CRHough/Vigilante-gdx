@@ -25,6 +25,7 @@ public class Mappers {
     public static final ComponentMapper<DroppableItemsComponent> DROP_ITEMS;
     public static final ComponentMapper<ItemDataComponent> ITEM_DATA;
     public static final ComponentMapper<EquipmentDataComponent> EQUIPMENT_DATA;
+    public static final ComponentMapper<CharacterDataComponent> CHARACTER_DATA;
 
     static {
         STATS = ComponentMapper.getFor(StatsComponent.class);
@@ -42,6 +43,7 @@ public class Mappers {
         DROP_ITEMS = ComponentMapper.getFor(DroppableItemsComponent.class);
         ITEM_DATA = ComponentMapper.getFor(ItemDataComponent.class);
         EQUIPMENT_DATA = ComponentMapper.getFor(EquipmentDataComponent.class);
+        CHARACTER_DATA = ComponentMapper.getFor(CharacterDataComponent.class);
     }
 
 }

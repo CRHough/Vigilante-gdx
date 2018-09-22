@@ -31,19 +31,18 @@ public abstract class Character extends Entity implements Disposable {
     protected StatsComponent stats;
     protected CombatTargetComponent targets;
     protected InventoryComponent inventory;
-    //protected EquipmentSlotsComponent equipmentSlots;
+    protected CharacterDataComponent characterData;
 
     protected AIActions AIActions;
-
     protected World world;
 
-    public Character(Texture texture, World world, float x, float y) {
+    public Character(World world, float x, float y) {
         this.world = world;
 
         stats = new StatsComponent();
         animations = new AnimationComponent();
         b2body = new B2BodyComponent(world);
-        sprite = new SpriteComponent(texture, x * Constants.PPM, y * Constants.PPM);
+        sprite = new SpriteComponent(x * Constants.PPM, y * Constants.PPM);
         state = new StateComponent(State.IDLE);
         sounds = new SoundComponent();
         targets = new CombatTargetComponent();
@@ -304,7 +303,7 @@ public abstract class Character extends Entity implements Disposable {
 
     @Override
     public void dispose() {
-        //sprite.dispose();
+        sprite.dispose();
         sounds.values().forEach(s -> s.dispose());
     }
 

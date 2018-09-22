@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -48,7 +49,7 @@ public class Utils {
     /**
      * Create animations by extracting a set of TextureRegion from the specified Texture.
      * Note that the all sprites must be on the same row.
-     * @param texture The Texture from which to extract TextureRegion
+     * @param region The AtlasRegion from which to extract TextureRegion
      * @param frameDuration The time between frames in seconds.
      * @param firstFrameCount The starting frame count of the frames to extract,
      *        usually 0 if correct offsetX is given.
@@ -59,16 +60,28 @@ public class Utils {
      * @param height The height of the TextureRegion. May be negative to flip the sprite when drawn.
      * @return Extracted animations.
      */
-    public static Animation<TextureRegion> createAnimation(Texture texture, float frameDuration,
-            int firstFrameCount, int lastFrameCount, int offsetX, int offsetY, int width, int height) {
+    public static Animation<TextureRegion> createAnimation(TextureAtlas.AtlasRegion region, float frameDuration,
+                                                           int firstFrameCount, int lastFrameCount, int offsetX, int offsetY, int width, int height) {
         frames.clear();
         
         for (int i = firstFrameCount; i <= lastFrameCount; i++) {
-            frames.add(new TextureRegion(texture, i * width + offsetX, offsetY, width, height));
+            frames.add(new TextureRegion(region, i * width + offsetX, offsetY, width, height));
         }
         
         return new Animation<>(frameDuration, frames);
     }
+
+    public static Animation<TextureRegion> createAnimation(Texture region, float frameDuration,
+                                                           int firstFrameCount, int lastFrameCount, int offsetX, int offsetY, int width, int height) {
+        frames.clear();
+
+        for (int i = firstFrameCount; i <= lastFrameCount; i++) {
+            frames.add(new TextureRegion(region, i * width + offsetX, offsetY, width, height));
+        }
+
+        return new Animation<>(frameDuration, frames);
+    }
+
 
     /**
      * Generates a random integer between the specified min and max value.

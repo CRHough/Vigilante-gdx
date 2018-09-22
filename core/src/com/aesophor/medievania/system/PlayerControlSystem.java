@@ -59,7 +59,7 @@ public class PlayerControlSystem extends IteratingSystem {
                 player.crouch();
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
                 PortalTargetComponent portalTarget = Mappers.PORTAL_TARGET.get(player);
-                if (portalTarget != null && !state.isSetToKill()) {
+                if (portalTarget.getInRangePortal() != null && !state.isSetToKill()) {
                     GameEventManager.getInstance().fireEvent(new PortalUsedEvent(portalTarget.getInRangePortal()));
                 }
             }
