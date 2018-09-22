@@ -11,7 +11,6 @@ import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,13 +23,8 @@ import com.badlogic.gdx.utils.Timer.Task;
 public class Player extends Character {
 
     public Player(AssetManager assets, World world, float x, float y) {
-        super(world, x, y);
+        super("Player", assets, world, x, y);
 
-        characterData = CharacterDataManager.getInstance().get("Player");
-        stats = new StatsComponent(characterData.getStats());
-
-        add(characterData);
-        add(stats); // override stats.
         add(new PickupItemTargetComponent());
         add(new ControllableComponent());
         add(new PortalTargetComponent());
@@ -58,24 +52,6 @@ public class Player extends Character {
         animations.put(State.KILLED, killedAnimation);
 
 
-        // Sounds.
-        //Sound footstepSound = gameWorldManager.getAssets().getDroppableItems("sfx/player/footstep.mp3");
-        Sound hurtSound = assets.get("sfx/player/hurt.wav");
-        Sound deathSound = assets.get("sfx/player/death.mp3");
-        Sound weaponSwingSound = assets.get("sfx/player/weapon_swing.ogg", Sound.class);
-        Sound weaponHitSound = assets.get("sfx/player/weapon_hit.ogg", Sound.class);
-        Sound jumpSound = assets.get("sfx/player/jump.wav", Sound.class);
-        Sound itemPickedupSound = assets.get("sfx/player/pickup_item.mp3", Sound.class);
-
-        //sounds.put(SoundType.FOOTSTEP, footstepSound);
-        sounds.put(SoundType.JUMP, jumpSound);
-        sounds.put(SoundType.HURT, hurtSound);
-        sounds.put(SoundType.DEATH, deathSound);
-        sounds.put(SoundType.WEAPON_SWING, weaponSwingSound);
-        sounds.put(SoundType.WEAPON_HIT, weaponHitSound);
-        sounds.put(SoundType.ITEM_PICKEDUP, itemPickedupSound);
-
-
         // Create body and fixtures.
         short bodyCategoryBits = CategoryBits.PLAYER;
         short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON | CategoryBits.ITEM;
@@ -83,7 +59,7 @@ public class Player extends Character {
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
         super.defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
-        sprite.setBounds(0, 0, 115 / Constants.PPM, 110 / Constants.PPM);
+        sprite.setBounds(0, 0, 115 / Constants.PPM, 115 / Constants.PPM);
     }
 
     public void pickup(Item item) {

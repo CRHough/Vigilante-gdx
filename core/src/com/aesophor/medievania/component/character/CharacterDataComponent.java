@@ -9,6 +9,13 @@ public class CharacterDataComponent implements Component {
     private int textureOffsetX;
     private int textureOffsetY;
 
+    private String hurtSound;
+    private String killedSound;
+    private String weaponSwingSound;
+    private String weaponHitSound;
+    private String jumpSound;
+    private String itemPickedupSound;
+
     private StatsComponent stats;
     private HashMap<String, Float> items;
 
@@ -23,6 +30,32 @@ public class CharacterDataComponent implements Component {
     public int getTextureOffsetY() {
         return textureOffsetY;
     }
+
+
+    public String getHurtSound() {
+        return hurtSound;
+    }
+
+    public String getKilledSound() {
+        return killedSound;
+    }
+
+    public String getWeaponHitSound() {
+        return weaponHitSound;
+    }
+
+    public String getWeaponSwingSound() {
+        return weaponSwingSound;
+    }
+
+    public String getJumpSound() {
+        return jumpSound;
+    }
+
+    public String getItemPickedupSound() {
+        return itemPickedupSound;
+    }
+
 
     public StatsComponent getStats() {
         return stats;

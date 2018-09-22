@@ -5,7 +5,7 @@ public enum SoundType {
     FOOTSTEP,
     JUMP,
     HURT,
-    DEATH,
+    KILLED,
     WEAPON_SWING,
     WEAPON_HIT,
     ITEM_PICKEDUP;

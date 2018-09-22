@@ -16,7 +16,7 @@ import com.aesophor.medievania.event.combat.InflictDamageEvent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
@@ -36,10 +36,11 @@ public abstract class Character extends Entity implements Disposable {
     protected AIActions AIActions;
     protected World world;
 
-    public Character(World world, float x, float y) {
+    public Character(String name, AssetManager assets, World world, float x, float y) {
         this.world = world;
 
-        stats = new StatsComponent();
+        characterData = CharacterDataManager.getInstance().get(name);
+        stats = new StatsComponent(characterData.getStats());
         animations = new AnimationComponent();
         b2body = new B2BodyComponent(world);
         sprite = new SpriteComponent(x * Constants.PPM, y * Constants.PPM);
@@ -48,6 +49,7 @@ public abstract class Character extends Entity implements Disposable {
         targets = new CombatTargetComponent();
         inventory = new InventoryComponent();
 
+        add(characterData);
         add(stats);
         add(animations);
         add(b2body);
@@ -58,6 +60,14 @@ public abstract class Character extends Entity implements Disposable {
         add(new EquipmentSlotsComponent());
 
         AIActions = new AIActions(this);
+
+        // Sounds.
+        sounds.put(SoundType.JUMP, assets.get(characterData.getJumpSound()));
+        sounds.put(SoundType.HURT, assets.get(characterData.getHurtSound()));
+        sounds.put(SoundType.KILLED, assets.get(characterData.getKilledSound()));
+        sounds.put(SoundType.WEAPON_SWING, assets.get(characterData.getWeaponSwingSound()));
+        sounds.put(SoundType.WEAPON_HIT, assets.get(characterData.getWeaponHitSound()));
+        sounds.put(SoundType.ITEM_PICKEDUP, assets.get(characterData.getItemPickedupSound()));
     }
 
 
@@ -243,7 +253,7 @@ public abstract class Character extends Entity implements Disposable {
             if (stats.getHealth() == 0) {
                 setCategoryBits(b2body.getBodyFixture(), CategoryBits.DESTROYED);
                 state.setSetToKill(true);
-                sounds.get(SoundType.DEATH).play();
+                sounds.get(SoundType.KILLED).play();
             } else {
                 sounds.get(SoundType.HURT).play();
             }

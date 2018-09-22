@@ -1,13 +1,10 @@
 package com.aesophor.medievania.entity.character;
 
-import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -17,13 +14,8 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Enemy extends Character {
 
     public Enemy(String enemyName, AssetManager assets, World world, float x, float y) {
-        super(world, x, y);
+        super(enemyName, assets, world, x, y);
 
-        characterData = CharacterDataManager.getInstance().get(enemyName);
-        stats = new StatsComponent(characterData.getStats());
-
-        add(characterData);
-        add(stats); // override stats.
         add(new DroppableItemsComponent(characterData.getItems()));
         add(new CharacterDataComponent());
         add(new CharacterAIComponent());
@@ -46,22 +38,6 @@ public class Enemy extends Character {
         animations.put(State.CROUCHING, crouchAnimation);
         animations.put(State.ATTACKING, attackAnimation);
         animations.put(State.KILLED, killedAnimation);
-
-
-        // Sounds.
-        //Sound footstepSound = assets.getDroppableItems("sfx/player/footstep.mp3");
-        Sound hurtSound = assets.get("sfx/player/hurt.wav");
-        Sound deathSound = assets.get("sfx/player/death.mp3");
-        Sound weaponSwingSound = assets.get("sfx/player/weapon_swing.ogg", Sound.class);
-        Sound weaponHitSound = assets.get("sfx/player/weapon_hit.ogg", Sound.class);
-        Sound jumpSound = assets.get("sfx/player/jump.wav", Sound.class);
-
-        //sounds.put(SoundType.FOOTSTEP, footstepSound);
-        sounds.put(SoundType.JUMP, jumpSound);
-        sounds.put(SoundType.HURT, hurtSound);
-        sounds.put(SoundType.DEATH, deathSound);
-        sounds.put(SoundType.WEAPON_SWING, weaponSwingSound);
-        sounds.put(SoundType.WEAPON_HIT, weaponHitSound);
 
         // Create body and fixtures.
         short bodyCategoryBits = CategoryBits.ENEMY;
