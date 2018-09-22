@@ -3,6 +3,7 @@ package com.aesophor.medievania.ui.pausemenu;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
 import com.aesophor.medievania.component.equipment.EquipmentType;
+import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
@@ -18,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
-public class EquipmentTable extends Table implements MenuItemTable {
+public class EquipmentPane extends Table implements MenuPagePane {
 
     private class EquipmentItem extends Stack {
 
@@ -74,32 +75,37 @@ public class EquipmentTable extends Table implements MenuItemTable {
 
     }
 
+    private static final float TAB_PANE_X = 50 + 8;
+    private static final float TAB_PANE_Y = -60;
+    private static final float GAP = 11f;
+
     private final Texture regularItemTexture;
     private final Texture selectedItemTexture;
 
     private final Array<EquipmentItem> items;
     private int currentItemIdx;
 
-    private final DialogTable dialogTable;
+    private final Player player;
+    private final MenuDialog menuDialog;
 
-    public EquipmentTable(AssetManager assets, Player player, DialogTable dialogTable) {
+    public EquipmentPane(AssetManager assets, Player player, MenuDialog menuDialog) {
+        this.player = player;
+        this.menuDialog = menuDialog;
+
         regularItemTexture = assets.get("interface/item_regular.png");
         selectedItemTexture = assets.get("interface/selection.png");
 
-        this.dialogTable = dialogTable;
-
-        items = new Array<>(7);
 
         top().left();
         setFillParent(true);
-        setPosition(50 + 8, -60);
+        setPosition(TAB_PANE_X, TAB_PANE_Y);
 
-
+        items = new Array<>(7);
         for (EquipmentType type : EquipmentType.values()) {
             items.add(new EquipmentItem(type, regularItemTexture, selectedItemTexture, LabelStyles.WHITE_HEADER));
         }
 
-        defaults().spaceTop(11f);
+        defaults().spaceTop(GAP);
         items.forEach(i -> add(i).row());
         items.first().setSelected(true);
 
@@ -136,11 +142,15 @@ public class EquipmentTable extends Table implements MenuItemTable {
                 items.get(currentItemIdx).setSelected(true);
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if (getSelectedItem().getItem() != null) {
-                dialogTable.show("Unequip this item?", "Yes", "No", new UnequipItemEvent(getSelectedItem().getItem()), null);
-            } else {
+            MenuPage.show(MenuPage.INVENTORY);
 
-            }
+            InventoryTabPane inventoryTabPane = ((InventoryTabPane) MenuPage.INVENTORY.getTables().first());
+            inventoryTabPane.getItemListView().clear();
+            inventoryTabPane.getItemListView()
+                    .insertEmptyItem()
+                    .populate(Mappers.INVENTORY.get(player), ItemType.EQUIP)
+                    .filter(getSelectedItem().getType());
+            inventoryTabPane.setSelectingEquipment(true, getSelectedItem().getType());
         }
     }
 

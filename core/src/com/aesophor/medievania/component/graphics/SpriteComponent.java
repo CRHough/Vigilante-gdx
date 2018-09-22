@@ -11,7 +11,7 @@ public class SpriteComponent extends Sprite implements Component, Disposable {
         super(texture);
         setPosition(x, y);
     }
-
+    
 
     @Override
     public void dispose() {

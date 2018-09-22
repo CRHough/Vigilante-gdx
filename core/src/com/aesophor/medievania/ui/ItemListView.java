@@ -2,8 +2,9 @@ package com.aesophor.medievania.ui;
 
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.InventoryComponent;
+import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
+import com.aesophor.medievania.component.equipment.EquipmentType;
 import com.aesophor.medievania.component.item.ItemType;
-import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.ui.InventoryItemChangedEvent;
@@ -15,7 +16,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
 
-public class ItemListView {
+public class ItemListView extends ScrollPane {
 
     private class InventoryItem extends Stack {
 
@@ -25,7 +26,7 @@ public class ItemListView {
 
         public InventoryItem(Item item, Texture selectionTexture, Label.LabelStyle labelStyle) {
             this.item = item;
-            this.nameLabel = new Label(" " + Mappers.ITEM_DATA.get(item).getName(), labelStyle);
+            this.nameLabel = new Label(" " + ((item != null) ? Mappers.ITEM_DATA.get(item).getName() : "----"), labelStyle);
             this.selectionImage = new Image(selectionTexture);
 
             this.add(this.selectionImage);
@@ -50,25 +51,24 @@ public class ItemListView {
     private final Texture selectionTexture;
     private final Sound clickSound;
 
-    private final ScrollPane scrollPane;
     private final Table contentTable;
-
     private final Array<InventoryItem> items;
+
     private int currentItemIdx;
     private int navigateUpCounter;
     private int navigateDownCounter;
 
-    public ItemListView(AssetManager assets, Player player) {
+    public ItemListView(AssetManager assets) {
+        super(new Table());
         selectionTexture = assets.get("interface/selection.png");
         clickSound = assets.get("sfx/ui/click.wav", Sound.class);
 
-        contentTable = new Table();
+        setScrollingDisabled(true, false);
+        setOverscroll(false, false);
+
+        contentTable = (Table) this.getActor();
         contentTable.top().left();
         contentTable.defaults().spaceTop(5f).left();
-
-        scrollPane = new ScrollPane(contentTable);
-        scrollPane.setScrollingDisabled(true, false);
-        scrollPane.setOverscroll(false, false);
 
         items = new Array<>();
         currentItemIdx = -1;
@@ -76,40 +76,50 @@ public class ItemListView {
 
 
     /**
-     * Populates the list view with the specified type of items from player inventory.
-     * @param type type of items to display.
-     * @param player player entity which will be used for retrieving its inventory component.
+     * Inserts an empty item.
+     * @return this ItemListView instance.
      */
-    public void populate(ItemType type, Player player) {
-        InventoryComponent inventory = Mappers.INVENTORY.get(player);
+    public ItemListView insertEmptyItem() {
+        add(null);
+        return this;
+    }
 
-        inventory.get(type).forEach(item -> {
-            InventoryItem i = new InventoryItem(item, selectionTexture, LabelStyles.WHITE_REGULAR);
-            items.add(i);
-            contentTable.add(i).row();
-        });
+    /**
+     * Populates the list view with the specified type of items from the specified inventory.
+     * @param inventory target inventory to display.
+     * @param type type of items to display.
+     * @return this ItemListView instance.
+     */
+    public ItemListView populate(InventoryComponent inventory, ItemType type) {
+        inventory.get(type).forEach(this::add);
 
         if (items.size > 0) {
             currentItemIdx = 0;
             items.first().setSelected(true);
             GameEventManager.getInstance().fireEvent(new InventoryItemChangedEvent(items.get(currentItemIdx).getItem()));
         }
+        return this;
     }
 
     /**
-     * Adds the specified item to the list view.
-     * @param item item to add.
+     * Filters the list view with the specified type of equipment.
+     * @param type type of equipment to display.
+     * @return this ItemListView instance.
      */
-    public void add(Item item) {
-        InventoryItem i = new InventoryItem(item, selectionTexture, LabelStyles.WHITE_REGULAR);
+    public ItemListView filter(EquipmentType type) {
+        contentTable.clearChildren();
 
-        items.add(i);
-        contentTable.add(i).row();
-
-        if (getSelectedItem() == null) {
-            currentItemIdx = 0;
-            items.first().setSelected(true);
+        for (InventoryItem i : items) {
+            if (i.getItem() == null) {
+                contentTable.add(i).row();
+                continue;
+            }
+            EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(i.getItem());
+            if (equipmentData.getType() == type) {
+                contentTable.add(i).row();
+            }
         }
+        return this;
     }
 
     /**
@@ -121,15 +131,26 @@ public class ItemListView {
     }
 
     /**
+     * Adds the specified item to the list view.
+     * @param item item to add.
+     */
+    public void add(Item item) {
+        InventoryItem i = new InventoryItem(item, selectionTexture, LabelStyles.WHITE_REGULAR);
+        items.add(i);
+        contentTable.add(i).row();
+
+        if (getSelectedItem() == null) {
+            currentItemIdx = 0;
+            items.first().setSelected(true);
+        }
+    }
+
+    /**
      * Gets the currently selected item.
      * @return selected item.
      */
     public Item getSelectedItem() {
         return (currentItemIdx >= 0) ? items.get(currentItemIdx).getItem() : null;
-    }
-
-    public ScrollPane getScrollPane() {
-        return scrollPane;
     }
 
     public void handleInput(float delta) {
@@ -148,7 +169,7 @@ public class ItemListView {
 
                 navigateUpCounter++;
                 if (navigateUpCounter >= 5) {
-                    scrollPane.setScrollY(scrollPane.getScrollY() - 24f);
+                    setScrollY(getScrollY() - 24f);
                     navigateUpCounter--;
                 }
 
@@ -170,7 +191,7 @@ public class ItemListView {
                 navigateDownCounter++;
 
                 if (navigateDownCounter >= 5) {
-                    scrollPane.setScrollY(scrollPane.getScrollY() + 24f);
+                    setScrollY(getScrollY() + 24f);
                     navigateDownCounter--;
                 }
 

@@ -19,8 +19,8 @@ public class PauseMenu extends Stage {
     private final Texture background;
     private final Sound clickSound;
 
-    private final StatsTable statsTable;
-    private final DialogTable dialogTable;
+    private final StatsPane statsPane;
+    private final MenuDialog menuDialog;
 
     public PauseMenu(GameStateManager gsm, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
@@ -30,45 +30,58 @@ public class PauseMenu extends Stage {
         gsm.getAssets().load("sfx/ui/click.wav", Sound.class); // assets should be loaded elsewhere.
         clickSound = gsm.getAssets().get("sfx/ui/click.wav", Sound.class);
 
+
+        // Initialize header options (Inventory / Equipment / Skills / Quest / Options).
         Table menuItemHeaderTable = new Table();
         menuItemHeaderTable.top().padTop(18f);
         menuItemHeaderTable.defaults().spaceRight(30f);
         menuItemHeaderTable.setFillParent(true);
-        MenuItem.buildLabels().forEach(menuItemHeaderTable::add);
+        MenuPage.buildLabels().forEach(menuItemHeaderTable::add);
 
-        statsTable = new StatsTable(gsm.getAssets(), player);
-        dialogTable = new DialogTable(gsm.getAssets());
-        dialogTable.setVisible(false);
+        // Initialize stats UI and menu dialog.
+        statsPane = new StatsPane(gsm.getAssets(), player);
+        menuDialog = new MenuDialog(gsm.getAssets());
+        //equipmentSelectionPane = new EquipmentSelectionPane(gsm.getAssets(), player, menuDialog);
+        //equipmentSelectionPane.setEquipmentPane(equipmentPane);
 
+        // Initialize pages.
+        MenuPage.INVENTORY.addTable(new InventoryTabPane(gsm.getAssets(), player, menuDialog));
+        MenuPage.EQUIPMENT.addTable(new EquipmentPane(gsm.getAssets(), player, menuDialog));
 
-        MenuItem.INVENTORY.addTable(new InventoryTabPane(gsm.getAssets(), player, dialogTable));
-        MenuItem.EQUIPMENT.addTable(new EquipmentTable(gsm.getAssets(), player, dialogTable));
-        //MenuItem.SKILLS.setTables();
-        //MenuItem.JOURNAL.setTables();
-        //MenuItem.OPTIONS.setTables();
+        //MenuPage.SKILLS.setTables();
+        //MenuPage.JOURNAL.setTables();
+        //MenuPage.OPTIONS.setTables();
+
 
         addActor(menuItemHeaderTable);
-        addActor(statsTable);
-        addActor(dialogTable);
-        MenuItem.INVENTORY.getTables().forEach(this::addActor);
-        MenuItem.EQUIPMENT.getTables().forEach(this::addActor);
+        addActor(statsPane);
+        addActor(menuDialog);
+        MenuPage.INVENTORY.getTables().forEach(this::addActor);
+        MenuPage.EQUIPMENT.getTables().forEach(this::addActor);
 
-        MenuItem.show(MenuItem.current());
+        MenuPage.update(MenuPage.current());
     }
 
 
     private void handleInput(float delta) {
-        if (dialogTable.isVisible()) {
-            dialogTable.handleInput(delta);
+        // Only process the dialog if it's currently being shown.
+        if (menuDialog.isVisible()) {
+            menuDialog.handleInput(delta);
         } else {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.TAB)) {
-                MenuItem.next();
-                MenuItem.show(MenuItem.current());
+            if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+                MenuPage.prev();
+                MenuPage.update(MenuPage.current());
                 clickSound.play();
             }
 
-            if (MenuItem.current().getTables().size > 0) {
-                MenuItem.current().handleInput(delta);
+            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+                MenuPage.next();
+                MenuPage.update(MenuPage.current());
+                clickSound.play();
+            }
+
+            if (MenuPage.current().getTables().size > 0) {
+                MenuPage.current().handleInput(delta);
             }
         }
     }
@@ -79,13 +92,13 @@ public class PauseMenu extends Stage {
 
         gsm.getBatch().begin();
         gsm.getBatch().draw(background, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
-        gsm.getBatch().draw(statsTable.getBackgroundTexture(), 380, 40);
-        if (MenuItem.current().getTables().size > 0 && MenuItem.current().getBackgroundTexture() != null) {
-            gsm.getBatch().draw(MenuItem.current().getBackgroundTexture(), 50, 40);
+        gsm.getBatch().draw(statsPane.getBackgroundTexture(), 380, 40);
+        if (MenuPage.current().getTables().size > 0 && MenuPage.current().getBackgroundTexture() != null) {
+            gsm.getBatch().draw(MenuPage.current().getBackgroundTexture(), 50, 40);
         }
         gsm.getBatch().end();
 
-        MenuItem.updateLabelColors();
+        MenuPage.updateLabelColors();
     }
 
 }

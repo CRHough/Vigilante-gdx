@@ -13,7 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
-public class DialogTable extends Table implements MenuItemTable {
+public class MenuDialog extends Table implements MenuPagePane {
 
     private class DialogOption extends HorizontalGroup {
 
@@ -60,10 +60,8 @@ public class DialogTable extends Table implements MenuItemTable {
     private final Array<DialogOption> options;
     private int currentItemIdx;
 
-    public DialogTable(AssetManager assets) {
+    public MenuDialog(AssetManager assets) {
         Texture triangleTexture = assets.get("interface/triangle.png");
-
-        options = new Array<>(2);
 
         bottom().left();
         setPosition(55, 20);
@@ -77,13 +75,16 @@ public class DialogTable extends Table implements MenuItemTable {
         optionTable.bottom().right();
         optionTable.setFillParent(true);
         optionTable.defaults().padRight(2f);
+        optionTable.setPosition(-125, 0);
+
+        options = new Array<>(2);
         options.add(new DialogOption(triangleTexture, ""));
         options.add(new DialogOption(triangleTexture, ""));
         options.first().setSelected(true);
         options.forEach(optionTable::add);
-        optionTable.setPosition(-125 - optionTable.getWidth(), 0);
 
-        this.addActor(optionTable);
+        addActor(optionTable);
+        setVisible(false);
     }
 
 
@@ -122,6 +123,8 @@ public class DialogTable extends Table implements MenuItemTable {
             if (selectedOptionEvent != null) {
                 GameEventManager.getInstance().fireEvent(selectedOptionEvent);
             }
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            setVisible(false);
         }
     }
 

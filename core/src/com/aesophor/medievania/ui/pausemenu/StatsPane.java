@@ -1,6 +1,5 @@
 package com.aesophor.medievania.ui.pausemenu;
 
-import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.entity.character.Player;
@@ -11,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
-public class StatsTable extends Table implements MenuItemTable {
+public class StatsPane extends Table implements MenuPagePane {
 
     private static final float TITLE_BODY_GAP = 3f;
     private static final float SECTION_GAP = 8f;
@@ -39,7 +38,7 @@ public class StatsTable extends Table implements MenuItemTable {
     private Label intLabel;
     private Label lukLabel;
 
-    public StatsTable(AssetManager assets, Player player) {
+    public StatsPane(AssetManager assets, Player player) {
         statsBackground = assets.get("interface/stats_bg.png");
 
         top().right();

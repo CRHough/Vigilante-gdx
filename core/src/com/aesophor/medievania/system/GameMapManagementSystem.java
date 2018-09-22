@@ -7,6 +7,7 @@ import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
+import com.aesophor.medievania.event.character.DiscardItemEvent;
 import com.aesophor.medievania.event.combat.CharacterKilledEvent;
 import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.event.map.MapChangedEvent;
@@ -69,6 +70,16 @@ public class GameMapManagementSystem extends EntitySystem {
                     engine.addEntity(item);
                 }
             });
+        });
+
+        GameEventManager.getInstance().addEventListener(GameEventType.DISCARD_ITEM, (DiscardItemEvent e) -> {
+            Item item = e.getItem();
+            item.constructBody();
+            item.reloadTexture();
+            Mappers.B2BODY.get(item).getBody().setTransform(player.getB2Body().getPosition().x, player.getB2Body().getPosition().y, 0);
+            Body body = Mappers.B2BODY.get(item).getBody();
+            body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
+            engine.addEntity(item);
         });
 
         // Remove the item entity from the engine once it has been picked up.

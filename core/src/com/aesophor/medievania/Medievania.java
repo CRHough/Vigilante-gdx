@@ -66,7 +66,7 @@ public class Medievania extends Game implements GameStateManager {
     
     /**
      * Shows the specified Screen.
-     * @param s screen to show.
+     * @param s screen to update.
      */
     @Override
     public void showScreen(Screens s) {

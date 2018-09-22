@@ -138,7 +138,6 @@ public abstract class Character extends Entity implements Disposable {
         inventory.remove(item);
         equipmentSlots.equip(item);
         GameEventManager.getInstance().fireEvent(new ItemEquippedEvent(this, item));
-        //System.out.println(equipmentSlots.has(equipmentType));
     }
 
     public void unequip(Item item) {
@@ -147,7 +146,7 @@ public abstract class Character extends Entity implements Disposable {
         EquipmentSlotsComponent equipmentSlots = Mappers.EQUIPMENT_SLOTS.get(this);
         if (equipmentSlots.has(equipmentType)) {
             equipmentSlots.unequip(item);
-            inventory.add(item); // not being added to inventory...
+            inventory.add(item);
             GameEventManager.getInstance().fireEvent(new ItemUnequippedEvent(this, item));
         }
     }

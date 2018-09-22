@@ -1,5 +1,6 @@
 package com.aesophor.medievania.entity.item;
 
+import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.sound.SoundComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.item.ItemDataComponent;
@@ -41,13 +42,20 @@ public class Item extends Entity implements Disposable {
         add(b2body);
         add(sounds);
 
-        short bodyCategoryBits = CategoryBits.ITEM;
-        short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
-        defineBody(bodyCategoryBits, bodyMaskBits);
-
+        constructBody();
         sprite.setBounds(0, 0, itemWidth / Constants.PPM, itemHeight / Constants.PPM);
     }
 
+
+    public void reloadTexture() {
+        sprite.setTexture(new Texture(itemData.getImage()));
+    }
+
+    public void constructBody() {
+        short bodyCategoryBits = CategoryBits.ITEM;
+        short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
+        defineBody(bodyCategoryBits, bodyMaskBits);
+    }
 
     protected void defineBody(short bodyCategoryBits, short bodyMaskBits) {
         Body body = b2body.getBodyBuilder().type(BodyDef.BodyType.DynamicBody)
