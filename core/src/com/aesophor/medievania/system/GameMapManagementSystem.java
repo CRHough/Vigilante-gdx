@@ -12,6 +12,8 @@ import com.aesophor.medievania.event.combat.CharacterKilledEvent;
 import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.event.map.MapChangedEvent;
 import com.aesophor.medievania.event.map.PortalUsedEvent;
+import com.aesophor.medievania.event.screen.GamePausedEvent;
+import com.aesophor.medievania.event.screen.GameResumedEvent;
 import com.aesophor.medievania.map.GameMap;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.ashley.core.EntitySystem;
@@ -86,6 +88,14 @@ public class GameMapManagementSystem extends EntitySystem {
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
             engine.removeEntity(e.getItem());
             e.getItem().dispose();
+        });
+
+        GameEventManager.getInstance().addEventListener(GameEventType.GAME_PAUSED, (GamePausedEvent e) -> {
+            currentMap.getBackgroundMusic().pause();
+        });
+
+        GameEventManager.getInstance().addEventListener(GameEventType.GAME_RESUMED, (GameResumedEvent e) -> {
+            currentMap.getBackgroundMusic().play();
         });
 
         setGameMap("map/starting_point.tmx");

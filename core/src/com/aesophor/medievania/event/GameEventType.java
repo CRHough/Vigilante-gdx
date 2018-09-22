@@ -19,4 +19,7 @@ public enum GameEventType {
     UNEQUIP_ITEM,               // 13
     PROMPT_DISCARD_ITEM,        // 14
 
+    GAME_PAUSED,                // 15
+    GAME_RESUMED,               // 16
+
 }

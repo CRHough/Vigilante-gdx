@@ -41,13 +41,13 @@ public class StatsPane extends Table implements MenuPagePane {
     public StatsPane(AssetManager assets, Player player) {
         statsBackground = assets.get("interface/stats_bg.png");
 
-        top().right();
+        top().right().padLeft(8f);
         setPosition(-statsBackground.getWidth() / 2 - 8, -(300 - statsBackground.getHeight()) / 2 + 5);
         setFillParent(true);
+        columnDefaults(0).width(80f);
+        defaults().height(16f);
 
         StatsComponent stats = Mappers.STATS.get(player);
-
-
         nameLabel = new Label(stats.getName().toUpperCase(), LabelStyles.WHITE_REGULAR);
         levelLabel = new Label(String.format("Level %d", stats.getLevel()), LabelStyles.RED_REGULAR);
 
@@ -55,22 +55,16 @@ public class StatsPane extends Table implements MenuPagePane {
         staminaLabel = new Label(String.format("%d / %d", stats.getStamina(), stats.getFullStamina()), LabelStyles.WHITE_REGULAR);
         magickaLabel = new Label(String.format("%d / %d", stats.getMagicka(), stats.getFullMagicka()), LabelStyles.WHITE_REGULAR);
 
-        attackRangeLabel = new Label("100%", LabelStyles.WHITE_REGULAR);
-        attackSpeedLabel = new Label("100%", LabelStyles.WHITE_REGULAR);
-        walkSpeedLabel = new Label("100%", LabelStyles.WHITE_REGULAR);
-        jumpHeightLabel = new Label("100%", LabelStyles.WHITE_REGULAR);
+        attackRangeLabel = new Label(String.format("%d", stats.getAttackRange()), LabelStyles.WHITE_REGULAR);
+        attackSpeedLabel = new Label(String.format("%f", stats.getAttackTime()), LabelStyles.WHITE_REGULAR);
+        walkSpeedLabel = new Label(String.format("%f", stats.getMovementSpeed()), LabelStyles.WHITE_REGULAR);
+        jumpHeightLabel = new Label(String.format("%f", stats.getJumpHeight()), LabelStyles.WHITE_REGULAR);
 
-        strLabel = new Label("7", LabelStyles.WHITE_REGULAR);
-        dexLabel = new Label("12", LabelStyles.WHITE_REGULAR);
-        intLabel = new Label("9", LabelStyles.WHITE_REGULAR);
-        lukLabel = new Label("20", LabelStyles.WHITE_REGULAR);
+        strLabel = new Label(String.format("%d", stats.getStr()), LabelStyles.WHITE_REGULAR);
+        dexLabel = new Label(String.format("%d", stats.getStr()), LabelStyles.WHITE_REGULAR);
+        intLabel = new Label(String.format("%d", stats.getStr()), LabelStyles.WHITE_REGULAR);
+        lukLabel = new Label(String.format("%d", stats.getStr()), LabelStyles.WHITE_REGULAR);
 
-        padLeft(8f);
-
-
-        // Sets the default width of column 0.
-        columnDefaults(0).width(80f);
-        defaults().height(16f);
 
         add(nameLabel).left().spaceBottom(TITLE_BODY_GAP);
         add(levelLabel).right().spaceBottom(TITLE_BODY_GAP).row();

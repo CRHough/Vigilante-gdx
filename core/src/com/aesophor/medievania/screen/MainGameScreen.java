@@ -3,6 +3,8 @@ package com.aesophor.medievania.screen;
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.screen.GamePausedEvent;
+import com.aesophor.medievania.event.screen.GameResumedEvent;
 import com.aesophor.medievania.event.screen.MainGameScreenResizeEvent;
 import com.aesophor.medievania.map.WorldContactListener;
 import com.aesophor.medievania.system.*;
@@ -130,6 +132,8 @@ public class MainGameScreen extends AbstractScreen {
         playerControlSys.setProcessing(false);
         physicsSys.setProcessing(false);
 
+        GameEventManager.getInstance().fireEvent(new GamePausedEvent());
+
         pauseSound.play();
     }
 
@@ -146,6 +150,8 @@ public class MainGameScreen extends AbstractScreen {
         aiSys.setProcessing(true);
         playerControlSys.setProcessing(true);
         physicsSys.setProcessing(true);
+
+        GameEventManager.getInstance().fireEvent(new GameResumedEvent());
 
         pauseSound.play();
     }

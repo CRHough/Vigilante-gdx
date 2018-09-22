@@ -124,11 +124,14 @@ public class InventoryTabPane extends Table implements MenuPagePane {
     public void setSelectingEquipment(boolean selectingEquipment, EquipmentType equipmentType) {
         this.selectingEquipment = selectingEquipment;
         this.equipmentType = equipmentType;
+        inventoryTabs.select(ItemType.EQUIP);
     }
 
     @Override
     public void handleInput(float delta) {
-        inventoryTabs.handleInput(delta);
+        if (!selectingEquipment) {
+            inventoryTabs.handleInput(delta);
+        }
         itemListView.handleInput(delta);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {

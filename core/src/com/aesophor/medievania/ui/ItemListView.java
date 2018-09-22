@@ -139,10 +139,8 @@ public class ItemListView extends ScrollPane {
         items.add(i);
         contentTable.add(i).row();
 
-        if (getSelectedItem() == null) {
-            currentItemIdx = 0;
-            items.first().setSelected(true);
-        }
+        currentItemIdx = 0;
+        items.first().setSelected(true);
     }
 
     /**

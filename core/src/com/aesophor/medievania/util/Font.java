@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 public class Font {
 
     private static final String HEADER_FONT = "interface/font/MatchupPro.ttf";
-    private static final String REGULAR_FONT = "interface/font/bitrod-regular.ttf";
+    private static final String REGULAR_FONT = "interface/font/HeartbitXX.ttf";
 
     public static final BitmapFont HEADER;
     public static final BitmapFont REGULAR;

@@ -76,20 +76,22 @@ public class InventoryTabs extends HorizontalGroup {
         return tabs.get(currentItemIdx);
     }
 
+    public void select(ItemType itemType) {
+       tabs.get(currentItemIdx).setSelected(false);
+       currentItemIdx = itemType.ordinal();
+       tabs.get(currentItemIdx).setSelected(true);
+    }
+
     public void handleInput(float delta) {
         if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)) {
             if (currentItemIdx > 0) {
-                tabs.get(currentItemIdx).setSelected(false);
-                currentItemIdx--;
-                tabs.get(currentItemIdx).setSelected(true);
+                select(ItemType.values()[currentItemIdx - 1]);
                 GameEventManager.getInstance().fireEvent(new InventoryTabChangedEvent(tabs.get(currentItemIdx).getType()));
                 clickSound.play();
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)) {
             if (currentItemIdx < ItemType.values().length - 1) {
-                tabs.get(currentItemIdx).setSelected(false);
-                currentItemIdx++;
-                tabs.get(currentItemIdx).setSelected(true);
+                select(ItemType.values()[currentItemIdx + 1]);
                 GameEventManager.getInstance().fireEvent(new InventoryTabChangedEvent(tabs.get(currentItemIdx).getType()));
                 clickSound.play();
             }
