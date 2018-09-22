@@ -2,6 +2,9 @@ package com.aesophor.medievania.ui;
 
 import java.util.Map;
 import java.util.HashMap;
+
+import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.util.Constants;
@@ -53,7 +56,8 @@ public class DamageIndicatorFactory extends Stage {
         }
 
         // Convert the coordinate from world to screen.
-        Vector3 worldCoordinates = new Vector3(c.getB2Body().getPosition().x, c.getB2Body().getPosition().y, 0);
+        B2BodyComponent b2body = Mappers.B2BODY.get(c);
+        Vector3 worldCoordinates = new Vector3(b2body.getBody().getPosition().x, b2body.getBody().getPosition().y, 0);
         Vector3 screenCoordinates = gameScreenCamera.project(worldCoordinates);
 
         // Display the new damage indicator.

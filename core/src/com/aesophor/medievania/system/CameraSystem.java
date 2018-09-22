@@ -1,5 +1,6 @@
 package com.aesophor.medievania.system;
 
+import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
@@ -42,7 +43,7 @@ public class CameraSystem extends EntitySystem {
             CameraShake.update(Gdx.graphics.getDeltaTime());
             camera.translate(CameraShake.getPos());
         } else {
-            CameraUtils.lerpToTarget(camera, player.getB2Body().getPosition());
+            CameraUtils.lerpToTarget(camera, Mappers.B2BODY.get(player).getBody().getPosition());
         }
 
         // Make sure to bound the camera within the TiledMap.

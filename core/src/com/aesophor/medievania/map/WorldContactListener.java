@@ -36,14 +36,14 @@ public class WorldContactListener implements ContactListener {
             // When a character lands on the ground, make following changes.
             case CategoryBits.FEET | CategoryBits.GROUND:
                 character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
-                character.setIsJumping(false);
+                Mappers.STATE.get(character).setJumping(false);
                 break;
 
             // When a character lands on a platform, make following changes.
             case CategoryBits.FEET | CategoryBits.PLATFORM:
                 character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
-                character.setIsJumping(false);
-                character.setIsOnPlatform(true);
+                Mappers.STATE.get(character).setJumping(false);
+                Mappers.STATE.get(character).setOnPlatform(true);
                 break;
 
             // When player gets close to a portal, register the portal to the player.
@@ -71,14 +71,14 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 player = (Player) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
-                player.addInRangeTarget(enemy);
+                Mappers.COMBAT_TARGETS.get(player).addInRangeTarget(enemy);
                 break;
 
             // Set player as enemy's current target (so enemy can inflict damage to player).
             case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
-                enemy.addInRangeTarget(player);
+                Mappers.COMBAT_TARGETS.get(enemy).addInRangeTarget(player);
                 break;
 
             case CategoryBits.PLAYER | CategoryBits.ITEM:
@@ -108,17 +108,17 @@ public class WorldContactListener implements ContactListener {
             // When a character leaves the ground, make following changes.
             case CategoryBits.FEET | CategoryBits.GROUND:
                 character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
-                if (character.getB2Body().getLinearVelocity().y > .5f) {
-                    character.setIsJumping(true);
+                if (Mappers.B2BODY.get(character).getBody().getLinearVelocity().y > .5f) {
+                    Mappers.STATE.get(character).setJumping(true);
                 }
                 break;
 
             // When a character leaves the platform, make following changes.
             case CategoryBits.FEET | CategoryBits.PLATFORM:
                 character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
-                if (character.getB2Body().getLinearVelocity().y < -.5f) {
-                    character.setIsJumping(true);
-                    character.setIsOnPlatform(false);
+                if (Mappers.B2BODY.get(character).getBody().getLinearVelocity().y < -.5f) {
+                    Mappers.STATE.get(character).setJumping(true);
+                    Mappers.STATE.get(character).setOnPlatform(false);
                 }
                 break;
 
@@ -133,14 +133,14 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.MELEE_WEAPON | CategoryBits.ENEMY:
                 player = (Player) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
-                player.removeInRangeTarget(enemy);
+                Mappers.COMBAT_TARGETS.get(player).removeInRangeTarget(enemy);
                 break;
 
             // Clear enemy's current target (so enemy cannot inflict damage to player from a distance).
             case CategoryBits.MELEE_WEAPON | CategoryBits.PLAYER:
                 enemy = (Enemy) getTargetFixture(CategoryBits.MELEE_WEAPON, fixtureA, fixtureB).getUserData();
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
-                enemy.removeInRangeTarget(player);
+                Mappers.COMBAT_TARGETS.get(enemy).removeInRangeTarget(player);
                 break;
 
             case CategoryBits.PLAYER | CategoryBits.ITEM:

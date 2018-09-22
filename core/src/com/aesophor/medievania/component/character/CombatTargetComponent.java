@@ -30,6 +30,14 @@ public class CombatTargetComponent implements Component {
         this.lockedOnTarget = lockedOnTarget;
     }
 
+    public void addInRangeTarget(Character target) {
+        inRangeTargets.add(target);
+    }
+
+    public void removeInRangeTarget(Character target) {
+        inRangeTargets.removeValue(target, false);
+    }
+
     public Array<Character> getInRangeTargets() {
         return inRangeTargets;
     }

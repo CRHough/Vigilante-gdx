@@ -1,6 +1,9 @@
 package com.aesophor.medievania.entity.character;
 
 import java.util.concurrent.ThreadLocalRandom;
+
+import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -34,7 +37,10 @@ public class AIActions {
      * @param c the target character to move to.
      */
     public void moveTowardTarget(Character c) {
-        if (character.getB2Body().getPosition().x > c.getB2Body().getPosition().x) {
+        B2BodyComponent b2body = Mappers.B2BODY.get(character);
+        B2BodyComponent targetB2Body = Mappers.B2BODY.get(c);
+
+        if (b2body.getBody().getPosition().x > targetB2Body.getBody().getPosition().x) {
             character.moveLeft();
         } else {
             character.moveRight();
@@ -100,9 +106,11 @@ public class AIActions {
      * @param checkInterval interval between checks.
      */
     public void jumpIfStucked(float delta, float checkInterval) {
+        B2BodyComponent b2body = Mappers.B2BODY.get(character);
+
         if (calculateDistanceTimer > checkInterval) {
-            lastTraveledDistance = Utils.getDistance(character.getB2Body().getPosition().x, lastStoppedPosition.x);
-            lastStoppedPosition.set(character.getB2Body().getPosition());
+            lastTraveledDistance = Utils.getDistance(b2body.getBody().getPosition().x, lastStoppedPosition.x);
+            lastStoppedPosition.set(b2body.getBody().getPosition());
 
             if (lastTraveledDistance == 0) {
                 character.jump();

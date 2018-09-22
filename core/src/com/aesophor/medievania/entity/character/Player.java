@@ -1,19 +1,16 @@
 package com.aesophor.medievania.entity.character;
 
-import com.aesophor.medievania.component.*;
-import com.aesophor.medievania.component.sound.SoundType;
+import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.*;
+import com.aesophor.medievania.component.sound.SoundComponent;
+import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.combat.CharacterKilledEvent;
 import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.Utils;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -31,27 +28,6 @@ public class Player extends Character {
         add(new EquipmentSlotsComponent());
         add(new StatsRegenerationComponent(3f, 1, 10, 10));
 
-
-        TextureAtlas atlas = assets.get(characterData.getAtlas());
-
-        // Create animations by extracting frames from the spritesheet.
-        Animation<TextureRegion> idleAnimation = Utils.createAnimation(atlas.findRegion("idle"), 22f / Constants.PPM, 0, 5, 0, 0 * 80, 80, 80);
-        Animation<TextureRegion> runAnimation = Utils.createAnimation(atlas.findRegion("run"), 17f / Constants.PPM, 0, 7,  0, 0 * 80,  80, 80);
-        Animation<TextureRegion> jumpAnimation = Utils.createAnimation(atlas.findRegion("jump"), 10f / Constants.PPM, 0, 3,  0, 0 * 80,  80, 80);
-        Animation<TextureRegion> fallAnimation = Utils.createAnimation(atlas.findRegion("jump"), 10f / Constants.PPM, 4, 4,  0, 0 * 80,  80, 80);
-        Animation<TextureRegion> crouchAnimation = Utils.createAnimation(atlas.findRegion("jump"), 10f / Constants.PPM, 5, 5,  0, 0 * 80,  80, 80);
-        Animation<TextureRegion> attackAnimation = Utils.createAnimation(atlas.findRegion("attack"), 20f / Constants.PPM, 1, 6,  0, 0 * 80,  80, 80);
-        Animation<TextureRegion> killedAnimation = Utils.createAnimation(atlas.findRegion("killed"), 30f / Constants.PPM, 0, 5,  0,      0,  80, 80);
-
-        animations.put(State.IDLE, idleAnimation);
-        animations.put(State.RUNNING, runAnimation);
-        animations.put(State.JUMPING, jumpAnimation);
-        animations.put(State.FALLING, fallAnimation);
-        animations.put(State.CROUCHING, crouchAnimation);
-        animations.put(State.ATTACKING, attackAnimation);
-        animations.put(State.KILLED, killedAnimation);
-
-
         // Create body and fixtures.
         short bodyCategoryBits = CategoryBits.PLAYER;
         short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON | CategoryBits.ITEM;
@@ -59,23 +35,26 @@ public class Player extends Character {
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
         super.defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
-        sprite.setBounds(0, 0, 115 / Constants.PPM, 115 / Constants.PPM);
+        Mappers.SPRITE.get(this).setBounds(0, 0, 115 / Constants.PPM, 115 / Constants.PPM);
     }
 
     public void pickup(Item item) {
+        InventoryComponent inventory = Mappers.INVENTORY.get(this);
+        SoundComponent sounds = Mappers.SOUNDS.get(this);
+
         inventory.get(item.getType()).add(item);
         world.destroyBody(Mappers.B2BODY.get(item).getBody());
         GameEventManager.getInstance().fireEvent(new ItemPickedUpEvent(item));
-        System.out.println(inventory);
+
         sounds.get(SoundType.ITEM_PICKEDUP).play();
     }
 
     public void reposition(Vector2 position) {
-        b2body.getBody().setTransform(position, 0);
+        Mappers.B2BODY.get(this).getBody().setTransform(position, 0);
     }
 
     public void reposition(float x, float y) {
-        b2body.getBody().setTransform(x, y, 0);
+        Mappers.B2BODY.get(this).getBody().setTransform(x, y, 0);
     }
 
     @Override
@@ -89,6 +68,8 @@ public class Player extends Character {
 
     @Override
     public void receiveDamage(Character source, int damage) {
+        StateComponent state = Mappers.STATE.get(this);
+
         super.receiveDamage(source, damage);
         state.setInvincible(true);
 

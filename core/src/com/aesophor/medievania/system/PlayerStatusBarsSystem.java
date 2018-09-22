@@ -24,7 +24,7 @@ public class PlayerStatusBarsSystem extends EntitySystem {
     }
 
     public void registerPlayer(Player player) {
-        statusBars.setPlayer(player);
+        statusBars.registerPlayer(player);
     }
 
 }

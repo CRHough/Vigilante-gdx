@@ -1,5 +1,6 @@
 package com.aesophor.medievania.util;
 
+import com.aesophor.medievania.component.character.CharacterDataComponent;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -47,38 +48,37 @@ public class Utils {
     }
     
     /**
-     * Create animations by extracting a set of TextureRegion from the specified Texture.
+     * Create animations by extracting a set of TextureRegion from the specified Texture atlas.
      * Note that the all sprites must be on the same row.
-     * @param region The AtlasRegion from which to extract TextureRegion
-     * @param frameDuration The time between frames in seconds.
-     * @param firstFrameCount The starting frame count of the frames to extract,
-     *        usually 0 if correct offsetX is given.
-     * @param lastFrameCount The last frame count of the frames to extract.
-     * @param offsetX The x offset to apply in order to reach the first frame.
-     * @param offsetY The y offset to apply in order to reach the first frame.
-     * @param width The width of the TextureRegion. May be negative to flip the sprite when drawn.
-     * @param height The height of the TextureRegion. May be negative to flip the sprite when drawn.
+     * @param atlas source texture atlas.
+     * @param characterData target character data component.
+     * @param frameName name of the animation (idle/run/jump... etc).
+     * @param ppm frame duration scale factor.
      * @return Extracted animations.
      */
-    public static Animation<TextureRegion> createAnimation(TextureAtlas.AtlasRegion region, float frameDuration,
-                                                           int firstFrameCount, int lastFrameCount, int offsetX, int offsetY, int width, int height) {
+    public static Animation<TextureRegion> createAnimation(TextureAtlas atlas, CharacterDataComponent characterData, String frameName, float ppm) {
+        TextureAtlas.AtlasRegion region = atlas.findRegion(frameName);
+        CharacterDataComponent.FrameData frameData = characterData.getFrameData().get(frameName);
+
+        float frameDuration = frameData.getFrameDuration();
+        int firstFrameCount = frameData.getFrameStartCount();
+        int lastFrameCount = frameData.getFrameEndCount();
+        int frameWidth = characterData.getFrameWidth();
+        int frameHeight = characterData.getFrameHeight();
+
         frames.clear();
-        
         for (int i = firstFrameCount; i <= lastFrameCount; i++) {
-            frames.add(new TextureRegion(region, i * width + offsetX, offsetY, width, height));
+            frames.add(new TextureRegion(region, i * frameWidth, 0, frameWidth, frameHeight));
         }
-        
-        return new Animation<>(frameDuration, frames);
+        return new Animation<>(frameDuration / ppm, frames);
     }
 
     public static Animation<TextureRegion> createAnimation(Texture region, float frameDuration,
                                                            int firstFrameCount, int lastFrameCount, int offsetX, int offsetY, int width, int height) {
         frames.clear();
-
         for (int i = firstFrameCount; i <= lastFrameCount; i++) {
             frames.add(new TextureRegion(region, i * width + offsetX, offsetY, width, height));
         }
-
         return new Animation<>(frameDuration, frames);
     }
 

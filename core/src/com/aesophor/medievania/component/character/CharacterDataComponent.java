@@ -5,16 +5,31 @@ import java.util.HashMap;
 
 public class CharacterDataComponent implements Component {
 
+    public static class FrameData {
+        private float frameDuration;
+        private int frameStartCount;
+        private int frameEndCount;
+
+        public float getFrameDuration() {
+            return frameDuration;
+        }
+
+        public int getFrameStartCount() {
+            return frameStartCount;
+        }
+
+        public int getFrameEndCount() {
+            return frameEndCount;
+        }
+    }
+
     private String atlas;
     private int textureOffsetX;
     private int textureOffsetY;
-
-    private String hurtSound;
-    private String killedSound;
-    private String weaponSwingSound;
-    private String weaponHitSound;
-    private String jumpSound;
-    private String itemPickedupSound;
+    private int frameWidth;
+    private int frameHeight;
+    private HashMap<String, FrameData> frameData;
+    private HashMap<String, String> soundData;
 
     private StatsComponent stats;
     private HashMap<String, Float> items;
@@ -31,31 +46,21 @@ public class CharacterDataComponent implements Component {
         return textureOffsetY;
     }
 
-
-    public String getHurtSound() {
-        return hurtSound;
+    public int getFrameWidth() {
+        return frameWidth;
     }
 
-    public String getKilledSound() {
-        return killedSound;
+    public int getFrameHeight() {
+        return frameHeight;
     }
 
-    public String getWeaponHitSound() {
-        return weaponHitSound;
+    public HashMap<String, FrameData> getFrameData() {
+        return frameData;
     }
 
-    public String getWeaponSwingSound() {
-        return weaponSwingSound;
+    public HashMap<String, String> getSoundData() {
+        return soundData;
     }
-
-    public String getJumpSound() {
-        return jumpSound;
-    }
-
-    public String getItemPickedupSound() {
-        return itemPickedupSound;
-    }
-
 
     public StatsComponent getStats() {
         return stats;

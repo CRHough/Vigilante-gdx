@@ -6,6 +6,7 @@ import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
+import com.aesophor.medievania.component.sound.SoundComponent;
 import com.badlogic.ashley.core.ComponentMapper;
 
 public class Mappers {
@@ -26,6 +27,7 @@ public class Mappers {
     public static final ComponentMapper<ItemDataComponent> ITEM_DATA;
     public static final ComponentMapper<EquipmentDataComponent> EQUIPMENT_DATA;
     public static final ComponentMapper<CharacterDataComponent> CHARACTER_DATA;
+    public static final ComponentMapper<SoundComponent> SOUNDS;
 
     static {
         STATS = ComponentMapper.getFor(StatsComponent.class);
@@ -44,6 +46,7 @@ public class Mappers {
         ITEM_DATA = ComponentMapper.getFor(ItemDataComponent.class);
         EQUIPMENT_DATA = ComponentMapper.getFor(EquipmentDataComponent.class);
         CHARACTER_DATA = ComponentMapper.getFor(CharacterDataComponent.class);
+        SOUNDS = ComponentMapper.getFor(SoundComponent.class);
     }
 
 }

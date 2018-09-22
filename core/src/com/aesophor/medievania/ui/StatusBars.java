@@ -1,6 +1,7 @@
 package com.aesophor.medievania.ui;
 
 import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.util.Constants;
@@ -19,7 +20,7 @@ public class StatusBars extends Stage {
 
     private static int barLength = 75; // pixel
 
-    private Player player;
+    private StatsComponent playerStats;
     
     private Texture hudTexture;
     private TextureRegion barsBackground;
@@ -54,7 +55,10 @@ public class StatusBars extends Stage {
     
     public StatusBars(GameStateManager gsm, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
-        this.player = player;
+
+        if (player != null) {
+            playerStats = Mappers.STATS.get(player);
+        }
         
         // Initializes player hud Texture and TextureRegions.
         hudTexture = gsm.getAssets().get("interface/hud/hud.png");
@@ -133,17 +137,17 @@ public class StatusBars extends Stage {
     }
 
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void registerPlayer(Player player) {
+        playerStats = Mappers.STATS.get(player);
     }
 
     public void update(float delta) {
-        int fullHealth = Mappers.STATS.get(player).getFullHealth();
-        int fullStamina = Mappers.STATS.get(player).getFullStamina();
-        int fullMagicka = Mappers.STATS.get(player).getFullMagicka();
+        int fullHealth = playerStats.getFullHealth();
+        int fullStamina = playerStats.getFullStamina();
+        int fullMagicka = playerStats.getFullMagicka();
 
-        healthBarImage.setScaleX(barLength * player.getHealth() / fullHealth); // 100 is only temporary (player's full heatlh is 100)
-        staminaBarImage.setScaleX(barLength * player.getStamina() / fullStamina);
+        healthBarImage.setScaleX(barLength * playerStats.getHealth() / fullHealth); // 100 is only temporary (player's full heatlh is 100)
+        staminaBarImage.setScaleX(barLength * playerStats.getStamina() / fullStamina);
         //healthBarPadImage.setX(healthBarImage.getX() + barLength * player.getHealth() / fullMagicka);
         healthBarPadImage.setX(healthBarImage.getX() + healthBarImage.getScaleX());
         staminaBarPadImage.setX(staminaBarImage.getX() + staminaBarImage.getScaleX());

@@ -19,7 +19,7 @@ public class MainMenuScreen extends AbstractScreen {
     private static final String BACKGROUND_MUSIC_FILE = "music/main_menu.wav";
     private static final String KEY_PRESS_SOUND_FILE = "sfx/ui/click.wav";
 
-    private static final String COPYRIGHT_NOTICE = "Aesophor Gameworks - Build: 9/10/2018 (pre-alpha)";
+    private static final String COPYRIGHT_NOTICE = "Aesophor Softworks - Build: 9/10/2018 (pre-alpha)";
 
     private Texture backgroundTexture;
     

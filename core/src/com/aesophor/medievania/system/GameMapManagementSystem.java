@@ -2,6 +2,7 @@ package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.component.character.DroppableItemsComponent;
 import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
@@ -63,10 +64,11 @@ public class GameMapManagementSystem extends EntitySystem {
         // decide whether the item should be dropped according to its drop rate.
         GameEventManager.getInstance().addEventListener(GameEventType.CHARACTER_KILLED, (CharacterKilledEvent e) -> {
             DroppableItemsComponent droppableItems = Mappers.DROP_ITEMS.get(e.getDeceased());
+            B2BodyComponent deceasedB2Body = Mappers.B2BODY.get(e.getDeceased());
 
             droppableItems.getDroppableItems().forEach((itemName, dropRate) -> {
                 if (Utils.randomInt(0, 100) / 100f <= dropRate) {
-                    Item item = spawnItem(itemName, world, e.getDeceased().getB2Body().getPosition().x, e.getDeceased().getB2Body().getPosition().y);
+                    Item item = spawnItem(itemName, world, deceasedB2Body.getBody().getPosition().x, deceasedB2Body.getBody().getPosition().y);
                     Body body = Mappers.B2BODY.get(item).getBody();
                     body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
                     engine.addEntity(item);
@@ -75,10 +77,13 @@ public class GameMapManagementSystem extends EntitySystem {
         });
 
         GameEventManager.getInstance().addEventListener(GameEventType.DISCARD_ITEM, (DiscardItemEvent e) -> {
+            B2BodyComponent b2body = Mappers.B2BODY.get(player);
+
             Item item = e.getItem();
             item.constructBody();
             item.reloadTexture();
-            Mappers.B2BODY.get(item).getBody().setTransform(player.getB2Body().getPosition().x, player.getB2Body().getPosition().y, 0);
+
+            Mappers.B2BODY.get(item).getBody().setTransform(b2body.getBody().getPosition().x, b2body.getBody().getPosition().y, 0);
             Body body = Mappers.B2BODY.get(item).getBody();
             body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
             engine.addEntity(item);
@@ -125,7 +130,7 @@ public class GameMapManagementSystem extends EntitySystem {
 
             for(int i = 0; i < bodies.size; i++)
             {
-                if (!bodies.get(i).equals(player.getB2Body())) {
+                if (!bodies.get(i).equals(Mappers.B2BODY.get(player).getBody())) {
                     world.destroyBody(bodies.get(i));
                 }
             }
@@ -147,7 +152,7 @@ public class GameMapManagementSystem extends EntitySystem {
         npcs.forEach(engine::addEntity);
     }
 
-    public Item spawnItem(String itemName, World world, float x, float y) {
+    private Item spawnItem(String itemName, World world, float x, float y) {
         Item item = null;
 
         try {

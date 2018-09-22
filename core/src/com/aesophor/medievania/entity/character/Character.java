@@ -15,23 +15,17 @@ import com.aesophor.medievania.event.character.ItemUnequippedEvent;
 import com.aesophor.medievania.event.combat.InflictDamageEvent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.Utils;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
+import java.util.Arrays;
 
 public abstract class Character extends Entity implements Disposable {
-
-    protected SpriteComponent sprite;
-    protected AnimationComponent animations;
-    protected B2BodyComponent b2body;
-    protected StateComponent state;
-    protected SoundComponent sounds;
-    protected StatsComponent stats;
-    protected CombatTargetComponent targets;
-    protected InventoryComponent inventory;
-    protected CharacterDataComponent characterData;
 
     protected AIActions AIActions;
     protected World world;
@@ -39,15 +33,15 @@ public abstract class Character extends Entity implements Disposable {
     public Character(String name, AssetManager assets, World world, float x, float y) {
         this.world = world;
 
-        characterData = CharacterDataManager.getInstance().get(name);
-        stats = new StatsComponent(characterData.getStats());
-        animations = new AnimationComponent();
-        b2body = new B2BodyComponent(world);
-        sprite = new SpriteComponent(x * Constants.PPM, y * Constants.PPM);
-        state = new StateComponent(State.IDLE);
-        sounds = new SoundComponent();
-        targets = new CombatTargetComponent();
-        inventory = new InventoryComponent();
+        CharacterDataComponent characterData = CharacterDataManager.getInstance().get(name);
+        StatsComponent stats = new StatsComponent(characterData.getStats());
+        AnimationComponent animations = new AnimationComponent();
+        B2BodyComponent b2body = new B2BodyComponent(world);
+        SpriteComponent sprite = new SpriteComponent(x * Constants.PPM, y * Constants.PPM);
+        StateComponent state = new StateComponent(State.IDLE);
+        SoundComponent sounds = new SoundComponent();
+        CombatTargetComponent targets = new CombatTargetComponent();
+        InventoryComponent inventory = new InventoryComponent();
 
         add(characterData);
         add(stats);
@@ -55,23 +49,26 @@ public abstract class Character extends Entity implements Disposable {
         add(b2body);
         add(sprite);
         add(state);
+        add(sounds);
         add(targets);
         add(inventory);
         add(new EquipmentSlotsComponent());
 
         AIActions = new AIActions(this);
 
-        // Sounds.
-        sounds.put(SoundType.JUMP, assets.get(characterData.getJumpSound()));
-        sounds.put(SoundType.HURT, assets.get(characterData.getHurtSound()));
-        sounds.put(SoundType.KILLED, assets.get(characterData.getKilledSound()));
-        sounds.put(SoundType.WEAPON_SWING, assets.get(characterData.getWeaponSwingSound()));
-        sounds.put(SoundType.WEAPON_HIT, assets.get(characterData.getWeaponHitSound()));
-        sounds.put(SoundType.ITEM_PICKEDUP, assets.get(characterData.getItemPickedupSound()));
+        // Initialize animations by extracting frames from the texture atlas.
+        TextureAtlas atlas = assets.get(characterData.getAtlas());
+        Arrays.stream(State.values()).forEach(s -> animations.put(s, Utils.createAnimation(atlas, characterData, s.name(), Constants.PPM)));
+
+        // Initialize sounds.
+        Arrays.stream(SoundType.values()).forEach(s -> sounds.put(s, assets.get(characterData.getSoundData().get(s.name()))));
     }
 
 
     protected void defineBody(BodyDef.BodyType type, short bodyCategoryBits, short bodyMaskBits, short feetMaskBits, short meleeWeaponMaskBits) {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        SpriteComponent sprite = Mappers.SPRITE.get(this);
+
         Body body = b2body.getBodyBuilder().type(type)
                 .position(sprite.getX(), sprite.getY(), Constants.PPM)
                 .buildBody();
@@ -88,6 +85,9 @@ public abstract class Character extends Entity implements Disposable {
      * @param maskBits defines which objects the body fixture can collide with.
      */
     protected void createBodyFixture(short categoryBits, short maskBits) {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+
         Fixture bodyFixture = b2body.getBodyBuilder().newRectangleFixture(b2body.getBody().getPosition(), stats.getBodyWidth() / 2, stats.getBodyHeight() / 2, Constants.PPM)
                 .categoryBits(categoryBits)
                 .maskBits(maskBits)
@@ -102,6 +102,9 @@ public abstract class Character extends Entity implements Disposable {
      * @param maskBits defines which objects the feet fixture can collide with.
      */
     protected void createFeetFixture(short maskBits) {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+
         Vector2[] feetPolyVertices = new Vector2[4];
         feetPolyVertices[0] = new Vector2(-stats.getBodyWidth() / 2 + 1, -stats.getBodyHeight() / 2);
         feetPolyVertices[1] = new Vector2(stats.getBodyWidth() / 2 - 1, -stats.getBodyHeight() / 2);
@@ -119,6 +122,9 @@ public abstract class Character extends Entity implements Disposable {
     }
 
     protected void createMeleeWeaponFixture(short maskBits) {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+
         Vector2 meleeAttackFixturePosition = new Vector2(stats.getAttackRange(), 0);
 
         Fixture meleeWeaponFixture = b2body.getBodyBuilder().newCircleFixture(meleeAttackFixturePosition, stats.getAttackRange(), Constants.PPM)
@@ -150,6 +156,7 @@ public abstract class Character extends Entity implements Disposable {
     }
 
     public void unequip(Item item) {
+        InventoryComponent inventory = Mappers.INVENTORY.get(this);
         EquipmentType equipmentType = Mappers.EQUIPMENT_DATA.get(item).getType();
 
         EquipmentSlotsComponent equipmentSlots = Mappers.EQUIPMENT_SLOTS.get(this);
@@ -162,22 +169,32 @@ public abstract class Character extends Entity implements Disposable {
 
 
     public void moveLeft() {
-        state.setFacingRight(false);
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
 
+        state.setFacingRight(false);
         if (b2body.getBody().getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
             b2body.getBody().applyLinearImpulse(new Vector2(-stats.getMovementSpeed(), 0), b2body.getBody().getWorldCenter(), true);
         }
     }
 
     public void moveRight() {
-        state.setFacingRight(true);
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
 
+        state.setFacingRight(true);
         if (b2body.getBody().getLinearVelocity().x <= stats.getMovementSpeed() * 2) {
             b2body.getBody().applyLinearImpulse(new Vector2(stats.getMovementSpeed(), 0), b2body.getBody().getWorldCenter(), true);
         }
     }
 
     public void forwardRush() {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+
         if (b2body.getBody().getLinearVelocity().x <= stats.getMovementSpeed() * 2 && b2body.getBody().getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
             float rushForce = (state.facingRight()) ? stats.getMovementSpeed() * 5 : -stats.getMovementSpeed() * 5;
             b2body.getBody().applyLinearImpulse(new Vector2(rushForce, 0), b2body.getBody().getWorldCenter(), true);
@@ -185,15 +202,23 @@ public abstract class Character extends Entity implements Disposable {
     }
 
     public void jump() {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+        SoundComponent sounds = Mappers.SOUNDS.get(this);
+
         if (!state.isJumping()) {
             state.setJumping(true);
 
-            getB2Body().applyLinearImpulse(new Vector2(0, stats.getJumpHeight()), b2body.getBody().getWorldCenter(), true);
+            b2body.getBody().applyLinearImpulse(new Vector2(0, stats.getJumpHeight()), b2body.getBody().getWorldCenter(), true);
             sounds.get(SoundType.JUMP).play();
         }
     }
 
     public void jumpDown() {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StateComponent state = Mappers.STATE.get(this);
+
         if (state.isOnPlatform()) {
             state.setOnPlatform(false);
             b2body.getBody().setTransform(b2body.getBody().getPosition().x, b2body.getBody().getPosition().y - 8f / Constants.PPM, 0);
@@ -201,12 +226,16 @@ public abstract class Character extends Entity implements Disposable {
     }
 
     public void crouch() {
+        StateComponent state = Mappers.STATE.get(this);
+
         if (!state.isCrouching()) {
             state.setCrouching(true);
         }
     }
 
     public void getUp() {
+        StateComponent state = Mappers.STATE.get(this);
+
         if (state.isCrouching()) {
             state.setCrouching(false);
         }
@@ -214,6 +243,11 @@ public abstract class Character extends Entity implements Disposable {
 
 
     public void swingWeapon() {
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+        CombatTargetComponent targets = Mappers.COMBAT_TARGETS.get(this);
+        SoundComponent sounds = Mappers.SOUNDS.get(this);
+
         if (!state.isAttacking()) {
             state.setAttacking(true);
 
@@ -221,17 +255,23 @@ public abstract class Character extends Entity implements Disposable {
 
             // A character can have multiple inRangeTargets which are stored as an array.
             // When an inRangeTarget dies, the target will be removed from the array.
-            if (targets.hasInRangeTarget() && !targets.getInRangeTargets().first().state.isInvincible() && !targets.getInRangeTargets().first().state.isSetToKill()) {
-                setLockedOnTarget(targets.getInRangeTargets().first());
-                targets.getInRangeTargets().first().setLockedOnTarget(this);
+            if (targets.hasInRangeTarget()) {
+                Character currentTarget = targets.getInRangeTargets().first();
+                StateComponent targetState = Mappers.STATE.get(currentTarget);
+                CombatTargetComponent targetsTarget = Mappers.COMBAT_TARGETS.get(currentTarget); // lol...
 
-                inflictDamage(targets.getInRangeTargets().first(), stats.getBasePhysicalDamage());
+                if (!targetState.isInvincible() && !targetState.isSetToKill()) {
+                    targets.setLockedOnTarget(targets.getInRangeTargets().first());
+                    targetsTarget.setLockedOnTarget(this);
 
-                if (targets.getInRangeTargets().first().getComponent(StateComponent.class).isSetToKill()) {
-                    targets.getInRangeTargets().removeValue(targets.getInRangeTargets().first(), false);
+                    inflictDamage(targets.getInRangeTargets().first(), stats.getBasePhysicalDamage());
+
+                    if (targets.getInRangeTargets().first().getComponent(StateComponent.class).isSetToKill()) {
+                        targets.getInRangeTargets().removeValue(targets.getInRangeTargets().first(), false);
+                    }
+
+                    sounds.get(SoundType.WEAPON_HIT).play();
                 }
-
-                sounds.get(SoundType.WEAPON_HIT).play();
             }
 
             sounds.get(SoundType.WEAPON_SWING).play();
@@ -240,11 +280,19 @@ public abstract class Character extends Entity implements Disposable {
     }
 
     public void inflictDamage(Character target, int damage) {
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+
         target.receiveDamage(this, damage);
         target.knockedBack((state.facingRight()) ? stats.getAttackForce() : -stats.getAttackForce());
     }
 
     public void receiveDamage(Character source, int damage) {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+        SoundComponent sounds = Mappers.SOUNDS.get(this);
+
         if (!state.isInvincible()) {
             stats.modHealth(-damage);
 
@@ -261,6 +309,7 @@ public abstract class Character extends Entity implements Disposable {
     }
 
     public void knockedBack(float force) {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
         b2body.getBody().applyLinearImpulse(new Vector2(force, 1f), b2body.getBody().getWorldCenter(), true);
     }
 
@@ -271,55 +320,19 @@ public abstract class Character extends Entity implements Disposable {
     }
 
 
-    // Review the code below.
-    public Body getB2Body() {
-        return b2body.getBody();
-    }
-
-    public int getHealth() {
-        return stats.getHealth();
-    }
-
-    public int getStamina() {
-        return stats.getStamina();
-    }
-
-
-    public void setIsJumping(boolean jumping) {
-        state.setJumping(jumping);
-    }
-
-    public void setIsOnPlatform(boolean onPlatform) {
-        state.setOnPlatform(onPlatform);
-    }
-
-
-    public void setLockedOnTarget(Character enemy) {
-        targets.setLockedOnTarget(enemy);
-    }
-
-    public void addInRangeTarget(Character enemy) {
-        targets.getInRangeTargets().add(enemy);
-    }
-
-    public void removeInRangeTarget(Character enemy) {
-        targets.getInRangeTargets().removeValue(enemy, false);
-    }
-
-
     public AIActions getAIActions() {
         return AIActions;
     }
 
     @Override
     public void dispose() {
-        sprite.dispose();
-        sounds.values().forEach(s -> s.dispose());
+        Mappers.SPRITE.get(this).dispose();
+        Mappers.SOUNDS.get(this).values().forEach(Sound::dispose);
     }
 
     @Override
     public String toString() {
-        return stats.getName();
+        return Mappers.STATS.get(this).getName();
     }
 
 }
