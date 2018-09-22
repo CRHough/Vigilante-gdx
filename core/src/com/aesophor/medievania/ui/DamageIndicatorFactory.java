@@ -7,6 +7,7 @@ import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Player;
+import com.aesophor.medievania.ui.component.DamageIndicator;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;

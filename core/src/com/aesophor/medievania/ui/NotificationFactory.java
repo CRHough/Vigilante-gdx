@@ -1,5 +1,6 @@
 package com.aesophor.medievania.ui;
 
+import com.aesophor.medievania.ui.component.Notification;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;

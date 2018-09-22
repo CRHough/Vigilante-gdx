@@ -3,7 +3,7 @@ package com.aesophor.medievania.ui.pausemenu;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.entity.character.Player;
-import com.aesophor.medievania.ui.LabelStyles;
+import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;

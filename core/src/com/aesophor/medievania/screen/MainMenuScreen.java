@@ -2,7 +2,7 @@ package com.aesophor.medievania.screen;
 
 import com.aesophor.medievania.Medievania;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.Font;
+import com.aesophor.medievania.ui.theme.Font;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;

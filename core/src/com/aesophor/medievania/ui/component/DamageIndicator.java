@@ -1,4 +1,4 @@
-package com.aesophor.medievania.ui;
+package com.aesophor.medievania.ui.component;
 
 import com.aesophor.medievania.entity.character.Character;
 

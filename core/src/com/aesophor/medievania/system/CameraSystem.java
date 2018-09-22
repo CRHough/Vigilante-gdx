@@ -29,7 +29,7 @@ public class CameraSystem extends EntitySystem {
             this.currentMap = e.getNewGameMap();
         });
 
-        GameEventManager.getInstance().addEventListener(GameEventType.HEALTH_CHANGED, (InflictDamageEvent e) -> {
+        GameEventManager.getInstance().addEventListener(GameEventType.INFLICT_DAMAGE, (InflictDamageEvent e) -> {
             if (e.getSource().equals(this.player) || e.getTarget().equals(this.player)) {
                 CameraShake.shake(8 / Constants.PPM, .1f);
             }

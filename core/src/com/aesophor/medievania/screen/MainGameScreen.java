@@ -11,7 +11,7 @@ import com.aesophor.medievania.system.*;
 import com.aesophor.medievania.ui.*;
 import com.aesophor.medievania.ui.pausemenu.PauseMenu;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.Font;
+import com.aesophor.medievania.ui.theme.Font;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;

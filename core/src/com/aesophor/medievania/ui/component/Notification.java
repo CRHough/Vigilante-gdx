@@ -1,4 +1,4 @@
-package com.aesophor.medievania.ui;
+package com.aesophor.medievania.ui.component;
 
 public class Notification extends TimedLabel {
 

@@ -1,4 +1,4 @@
-package com.aesophor.medievania.ui;
+package com.aesophor.medievania.ui.component;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;

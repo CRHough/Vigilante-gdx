@@ -2,10 +2,18 @@ package com.aesophor.medievania.ui;
 
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.StatsComponent;
+import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
+import com.aesophor.medievania.component.equipment.EquipmentType;
+import com.aesophor.medievania.component.item.ItemDataComponent;
+import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.GameStateManager;
+import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.GameEventType;
+import com.aesophor.medievania.event.character.ItemEquippedEvent;
+import com.aesophor.medievania.event.character.ItemUnequippedEvent;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.util.Font;
+import com.aesophor.medievania.ui.theme.Font;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -14,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class StatusBars extends Stage {
@@ -40,7 +49,7 @@ public class StatusBars extends Stage {
     private Image extraItemImageOne;
     private Image extraItemImageTwo;
 
-    private Texture weaponIcon;
+    private Texture weaponIconTexture;
     private Image weaponIconImage;
     private Label weaponNameLabel;
     
@@ -48,6 +57,10 @@ public class StatusBars extends Stage {
     private Table barTable;
     private Table extraTable;
     private Table textTable;
+
+    private int lastUpdatedHealth;
+    private int lastUpdatedStamina;
+    private int lastUpdatedMagicka;
 
     public StatusBars(GameStateManager gsm) {
         this(gsm, null);
@@ -68,7 +81,6 @@ public class StatusBars extends Stage {
         staminaBar = new TextureRegion(hudTexture, 1, 0, 1, 4);
         magickaBar = new TextureRegion(hudTexture, 2, 0, 1, 4);
         extraItem = new TextureRegion(hudTexture, 0, 54, 65, 15);
-        weaponIcon = gsm.getAssets().get("item/RusticAxe.png");
         
         
         hudTable = new Table();
@@ -124,8 +136,8 @@ public class StatusBars extends Stage {
         textTable.padTop(23f).padLeft(49f);
 
         BitmapFont font = Font.REGULAR;
-        weaponIconImage = new Image(weaponIcon);
-        weaponNameLabel = new Label("Rustic Axe", new Label.LabelStyle(font, Color.WHITE));
+        weaponIconImage = new Image();
+        weaponNameLabel = new Label("", new Label.LabelStyle(font, Color.WHITE));
 
         textTable.add(weaponIconImage).pad(5f);
         textTable.add(weaponNameLabel).padTop(18f);
@@ -134,6 +146,37 @@ public class StatusBars extends Stage {
         addActor(barTable);
         addActor(extraTable);
         addActor(textTable);
+
+
+        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_EQUIPPED, (ItemEquippedEvent e) -> {
+            if (e.getCharacter().equals(player) || e.getItem().getType() == ItemType.EQUIP) {
+                EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
+
+                if (equipmentData.getType() == EquipmentType.WEAPON) {
+                    ItemDataComponent itemData = Mappers.ITEM_DATA.get(e.getItem());
+
+                    if (weaponIconTexture != null) {
+                        weaponIconTexture.dispose();
+                    }
+
+                    weaponIconTexture = new Texture(itemData.getImage());
+                    weaponIconImage.setDrawable(new TextureRegionDrawable(new TextureRegion(weaponIconTexture)));
+                    weaponNameLabel.setText(itemData.getName());
+                }
+            }
+        });
+
+        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_UNEQUIPPED, (ItemUnequippedEvent e) -> {
+            if (e.getCharacter().equals(player) || e.getItem().getType() == ItemType.EQUIP) {
+                EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
+
+                if (equipmentData.getType() == EquipmentType.WEAPON) {
+                    weaponIconTexture.dispose();
+                    weaponIconImage.setDrawable(null);
+                    weaponNameLabel.setText("");
+                }
+            }
+        });
     }
 
 
@@ -141,18 +184,35 @@ public class StatusBars extends Stage {
         playerStats = Mappers.STATS.get(player);
     }
 
-    public void update(float delta) {
+    public void updateHealth() {
+        int currentHealth = playerStats.getHealth();
         int fullHealth = playerStats.getFullHealth();
-        int fullStamina = playerStats.getFullStamina();
-        int fullMagicka = playerStats.getFullMagicka();
+        lastUpdatedHealth = currentHealth;
+        healthBarImage.setScaleX(barLength * currentHealth / fullHealth);
+        healthBarPadImage.setX(healthBarImage.getX() + barLength * currentHealth / fullHealth);
+    }
 
-        healthBarImage.setScaleX(barLength * playerStats.getHealth() / fullHealth); // 100 is only temporary (player's full heatlh is 100)
-        staminaBarImage.setScaleX(barLength * playerStats.getStamina() / fullStamina);
-        //healthBarPadImage.setX(healthBarImage.getX() + barLength * player.getHealth() / fullMagicka);
-        healthBarPadImage.setX(healthBarImage.getX() + healthBarImage.getScaleX());
+    public void updateStamina() {
+        int currentStamina = playerStats.getStamina();
+        int fullStamina = playerStats.getFullStamina();
+        lastUpdatedStamina = currentStamina;
+        staminaBarImage.setScaleX(barLength * currentStamina / fullStamina);
         staminaBarPadImage.setX(staminaBarImage.getX() + staminaBarImage.getScaleX());
+    }
+
+    public void updateMagicka() {
+        int currentMagicka = playerStats.getMagicka();
+        int fullMagicka = playerStats.getFullMagicka();
+        lastUpdatedMagicka = currentMagicka;
+        magickaBarImage.setScaleX(barLength * currentMagicka / fullMagicka);
         magickaBarPadImage.setX(magickaBarImage.getX() + magickaBarImage.getScaleX());
-        //healthLabel.setText(String.format("HP: %d / %d", player.getHealth(), 100));
+
+    }
+
+    public void update(float delta) {
+        updateHealth();
+        updateStamina();
+        updateMagicka();
     }
     
 }

@@ -2,7 +2,7 @@ package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.event.GameEvent;
 import com.aesophor.medievania.event.GameEventManager;
-import com.aesophor.medievania.ui.LabelStyles;
+import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;

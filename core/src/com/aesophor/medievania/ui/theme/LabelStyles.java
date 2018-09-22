@@ -1,6 +1,5 @@
-package com.aesophor.medievania.ui;
+package com.aesophor.medievania.ui.theme;
 
-import com.aesophor.medievania.util.Font;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 

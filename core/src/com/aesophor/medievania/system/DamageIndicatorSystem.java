@@ -21,7 +21,7 @@ public class DamageIndicatorSystem extends EntitySystem {
             damageIndicatorFactory.getViewport().update(e.getViewportWidth(), e.getViewportHeight());
         });
 
-        GameEventManager.getInstance().addEventListener(GameEventType.HEALTH_CHANGED, (InflictDamageEvent e) -> {
+        GameEventManager.getInstance().addEventListener(GameEventType.INFLICT_DAMAGE, (InflictDamageEvent e) -> {
             damageIndicatorFactory.show(e.getTarget(), e.getDamage());
         });
     }

@@ -5,7 +5,7 @@ public enum GameEventType {
     MAP_CHANGED,                // 0
     PORTAL_USED,                // 1
     MAINGAME_SCREEN_RESIZED,    // 2
-    HEALTH_CHANGED,             // 3
+    INFLICT_DAMAGE,             // 3
     CHARACTER_KILLED,           // 4
     ITEM_PICKED_UP,             // 5
     ITEM_EQUIPPED,              // 6

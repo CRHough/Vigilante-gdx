@@ -48,6 +48,11 @@ public class StatsComponent implements Component {
         modStamina(fullStamina);
         modMagicka(fullMagicka);
 
+        _str = s.getStr();
+        _dex = s.getDex();
+        _int = s.getInt();
+        _luk = s.getLuk();
+
         bodyHeight = s.getBodyHeight();
         bodyWidth = s.getBodyWidth();
 

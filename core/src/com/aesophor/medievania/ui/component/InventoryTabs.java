@@ -1,8 +1,9 @@
-package com.aesophor.medievania.ui;
+package com.aesophor.medievania.ui.component;
 
 import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
+import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;

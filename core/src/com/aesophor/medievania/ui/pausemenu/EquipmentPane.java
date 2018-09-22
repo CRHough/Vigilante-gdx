@@ -10,7 +10,7 @@ import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.character.ItemEquippedEvent;
 import com.aesophor.medievania.event.character.UnequipItemEvent;
-import com.aesophor.medievania.ui.LabelStyles;
+import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;

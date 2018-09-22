@@ -11,7 +11,7 @@ public class InflictDamageEvent extends GameEvent {
     private final int damage;
 
     public InflictDamageEvent(Character source, Character target, int damage) {
-        super(GameEventType.HEALTH_CHANGED);
+        super(GameEventType.INFLICT_DAMAGE);
         this.source = source;
         this.target = target;
         this.damage = damage;

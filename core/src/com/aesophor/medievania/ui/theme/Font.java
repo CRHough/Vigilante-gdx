@@ -1,4 +1,4 @@
-package com.aesophor.medievania.util;
+package com.aesophor.medievania.ui.theme;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;

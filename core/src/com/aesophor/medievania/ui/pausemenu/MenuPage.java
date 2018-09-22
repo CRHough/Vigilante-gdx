@@ -1,7 +1,7 @@
 package com.aesophor.medievania.ui.pausemenu;
 
-import com.aesophor.medievania.ui.Colorscheme;
-import com.aesophor.medievania.ui.LabelStyles;
+import com.aesophor.medievania.ui.theme.Colorscheme;
+import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
