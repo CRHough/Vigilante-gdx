@@ -26,9 +26,9 @@ public class Medievania extends Game implements GameStateManager {
         this.batch = new SpriteBatch();
         this.assets = new AssetManager();
 
-        ItemDataManager.getInstance().load("items.json");
-        EquipmentDataManager.getInstance().load("equipment.json");
-        CharacterDataManager.getInstance().load("characters.json");
+        ItemDataManager.getInstance().load("data/items.json");
+        EquipmentDataManager.getInstance().load("data/equipment.json");
+        CharacterDataManager.getInstance().load("data/characters.json");
 
         assets.load("interface/mainmenu_bg.png", Texture.class);
         assets.load("interface/hud/hud.png", Texture.class);
@@ -41,12 +41,10 @@ public class Medievania extends Game implements GameStateManager {
         assets.load("interface/selection.png", Texture.class); // rename to item_selected later
         assets.load("interface/triangle.png", Texture.class);
 
-        assets.load("character/bandit/Bandit.pack", TextureAtlas.class);
-        assets.load("character/knight/Knight.pack", TextureAtlas.class);
+        assets.load("texture/bandit/Bandit.pack", TextureAtlas.class);
+        assets.load("texture/knight/Knight.pack", TextureAtlas.class);
 
-        //assets.load("character/bandit/Bandit.png", Texture.class);
-        //assets.load("character/knight/Knight.png", Texture.class);
-        assets.load("item/RusticAxe.png", Texture.class);
+        assets.load("item/RustyAxe.png", Texture.class);
         assets.load("music/main_menu.wav", Music.class);
         assets.load("music/village01.mp3", Music.class);
         assets.load("sfx/inventory/open_and_close.wav", Sound.class);
