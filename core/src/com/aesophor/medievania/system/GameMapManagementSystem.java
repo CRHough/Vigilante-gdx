@@ -8,9 +8,9 @@ import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
-import com.aesophor.medievania.event.character.DiscardItemEvent;
+import com.aesophor.medievania.event.character.ItemDiscardedEvent;
 import com.aesophor.medievania.event.combat.CharacterKilledEvent;
-import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
+import com.aesophor.medievania.event.character.ItemPickedUpEvent;
 import com.aesophor.medievania.event.map.MapChangedEvent;
 import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.aesophor.medievania.event.screen.GamePausedEvent;
@@ -70,13 +70,13 @@ public class GameMapManagementSystem extends EntitySystem {
                 if (Utils.randomInt(0, 100) / 100f <= dropRate) {
                     Item item = spawnItem(itemName, world, deceasedB2Body.getBody().getPosition().x, deceasedB2Body.getBody().getPosition().y);
                     Body body = Mappers.B2BODY.get(item).getBody();
-                    body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
+                    body.applyLinearImpulse(new Vector2(Utils.randomInt(-1,1), 2.5f), body.getWorldCenter(), true);
                     engine.addEntity(item);
                 }
             });
         });
 
-        GameEventManager.getInstance().addEventListener(GameEventType.DISCARD_ITEM, (DiscardItemEvent e) -> {
+        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_DISCARDED, (ItemDiscardedEvent e) -> {
             B2BodyComponent b2body = Mappers.B2BODY.get(player);
 
             Item item = e.getItem();
@@ -165,6 +165,11 @@ public class GameMapManagementSystem extends EntitySystem {
         }
 
         return item;
+    }
+
+    @Override
+    public void update(float delta) {
+
     }
 
 }

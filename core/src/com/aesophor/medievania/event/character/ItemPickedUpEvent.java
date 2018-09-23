@@ -1,4 +1,4 @@
-package com.aesophor.medievania.event.combat;
+package com.aesophor.medievania.event.character;
 
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEvent;

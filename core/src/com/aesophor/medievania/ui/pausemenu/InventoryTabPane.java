@@ -5,23 +5,23 @@ import com.aesophor.medievania.component.equipment.EquipmentType;
 import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.entity.character.Player;
+import com.aesophor.medievania.entity.item.Item;
+import com.aesophor.medievania.event.ui.DialogOptionEvent;
+import com.aesophor.medievania.event.GameEventListener;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
-import com.aesophor.medievania.event.character.DiscardItemEvent;
-import com.aesophor.medievania.event.character.EquipItemEvent;
+import com.aesophor.medievania.event.character.ItemEquippedEvent;
 import com.aesophor.medievania.event.character.InventoryChangedEvent;
-import com.aesophor.medievania.event.character.UnequipItemEvent;
-import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
+import com.aesophor.medievania.event.character.ItemUnequippedEvent;
+import com.aesophor.medievania.event.character.ItemPickedUpEvent;
 import com.aesophor.medievania.event.ui.InventoryItemChangedEvent;
 import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
-import com.aesophor.medievania.event.ui.PromptDiscardItemEvent;
 import com.aesophor.medievania.ui.component.InventoryTabs;
 import com.aesophor.medievania.ui.component.ItemListView;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -32,7 +32,6 @@ public class InventoryTabPane extends Table implements MenuPagePane {
     private static final float TAB_PANE_Y = -45;
 
     private final Texture inventoryBackground;
-    private final Sound equipSound;
 
     private final InventoryTabs inventoryTabs;
     private final ItemListView itemListView;
@@ -43,6 +42,7 @@ public class InventoryTabPane extends Table implements MenuPagePane {
     private Player player;
     private boolean selectingEquipment; /* InventoryTabPane can also be used as an equipment selector! */
     private EquipmentType equipmentType;
+    private final GameEventListener<DialogOptionEvent> promptDiscardItemEvLstnr;
 
     public InventoryTabPane(AssetManager assets, Player player, MenuDialog menuDialog) {
         this.inventoryTabs = new InventoryTabs(assets);
@@ -51,7 +51,6 @@ public class InventoryTabPane extends Table implements MenuPagePane {
         this.player = player;
 
         inventoryBackground = assets.get("interface/inventory_bg.png");
-        equipSound = assets.get("sfx/inventory/equip.wav", Sound.class);
 
         itemDesc = new Label("", LabelStyles.WHITE_REGULAR);
         itemDesc.setWrap(true);
@@ -69,6 +68,18 @@ public class InventoryTabPane extends Table implements MenuPagePane {
         itemListView.populate(Mappers.INVENTORY.get(player), ItemType.EQUIP);
 
 
+        promptDiscardItemEvLstnr = new GameEventListener<DialogOptionEvent>() {
+            @Override
+            public void handle(DialogOptionEvent e) {
+                menuDialog.show("Do you want to discard this item?", "Yes", "No", (DialogOptionEvent discardItem) -> {
+                    Item selectedItem = itemListView.getSelectedItem();
+                    player.discard(selectedItem);
+                }, null);
+            }
+        };
+
+
+        // !!!!!!!!!! Not necessary ??????
         // Add the item which the player has just picked up to inventory content table
         // iff currently selected tab matches the item type.
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
@@ -94,25 +105,11 @@ public class InventoryTabPane extends Table implements MenuPagePane {
             }
         });
 
-        // Remove the item when the player has confirmed to discard it.
-        GameEventManager.getInstance().addEventListener(GameEventType.DISCARD_ITEM, (DiscardItemEvent e) -> {
-            Mappers.INVENTORY.get(player).remove(e.getItem());
-        });
-
-        GameEventManager.getInstance().addEventListener(GameEventType.EQUIP_ITEM, (EquipItemEvent e) -> {
-            player.equip(e.getItem());
-            equipSound.play();
-        });
-
         // Whenever there's a change in inventory, refresh the list. (TODO: inventory onChange efficiency)
         GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_CHANGED, (InventoryChangedEvent e) -> {
             itemListView.clear();
             itemDesc.setText("");
             itemListView.populate(Mappers.INVENTORY.get(player), inventoryTabs.getSelectedTab().getType());
-        });
-
-        GameEventManager.getInstance().addEventListener(GameEventType.PROMPT_DISCARD_ITEM, (PromptDiscardItemEvent e) -> {
-            menuDialog.show("Do you want to discard this item?", "Yes", "No", new DiscardItemEvent(itemListView.getSelectedItem()), null);
         });
     }
 
@@ -137,11 +134,9 @@ public class InventoryTabPane extends Table implements MenuPagePane {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             if (selectingEquipment) {
                 if (itemListView.getSelectedItem() != null) {
-                    player.equip(getItemListView().getSelectedItem());
+                    player.equip(itemListView.getSelectedItem());
                 } else {
-                    if (Mappers.EQUIPMENT_SLOTS.get(player).get(equipmentType) != null) {
-                        GameEventManager.getInstance().fireEvent(new UnequipItemEvent(Mappers.EQUIPMENT_SLOTS.get(player).get(equipmentType)));
-                    }
+                    player.unequip(equipmentType);
                     GameEventManager.getInstance().fireEvent(new InventoryChangedEvent());
                 }
                 selectingEquipment = false;
@@ -149,16 +144,19 @@ public class InventoryTabPane extends Table implements MenuPagePane {
             } else {
                 switch (itemListView.getSelectedItem().getType()) {
                     case EQUIP:
-                        menuDialog.show("", "Equip", "Discard", new EquipItemEvent(itemListView.getSelectedItem()), new PromptDiscardItemEvent());
+                        menuDialog.show("", "Equip", "Discard", (DialogOptionEvent equipItem) -> {
+                            Item selectedItem = itemListView.getSelectedItem();
+                            player.equip(selectedItem);
+                        }, promptDiscardItemEvLstnr);
                         break;
 
                     case USE:
-                        menuDialog.show("", "Use", "Discard", new EquipItemEvent(itemListView.getSelectedItem()), new PromptDiscardItemEvent());
+                        //menuDialog.show("", "Use", "Discard", new UseItemEvent(player, itemListView.getSelectedItem()), promptDiscardItemEvLstnr);
                         break;
 
                     case MISC:
                     default:
-                        menuDialog.show("", "Use", "Discard", null, new PromptDiscardItemEvent());
+                        //menuDialog.show("", "Use", "Discard", null, promptDiscardItemEvLstnr);
                         break;
                 }
             }

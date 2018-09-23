@@ -10,7 +10,9 @@ import com.aesophor.medievania.component.sound.SoundComponent;
 import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.character.ItemDiscardedEvent;
 import com.aesophor.medievania.event.character.ItemEquippedEvent;
+import com.aesophor.medievania.event.character.ItemPickedUpEvent;
 import com.aesophor.medievania.event.character.ItemUnequippedEvent;
 import com.aesophor.medievania.event.combat.InflictDamageEvent;
 import com.aesophor.medievania.util.CategoryBits;
@@ -134,29 +136,47 @@ public abstract class Character extends Entity implements Disposable {
         InventoryComponent inventory = Mappers.INVENTORY.get(this);
         EquipmentSlotsComponent equipmentSlots = Mappers.EQUIPMENT_SLOTS.get(this);
         EquipmentType equipmentType = Mappers.EQUIPMENT_DATA.get(item).getType();
+        SoundComponent sounds = Mappers.SOUNDS.get(this);
 
         // If this equipment slot has already been occupied, add the previously item back to inventory first.
-        if (equipmentSlots.has(equipmentType)) {
-            inventory.add(equipmentSlots.get(equipmentType));
-            GameEventManager.getInstance().fireEvent(new ItemUnequippedEvent(this, equipmentSlots.get(equipmentType)));
-        }
+        unequip(equipmentType);
 
         // Equip the new item.
         inventory.remove(item);
-        equipmentSlots.equip(item);
+        equipmentSlots.put(item);
         GameEventManager.getInstance().fireEvent(new ItemEquippedEvent(this, item));
+        sounds.get(SoundType.EQUIPMENT_CHANGED).play();
     }
 
-    public void unequip(Item item) {
+    public void unequip(EquipmentType equipmentType) {
         InventoryComponent inventory = Mappers.INVENTORY.get(this);
-        EquipmentType equipmentType = Mappers.EQUIPMENT_DATA.get(item).getType();
-
         EquipmentSlotsComponent equipmentSlots = Mappers.EQUIPMENT_SLOTS.get(this);
+        SoundComponent sounds = Mappers.SOUNDS.get(this);
+
         if (equipmentSlots.has(equipmentType)) {
-            equipmentSlots.unequip(item);
+            Item item = equipmentSlots.get(equipmentType);
+            equipmentSlots.remove(item);
             inventory.add(item);
             GameEventManager.getInstance().fireEvent(new ItemUnequippedEvent(this, item));
+            sounds.get(SoundType.EQUIPMENT_CHANGED).play();
         }
+    }
+
+    public void pickup(Item item) {
+        B2BodyComponent itemB2Body = Mappers.B2BODY.get(item);
+        InventoryComponent inventory = Mappers.INVENTORY.get(this);
+        SoundComponent sounds = Mappers.SOUNDS.get(this);
+
+        inventory.get(item.getType()).add(item);
+        itemB2Body.getWorld().destroyBody(itemB2Body.getBody());
+        GameEventManager.getInstance().fireEvent(new ItemPickedUpEvent(item));
+
+        sounds.get(SoundType.ITEM_PICKEDUP).play();
+    }
+
+    public void discard(Item item) {
+        Mappers.INVENTORY.get(this).remove(item);
+        GameEventManager.getInstance().fireEvent(new ItemDiscardedEvent(item)); // move these events firing to Player?
     }
 
 
@@ -203,7 +223,7 @@ public abstract class Character extends Entity implements Disposable {
             state.setJumping(true);
 
             b2body.getBody().applyLinearImpulse(new Vector2(0, stats.getJumpHeight()), b2body.getBody().getWorldCenter(), true);
-            sounds.get(SoundType.JUMP).play();
+            //sounds.get(SoundType.JUMP).play();
         }
     }
 

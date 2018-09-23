@@ -24,11 +24,11 @@ public class EquipmentSlotsComponent implements Component {
         return equipment.get(type);
     }
 
-    public void equip(Item item) {
+    public void put(Item item) {
         equipment.put(Mappers.EQUIPMENT_DATA.get(item).getType(), item);
     }
 
-    public void unequip(Item item) {
+    public void remove(Item item) {
         equipment.put(Mappers.EQUIPMENT_DATA.get(item).getType(), null);
     }
 

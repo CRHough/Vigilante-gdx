@@ -1,7 +1,7 @@
 package com.aesophor.medievania.ui.pausemenu;
 
-import com.aesophor.medievania.event.GameEvent;
-import com.aesophor.medievania.event.GameEventManager;
+import com.aesophor.medievania.event.*;
+import com.aesophor.medievania.event.ui.DialogOptionEvent;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,16 +19,16 @@ public class MenuDialog extends Table implements MenuPagePane {
 
         private final Image image;
         private final Label text;
-        private GameEvent optionEvent;
+        private GameEventListener<DialogOptionEvent> optionEvLstnr;
 
         public DialogOption(Texture texture, String text) {
             this(texture, text, null);
         }
 
-        public DialogOption(Texture texture, String text, GameEvent optionEvent) {
+        public DialogOption(Texture texture, String text, GameEventListener<DialogOptionEvent> optionEvLstnr) {
             this.image = new Image(texture);
             this.text = new Label(text, LabelStyles.WHITE_REGULAR);
-            this.optionEvent = optionEvent;
+            this.optionEvLstnr = optionEvLstnr;
 
             this.padRight(10f);
             this.addActor(this.image);
@@ -38,12 +38,12 @@ public class MenuDialog extends Table implements MenuPagePane {
         }
 
 
-        public GameEvent getOptionEvent() {
-            return optionEvent;
+        public GameEventListener<DialogOptionEvent> getOptionEvLstnr() {
+            return optionEvLstnr;
         }
 
-        public void setOptionEvent(GameEvent optionEvent) {
-            this.optionEvent = optionEvent;
+        public void setOptionEvLstnr(GameEventListener<DialogOptionEvent> optionEvLstnr) {
+            this.optionEvLstnr = optionEvLstnr;
         }
 
         public void setText(String text) {
@@ -88,12 +88,12 @@ public class MenuDialog extends Table implements MenuPagePane {
     }
 
 
-    public void show(String message, String option1, String option2, GameEvent option1Event, GameEvent option2Event) {
+    public void show(String message, String option1, String option2, GameEventListener<DialogOptionEvent> option1EvLstnr, GameEventListener<DialogOptionEvent> option2EvLstnr) {
         this.message.setText(message);
         this.options.get(0).setText(option1);
         this.options.get(1).setText(option2);
-        this.options.get(0).setOptionEvent(option1Event);
-        this.options.get(1).setOptionEvent(option2Event);
+        this.options.get(0).setOptionEvLstnr(option1EvLstnr);
+        this.options.get(1).setOptionEvLstnr(option2EvLstnr);
         setVisible(true);
     }
 
@@ -118,11 +118,13 @@ public class MenuDialog extends Table implements MenuPagePane {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             setVisible(false);
 
-            // Fire the user-specified event corresponding to user's choice.
-            GameEvent selectedOptionEvent = getSelectedItem().getOptionEvent();
-            if (selectedOptionEvent != null) {
-                GameEventManager.getInstance().fireEvent(selectedOptionEvent);
+            // Handle the GameEventListener<DialogOptionEvent> here.
+            GameEventListener<DialogOptionEvent> selectedOptionEvLstnr = getSelectedItem().getOptionEvLstnr();
+
+            if (selectedOptionEvLstnr != null) {
+                selectedOptionEvLstnr.handle(new DialogOptionEvent() {});
             }
+
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             setVisible(false);
         }

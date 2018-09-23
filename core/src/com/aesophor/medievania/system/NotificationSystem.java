@@ -4,7 +4,7 @@ import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.combat.CharacterKilledEvent;
-import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
+import com.aesophor.medievania.event.character.ItemPickedUpEvent;
 import com.aesophor.medievania.ui.NotificationFactory;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.graphics.g2d.Batch;

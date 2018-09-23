@@ -9,11 +9,12 @@ import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.character.ItemEquippedEvent;
-import com.aesophor.medievania.event.character.UnequipItemEvent;
+import com.aesophor.medievania.event.character.ItemUnequippedEvent;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
@@ -81,6 +82,7 @@ public class EquipmentPane extends Table implements MenuPagePane {
 
     private final Texture regularItemTexture;
     private final Texture selectedItemTexture;
+    private final Sound clickSound;
 
     private final Array<EquipmentItem> items;
     private int currentItemIdx;
@@ -94,7 +96,7 @@ public class EquipmentPane extends Table implements MenuPagePane {
 
         regularItemTexture = assets.get("interface/item_regular.png");
         selectedItemTexture = assets.get("interface/selection.png");
-
+        clickSound = assets.get("sfx/ui/click.wav", Sound.class);
 
         top().left();
         setFillParent(true);
@@ -110,15 +112,16 @@ public class EquipmentPane extends Table implements MenuPagePane {
         items.first().setSelected(true);
 
 
+        // Update equipment UI when the player equipped an item.
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_EQUIPPED, (ItemEquippedEvent e) -> {
             EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
             items.get(equipmentData.getType().ordinal()).setItem(e.getItem());
         });
 
-        GameEventManager.getInstance().addEventListener(GameEventType.UNEQUIP_ITEM, (UnequipItemEvent e) -> {
+        // Update equipment UI when the player unequipped an item.
+        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_UNEQUIPPED, (ItemUnequippedEvent e) -> {
             EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
             items.get(equipmentData.getType().ordinal()).setItem(null);
-            player.unequip(e.getItem());
         });
     }
 
@@ -134,14 +137,18 @@ public class EquipmentPane extends Table implements MenuPagePane {
                 items.get(currentItemIdx).setSelected(false);
                 currentItemIdx--;
                 items.get(currentItemIdx).setSelected(true);
+                clickSound.play();
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             if (currentItemIdx < items.size - 1) {
                 items.get(currentItemIdx).setSelected(false);
                 currentItemIdx++;
                 items.get(currentItemIdx).setSelected(true);
+                clickSound.play();
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            // When player hits ENTER on an equipment slot, switch to the inventory page and
+            // prompt the player to select an item to put.
             MenuPage.show(MenuPage.INVENTORY);
 
             InventoryTabPane inventoryTabPane = ((InventoryTabPane) MenuPage.INVENTORY.getTables().first());
@@ -151,6 +158,8 @@ public class EquipmentPane extends Table implements MenuPagePane {
                     .populate(Mappers.INVENTORY.get(player), ItemType.EQUIP)
                     .filter(getSelectedItem().getType());
             inventoryTabPane.setSelectingEquipment(true, getSelectedItem().getType());
+
+            clickSound.play();
         }
     }
 

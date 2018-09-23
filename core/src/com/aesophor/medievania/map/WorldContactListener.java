@@ -1,6 +1,7 @@
 package com.aesophor.medievania.map;
 
 import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.entity.character.Enemy;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.util.CategoryBits;

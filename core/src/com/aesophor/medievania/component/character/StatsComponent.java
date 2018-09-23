@@ -160,21 +160,21 @@ public class StatsComponent implements Component {
 
     public void modHealth(int health) {
         this.health += health;
-        if (this.health + health < 0) {
+        if (this.health < 0) {
             this.health = 0;
         }
     }
 
     public void modStamina(int stamina) {
         this.stamina += stamina;
-        if (this.stamina + stamina < 0) {
+        if (this.stamina < 0) {
             this.stamina = 0;
         }
     }
 
     public void modMagicka(int magicka) {
         this.magicka += magicka;
-        if (this.magicka + magicka < 0) {
+        if (this.magicka < 0) {
             this.magicka = 0;
         }
     }

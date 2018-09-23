@@ -8,7 +8,7 @@ import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.combat.CharacterKilledEvent;
-import com.aesophor.medievania.event.combat.ItemPickedUpEvent;
+import com.aesophor.medievania.event.character.ItemPickedUpEvent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.assets.AssetManager;
@@ -38,17 +38,6 @@ public class Player extends Character {
         Mappers.SPRITE.get(this).setBounds(0, 0, 115 / Constants.PPM, 115 / Constants.PPM);
     }
 
-    public void pickup(Item item) {
-        B2BodyComponent itemB2Body = Mappers.B2BODY.get(item);
-        InventoryComponent inventory = Mappers.INVENTORY.get(this);
-        SoundComponent sounds = Mappers.SOUNDS.get(this);
-
-        inventory.get(item.getType()).add(item);
-        itemB2Body.getWorld().destroyBody(itemB2Body.getBody());
-        GameEventManager.getInstance().fireEvent(new ItemPickedUpEvent(item));
-
-        sounds.get(SoundType.ITEM_PICKEDUP).play();
-    }
 
     public void reposition(Vector2 position) {
         Mappers.B2BODY.get(this).getBody().setTransform(position, 0);

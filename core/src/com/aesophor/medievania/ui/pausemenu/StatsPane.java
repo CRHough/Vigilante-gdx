@@ -55,10 +55,10 @@ public class StatsPane extends Table implements MenuPagePane {
         staminaLabel = new Label(String.format("%d / %d", stats.getStamina(), stats.getFullStamina()), LabelStyles.WHITE_REGULAR);
         magickaLabel = new Label(String.format("%d / %d", stats.getMagicka(), stats.getFullMagicka()), LabelStyles.WHITE_REGULAR);
 
-        attackRangeLabel = new Label(String.format("%d", stats.getAttackRange()), LabelStyles.WHITE_REGULAR);
-        attackSpeedLabel = new Label(String.format("%f", stats.getAttackTime()), LabelStyles.WHITE_REGULAR);
-        walkSpeedLabel = new Label(String.format("%f", stats.getMovementSpeed()), LabelStyles.WHITE_REGULAR);
-        jumpHeightLabel = new Label(String.format("%f", stats.getJumpHeight()), LabelStyles.WHITE_REGULAR);
+        attackRangeLabel = new Label(String.format("%2d", stats.getAttackRange()), LabelStyles.WHITE_REGULAR);
+        attackSpeedLabel = new Label(String.format("%.2f", stats.getAttackTime()), LabelStyles.WHITE_REGULAR);
+        walkSpeedLabel = new Label(String.format("%.2f", stats.getMovementSpeed()), LabelStyles.WHITE_REGULAR);
+        jumpHeightLabel = new Label(String.format("%.2f", stats.getJumpHeight()), LabelStyles.WHITE_REGULAR);
 
         strLabel = new Label(String.format("%d", stats.getStr()), LabelStyles.WHITE_REGULAR);
         dexLabel = new Label(String.format("%d", stats.getStr()), LabelStyles.WHITE_REGULAR);

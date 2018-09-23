@@ -27,10 +27,4 @@ public class CharacterStatsSystem extends EntitySystem {
         });
     }
 
-
-    @Override
-    public void update(float delta) {
-
-    }
-
 }

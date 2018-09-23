@@ -137,10 +137,11 @@ public class StatusBars extends Stage {
 
         BitmapFont font = Font.REGULAR;
         weaponIconImage = new Image();
+        weaponIconImage.setScale(1.5f);
         weaponNameLabel = new Label("", new Label.LabelStyle(font, Color.WHITE));
 
-        textTable.add(weaponIconImage).pad(5f);
-        textTable.add(weaponNameLabel).padTop(18f);
+        textTable.add(weaponIconImage).padTop(11f).padLeft(9f).padRight(17f);
+        textTable.add(weaponNameLabel).padTop(25f);
         
         addActor(hudTable);
         addActor(barTable);

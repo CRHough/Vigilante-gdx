@@ -51,11 +51,12 @@
       "KILLED": "sfx/player/death.mp3",
       "WEAPON_SWING": "sfx/player/weapon_swing.ogg",
       "WEAPON_HIT": "sfx/player/weapon_hit.ogg",
-      "ITEM_PICKEDUP": "sfx/player/pickup_item.mp3"
+      "ITEM_PICKEDUP": "sfx/player/pickup_item.mp3",
+      "EQUIPMENT_CHANGED": "sfx/player/equip.wav"
     },
     "stats": {
       "class": "com.aesophor.medievania.component.character.StatsComponent",
-      "name": "Castle Guard",
+      "name": "Aesophor",
       "level": 1,
       "exp": 0,
       "fullHealth": 100,
@@ -72,7 +73,7 @@
       "attackForce": 1.0,
       "attackTime": 1.8,
       "attackRange": 15,
-      "basePhysicalDamage": 100
+      "basePhysicalDamage": 50
     },
     "statsRegen": {
       "class": "com.aesophor.medievania.component.character.StatsRegenerationComponent"
@@ -132,7 +133,8 @@
       "KILLED": "sfx/player/death.mp3",
       "WEAPON_SWING": "sfx/player/weapon_swing.ogg",
       "WEAPON_HIT": "sfx/player/weapon_hit.ogg",
-      "ITEM_PICKEDUP": "sfx/player/pickup_item.mp3"
+      "ITEM_PICKEDUP": "sfx/player/pickup_item.mp3",
+      "EQUIPMENT_CHANGED": "sfx/player/equip.wav"
     },
     "stats": {
       "class": "com.aesophor.medievania.component.character.StatsComponent",
