@@ -115,6 +115,12 @@ public abstract class Character extends Entity implements Disposable {
         b2body.setFeetFixture(feetFixture);
     }
 
+    /**
+     * Builds melee weapon fixture. When the body of an enemy collides with this fixture,
+     * the enemy will be added to player's inRangeTarget.
+     * (See CombatTargetComponent.java and WorldContactListener.java)
+     * @param maskBits defines which objects the melee weapon fixture can collide with.
+     */
     protected void createMeleeWeaponFixture(short maskBits) {
         B2BodyComponent b2body = Mappers.B2BODY.get(this);
         StatsComponent stats = Mappers.STATS.get(this);
@@ -132,6 +138,12 @@ public abstract class Character extends Entity implements Disposable {
     }
 
 
+    /**
+     * Removes the specified item from character's inventory and equips the specified item.
+     * If there's already an item in the target equipment slot, the item in that slot will
+     * be unequipped first before the new item is equipped.
+     * @param item item to equip.
+     */
     public void equip(Item item) {
         InventoryComponent inventory = Mappers.INVENTORY.get(this);
         EquipmentSlotsComponent equipmentSlots = Mappers.EQUIPMENT_SLOTS.get(this);
@@ -148,6 +160,11 @@ public abstract class Character extends Entity implements Disposable {
         sounds.get(SoundType.EQUIPMENT_CHANGED).play();
     }
 
+    /**
+     * Removes the equipped item of the specified equipment type and add it to character's inventory.
+     * Nothing happens if the slot is already empty.
+     * @param equipmentType equipment type of item to unequip.
+     */
     public void unequip(EquipmentType equipmentType) {
         InventoryComponent inventory = Mappers.INVENTORY.get(this);
         EquipmentSlotsComponent equipmentSlots = Mappers.EQUIPMENT_SLOTS.get(this);
@@ -162,6 +179,10 @@ public abstract class Character extends Entity implements Disposable {
         }
     }
 
+    /**
+     * Picks up the specified item and add it to character's inventory.
+     * @param item item to pick up.
+     */
     public void pickup(Item item) {
         B2BodyComponent itemB2Body = Mappers.B2BODY.get(item);
         InventoryComponent inventory = Mappers.INVENTORY.get(this);
@@ -174,6 +195,10 @@ public abstract class Character extends Entity implements Disposable {
         sounds.get(SoundType.ITEM_PICKEDUP).play();
     }
 
+    /**
+     * Discards the specified item and drop it in the world.
+     * @param item item to discard.
+     */
     public void discard(Item item) {
         Mappers.INVENTORY.get(this).remove(item);
         GameEventManager.getInstance().fireEvent(new ItemDiscardedEvent(item)); // move these events firing to Player?
