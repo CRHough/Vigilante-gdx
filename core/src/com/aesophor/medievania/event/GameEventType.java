@@ -2,31 +2,29 @@ package com.aesophor.medievania.event;
 
 public enum GameEventType {
 
-    DIALOG_OPTION,              // 0
+    // Screen related events.
+    MAINGAME_SCREEN_RESIZED,    // 0
+    GAME_PAUSED,                // 1
+    GAME_RESUMED,               // 2
 
-    MAINGAME_SCREEN_RESIZED,    // 2
-    GAME_PAUSED,                // 15
-    GAME_RESUMED,               // 16
+    // UI related events.
+    DIALOG_OPTION,              // 3
+    INVENTORY_TAB_SELECTED,     // 4
+    INVENTORY_ITEM_SELECTED,    // 5
 
-    ITEM_EQUIPPED,                 // 12
-    ITEM_UNEQUIPPED,               // 13
-    ITEM_PICKED_UP,             // 5
+    // Inventory related events.
+    INVENTORY_CHANGED,          // 6
+    ITEM_EQUIPPED,              // 7
+    ITEM_UNEQUIPPED,            // 8
+    ITEM_PICKED_UP,             // 9
+    ITEM_DISCARDED,             // 10
 
-    MAP_CHANGED,                // 0
-    PORTAL_USED,                // 1
+    // Map related events.
+    PORTAL_USED,                // 11
+    MAP_CHANGED,                // 12
 
-    INFLICT_DAMAGE,             // 3
-    CHARACTER_KILLED,           // 4
-
-
-
-    INVENTORY_CHANGED,          // 8
-    INVENTORY_TAB_SELECTED,     // 9
-    INVENTORY_ITEM_SELECTED,    // 10
-    ITEM_DISCARDED,             // 11
-
-    PROMPT_DISCARD_ITEM,        // 14
-
-
+    // Combat related events.
+    INFLICT_DAMAGE,             // 13
+    CHARACTER_KILLED,           // 14
 
 }
