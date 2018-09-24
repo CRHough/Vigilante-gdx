@@ -1,4 +1,4 @@
-package com.aesophor.medievania.entity.character;
+package com.aesophor.medievania.entity.data;
 
 import com.aesophor.medievania.component.character.CharacterDataComponent;
 import com.badlogic.gdx.Gdx;

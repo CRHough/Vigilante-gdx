@@ -4,7 +4,7 @@ import com.badlogic.ashley.core.Component;
 
 public class ItemDataComponent implements Component {
 
-    private Integer type;
+    private int type;
     private String image;
     private String name;
     private String desc;

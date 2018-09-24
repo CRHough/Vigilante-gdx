@@ -38,7 +38,7 @@ public class EnemyAISystem extends IteratingSystem {
 
         if (state.isSetToKill()) return;
 
-        if (state.isAlerted() && targets.hasLockedOnTarget()) {
+        if (state.isAlerted() && targets.hasLockedOnTarget() && !Mappers.STATE.get(targets.getLockedOnTarget()).isSetToKill()) {
             // Is the target within melee attack range?
             if (targets.hasInRangeTarget()) {
                 // If yes, swing its weapon.

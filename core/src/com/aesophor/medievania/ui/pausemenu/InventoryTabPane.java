@@ -6,14 +6,11 @@ import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
-import com.aesophor.medievania.event.ui.DialogOptionEvent;
 import com.aesophor.medievania.event.GameEventListener;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
-import com.aesophor.medievania.event.character.ItemEquippedEvent;
 import com.aesophor.medievania.event.character.InventoryChangedEvent;
-import com.aesophor.medievania.event.character.ItemUnequippedEvent;
-import com.aesophor.medievania.event.character.ItemPickedUpEvent;
+import com.aesophor.medievania.event.ui.DialogOptionEvent;
 import com.aesophor.medievania.event.ui.InventoryItemChangedEvent;
 import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
 import com.aesophor.medievania.ui.component.InventoryTabs;
@@ -40,7 +37,7 @@ public class InventoryTabPane extends Table implements MenuPagePane {
     private final MenuDialog menuDialog;
 
     private Player player;
-    private boolean selectingEquipment; /* InventoryTabPane can also be used as an equipment selector! */
+    private boolean isSelectingEquipment; /* InventoryTabPane can also be used as an equipment selector! */
     private EquipmentType equipmentType;
     private final GameEventListener<DialogOptionEvent> promptDiscardItemEvLstnr;
 
@@ -68,25 +65,13 @@ public class InventoryTabPane extends Table implements MenuPagePane {
         itemListView.populate(Mappers.INVENTORY.get(player), ItemType.EQUIP);
 
 
-        promptDiscardItemEvLstnr = new GameEventListener<DialogOptionEvent>() {
-            @Override
-            public void handle(DialogOptionEvent e) {
-                menuDialog.show("Do you want to discard this item?", "Yes", "No", (DialogOptionEvent discardItem) -> {
-                    Item selectedItem = itemListView.getSelectedItem();
-                    player.discard(selectedItem);
-                }, null);
-            }
+        promptDiscardItemEvLstnr = (DialogOptionEvent e) -> {
+            menuDialog.show("Do you want to discard this item?", "Yes", "No", (DialogOptionEvent discardItem) -> {
+                Item selectedItem = itemListView.getSelectedItem();
+                player.discard(selectedItem);
+            }, null);
         };
 
-
-        // !!!!!!!!!! Not necessary ??????
-        // Add the item which the player has just picked up to inventory content table
-        // iff currently selected tab matches the item type.
-        GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
-            if (inventoryTabs.getSelectedTab().getType() == e.getItem().getType()) {
-                itemListView.add(e.getItem());
-            }
-        });
 
         // Clear and re-populate inventory content table with the item type of the newly selected tab.
         GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_TAB_SELECTED, (InventoryTabChangedEvent e) -> {
@@ -105,7 +90,7 @@ public class InventoryTabPane extends Table implements MenuPagePane {
             }
         });
 
-        // Whenever there's a change in inventory, refresh the list. (TODO: inventory onChange efficiency)
+        // Whenever there's a change in inventory, refresh the list.
         GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_CHANGED, (InventoryChangedEvent e) -> {
             itemListView.clear();
             itemDesc.setText("");
@@ -119,27 +104,30 @@ public class InventoryTabPane extends Table implements MenuPagePane {
     }
 
     public void setSelectingEquipment(boolean selectingEquipment, EquipmentType equipmentType) {
-        this.selectingEquipment = selectingEquipment;
+        this.isSelectingEquipment = selectingEquipment;
         this.equipmentType = equipmentType;
         inventoryTabs.select(ItemType.EQUIP);
     }
 
     @Override
     public void handleInput(float delta) {
-        if (!selectingEquipment) {
+        // Disable user's control over inventory tabs if selecting equipment.
+        if (!isSelectingEquipment) {
             inventoryTabs.handleInput(delta);
         }
+
+        // Handles user's control over item list view.
         itemListView.handleInput(delta);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if (selectingEquipment) {
+            if (isSelectingEquipment) {
                 if (itemListView.getSelectedItem() != null) {
                     player.equip(itemListView.getSelectedItem());
                 } else {
                     player.unequip(equipmentType);
                     GameEventManager.getInstance().fireEvent(new InventoryChangedEvent());
                 }
-                selectingEquipment = false;
+                isSelectingEquipment = false;
                 MenuPage.show(MenuPage.EQUIPMENT);
             } else {
                 switch (itemListView.getSelectedItem().getType()) {

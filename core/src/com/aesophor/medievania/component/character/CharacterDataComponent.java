@@ -1,6 +1,7 @@
 package com.aesophor.medievania.component.character;
 
 import com.badlogic.ashley.core.Component;
+
 import java.util.HashMap;
 
 public class CharacterDataComponent implements Component {

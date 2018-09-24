@@ -92,5 +92,15 @@ public class Utils {
     public static int randomInt(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
+
+    /**
+     * Generates a random float between the specified min and max value.
+     * @param min minimum value of the float.
+     * @param max maximum value of the float.
+     * @return randomly generated float.
+     */
+    public static float randomFloat(float min, float max) {
+        return min + ThreadLocalRandom.current().nextFloat() * (max - min);
+    }
     
 }

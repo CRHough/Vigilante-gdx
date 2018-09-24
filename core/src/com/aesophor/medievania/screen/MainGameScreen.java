@@ -46,10 +46,10 @@ public class MainGameScreen extends AbstractScreen {
 
         // Initialize damage indicators and notificationFactory area.
         StatusBars statusBars = new StatusBars(gsm);
+        MessageBox messageBox = new MessageBox(gsm);
         PauseMenu pauseMenu = new PauseMenu(gsm, player);
         DamageIndicatorFactory damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), Font.REGULAR, getCamera(), 1.2f);
         NotificationFactory notificationFactory = new NotificationFactory(getBatch(), Font.REGULAR, 6, 4f);
-
 
         // Here I employ Entity-Component-System because it makes the layout of my code cleaner.
         // Tasks are independently spread into different systems/layers and can be added/removed on demand.
@@ -69,6 +69,7 @@ public class MainGameScreen extends AbstractScreen {
         engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorFactory));    // Renders damage indicators.
         engine.addSystem(new NotificationSystem(getBatch(), notificationFactory));          // Renders Notifications.
         engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));               // Renders player status bars.
+        engine.addSystem(new MessageBoxSystem(getBatch(), messageBox));                     // Renders MessageBox (dialogues).
         engine.addSystem(new PauseMenuSystem(getBatch(), pauseMenu));                       // Pause Menu.
         engine.addSystem(new ScreenFadeSystem(getBatch()));                                 // Renders screen fade effects.
 
@@ -79,6 +80,7 @@ public class MainGameScreen extends AbstractScreen {
         engine.getSystem(PlayerStatusBarsSystem.class).registerPlayer(player);
 
         engine.getSystem(PauseMenuSystem.class).setProcessing(false);
+        engine.getSystem(MessageBoxSystem.class).setProcessing(false);
 
         pauseSound = gsm.getAssets().get("sfx/inventory/open_and_close.wav");
     }

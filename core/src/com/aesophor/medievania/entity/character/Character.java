@@ -8,6 +8,7 @@ import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.sound.SoundComponent;
 import com.aesophor.medievania.component.sound.SoundType;
+import com.aesophor.medievania.entity.data.CharacterDataManager;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.character.ItemDiscardedEvent;
@@ -20,11 +21,11 @@ import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
+
 import java.util.Arrays;
 
 public abstract class Character extends Entity implements Disposable {
@@ -188,7 +189,7 @@ public abstract class Character extends Entity implements Disposable {
         InventoryComponent inventory = Mappers.INVENTORY.get(this);
         SoundComponent sounds = Mappers.SOUNDS.get(this);
 
-        inventory.get(item.getType()).add(item);
+        inventory.add(item);
         itemB2Body.getWorld().destroyBody(itemB2Body.getBody());
         GameEventManager.getInstance().fireEvent(new ItemPickedUpEvent(item));
 
@@ -364,7 +365,7 @@ public abstract class Character extends Entity implements Disposable {
     @Override
     public void dispose() {
         Mappers.SPRITE.get(this).dispose();
-        Mappers.SOUNDS.get(this).values().forEach(Sound::dispose);
+        //Mappers.SOUNDS.get(this).values().forEach(Sound::dispose);
     }
 
     @Override

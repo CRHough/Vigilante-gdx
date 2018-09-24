@@ -43,7 +43,7 @@ public class GameMapManagementSystem extends EntitySystem {
         this.assets = assets;
         this.world = world;
 
-        npcs = new Array<>();
+        this.npcs = new Array<>();
 
         // When the player used a portal, first we set the new (target) map as current map,
         // and then place the player's body at "the portal on the other side" which is another portal.
@@ -70,7 +70,7 @@ public class GameMapManagementSystem extends EntitySystem {
                 if (Utils.randomInt(0, 100) / 100f <= dropRate) {
                     Item item = spawnItem(itemName, world, deceasedB2Body.getBody().getPosition().x, deceasedB2Body.getBody().getPosition().y);
                     Body body = Mappers.B2BODY.get(item).getBody();
-                    body.applyLinearImpulse(new Vector2(Utils.randomInt(-1,1), 2.5f), body.getWorldCenter(), true);
+                    body.applyLinearImpulse(new Vector2(0, 2.5f), body.getWorldCenter(), true);
                     engine.addEntity(item);
                 }
             });

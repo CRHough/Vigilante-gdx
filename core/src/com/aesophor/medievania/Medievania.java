@@ -1,8 +1,8 @@
 package com.aesophor.medievania;
 
-import com.aesophor.medievania.entity.character.CharacterDataManager;
-import com.aesophor.medievania.entity.item.EquipmentDataManager;
-import com.aesophor.medievania.entity.item.ItemDataManager;
+import com.aesophor.medievania.entity.data.CharacterDataManager;
+import com.aesophor.medievania.entity.data.EquipmentDataManager;
+import com.aesophor.medievania.entity.data.ItemDataManager;
 import com.aesophor.medievania.screen.AbstractScreen;
 import com.aesophor.medievania.screen.Screens;
 import com.badlogic.gdx.Game;
@@ -32,6 +32,7 @@ public class Medievania extends Game implements GameStateManager {
 
         assets.load("interface/mainmenu_bg.png", Texture.class);
         assets.load("interface/hud/hud.png", Texture.class);
+        assets.load("interface/messagebox.png", Texture.class);
         assets.load("interface/pause.png", Texture.class);
         assets.load("interface/stats_bg.png", Texture.class);
         assets.load("interface/inventory_bg.png", Texture.class);
