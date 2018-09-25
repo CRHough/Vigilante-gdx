@@ -1,8 +1,6 @@
 package com.aesophor.medievania.util;
 
 public final class Constants {
-    
-    public static boolean DEBUG = true;
 
     // Graphics constants
     public static final float PPM = 100;
@@ -11,7 +9,7 @@ public final class Constants {
     
     // Physics constants
     public static final int GRAVITY = -10;
-    public static final int GROUND_FRICTION = 1;
+    public static final int GROUND_FRICTION = 2;
     
     
     private Constants() {

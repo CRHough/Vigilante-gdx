@@ -2,7 +2,6 @@ package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.CharacterAIComponent;
-import com.aesophor.medievania.component.character.CharacterDataComponent;
 import com.aesophor.medievania.component.character.DroppableItemsComponent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
@@ -23,7 +22,6 @@ public class Enemy extends Character {
         short bodyMaskBits = CategoryBits.WALL | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER;
         short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
         short weaponMaskBits = CategoryBits.PLAYER | CategoryBits.OBJECT;
-
         defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
         Mappers.SPRITE.get(this).setBounds(0, 0, 50 / Constants.PPM, 50 / Constants.PPM);

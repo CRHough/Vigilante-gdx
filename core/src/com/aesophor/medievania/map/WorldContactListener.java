@@ -1,27 +1,34 @@
 package com.aesophor.medievania.map;
 
 import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.graphics.SpriteComponent;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
+import com.aesophor.medievania.entity.Dust;
+import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Enemy;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.util.CategoryBits;
-import com.aesophor.medievania.entity.character.Character;
-import com.aesophor.medievania.entity.character.Player;
-import com.badlogic.gdx.physics.box2d.Contact;
-import com.badlogic.gdx.physics.box2d.ContactImpulse;
-import com.badlogic.gdx.physics.box2d.ContactListener;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.Manifold;
+import com.aesophor.medievania.util.Constants;
+import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 
 public class WorldContactListener implements ContactListener {
 
-    public WorldContactListener() {
+    private final PooledEngine engine;
+    private final AssetManager assets;
 
+    public WorldContactListener(PooledEngine engine, AssetManager assets) {
+        this.engine = engine;
+        this.assets = assets;
     }
 
 
     @Override
     public void beginContact(Contact contact) {
-        // Some variables that might getDroppableItems reused for several times.
         Character character;
         Player player;
         Enemy enemy;
@@ -31,12 +38,13 @@ public class WorldContactListener implements ContactListener {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
-        
+
         switch (cDef) {
             // When a character lands on the ground, make following changes.
             case CategoryBits.FEET | CategoryBits.GROUND:
                 character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
                 Mappers.STATE.get(character).setJumping(false);
+                engine.addEntity(createDust(assets, Mappers.B2BODY.get(character).getFeetFixturePosition()));
                 break;
 
             // When a character lands on a platform, make following changes.
@@ -44,6 +52,7 @@ public class WorldContactListener implements ContactListener {
                 character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
                 Mappers.STATE.get(character).setJumping(false);
                 Mappers.STATE.get(character).setOnPlatform(true);
+                engine.addEntity(createDust(assets, Mappers.B2BODY.get(character).getFeetFixturePosition()));
                 break;
 
             // When player gets close to a portal, register the portal to the player.
@@ -58,7 +67,9 @@ public class WorldContactListener implements ContactListener {
             case CategoryBits.PLAYER | CategoryBits.ENEMY:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
-                enemy.inflictDamage(player, 25);
+                if (!fixtureA.isSensor() && !fixtureB.isSensor()) {
+                    enemy.inflictDamage(player, 25);
+                }
                 break;
 
             // When an NPC hits a cliff marker, reverse the NPC's current direction.
@@ -86,7 +97,7 @@ public class WorldContactListener implements ContactListener {
                 item = (Item) getTargetFixture(CategoryBits.ITEM, fixtureA, fixtureB).getUserData();
                 Mappers.PICKUP_ITEM_TARGETS.get(player).addInRangeItems(item);
                 break;
-                
+
             default:
                 break;
         }
@@ -94,7 +105,6 @@ public class WorldContactListener implements ContactListener {
 
     @Override
     public void endContact(Contact contact) {
-        // Some variables that might getDroppableItems reused for several times.
         Character character;
         Player player;
         Enemy enemy;
@@ -103,13 +113,14 @@ public class WorldContactListener implements ContactListener {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
-        
+
         switch (cDef) {
             // When a character leaves the ground, make following changes.
             case CategoryBits.FEET | CategoryBits.GROUND:
                 character = (Character) getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB).getUserData();
                 if (Mappers.B2BODY.get(character).getBody().getLinearVelocity().y > .5f) {
                     Mappers.STATE.get(character).setJumping(true);
+                    engine.addEntity(createDust(assets, Mappers.B2BODY.get(character).getFeetFixturePosition()));
                 }
                 break;
 
@@ -119,6 +130,7 @@ public class WorldContactListener implements ContactListener {
                 if (Mappers.B2BODY.get(character).getBody().getLinearVelocity().y < -.5f) {
                     Mappers.STATE.get(character).setJumping(true);
                     Mappers.STATE.get(character).setOnPlatform(false);
+                    engine.addEntity(createDust(assets, Mappers.B2BODY.get(character).getFeetFixturePosition()));
                 }
                 break;
 
@@ -148,7 +160,7 @@ public class WorldContactListener implements ContactListener {
                 item = (Item) getTargetFixture(CategoryBits.ITEM, fixtureA, fixtureB).getUserData();
                 Mappers.PICKUP_ITEM_TARGETS.get(player).removeInRangeItems(item);
                 break;
-                
+
             default:
                 break;
         }
@@ -158,9 +170,9 @@ public class WorldContactListener implements ContactListener {
     public void preSolve(Contact contact, Manifold oldManifold) {
         Fixture fixtureA = contact.getFixtureA();
         Fixture fixtureB = contact.getFixtureB();
-        
+
         int cDef = fixtureA.getFilterData().categoryBits | fixtureB.getFilterData().categoryBits;
-        
+
         switch (cDef) {
             // Allow player to pass through platforms and collide on the way down.
             case CategoryBits.FEET | CategoryBits.PLATFORM:
@@ -174,16 +186,16 @@ public class WorldContactListener implements ContactListener {
                 // .15f is a value that works fine in my world.
                 contact.setEnabled((playerY > platformY + .15f));
                 break;
-                
+
             default:
                 break;
         }
-        
+
     }
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-        
+
     }
 
 
@@ -194,7 +206,7 @@ public class WorldContactListener implements ContactListener {
      * @param fixtureB candidate B.
      * @return target fixture. If the target cannot be found, it returns null.
      */
-    public static Fixture getTargetFixture(short targetCategoryBits, Fixture fixtureA, Fixture fixtureB) {
+    private static Fixture getTargetFixture(short targetCategoryBits, Fixture fixtureA, Fixture fixtureB) {
         Fixture targetFixture;
 
         if (fixtureA.getFilterData().categoryBits == targetCategoryBits) {
@@ -206,6 +218,12 @@ public class WorldContactListener implements ContactListener {
         }
 
         return targetFixture;
+    }
+
+    private static Dust createDust(AssetManager assets, Vector2 feetPosition) {
+        float dustX = feetPosition.x - Dust.TEXTURE_WIDTH / Constants.PPM / 2;
+        float dustY = feetPosition.y - Dust.TEXTURE_HEIGHT / Constants.PPM / 2 + .065f; // .065f is a manual correction to Y.
+        return new Dust(assets, dustX, dustY);
     }
 
 }

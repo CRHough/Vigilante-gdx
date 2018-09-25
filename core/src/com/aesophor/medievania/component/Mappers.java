@@ -2,17 +2,19 @@ package com.aesophor.medievania.component;
 
 import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
+import com.aesophor.medievania.component.character.CharacterAnimationComponent;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.sound.SoundComponent;
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Mappers {
 
     public static final ComponentMapper<StatsComponent> STATS;
-    public static final ComponentMapper<AnimationComponent> ANIMATION;
+    public static final ComponentMapper<CharacterAnimationComponent> CHARACTER_ANIMATIONS;
     public static final ComponentMapper<B2BodyComponent> B2BODY;
     public static final ComponentMapper<SpriteComponent> SPRITE;
     public static final ComponentMapper<StateComponent> STATE;
@@ -28,10 +30,11 @@ public class Mappers {
     public static final ComponentMapper<EquipmentDataComponent> EQUIPMENT_DATA;
     public static final ComponentMapper<CharacterDataComponent> CHARACTER_DATA;
     public static final ComponentMapper<SoundComponent> SOUNDS;
+    public static final ComponentMapper<AnimationComponent> ANIMATION;
 
     static {
         STATS = ComponentMapper.getFor(StatsComponent.class);
-        ANIMATION = ComponentMapper.getFor(AnimationComponent.class);
+        CHARACTER_ANIMATIONS = ComponentMapper.getFor(CharacterAnimationComponent.class);
         B2BODY = ComponentMapper.getFor(B2BodyComponent.class);
         SPRITE = ComponentMapper.getFor(SpriteComponent.class);
         STATE = ComponentMapper.getFor(StateComponent.class);
@@ -47,6 +50,7 @@ public class Mappers {
         EQUIPMENT_DATA = ComponentMapper.getFor(EquipmentDataComponent.class);
         CHARACTER_DATA = ComponentMapper.getFor(CharacterDataComponent.class);
         SOUNDS = ComponentMapper.getFor(SoundComponent.class);
+        ANIMATION = ComponentMapper.getFor(AnimationComponent.class);
     }
 
 }

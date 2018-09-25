@@ -3,7 +3,7 @@ package com.aesophor.medievania.entity.character;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.component.equipment.EquipmentType;
-import com.aesophor.medievania.component.graphics.AnimationComponent;
+import com.aesophor.medievania.component.character.CharacterAnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.sound.SoundComponent;
@@ -37,7 +37,7 @@ public abstract class Character extends Entity implements Disposable {
         AIActions = new AIActions(this);
 
         CharacterDataComponent characterData = CharacterDataManager.getInstance().get(name);
-        AnimationComponent animations = new AnimationComponent();
+        CharacterAnimationComponent animations = new CharacterAnimationComponent();
         SoundComponent sounds = new SoundComponent();
 
         add(characterData);
@@ -54,10 +54,14 @@ public abstract class Character extends Entity implements Disposable {
 
         // Initialize animations by extracting frames from the texture atlas.
         TextureAtlas atlas = assets.get(characterData.getAtlas());
-        Arrays.stream(State.values()).forEach(s -> animations.put(s, Utils.createAnimation(atlas, characterData, s.name(), Constants.PPM)));
+        Arrays.stream(State.values()).forEach(s -> {
+            animations.put(s, Utils.createAnimation(atlas, characterData, s.name(), Constants.PPM));
+        });
 
         // Initialize sounds.
-        Arrays.stream(SoundType.values()).forEach(s -> sounds.put(s, assets.get(characterData.getSoundData().get(s.name()))));
+        Arrays.stream(SoundType.values()).forEach(s -> {
+            sounds.put(s, assets.get(characterData.getSoundData().get(s.name())));
+        });
     }
 
 
@@ -131,7 +135,7 @@ public abstract class Character extends Entity implements Disposable {
         Fixture meleeWeaponFixture = b2body.getBodyBuilder().newCircleFixture(meleeAttackFixturePosition, stats.getAttackRange(), Constants.PPM)
                 .categoryBits(CategoryBits.MELEE_WEAPON)
                 .maskBits(maskBits)
-                .isSensor(true)
+                .setSensor(true)
                 .setUserData(this)
                 .buildFixture();
 
@@ -248,7 +252,14 @@ public abstract class Character extends Entity implements Disposable {
 
         if (state.isOnPlatform()) {
             state.setOnPlatform(false);
-            b2body.getBody().setTransform(b2body.getBody().getPosition().x, b2body.getBody().getPosition().y - 8f / Constants.PPM, 0);
+            b2body.getFeetFixture().setSensor(true);
+
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    b2body.getFeetFixture().setSensor(false);
+                }
+            }, .1f);
         }
     }
 
@@ -348,13 +359,20 @@ public abstract class Character extends Entity implements Disposable {
         StatsComponent stats = Mappers.STATS.get(this);
 
         if (b2body.getBody().getLinearVelocity().x <= stats.getMovementSpeed() * 2 && b2body.getBody().getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
-            float rushForce = (state.facingRight()) ? stats.getMovementSpeed() * 8 : -stats.getMovementSpeed() * 8;
-            Character.setCategoryBits(b2body.getBodyFixture(), CategoryBits.DESTROYED);
+            float rushForce = (state.facingRight()) ? stats.getMovementSpeed() * 10 : -stats.getMovementSpeed() * 10;
+            b2body.getBodyFixture().setSensor(true);
+            CharacterAnimationComponent acCache = getComponent(CharacterAnimationComponent.class);
+            SpriteComponent scCache = getComponent(SpriteComponent.class);
+            remove(CharacterAnimationComponent.class);
+            remove(SpriteComponent.class);
+
             b2body.getBody().applyLinearImpulse(new Vector2(rushForce, 0), b2body.getBody().getWorldCenter(), true);
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
-                    Character.setCategoryBits(b2body.getBodyFixture(), CategoryBits.PLAYER);
+                    b2body.getBodyFixture().setSensor(false);
+                    add(scCache);
+                    add(acCache);
                 }
             }, .5f);
         }

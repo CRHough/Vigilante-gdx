@@ -1,27 +1,56 @@
 package com.aesophor.medievania.component.graphics;
 
-import com.aesophor.medievania.component.character.State;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import java.util.HashMap;
-import java.util.Map;
+import com.badlogic.gdx.utils.Array;
 
-public class AnimationComponent implements Component {
+public class AnimationComponent<T> extends Animation<T> implements Component {
 
-    private final Map<State, Animation<TextureRegion>> animations;
+    private float timer;
 
-    public AnimationComponent() {
-        animations = new HashMap<>();
+    /** Constructor, storing the frame duration and key frames.
+     *
+     * @param frameDuration the time between frames in seconds.
+     * @param keyFrames the objects representing the frames. If this Array is type-aware, {@link #getKeyFrames()} can return the
+     *           correct type of array. Otherwise, it returns an Object[]. */
+    public AnimationComponent (float frameDuration, Array<? extends T> keyFrames) {
+        super(frameDuration, keyFrames);
+    }
+
+    /** Constructor, storing the frame duration and key frames.
+     *
+     * @param frameDuration the time between frames in seconds.
+     * @param keyFrames the objects representing the frames. If this Array is type-aware, {@link #getKeyFrames()} can
+     * return the correct type of array. Otherwise, it returns an Object[].*/
+    public AnimationComponent (float frameDuration, Array<? extends T> keyFrames, PlayMode playMode) {
+        super(frameDuration, keyFrames);
+        setPlayMode(playMode);
+    }
+
+    /** Constructor, storing the frame duration and key frames.
+     *
+     * @param frameDuration the time between frames in seconds.
+     * @param keyFrames the objects representing the frames. */
+    public AnimationComponent (float frameDuration, T... keyFrames) {
+        super(frameDuration, keyFrames);
+        setKeyFrames(keyFrames);
     }
 
 
-    public Animation<TextureRegion> get(State state) {
-        return animations.get(state);
+    /**
+     * Gets the state timer of this animation.
+     * @return state timer.
+     */
+    public float getTimer() {
+        return timer;
     }
 
-    public void put(State state, Animation<TextureRegion> animation) {
-        animations.put(state, animation);
+    /**
+     * Updates the state timer.
+     * @param delta delta time since the last frame.
+     */
+    public void update(float delta) {
+        timer += delta;
     }
 
 }

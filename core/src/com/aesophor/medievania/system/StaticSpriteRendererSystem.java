@@ -1,5 +1,6 @@
 package com.aesophor.medievania.system;
 
+import com.aesophor.medievania.component.character.CharacterAnimationComponent;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.Mappers;
@@ -13,12 +14,12 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class StaticSpriteRendererSystem extends IteratingSystem {
 
-    private Batch batch;
-    private Camera camera;
-    private World world;
+    private final Batch batch;
+    private final Camera camera;
+    private final World world;
 
     public StaticSpriteRendererSystem(Batch batch, Camera camera, World world) {
-        super(Family.all(SpriteComponent.class).exclude(AnimationComponent.class).get());
+        super(Family.all(SpriteComponent.class).exclude(CharacterAnimationComponent.class, AnimationComponent.class).get());
 
         this.batch = batch;
         this.camera = camera;

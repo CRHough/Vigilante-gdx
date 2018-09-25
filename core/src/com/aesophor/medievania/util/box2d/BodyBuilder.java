@@ -197,7 +197,7 @@ public class BodyBuilder {
      * @return BodyBuilder instance.
      */
     public BodyBuilder maskBits(short maskBits) {
-        fdef.filter.maskBits = (short) maskBits;
+        fdef.filter.maskBits = maskBits;
         return this;
     }
 
@@ -205,7 +205,7 @@ public class BodyBuilder {
      * Sets current fixture to a sensor. A sensor will not collide with anything.
      * @return BodyBuilder instance.
      */
-    public BodyBuilder isSensor(boolean isSensor) {
+    public BodyBuilder setSensor(boolean isSensor) {
         fdef.isSensor = isSensor;
         return this;
     }

@@ -76,7 +76,7 @@ public class Item extends Entity implements Disposable {
         Fixture bodyFixture = b2body.getBodyBuilder().newRectangleFixture(b2body.getBody().getPosition(), itemWidth / 2, itemHeight / 2, Constants.PPM)
                 .categoryBits(categoryBits)
                 .maskBits((short) (maskBits | CategoryBits.PLAYER))
-                .isSensor(true)
+                .setSensor(true)
                 .setUserData(this)
                 .buildFixture();
 

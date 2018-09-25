@@ -1,10 +1,10 @@
 package com.aesophor.medievania.util;
 
 import com.aesophor.medievania.component.character.CharacterDataComponent;
+import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -56,7 +56,7 @@ public class Utils {
      * @param ppm frame duration scale factor.
      * @return Extracted animations.
      */
-    public static Animation<TextureRegion> createAnimation(TextureAtlas atlas, CharacterDataComponent characterData, String frameName, float ppm) {
+    public static AnimationComponent<TextureRegion> createAnimation(TextureAtlas atlas, CharacterDataComponent characterData, String frameName, float ppm) {
         TextureAtlas.AtlasRegion region = atlas.findRegion(frameName);
         CharacterDataComponent.FrameData frameData = characterData.getFrameData().get(frameName);
 
@@ -70,16 +70,16 @@ public class Utils {
         for (int i = firstFrameCount; i <= lastFrameCount; i++) {
             frames.add(new TextureRegion(region, i * frameWidth, 0, frameWidth, frameHeight));
         }
-        return new Animation<>(frameDuration / ppm, frames);
+        return new AnimationComponent<>(frameDuration / ppm, frames);
     }
 
-    public static Animation<TextureRegion> createAnimation(Texture region, float frameDuration,
+    public static AnimationComponent<TextureRegion> createAnimation(Texture region, float frameDuration,
                                                            int firstFrameCount, int lastFrameCount, int offsetX, int offsetY, int width, int height) {
         frames.clear();
         for (int i = firstFrameCount; i <= lastFrameCount; i++) {
             frames.add(new TextureRegion(region, i * width + offsetX, offsetY, width, height));
         }
-        return new Animation<>(frameDuration, frames);
+        return new AnimationComponent<>(frameDuration, frames);
     }
 
 

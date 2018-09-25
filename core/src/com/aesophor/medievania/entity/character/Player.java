@@ -2,13 +2,8 @@ package com.aesophor.medievania.entity.character;
 
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.*;
-import com.aesophor.medievania.component.physics.B2BodyComponent;
-import com.aesophor.medievania.component.sound.SoundComponent;
-import com.aesophor.medievania.component.sound.SoundType;
-import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.combat.CharacterKilledEvent;
-import com.aesophor.medievania.event.character.ItemPickedUpEvent;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.assets.AssetManager;
@@ -33,7 +28,7 @@ public class Player extends Character {
         short bodyMaskBits = CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON | CategoryBits.ITEM;
         short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
-        super.defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
+        defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
         Mappers.SPRITE.get(this).setBounds(0, 0, 115 / Constants.PPM, 115 / Constants.PPM);
     }
@@ -70,7 +65,7 @@ public class Player extends Character {
                     state.setInvincible(false);
                 }
             }
-        }, 3f);
+        }, 1.5f);
     }
 
 }

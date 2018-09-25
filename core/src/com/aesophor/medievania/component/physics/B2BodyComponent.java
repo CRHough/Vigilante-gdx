@@ -2,8 +2,10 @@ package com.aesophor.medievania.component.physics;
 
 import com.aesophor.medievania.util.box2d.BodyBuilder;
 import com.badlogic.ashley.core.Component;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class B2BodyComponent implements Component {
@@ -61,6 +63,22 @@ public class B2BodyComponent implements Component {
 
     public void setMeleeWeaponFixture(Fixture meleeWeaponFixture) {
         this.meleeWeaponFixture = meleeWeaponFixture;
+    }
+
+    public Vector2 getFeetFixturePosition() {
+        Vector2 bodyPos = body.getPosition();
+
+        PolygonShape ps = (PolygonShape) feetFixture.getShape();
+        Vector2 v1 = new Vector2();
+        Vector2 v2 = new Vector2();
+        ps.getVertex(0, v1); // (+, -)
+        ps.getVertex(3, v2); // (-, -)
+
+        v1.x = bodyPos.x + v1.x;
+        v2.x = bodyPos.x + v2.x;
+        float centerX = (v1.x + v2.x) / 2;
+
+        return new Vector2(centerX, bodyPos.y + v1.y);
     }
 
 }

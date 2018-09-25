@@ -6,7 +6,7 @@ public class StateComponent implements Component {
 
     private State previousState;
     private State currentState;
-    private float time;
+    private float stateTimer;
 
     private boolean alerted;
     private boolean facingRight;
@@ -37,16 +37,16 @@ public class StateComponent implements Component {
         this.currentState = newState;
     }
 
-    public float getTime() {
-        return time;
+    public float getStateTimer() {
+        return stateTimer;
     }
 
     public void update(float delta) {
-        time += delta;
+        stateTimer += delta;
     }
 
     public void resetTime() {
-        time = 0;
+        stateTimer = 0;
     }
 
 

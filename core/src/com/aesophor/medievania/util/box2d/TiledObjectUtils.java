@@ -60,7 +60,7 @@ public class TiledObjectUtils {
             bodyBuilder.newRectangleFixture(centerPos, rect.getWidth() / 2, rect.getHeight() / 2, Constants.PPM)
                     .categoryBits(categoryBits)
                     .friction(friction)
-                    .isSensor(!collidable)
+                    .setSensor(!collidable)
                     .buildFixture();
         }
     }
@@ -86,7 +86,7 @@ public class TiledObjectUtils {
             bodyBuilder.newPolylineFixture(worldVertices, Constants.PPM)
                     .categoryBits(categoryBits)
                     .friction(friction)
-                    .isSensor(!collidable)
+                    .setSensor(!collidable)
                     .buildFixture();
         }
     }
@@ -121,7 +121,7 @@ public class TiledObjectUtils {
             // a portal body, then we can getDroppableItems that portal by using "character.getCurrentPortal()"
             bodyBuilder.newRectangleFixture(centerPos, rect.getWidth() / 2, rect.getHeight() / 2, Constants.PPM)
                     .categoryBits(CategoryBits.PORTAL)
-                    .isSensor(true)
+                    .setSensor(true)
                     .setUserData(portal)
                     .buildFixture();
         }

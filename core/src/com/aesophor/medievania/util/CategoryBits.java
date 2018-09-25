@@ -15,5 +15,7 @@ public class CategoryBits {
     public static final short ITEM = 512;
     public static final short MELEE_WEAPON = 1024;
     public static final short DESTROYED = 2048;
+
+    public static final short LIGHT = 4096;
     
 }

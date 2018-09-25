@@ -39,9 +39,11 @@ public class MainGameScreen extends AbstractScreen {
         // Initialize the GameEventManager.
         gameEventManager = GameEventManager.getInstance();
 
+        engine = new PooledEngine();
+
         // Initialize the world, and register the world contact listener.
         world = new World(new Vector2(0, Constants.GRAVITY), true);
-        world.setContactListener(new WorldContactListener());
+        world.setContactListener(new WorldContactListener(engine, gsm.getAssets()));
         player = new Player(gsm.getAssets(), world, 0.3f, 1f);
 
         // Initialize damage indicators and notificationFactory area.
@@ -53,11 +55,12 @@ public class MainGameScreen extends AbstractScreen {
 
         // Here I employ Entity-Component-System because it makes the layout of my code cleaner.
         // Tasks are independently spread into different systems/layers and can be added/removed on demand.
-        engine = new PooledEngine();
+
         engine.addSystem(new PhysicsSystem(world));
         engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera()));     // Renders TiledMap textures.
-        engine.addSystem(new AnimatedSpriteRendererSystem(getBatch(), getCamera(), world)); // Renders player / npc entities.
-        engine.addSystem(new StaticSpriteRendererSystem(getBatch(), getCamera(), world));   // Renders itemData entities
+        engine.addSystem(new CharacterRendererSystem(getBatch(), getCamera(), world));      // Renders player / npc entities.
+        engine.addSystem(new AnimatedSpriteRendererSystem(engine, getBatch(), getCamera(), world)); // Renders dust entities.
+        engine.addSystem(new StaticSpriteRendererSystem(getBatch(), getCamera(), world));   // Renders item entities
         engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                    // Renders physics debug profiles.
         engine.addSystem(new B2LightsSystem(world, getCamera()));                           // Renders Dynamic box2d lights.
         engine.addSystem(new CameraSystem(getCamera(), null, null));     // Camera shake / lerp to target.
