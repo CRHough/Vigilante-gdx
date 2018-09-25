@@ -15,6 +15,8 @@ import com.badlogic.gdx.utils.Timer.Task;
 
 public class Player extends Character {
 
+    private static final float POST_DAMAGE_INVINCIBLE_DURATION = 1.5f;
+
     public Player(AssetManager assets, World world, float x, float y) {
         super("Player", assets, world, x, y);
 
@@ -25,8 +27,8 @@ public class Player extends Character {
 
         // Create body and fixtures.
         short bodyCategoryBits = CategoryBits.PLAYER;
-        short bodyMaskBits = CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON | CategoryBits.ITEM;
-        short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
+        short bodyMaskBits = CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON | CategoryBits.ITEM;
+        short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL;
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
         defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
@@ -65,7 +67,7 @@ public class Player extends Character {
                     state.setInvincible(false);
                 }
             }
-        }, 1.5f);
+        }, POST_DAMAGE_INVINCIBLE_DURATION);
     }
 
 }
