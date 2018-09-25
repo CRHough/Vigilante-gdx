@@ -51,6 +51,8 @@ public class PlayerControlSystem extends IteratingSystem {
                 if (pickupItemTarget.hasInRangeItem()) {
                     player.pickup(pickupItemTarget.getInRangeItems().first());
                 }
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+                player.batPower();
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
                 player.moveRight();
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {

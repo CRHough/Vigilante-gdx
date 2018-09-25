@@ -1,7 +1,6 @@
 package com.aesophor.medievania.map;
 
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.sound.SoundType;
 import com.aesophor.medievania.entity.character.Enemy;
 import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.util.CategoryBits;
@@ -164,8 +163,8 @@ public class WorldContactListener implements ContactListener {
         
         switch (cDef) {
             // Allow player to pass through platforms and collide on the way down.
-            case CategoryBits.PLAYER | CategoryBits.PLATFORM:
-                Fixture playerBody = getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB);
+            case CategoryBits.FEET | CategoryBits.PLATFORM:
+                Fixture playerBody = getTargetFixture(CategoryBits.FEET, fixtureA, fixtureB);
                 Fixture platform = getTargetFixture(CategoryBits.PLATFORM, fixtureA, fixtureB);
 
                 float playerY = playerBody.getBody().getPosition().y;

@@ -30,7 +30,7 @@ public class Player extends Character {
 
         // Create body and fixtures.
         short bodyCategoryBits = CategoryBits.PLAYER;
-        short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON | CategoryBits.ITEM;
+        short bodyMaskBits = CategoryBits.WALL | CategoryBits.PORTAL | CategoryBits.ENEMY | CategoryBits.MELEE_WEAPON | CategoryBits.ITEM;
         short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
         super.defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);

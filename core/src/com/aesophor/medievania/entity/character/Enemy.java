@@ -20,7 +20,7 @@ public class Enemy extends Character {
 
         // Create body and fixtures.
         short bodyCategoryBits = CategoryBits.ENEMY;
-        short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM | CategoryBits.WALL | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER;
+        short bodyMaskBits = CategoryBits.WALL | CategoryBits.PLAYER | CategoryBits.MELEE_WEAPON | CategoryBits.CLIFF_MARKER;
         short feetMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
         short weaponMaskBits = CategoryBits.PLAYER | CategoryBits.OBJECT;
 

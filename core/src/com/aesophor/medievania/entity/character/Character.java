@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.Timer;
 
 import java.util.Arrays;
 
@@ -101,15 +102,14 @@ public abstract class Character extends Entity implements Disposable {
         StatsComponent stats = Mappers.STATS.get(this);
 
         Vector2[] feetPolyVertices = new Vector2[4];
-        feetPolyVertices[0] = new Vector2(-stats.getBodyWidth() / 2 + 1, -stats.getBodyHeight() / 2);
-        feetPolyVertices[1] = new Vector2(stats.getBodyWidth() / 2 - 1, -stats.getBodyHeight() / 2);
+        feetPolyVertices[0] = new Vector2(-stats.getBodyWidth() / 2 + 1, 0);
+        feetPolyVertices[1] = new Vector2(stats.getBodyWidth() / 2 - 1, 0);
         feetPolyVertices[2] = new Vector2(-stats.getBodyWidth() / 2 + 1, -stats.getBodyHeight() / 2 - 1);
         feetPolyVertices[3] = new Vector2(stats.getBodyWidth() / 2 - 1, -stats.getBodyHeight() / 2 - 1);
 
         Fixture feetFixture = b2body.getBodyBuilder().newPolygonFixture(feetPolyVertices, Constants.PPM)
                 .categoryBits(CategoryBits.FEET)
                 .maskBits(maskBits)
-                .isSensor(true)
                 .setUserData(this)
                 .buildFixture();
 
@@ -228,17 +228,6 @@ public abstract class Character extends Entity implements Disposable {
         }
     }
 
-    public void forwardRush() {
-        B2BodyComponent b2body = Mappers.B2BODY.get(this);
-        StateComponent state = Mappers.STATE.get(this);
-        StatsComponent stats = Mappers.STATS.get(this);
-
-        if (b2body.getBody().getLinearVelocity().x <= stats.getMovementSpeed() * 2 && b2body.getBody().getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
-            float rushForce = (state.facingRight()) ? stats.getMovementSpeed() * 5 : -stats.getMovementSpeed() * 5;
-            b2body.getBody().applyLinearImpulse(new Vector2(rushForce, 0), b2body.getBody().getWorldCenter(), true);
-        }
-    }
-
     public void jump() {
         B2BodyComponent b2body = Mappers.B2BODY.get(this);
         StateComponent state = Mappers.STATE.get(this);
@@ -350,6 +339,28 @@ public abstract class Character extends Entity implements Disposable {
         B2BodyComponent b2body = Mappers.B2BODY.get(this);
         b2body.getBody().applyLinearImpulse(new Vector2(force, 1f), b2body.getBody().getWorldCenter(), true);
     }
+
+
+    // ---------- Clean up this part later! ----------
+    public void batPower() {
+        B2BodyComponent b2body = Mappers.B2BODY.get(this);
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+
+        if (b2body.getBody().getLinearVelocity().x <= stats.getMovementSpeed() * 2 && b2body.getBody().getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
+            float rushForce = (state.facingRight()) ? stats.getMovementSpeed() * 8 : -stats.getMovementSpeed() * 8;
+            Character.setCategoryBits(b2body.getBodyFixture(), CategoryBits.DESTROYED);
+            b2body.getBody().applyLinearImpulse(new Vector2(rushForce, 0), b2body.getBody().getWorldCenter(), true);
+            Timer.schedule(new Timer.Task() {
+                @Override
+                public void run() {
+                    Character.setCategoryBits(b2body.getBodyFixture(), CategoryBits.PLAYER);
+                }
+            }, .5f);
+        }
+    }
+    // -----------------------------------------------
+
 
     public static void setCategoryBits(Fixture f, short bits) {
         Filter filter = new Filter();
