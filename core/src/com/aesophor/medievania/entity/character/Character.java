@@ -4,6 +4,7 @@ import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.component.equipment.EquipmentType;
 import com.aesophor.medievania.component.character.CharacterAnimationComponent;
+import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.sound.SoundComponent;
@@ -21,7 +22,9 @@ import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
@@ -31,9 +34,11 @@ import java.util.Arrays;
 
 public abstract class Character extends Entity implements Disposable {
 
+    private final AssetManager assets;
     private final AIActions AIActions;
 
     public Character(String name, AssetManager assets, World world, float x, float y) {
+        this.assets = assets;
         AIActions = new AIActions(this);
 
         CharacterDataComponent characterData = CharacterDataManager.getInstance().get(name);
@@ -322,7 +327,7 @@ public abstract class Character extends Entity implements Disposable {
         StatsComponent stats = Mappers.STATS.get(this);
 
         target.receiveDamage(this, damage);
-        target.knockedBack((state.facingRight()) ? stats.getAttackForce() : -stats.getAttackForce());
+        target.knockedBack((state.isFacingRight()) ? stats.getAttackForce() : -stats.getAttackForce());
     }
 
     public void receiveDamage(Character source, int damage) {
@@ -357,22 +362,26 @@ public abstract class Character extends Entity implements Disposable {
         B2BodyComponent b2body = Mappers.B2BODY.get(this);
         StateComponent state = Mappers.STATE.get(this);
         StatsComponent stats = Mappers.STATS.get(this);
+        SpriteComponent sprite = Mappers.SPRITE.get(this);
 
         if (b2body.getBody().getLinearVelocity().x <= stats.getMovementSpeed() * 2 && b2body.getBody().getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
-            float rushForce = (state.facingRight()) ? stats.getMovementSpeed() * 10 : -stats.getMovementSpeed() * 10;
+            float rushForce = (state.isFacingRight()) ? stats.getMovementSpeed() * 10 : -stats.getMovementSpeed() * 10;
             b2body.getBodyFixture().setSensor(true);
-            CharacterAnimationComponent acCache = getComponent(CharacterAnimationComponent.class);
-            SpriteComponent scCache = getComponent(SpriteComponent.class);
-            remove(CharacterAnimationComponent.class);
-            remove(SpriteComponent.class);
+
+            CharacterAnimationComponent animations = getComponent(CharacterAnimationComponent.class);
+
+            Texture texture = assets.get("texture/bat.png");
+            animations.put(State.SKILL, Utils.createAnimation(texture, 12f / Constants.PPM, 0, 2, 0, 0, 42, 42));
+            sprite.setBounds(0, 0, 56f / 100, 56f / 100);
+            state.setUsingSkill(true);
 
             b2body.getBody().applyLinearImpulse(new Vector2(rushForce, 0), b2body.getBody().getWorldCenter(), true);
             Timer.schedule(new Timer.Task() {
                 @Override
                 public void run() {
                     b2body.getBodyFixture().setSensor(false);
-                    add(scCache);
-                    add(acCache);
+                    sprite.setBounds(0, 0, 115 / 100, 115 / 100);
+                    state.setUsingSkill(false);
                 }
             }, .5f);
         }

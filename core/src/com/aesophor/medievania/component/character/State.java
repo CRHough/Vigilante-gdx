@@ -8,6 +8,7 @@ public enum State {
     FALLING,
     CROUCHING,
     ATTACKING,
+    SKILL,
     KILLED;
 
 }

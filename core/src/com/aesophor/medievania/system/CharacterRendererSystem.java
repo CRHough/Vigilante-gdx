@@ -117,6 +117,9 @@ public class CharacterRendererSystem extends IteratingSystem {
             case ATTACKING:
                 textureRegion = animations.get(State.ATTACKING).getKeyFrame(state.getStateTimer(), false);
                 break;
+            case SKILL:
+                textureRegion = animations.get(State.SKILL).getKeyFrame(state.getStateTimer(), true);
+                break;
             case KILLED:
                 textureRegion = animations.get(State.KILLED).getKeyFrame(state.getStateTimer(), false);
                 break;
@@ -126,11 +129,11 @@ public class CharacterRendererSystem extends IteratingSystem {
                 break;
         }
 
-        if (!state.facingRight() && !textureRegion.isFlipX()) {
+        if (!state.isFacingRight() && !textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
             CircleShape shape = (CircleShape) b2body.getMeleeWeaponFixture().getShape();
             shape.setPosition(new Vector2(-stats.getAttackRange() / Constants.PPM, 0));
-        } else if (state.facingRight() && textureRegion.isFlipX()) {
+        } else if (state.isFacingRight() && textureRegion.isFlipX()) {
             textureRegion.flip(true, false);
             CircleShape shape = (CircleShape) b2body.getMeleeWeaponFixture().getShape();
             shape.setPosition(new Vector2(stats.getAttackRange() / Constants.PPM, 0));
@@ -152,6 +155,8 @@ public class CharacterRendererSystem extends IteratingSystem {
     private State getState() {
         if (state.isSetToKill()) {
             return State.KILLED;
+        } else if (state.isUsingSkill()) {
+            return State.SKILL;
         } else if (state.isAttacking()) {
             return State.ATTACKING;
         } else if (state.isJumping()) {

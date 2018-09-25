@@ -52,3 +52,10 @@ IDLE
   orig: 480, 80
   offset: 0, 0
   index: -1
+SKILL
+  rotate: false
+  xy: 1, 1
+  size: 480, 80
+  orig: 480, 80
+  offset: 0, 0
+  index: -1

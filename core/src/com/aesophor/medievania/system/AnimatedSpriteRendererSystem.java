@@ -50,7 +50,6 @@ public class AnimatedSpriteRendererSystem extends IteratingSystem {
         if (animation.isAnimationFinished(animation.getTimer())) {
             engine.removeEntity(entity);
         }
-
     }
 
 }

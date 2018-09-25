@@ -39,6 +39,11 @@
         "frameDuration": 20.0,
         "frameEndCount": 6
       },
+      "SKILL": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 30.0,
+        "frameEndCount": 5
+      },
       "KILLED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
         "frameDuration": 30.0,
@@ -120,6 +125,11 @@
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
         "frameDuration": 24.0,
         "frameEndCount": 9
+      },
+      "SKILL": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 30.0,
+        "frameEndCount": 5
       },
       "KILLED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",

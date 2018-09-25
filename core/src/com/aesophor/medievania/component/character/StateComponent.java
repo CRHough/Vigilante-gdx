@@ -8,19 +8,20 @@ public class StateComponent implements Component {
     private State currentState;
     private float stateTimer;
 
-    private boolean alerted;
-    private boolean facingRight;
-    private boolean jumping;
-    private boolean onPlatform;
-    private boolean attacking;
-    private boolean crouching;
-    private boolean invincible;
-    private boolean killed;
-    private boolean setToKill;
+    private boolean isAlerted;
+    private boolean isFacingRight;
+    private boolean isJumping;
+    private boolean isOnPlatform;
+    private boolean isAttacking;
+    private boolean isCrouching;
+    private boolean isUsingSkill;
+    private boolean isInvincible;
+    private boolean isKilled;
+    private boolean isSetToKill;
 
     public StateComponent(State defaultState) {
         this.currentState = defaultState;
-        facingRight = true;
+        isFacingRight = true;
     }
 
 
@@ -51,75 +52,83 @@ public class StateComponent implements Component {
 
 
     public boolean isAlerted() {
-        return alerted;
+        return isAlerted;
     }
 
-    public boolean facingRight() {
-        return facingRight;
+    public boolean isFacingRight() {
+        return isFacingRight;
     }
 
     public boolean isAttacking() {
-        return attacking;
+        return isAttacking;
     }
 
     public boolean isCrouching() {
-        return crouching;
+        return isCrouching;
+    }
+
+    public boolean isUsingSkill() {
+        return isUsingSkill;
     }
 
     public boolean isInvincible() {
-        return invincible;
+        return isInvincible;
     }
 
     public boolean isSetToKill() {
-        return setToKill;
+        return isSetToKill;
     }
 
     public boolean isKilled() {
-        return killed;
+        return isKilled;
     }
 
     public boolean isJumping() {
-        return jumping;
+        return isJumping;
     }
 
     public boolean isOnPlatform() {
-        return onPlatform;
+        return isOnPlatform;
     }
 
 
-    public void setAlerted(boolean alerted) {
-        this.alerted = alerted;
+    public void setAlerted(boolean isAlerted) {
+        this.isAlerted = isAlerted;
     }
 
-    public void setFacingRight(boolean facingRight) {
-        this.facingRight = facingRight;
+    public void setFacingRight(boolean isFacingRight) {
+        this.isFacingRight = isFacingRight;
     }
 
-    public void setJumping(boolean jumping) {
-        this.jumping = jumping;
+    public void setJumping(boolean isJumping) {
+        this.isJumping = isJumping;
     }
 
-    public void setOnPlatform(boolean onPlatform) {
-        this.onPlatform = onPlatform;
+    public void setOnPlatform(boolean isOnPlatform) {
+        this.isOnPlatform = isOnPlatform;
     }
 
-    public void setAttacking(boolean attacking) {
-        this.attacking = attacking;
+    public void setAttacking(boolean isAttacking) {
+        this.isAttacking = isAttacking;
     }
 
-    public void setCrouching(boolean crouching) {
-        this.crouching = crouching;
+    public void setCrouching(boolean isCrouching) {
+        this.isCrouching = isCrouching;
     }
 
-    public void setInvincible(boolean invincible) {
-        this.invincible = invincible;
+    public void setUsingSkill(boolean isUsingSkill) {
+        this.isUsingSkill = isUsingSkill;
     }
 
-    public void setKilled(boolean killed) {
-        this.killed = killed;
+    public void setInvincible(boolean isInvincible) {
+        this.isInvincible = isInvincible;
     }
 
-    public void setSetToKill(boolean setToKill) {
-        this.setToKill = setToKill;
+    public void setKilled(boolean isKilled) {
+        this.isKilled = isKilled;
+    }
+
+    public void setSetToKill(boolean isSetToKill) {
+        this.isSetToKill = isSetToKill;
     }
 }
