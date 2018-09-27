@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui;
 
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
@@ -76,7 +76,7 @@ public class StatusBars extends Stage {
         }
         
         // Initializes player hud Texture and TextureRegions.
-        hudTexture = assets.get(Asset.HUD_TEXTURE);
+        hudTexture = assets.get(GameAssetManager.HUD_TEXTURE);
         barsBackground = new TextureRegion(hudTexture, 0, 4, 135, 50);
         barsPadRight = new TextureRegion(hudTexture, 3, 0, 1, 4);
         healthBar = new TextureRegion(hudTexture, 0, 0, 1, 4);

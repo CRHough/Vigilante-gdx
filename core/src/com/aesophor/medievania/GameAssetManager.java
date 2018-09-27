@@ -1,5 +1,6 @@
 package com.aesophor.medievania;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
@@ -8,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Asset extends AssetManager {
+public class GameAssetManager extends AssetManager {
 
     public static final String CHARACTER_DATABASE = "Database/characters.json";
     public static final String ITEM_DATABASE = "Database/items.json";
@@ -62,42 +63,42 @@ public class Asset extends AssetManager {
 
     private final Map<String, Class<?>> assets;
 
-    public Asset() {
+    public GameAssetManager() {
         assets = new HashMap<>();
 
-        register(Asset.MAIN_MENU_BG, Texture.class);
-        register(Asset.HUD_TEXTURE, Texture.class);
-        register(Asset.MESSAGE_BOX_BG, Texture.class);
-        register(Asset.PAUSE_MENU_BG, Texture.class);
-        register(Asset.STATS_BG, Texture.class);
-        register(Asset.INVENTORY_BG, Texture.class);
-        register(Asset.TAB_REGULAR, Texture.class);
-        register(Asset.TAB_HIGHLIGHTED, Texture.class);
-        register(Asset.ITEM_REGULAR, Texture.class);
-        register(Asset.ITEM_HIGHLIGHTED, Texture.class);
-        register(Asset.EQUIPMENT_REGULAR, Texture.class);
-        register(Asset.EQUIPMENT_HIGHLIGHTED, Texture.class);
-        register(Asset.TRIANGLE, Texture.class);
+        register(GameAssetManager.MAIN_MENU_BG, Texture.class);
+        register(GameAssetManager.HUD_TEXTURE, Texture.class);
+        register(GameAssetManager.MESSAGE_BOX_BG, Texture.class);
+        register(GameAssetManager.PAUSE_MENU_BG, Texture.class);
+        register(GameAssetManager.STATS_BG, Texture.class);
+        register(GameAssetManager.INVENTORY_BG, Texture.class);
+        register(GameAssetManager.TAB_REGULAR, Texture.class);
+        register(GameAssetManager.TAB_HIGHLIGHTED, Texture.class);
+        register(GameAssetManager.ITEM_REGULAR, Texture.class);
+        register(GameAssetManager.ITEM_HIGHLIGHTED, Texture.class);
+        register(GameAssetManager.EQUIPMENT_REGULAR, Texture.class);
+        register(GameAssetManager.EQUIPMENT_HIGHLIGHTED, Texture.class);
+        register(GameAssetManager.TRIANGLE, Texture.class);
 
-        register(Asset.BANDIT_ATLAS, TextureAtlas.class);
-        register(Asset.KNIGHT_ATLAS, TextureAtlas.class);
-        register(Asset.TEXTURE_DUST, Texture.class);
-        register(Asset.TEXTURE_BAT, Texture.class);
+        register(GameAssetManager.BANDIT_ATLAS, TextureAtlas.class);
+        register(GameAssetManager.KNIGHT_ATLAS, TextureAtlas.class);
+        register(GameAssetManager.TEXTURE_DUST, Texture.class);
+        register(GameAssetManager.TEXTURE_BAT, Texture.class);
 
-        register(Asset.EMPTY_ITEM, Texture.class);
-        register(Asset.TEXTURE_AXE, Texture.class);
-        register(Asset.MAIN_MENU_MUSIC, Music.class);
-        register(Asset.WATER_DRIPPING, Music.class);
-        register(Asset.VILLAGE_MUSIC, Music.class);
-        register(Asset.OPEN_CLOSE_SOUND, Sound.class);
-        register(Asset.EQUIP_SOUND, Sound.class);
-        register(Asset.HURT_SOUND, Sound.class);
-        register(Asset.KILLED_SOUND, Sound.class);
-        register(Asset.WEAPON_SWING_SOUND, Sound.class);
-        register(Asset.WEAPON_HIT_SOUND, Sound.class);
-        register(Asset.ITEM_PICKEDUP_SOUND, Sound.class);
-        register(Asset.JUMP_SOUND, Sound.class);
-        register(Asset.UI_CLICK_SOUND, Sound.class);
+        register(GameAssetManager.EMPTY_ITEM, Texture.class);
+        register(GameAssetManager.TEXTURE_AXE, Texture.class);
+        register(GameAssetManager.MAIN_MENU_MUSIC, Music.class);
+        register(GameAssetManager.WATER_DRIPPING, Music.class);
+        register(GameAssetManager.VILLAGE_MUSIC, Music.class);
+        register(GameAssetManager.OPEN_CLOSE_SOUND, Sound.class);
+        register(GameAssetManager.EQUIP_SOUND, Sound.class);
+        register(GameAssetManager.HURT_SOUND, Sound.class);
+        register(GameAssetManager.KILLED_SOUND, Sound.class);
+        register(GameAssetManager.WEAPON_SWING_SOUND, Sound.class);
+        register(GameAssetManager.WEAPON_HIT_SOUND, Sound.class);
+        register(GameAssetManager.ITEM_PICKEDUP_SOUND, Sound.class);
+        register(GameAssetManager.JUMP_SOUND, Sound.class);
+        register(GameAssetManager.UI_CLICK_SOUND, Sound.class);
     }
 
 
@@ -118,7 +119,7 @@ public class Asset extends AssetManager {
     @Override
     public <T> T get(String fileName) {
         load(fileName, assets.get(fileName));
-        System.out.println(fileName + ": " + getReferenceCount(fileName));
+        //Gdx.app.log("DEBUG", "[" + fileName + "] " + getReferenceCount(fileName));
         return super.get(fileName);
     }
 

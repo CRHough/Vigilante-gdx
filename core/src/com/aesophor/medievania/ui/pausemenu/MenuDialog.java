@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.event.GameEventListener;
 import com.aesophor.medievania.event.ui.DialogOptionEvent;
 import com.aesophor.medievania.ui.theme.LabelStyles;
@@ -56,6 +56,8 @@ public class MenuDialog extends Pane {
 
     }
 
+    private static final float ITEM_PAD_RIGHT = 3f;
+
     private final Label message;
     private final Array<DialogOption> options;
     private int currentItemIdx;
@@ -64,10 +66,10 @@ public class MenuDialog extends Pane {
         super(assets, x, y);
 
         // Initialize assets.
-        Texture triangleTexture = assets.get(Asset.TRIANGLE);
+        Texture triangleTexture = assets.get(GameAssetManager.TRIANGLE);
 
         bottom().right();
-        defaults().padRight(3f);
+        defaults().padRight(ITEM_PAD_RIGHT);
         message = new Label("", LabelStyles.WHITE_REGULAR);
         add(message);
 
@@ -77,6 +79,7 @@ public class MenuDialog extends Pane {
         options.first().setSelected(true);
         options.forEach(this::add);
 
+        // Hide the menu dialog by default.
         setVisible(false);
     }
 

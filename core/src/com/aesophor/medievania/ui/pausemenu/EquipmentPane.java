@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
 import com.aesophor.medievania.component.equipment.EquipmentType;
@@ -105,10 +105,10 @@ public class EquipmentPane extends Pane {
     public EquipmentPane(AssetManager assets, Player player, float x, float y) {
         super(assets, player, x, y);
 
-        regularEquipmentItemTexture = assets.get(Asset.EQUIPMENT_REGULAR);
-        highlightedEquipmentItemTexture = assets.get(Asset.EQUIPMENT_HIGHLIGHTED);
-        emptyItemIconTexture = assets.get(Asset.EMPTY_ITEM);
-        clickSound = assets.get(Asset.UI_CLICK_SOUND, Sound.class);
+        regularEquipmentItemTexture = assets.get(GameAssetManager.EQUIPMENT_REGULAR);
+        highlightedEquipmentItemTexture = assets.get(GameAssetManager.EQUIPMENT_HIGHLIGHTED);
+        emptyItemIconTexture = assets.get(GameAssetManager.EMPTY_ITEM);
+        clickSound = assets.get(GameAssetManager.UI_CLICK_SOUND, Sound.class);
 
         items = new Array<>(7);
         for (EquipmentType type : EquipmentType.values()) {

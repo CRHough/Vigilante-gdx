@@ -1,7 +1,7 @@
 package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.Gdx;
@@ -44,8 +44,8 @@ public class PauseMenu extends Stage {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
         this.gsm = gsm;
 
-        background = gsm.getAssets().get(Asset.PAUSE_MENU_BG);
-        clickSound = gsm.getAssets().get(Asset.UI_CLICK_SOUND, Sound.class);
+        background = gsm.getAssets().get(GameAssetManager.PAUSE_MENU_BG);
+        clickSound = gsm.getAssets().get(GameAssetManager.UI_CLICK_SOUND, Sound.class);
 
 
         // Initialize header options (Inventory / Equipment / Skills / Quest / Options).

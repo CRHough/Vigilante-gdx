@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui.component;
 
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
@@ -54,9 +54,9 @@ public class InventoryTabs extends HorizontalGroup {
     private int currentItemIdx;
 
     public InventoryTabs(AssetManager assets) {
-        regularTabTexture = assets.get(Asset.TAB_REGULAR);
-        selectedTabTexture = assets.get(Asset.TAB_HIGHLIGHTED);
-        clickSound = assets.get(Asset.UI_CLICK_SOUND, Sound.class);
+        regularTabTexture = assets.get(GameAssetManager.TAB_REGULAR);
+        selectedTabTexture = assets.get(GameAssetManager.TAB_HIGHLIGHTED);
+        clickSound = assets.get(GameAssetManager.UI_CLICK_SOUND, Sound.class);
 
         space(1f);      /* Space between tabs */
         padBottom(5f);  /* Padding between tabs and whatever content below them. */

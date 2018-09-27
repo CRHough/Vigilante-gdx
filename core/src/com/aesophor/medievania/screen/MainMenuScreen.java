@@ -1,6 +1,6 @@
 package com.aesophor.medievania.screen;
 
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.Medievania;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.ui.theme.Font;
@@ -30,9 +30,9 @@ public class MainMenuScreen extends AbstractScreen {
     public MainMenuScreen(Medievania gsm) {
         super(gsm);
 
-        backgroundMusic = gsm.getAssets().get(Asset.MAIN_MENU_MUSIC);
-        backgroundTexture = gsm.getAssets().get(Asset.MAIN_MENU_BG);
-        keyPressSound = gsm.getAssets().get(Asset.UI_CLICK_SOUND);
+        backgroundMusic = gsm.getAssets().get(GameAssetManager.MAIN_MENU_MUSIC);
+        backgroundTexture = gsm.getAssets().get(GameAssetManager.MAIN_MENU_BG);
+        keyPressSound = gsm.getAssets().get(GameAssetManager.UI_CLICK_SOUND);
 
         
         Table labelTable = new Table();

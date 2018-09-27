@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.entity.character.Player;
@@ -38,7 +38,7 @@ public class StatsPane extends Pane {
     public StatsPane(AssetManager assets, Player player, float x, float y) {
         super(assets, player, x, y);
 
-        paneBackgroundTexture = assets.get(Asset.STATS_BG);
+        paneBackgroundTexture = assets.get(GameAssetManager.STATS_BG);
 
         padLeft(10f).padBottom(4f);
         columnDefaults(0).width(85f);

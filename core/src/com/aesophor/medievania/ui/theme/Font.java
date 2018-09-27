@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui.theme;
 
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -13,7 +13,7 @@ public class Font {
 
     static {
         // Initialize Header font.
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(Asset.HEADER_FONT));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(GameAssetManager.HEADER_FONT));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 16;
         parameter.shadowColor = Color.BLACK;
@@ -22,7 +22,7 @@ public class Font {
         generator.dispose();
 
         // Initialize Regular font.
-        generator = new FreeTypeFontGenerator(Gdx.files.internal(Asset.REGULAR_FONT));
+        generator = new FreeTypeFontGenerator(Gdx.files.internal(GameAssetManager.REGULAR_FONT));
         parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 16;
         parameter.shadowColor = Color.BLACK;

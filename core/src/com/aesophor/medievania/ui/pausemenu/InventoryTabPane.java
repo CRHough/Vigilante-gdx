@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.equipment.EquipmentType;
 import com.aesophor.medievania.component.item.ItemDataComponent;
@@ -43,7 +43,7 @@ public class InventoryTabPane extends Pane {
         super(assets, player, menuDialog, x, y);
 
         // Initialize assets.
-        paneBackgroundTexture = assets.get(Asset.INVENTORY_BG);
+        paneBackgroundTexture = assets.get(GameAssetManager.INVENTORY_BG);
 
         // Initialize UI components.
         inventoryTabs = new InventoryTabs(assets);

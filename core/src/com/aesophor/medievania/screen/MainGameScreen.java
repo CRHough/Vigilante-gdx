@@ -1,7 +1,7 @@
 package com.aesophor.medievania.screen;
 
 import com.aesophor.medievania.GameStateManager;
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.screen.GamePausedEvent;
@@ -59,7 +59,7 @@ public class MainGameScreen extends AbstractScreen {
         engine.addSystem(new PhysicsSystem(world));
         engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera()));     // Renders TiledMap textures.
         engine.addSystem(new CharacterRendererSystem(getBatch(), getCamera(), world));      // Renders player / npc entities.
-        engine.addSystem(new AnimatedSpriteRendererSystem(engine, gsm.getAssets(), getBatch(), world, getCamera())); // Renders dust entities.
+        engine.addSystem(new AnimatedSpriteRendererSystem(engine, gsm.getAssets(), getBatch(), getCamera())); // Renders dust entities.
         engine.addSystem(new StaticSpriteRendererSystem(getBatch(), getCamera(), world));   // Renders item entities
         engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                    // Renders physics debug profiles.
         engine.addSystem(new B2LightsSystem(world, getCamera()));                           // Renders Dynamic box2d lights.
@@ -85,7 +85,7 @@ public class MainGameScreen extends AbstractScreen {
         engine.getSystem(PauseMenuSystem.class).setProcessing(false);
         engine.getSystem(MessageBoxSystem.class).setProcessing(false);
 
-        pauseSound = gsm.getAssets().get(Asset.OPEN_CLOSE_SOUND);
+        pauseSound = gsm.getAssets().get(GameAssetManager.OPEN_CLOSE_SOUND);
     }
 
 
@@ -140,7 +140,6 @@ public class MainGameScreen extends AbstractScreen {
         physicsSys.setProcessing(false);
 
         GameEventManager.getInstance().fireEvent(new GamePausedEvent());
-
         pauseSound.play();
     }
 
@@ -159,7 +158,6 @@ public class MainGameScreen extends AbstractScreen {
         physicsSys.setProcessing(true);
 
         GameEventManager.getInstance().fireEvent(new GameResumedEvent());
-
         pauseSound.play();
     }
 

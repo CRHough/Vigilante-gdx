@@ -20,14 +20,14 @@ public class Medievania extends Game implements GameStateManager {
     @Override
     public void create () {
         this.batch = new SpriteBatch();
-        this.assets = new Asset();
+        this.assets = new GameAssetManager();
 
         // Initialize database.
-        ItemDataManager.getInstance().load(Asset.ITEM_DATABASE);
-        EquipmentDataManager.getInstance().load(Asset.EQUIPMENT_DATABASE);
-        CharacterDataManager.getInstance().load(Asset.CHARACTER_DATABASE);
+        ItemDataManager.getInstance().load(GameAssetManager.ITEM_DATABASE);
+        EquipmentDataManager.getInstance().load(GameAssetManager.EQUIPMENT_DATABASE);
+        CharacterDataManager.getInstance().load(GameAssetManager.CHARACTER_DATABASE);
 
-        ((Asset) assets).loadAllAssets();
+        ((GameAssetManager) assets).loadAllAssets();
         assets.finishLoading();
         
         showScreen(Screens.MAIN_MENU);

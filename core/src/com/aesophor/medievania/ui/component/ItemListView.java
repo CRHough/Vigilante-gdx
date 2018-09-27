@@ -1,6 +1,6 @@
 package com.aesophor.medievania.ui.component;
 
-import com.aesophor.medievania.Asset;
+import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.InventoryComponent;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
@@ -84,9 +84,9 @@ public class ItemListView extends ScrollPane {
         setSize(width, height);
 
         // Initialize assets.
-        highlightedItemTexture = assets.get(Asset.ITEM_HIGHLIGHTED);
-        emptyItemIconTexture = assets.get(Asset.EMPTY_ITEM);
-        clickSound = assets.get(Asset.UI_CLICK_SOUND, Sound.class);
+        highlightedItemTexture = assets.get(GameAssetManager.ITEM_HIGHLIGHTED);
+        emptyItemIconTexture = assets.get(GameAssetManager.EMPTY_ITEM);
+        clickSound = assets.get(GameAssetManager.UI_CLICK_SOUND, Sound.class);
 
         // Disable overscroll effects and X coordinate scrolling.
         setOverscroll(false, false);

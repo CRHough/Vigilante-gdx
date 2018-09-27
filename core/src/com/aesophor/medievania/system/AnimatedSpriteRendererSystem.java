@@ -1,6 +1,5 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
@@ -12,23 +11,20 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class AnimatedSpriteRendererSystem extends IteratingSystem {
 
     private final PooledEngine engine;
     private final AssetManager assets;
     private final Batch batch;
-    private final World world;
     private final Camera camera;
 
-    public AnimatedSpriteRendererSystem(PooledEngine engine, AssetManager assets, Batch batch, World world, Camera camera) {
+    public AnimatedSpriteRendererSystem(PooledEngine engine, AssetManager assets, Batch batch, Camera camera) {
         super(Family.all(AnimationComponent.class).get());
 
         this.engine = engine;
         this.assets = assets;
         this.batch = batch;
-        this.world = world;
         this.camera = camera;
     }
 
