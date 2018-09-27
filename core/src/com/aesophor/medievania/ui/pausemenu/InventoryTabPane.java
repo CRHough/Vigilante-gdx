@@ -20,47 +20,41 @@ import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-public class InventoryTabPane extends Table implements MenuPagePane {
+public class InventoryTabPane extends Pane {
 
-    private static final float TAB_PADDING_X = 5f;
-
-    private final Texture inventoryBackground;
+    private static final float Y_CORRECTION = 50f;
+    private static final float TABS_PAD_LEFT = 2f;
+    private static final float LIST_VIEW_PAD_LEFT = 6f;
+    private static final float DESC_PAD_LEFT = 8f;
+    private static final float LIST_VIEW_DESC_GAP = 13f;
 
     private final InventoryTabs inventoryTabs;
     private final ItemListView itemListView;
     private final Label itemDesc;
 
-    private final MenuDialog menuDialog;
+    private boolean isEquipmentSelector;
+    private EquipmentType selectingEquipmentType;
 
-    private Player player;
-    private boolean isSelectingEquipment; /* InventoryTabPane can also be used as an equipment selector! */
-    private EquipmentType equipmentType;
     private final GameEventListener<DialogOptionEvent> promptDiscardItemEvLstnr;
 
-    public InventoryTabPane(AssetManager assets, Player player, MenuDialog menuDialog, float x, float y) {
-        this.inventoryTabs = new InventoryTabs(assets);
-        this.itemListView = new ItemListView(assets);
-        this.menuDialog = menuDialog;
-        this.player = player;
+    public InventoryTabPane(AssetManager assets, Player player, MenuDialog menuDialog, float x, float y, float width, float height) {
+        super(assets, player, menuDialog, x, y);
 
+        // Initialize assets.
+        paneBackgroundTexture = assets.get(Asset.INVENTORY_BG);
 
-        inventoryBackground = assets.get(Asset.INVENTORY_BG);
-
+        // Initialize UI components.
+        inventoryTabs = new InventoryTabs(assets);
+        itemListView = new ItemListView(assets, width, height);
         itemDesc = new Label("", LabelStyles.WHITE_REGULAR);
         itemDesc.setWrap(true);
 
-        setPosition(x, y);
-        setFillParent(true);
-
-        bottom().left().padLeft(3f).padBottom(50f);
-        defaults().padLeft(5f);
-        add(inventoryTabs).padLeft(0).left().row();
-        add(itemListView).width(270f).height(120f).row();
-        add(itemDesc).width(270f).top().left().spaceTop(13f);
+        padBottom(Y_CORRECTION);
+        add(inventoryTabs).padLeft(TABS_PAD_LEFT).left().row();
+        add(itemListView).padLeft(LIST_VIEW_PAD_LEFT).width(width).height(height).row();
+        add(itemDesc).padLeft(DESC_PAD_LEFT).top().left().width(width).spaceTop(LIST_VIEW_DESC_GAP);
 
         // Show all equipment in player inventory by default.
         itemListView.populate(Mappers.INVENTORY.get(player), ItemType.EQUIP);
@@ -72,7 +66,6 @@ public class InventoryTabPane extends Table implements MenuPagePane {
                 player.discard(selectedItem);
             }, null);
         };
-
 
         // Clear and re-populate inventory content table with the item type of the newly selected tab.
         GameEventManager.getInstance().addEventListener(GameEventType.INVENTORY_TAB_SELECTED, (InventoryTabChangedEvent e) -> {
@@ -105,15 +98,15 @@ public class InventoryTabPane extends Table implements MenuPagePane {
     }
 
     public void setSelectingEquipment(boolean selectingEquipment, EquipmentType equipmentType) {
-        this.isSelectingEquipment = selectingEquipment;
-        this.equipmentType = equipmentType;
+        this.isEquipmentSelector = selectingEquipment;
+        this.selectingEquipmentType = equipmentType;
         inventoryTabs.select(ItemType.EQUIP);
     }
 
     @Override
     public void handleInput(float delta) {
         // Disable user's control over inventory tabs if selecting equipment.
-        if (!isSelectingEquipment) {
+        if (!isEquipmentSelector) {
             inventoryTabs.handleInput(delta);
         }
 
@@ -121,14 +114,14 @@ public class InventoryTabPane extends Table implements MenuPagePane {
         itemListView.handleInput(delta);
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
-            if (isSelectingEquipment) {
+            if (isEquipmentSelector) {
                 if (itemListView.getSelectedItem() != null) {
                     player.equip(itemListView.getSelectedItem());
                 } else {
-                    player.unequip(equipmentType);
+                    player.unequip(selectingEquipmentType);
                     GameEventManager.getInstance().fireEvent(new InventoryChangedEvent());
                 }
-                isSelectingEquipment = false;
+                isEquipmentSelector = false;
                 MenuPage.show(MenuPage.EQUIPMENT);
             } else {
                 if (itemListView.getSelectedItem() != null) {
@@ -153,11 +146,5 @@ public class InventoryTabPane extends Table implements MenuPagePane {
             }
         }
     }
-
-    @Override
-    public Texture getBackgroundTexture() {
-        return inventoryBackground;
-    }
-
 
 }

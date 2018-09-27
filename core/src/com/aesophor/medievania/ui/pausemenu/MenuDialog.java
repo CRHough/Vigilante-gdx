@@ -1,7 +1,7 @@
 package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.Asset;
-import com.aesophor.medievania.event.*;
+import com.aesophor.medievania.event.GameEventListener;
 import com.aesophor.medievania.event.ui.DialogOptionEvent;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.Gdx;
@@ -11,10 +11,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
-public class MenuDialog extends Table implements MenuPagePane {
+public class MenuDialog extends Pane {
 
     private class DialogOption extends HorizontalGroup {
 
@@ -62,12 +61,12 @@ public class MenuDialog extends Table implements MenuPagePane {
     private int currentItemIdx;
 
     public MenuDialog(AssetManager assets, float x, float y) {
+        super(assets, x, y);
+
+        // Initialize assets.
         Texture triangleTexture = assets.get(Asset.TRIANGLE);
 
         bottom().right();
-        setPosition(-x, y);
-        setFillParent(true);
-
         defaults().padRight(3f);
         message = new Label("", LabelStyles.WHITE_REGULAR);
         add(message);
@@ -122,11 +121,6 @@ public class MenuDialog extends Table implements MenuPagePane {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             setVisible(false);
         }
-    }
-
-    @Override
-    public Texture getBackgroundTexture() {
-        return null;
     }
 
 }

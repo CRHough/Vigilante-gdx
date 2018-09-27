@@ -3,11 +3,19 @@ package com.aesophor.medievania.ui.pausemenu;
 import com.aesophor.medievania.ui.theme.Colorscheme;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Menu page is an enum that contains all "pages" in the Pause Menu.
+ * Each page can contain multiple "panes",
+ *
+ * Each pane can contain a background texture (the background texture can be null).
+ * If it's not null, it will be rendered depending on the pane's position.
+ *
+ * Each pane must implement the abstract method handleInput() which handles
+ * the input to the pane.
+ */
 public enum MenuPage {
 
     INVENTORY,      // 0
@@ -24,7 +32,7 @@ public enum MenuPage {
     private static Array<Label> labels;
     private static int currentItemIdx;
 
-    private final Array<Table> tables;
+    private final Array<Pane> panes;
 
     static {
         renderQueue = new Array<>();
@@ -32,20 +40,24 @@ public enum MenuPage {
     }
 
     private MenuPage() {
-        tables = new Array<>();
+        panes = new Array<>();
     }
 
 
-    public Texture getBackgroundTexture() {
-        return ((MenuPagePane) tables.first()).getBackgroundTexture();
+    /**
+     * Gets all panes within this menu page.
+     * @return
+     */
+    public Array<Pane> getPanes() {
+        return panes;
     }
 
-    public Array<Table> getTables() {
-        return tables;
-    }
-
-    public void addTable(MenuPagePane table) {
-        tables.add((Table) table);
+    /**
+     * Adds the specified pane to this menu page.
+     * @param pane
+     */
+    public void addPane(Pane pane) {
+        panes.add(pane);
     }
 
     @Override
@@ -62,7 +74,7 @@ public enum MenuPage {
         // that new page to be rendered will be stored in renderQueue.
         // Directly rendering the new page while the line below hasn't finished
         // will cause problem.
-        tables.forEach(pane -> ((MenuPagePane) pane).handleInput(delta));
+        panes.forEach(pane -> pane.handleInput(delta));
 
         // Should there be any of them, it is now safe to render it.
         MenuPage.renderPageInQueue();
@@ -94,10 +106,10 @@ public enum MenuPage {
     }
 
     /**
-     * Shows the specified page. The actual rendering of the target page will be postponed
-     * until handleInput() on all tables of current page has finished. (Otherwise it would
+     * Shows the specified menu page. The actual rendering of the target page will be postponed
+     * until handleInput() on all panes of current page has finished. (Otherwise it would
      * throw an exception)
-     * @param target page to show.
+     * @param target menu page to show.
      */
     public static void show(MenuPage target) {
         renderQueue.add(target);
@@ -135,13 +147,13 @@ public enum MenuPage {
     }
 
     /**
-     * Updates all tables of the specified target menu page. Tables that belong to any menu page
+     * Updates all panes of the specified target menu page. Tables that belong to any menu page
      * other than the currently selected one will be invisible.
      * @param target menu page to update.
      */
     public static void update(MenuPage target) {
         for (MenuPage item : MenuPage.values()) {
-            item.getTables().forEach(table -> table.setVisible(item == target));
+            item.getPanes().forEach(table -> table.setVisible(item == target));
         }
     }
 

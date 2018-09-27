@@ -14,6 +14,25 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class PauseMenu extends Stage {
 
+    // Constants regarding the position and size of each pane.
+    private static final float HEADER_PAD_TOP = 18f;
+    private static final float HEADER_SPACE_RIGHT = 30f;
+
+    private static final float STATS_PANE_X = 60;
+    private static final float STATS_PANE_Y = 40;
+
+    private static final float MENU_DIALOG_X = -65;
+    private static final float MENU_DIALOG_Y = 20;
+
+    private static final float INVENTORY_PANE_X = 230;
+    private static final float INVENTORY_PANE_Y = 41;
+    private static final float INVENTORY_PANE_WIDTH = 270;
+    private static final float INVENTORY_PANE_HEIGHT = 120;
+
+    private static final float EQUIPMENT_PANE_X = 230;
+    private static final float EQUIPMENT_PANE_Y = 41;
+
+
     private final GameStateManager gsm;
     private final Texture background;
     private final Sound clickSound;
@@ -26,37 +45,32 @@ public class PauseMenu extends Stage {
         this.gsm = gsm;
 
         background = gsm.getAssets().get(Asset.PAUSE_MENU_BG);
-        gsm.getAssets().load(Asset.UI_CLICK_SOUND, Sound.class); // assets should be loaded elsewhere.
         clickSound = gsm.getAssets().get(Asset.UI_CLICK_SOUND, Sound.class);
 
 
         // Initialize header options (Inventory / Equipment / Skills / Quest / Options).
         Table menuItemHeaderTable = new Table();
-        menuItemHeaderTable.top().padTop(18f);
-        menuItemHeaderTable.defaults().spaceRight(30f);
         menuItemHeaderTable.setFillParent(true);
+        menuItemHeaderTable.top().padTop(HEADER_PAD_TOP);
+        menuItemHeaderTable.defaults().spaceRight(HEADER_SPACE_RIGHT);
         MenuPage.buildLabels().forEach(menuItemHeaderTable::add);
 
         // Initialize stats UI and menu dialog.
-        statsPane = new StatsPane(gsm.getAssets(), player, 60, 40);
-        menuDialog = new MenuDialog(gsm.getAssets(), 65, 20);
-        //equipmentSelectionPane = new EquipmentSelectionPane(gsm.getAssets(), player, menuDialog);
-        //equipmentSelectionPane.setEquipmentPane(equipmentPane);
+        statsPane = new StatsPane(gsm.getAssets(), player, STATS_PANE_X, STATS_PANE_Y);
+        menuDialog = new MenuDialog(gsm.getAssets(), MENU_DIALOG_X, MENU_DIALOG_Y);
 
         // Initialize pages.
-        MenuPage.INVENTORY.addTable(new InventoryTabPane(gsm.getAssets(), player, menuDialog, 230, 41));
-        MenuPage.EQUIPMENT.addTable(new EquipmentPane(gsm.getAssets(), player));
-
-        //MenuPage.SKILLS.setTables();
-        //MenuPage.JOURNAL.setTables();
-        //MenuPage.OPTIONS.setTables();
-
+        MenuPage.INVENTORY.addPane(new InventoryTabPane(gsm.getAssets(), player, menuDialog, INVENTORY_PANE_X, INVENTORY_PANE_Y, INVENTORY_PANE_WIDTH, INVENTORY_PANE_HEIGHT));
+        MenuPage.EQUIPMENT.addPane(new EquipmentPane(gsm.getAssets(), player, EQUIPMENT_PANE_X, EQUIPMENT_PANE_Y));
+        //MenuPage.SKILLS.addPane();
+        //MenuPage.JOURNAL.addPane();
+        //MenuPage.OPTIONS.addPane();
 
         addActor(menuItemHeaderTable);
         addActor(statsPane);
         addActor(menuDialog);
-        MenuPage.INVENTORY.getTables().forEach(this::addActor);
-        MenuPage.EQUIPMENT.getTables().forEach(this::addActor);
+        MenuPage.INVENTORY.getPanes().forEach(this::addActor);
+        MenuPage.EQUIPMENT.getPanes().forEach(this::addActor);
 
         MenuPage.update(MenuPage.current());
     }
@@ -71,15 +85,13 @@ public class PauseMenu extends Stage {
                 MenuPage.prev();
                 MenuPage.update(MenuPage.current());
                 clickSound.play();
-            }
-
-            if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
                 MenuPage.next();
                 MenuPage.update(MenuPage.current());
                 clickSound.play();
             }
 
-            if (MenuPage.current().getTables().size > 0) {
+            if (MenuPage.current().getPanes().size > 0) {
                 MenuPage.current().handleInput(delta);
             }
         }
@@ -90,18 +102,24 @@ public class PauseMenu extends Stage {
         act(delta);
 
         gsm.getBatch().begin();
+
+        // Render the background of pause menu.
         gsm.getBatch().draw(background, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
+
+        // Render the background of stats pane.
         gsm.getBatch().draw(statsPane.getBackgroundTexture(), statsPane.getX(), statsPane.getY());
 
-        MenuPage.current().getTables().forEach(t -> {
-            Texture backgroundTexture = ((MenuPagePane) t).getBackgroundTexture();
+        // Render the background texture (if not null) of each pane within this page.
+        MenuPage.current().getPanes().forEach(pane -> {
+            Texture backgroundTexture = pane.getBackgroundTexture();
             if (backgroundTexture != null) {
-                gsm.getBatch().draw(backgroundTexture, t.getX(), t.getY());
+                gsm.getBatch().draw(backgroundTexture, pane.getX(), pane.getY());
             }
         });
 
         gsm.getBatch().end();
 
+        // Highlight only the label of currently selected menu page.
         MenuPage.updateLabelColors();
     }
 

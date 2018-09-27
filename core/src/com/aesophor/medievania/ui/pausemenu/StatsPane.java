@@ -6,17 +6,13 @@ import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
-public class StatsPane extends Table implements MenuPagePane {
+public class StatsPane extends Pane {
 
     private static final float TITLE_BODY_GAP = 3f;
     private static final float SECTION_GAP = 8f;
-
-    private final Texture statsBackground;
 
     private Label nameLabel;
     private Label levelLabel;
@@ -40,12 +36,11 @@ public class StatsPane extends Table implements MenuPagePane {
     private Label lukLabel;
 
     public StatsPane(AssetManager assets, Player player, float x, float y) {
-        statsBackground = assets.get(Asset.STATS_BG);
+        super(assets, player, x, y);
 
-        setPosition(x, y);
-        setFillParent(true);
+        paneBackgroundTexture = assets.get(Asset.STATS_BG);
 
-        bottom().left().padLeft(10f).padBottom(4f);
+        padLeft(10f).padBottom(4f);
         columnDefaults(0).width(85f);
         defaults().height(16f);
 
@@ -101,11 +96,6 @@ public class StatsPane extends Table implements MenuPagePane {
     @Override
     public void handleInput(float delta) {
 
-    }
-
-    @Override
-    public Texture getBackgroundTexture() {
-        return statsBackground;
     }
 
 }

@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
-public class EquipmentPane extends Table implements MenuPagePane {
+public class EquipmentPane extends Pane {
 
     private class EquipmentItem extends Stack {
 
@@ -92,8 +92,6 @@ public class EquipmentPane extends Table implements MenuPagePane {
 
     }
 
-    private static final float TAB_PANE_X = 230;
-    private static final float TAB_PANE_Y = -60;
     private static final float GAP = 11f;
 
     private final Texture regularEquipmentItemTexture;
@@ -104,19 +102,13 @@ public class EquipmentPane extends Table implements MenuPagePane {
     private final Array<EquipmentItem> items;
     private int currentItemIdx;
 
-    private final Player player;
-
-    public EquipmentPane(AssetManager assets, Player player) {
-        this.player = player;
+    public EquipmentPane(AssetManager assets, Player player, float x, float y) {
+        super(assets, player, x, y);
 
         regularEquipmentItemTexture = assets.get(Asset.EQUIPMENT_REGULAR);
         highlightedEquipmentItemTexture = assets.get(Asset.EQUIPMENT_HIGHLIGHTED);
         emptyItemIconTexture = assets.get(Asset.EMPTY_ITEM);
         clickSound = assets.get(Asset.UI_CLICK_SOUND, Sound.class);
-
-        top().left();
-        setFillParent(true);
-        setPosition(TAB_PANE_X, TAB_PANE_Y);
 
         items = new Array<>(7);
         for (EquipmentType type : EquipmentType.values()) {
@@ -167,7 +159,7 @@ public class EquipmentPane extends Table implements MenuPagePane {
             // prompt the player to select an item to put.
             MenuPage.show(MenuPage.INVENTORY);
 
-            InventoryTabPane inventoryTabPane = ((InventoryTabPane) MenuPage.INVENTORY.getTables().first());
+            InventoryTabPane inventoryTabPane = ((InventoryTabPane) MenuPage.INVENTORY.getPanes().first());
             inventoryTabPane.getItemListView().clear();
             inventoryTabPane.getItemListView()
                     .insertEmptyItem()
@@ -177,11 +169,6 @@ public class EquipmentPane extends Table implements MenuPagePane {
 
             clickSound.play();
         }
-    }
-
-    @Override
-    public Texture getBackgroundTexture() {
-        return null;
     }
 
 }

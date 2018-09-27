@@ -79,8 +79,9 @@ public class ItemListView extends ScrollPane {
     private int navigateUpCounter;
     private int navigateDownCounter;
 
-    public ItemListView(AssetManager assets) {
+    public ItemListView(AssetManager assets, float width, float height) {
         super(new Table());
+        setSize(width, height);
 
         // Initialize assets.
         highlightedItemTexture = assets.get(Asset.ITEM_HIGHLIGHTED);
