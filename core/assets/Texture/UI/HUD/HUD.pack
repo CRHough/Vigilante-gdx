@@ -1,0 +1,54 @@
+
+HUD.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+item_desc
+  rotate: false
+  xy: 1, 20
+  size: 65, 13
+  orig: 65, 13
+  offset: 0, 0
+  index: -1
+equipped_weapon_slot
+  rotate: false
+  xy: 68, 1
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+health_bar
+  rotate: false
+  xy: 1, 14
+  size: 1, 4
+  orig: 1, 4
+  offset: 0, 0
+  index: -1
+bar_padding_left
+  rotate: false
+  xy: 102, 29
+  size: 1, 4
+  orig: 1, 4
+  offset: 0, 0
+  index: -1
+magicka_bar
+  rotate: false
+  xy: 1, 8
+  size: 1, 4
+  orig: 1, 4
+  offset: 0, 0
+  index: -1
+bar_padding_right
+  rotate: false
+  xy: 4, 14
+  size: 1, 4
+  orig: 1, 4
+  offset: 0, 0
+  index: -1
+stamina_bar
+  rotate: false
+  xy: 102, 23
+  size: 1, 4
+  orig: 1, 4
+  offset: 0, 0
+  index: -1

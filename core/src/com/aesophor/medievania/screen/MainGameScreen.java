@@ -10,6 +10,7 @@ import com.aesophor.medievania.event.screen.MainGameScreenResizeEvent;
 import com.aesophor.medievania.map.WorldContactListener;
 import com.aesophor.medievania.system.*;
 import com.aesophor.medievania.ui.*;
+import com.aesophor.medievania.ui.hud.HUD;
 import com.aesophor.medievania.ui.pausemenu.PauseMenu;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.ui.theme.Font;
@@ -48,7 +49,7 @@ public class MainGameScreen extends AbstractScreen {
         player = new Player(gsm.getAssets(), world, 0.3f, 1f);
 
         // Initialize damage indicators and notificationFactory area.
-        StatusBars statusBars = new StatusBars(gsm.getAssets(), gsm.getBatch());
+        HUD hud = new HUD(gsm.getAssets(), gsm.getBatch());
         MessageBox messageBox = new MessageBox(gsm);
         PauseMenu pauseMenu = new PauseMenu(gsm, player);
         DamageIndicatorFactory damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), Font.REGULAR, getCamera(), 1.2f);
@@ -71,7 +72,7 @@ public class MainGameScreen extends AbstractScreen {
         engine.addSystem(new GameMapManagementSystem(engine, gsm.getAssets(), world));      // Used to set current GameMap.
         engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorFactory));    // Renders damage indicators.
         engine.addSystem(new NotificationSystem(getBatch(), notificationFactory));          // Renders Notifications.
-        engine.addSystem(new PlayerStatusBarsSystem(getBatch(), statusBars));               // Renders player status bars.
+        engine.addSystem(new HUDSystem(getBatch(), hud));                                   // Renders heads up display.
         engine.addSystem(new MessageBoxSystem(getBatch(), messageBox));                     // Renders MessageBox (dialogues).
         engine.addSystem(new PauseMenuSystem(getBatch(), pauseMenu));                       // Pause Menu.
         engine.addSystem(new ScreenFadeSystem(getBatch()));                                 // Renders screen fade effects.
@@ -80,7 +81,7 @@ public class MainGameScreen extends AbstractScreen {
         engine.addEntity(player);
         engine.getSystem(CameraSystem.class).registerPlayer(player);
         engine.getSystem(GameMapManagementSystem.class).registerPlayer(player);
-        engine.getSystem(PlayerStatusBarsSystem.class).registerPlayer(player);
+        engine.getSystem(HUDSystem.class).registerPlayer(player);
 
         engine.getSystem(PauseMenuSystem.class).setProcessing(false);
         engine.getSystem(MessageBoxSystem.class).setProcessing(false);

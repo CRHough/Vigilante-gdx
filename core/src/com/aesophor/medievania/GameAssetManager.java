@@ -26,8 +26,6 @@ public class GameAssetManager extends AssetManager {
     public static final String INVENTORY_BG = "Texture/UI/inventory_bg.png";
     public static final String TRIANGLE = "Texture/UI/triangle.png";
 
-    public static final String HUD_TEXTURE = "Texture/UI/status_bar.png";
-
     public static final String TAB_REGULAR = "Texture/UI/tab_regular.png";
     public static final String TAB_HIGHLIGHTED = "Texture/UI/tab_highlighted.png";
 
@@ -52,6 +50,7 @@ public class GameAssetManager extends AssetManager {
     public static final String WATER_DRIPPING = "Sfx/Environment/water_dripping.mp3";
     public static final String VILLAGE_MUSIC = "Music/village01.mp3";
 
+    public static final String HUD_ATLAS = "Texture/UI/HUD/HUD.pack";
     public static final String BANDIT_ATLAS = "Texture/Character/bandit/Bandit.pack";
     public static final String KNIGHT_ATLAS = "Texture/Character/knight/Knight.pack";
 
@@ -66,39 +65,40 @@ public class GameAssetManager extends AssetManager {
     public GameAssetManager() {
         assets = new HashMap<>();
 
-        register(GameAssetManager.MAIN_MENU_BG, Texture.class);
-        register(GameAssetManager.HUD_TEXTURE, Texture.class);
-        register(GameAssetManager.MESSAGE_BOX_BG, Texture.class);
-        register(GameAssetManager.PAUSE_MENU_BG, Texture.class);
-        register(GameAssetManager.STATS_BG, Texture.class);
-        register(GameAssetManager.INVENTORY_BG, Texture.class);
-        register(GameAssetManager.TAB_REGULAR, Texture.class);
-        register(GameAssetManager.TAB_HIGHLIGHTED, Texture.class);
-        register(GameAssetManager.ITEM_REGULAR, Texture.class);
-        register(GameAssetManager.ITEM_HIGHLIGHTED, Texture.class);
-        register(GameAssetManager.EQUIPMENT_REGULAR, Texture.class);
-        register(GameAssetManager.EQUIPMENT_HIGHLIGHTED, Texture.class);
-        register(GameAssetManager.TRIANGLE, Texture.class);
+        register(MAIN_MENU_BG, Texture.class);
+        register(MESSAGE_BOX_BG, Texture.class);
+        register(PAUSE_MENU_BG, Texture.class);
+        register(STATS_BG, Texture.class);
+        register(INVENTORY_BG, Texture.class);
 
-        register(GameAssetManager.BANDIT_ATLAS, TextureAtlas.class);
-        register(GameAssetManager.KNIGHT_ATLAS, TextureAtlas.class);
-        register(GameAssetManager.TEXTURE_DUST, Texture.class);
-        register(GameAssetManager.TEXTURE_BAT, Texture.class);
+        register(TAB_REGULAR, Texture.class);
+        register(TAB_HIGHLIGHTED, Texture.class);
+        register(ITEM_REGULAR, Texture.class);
+        register(ITEM_HIGHLIGHTED, Texture.class);
+        register(EQUIPMENT_REGULAR, Texture.class);
+        register(EQUIPMENT_HIGHLIGHTED, Texture.class);
+        register(TRIANGLE, Texture.class);
 
-        register(GameAssetManager.EMPTY_ITEM, Texture.class);
-        register(GameAssetManager.TEXTURE_AXE, Texture.class);
-        register(GameAssetManager.MAIN_MENU_MUSIC, Music.class);
-        register(GameAssetManager.WATER_DRIPPING, Music.class);
-        register(GameAssetManager.VILLAGE_MUSIC, Music.class);
-        register(GameAssetManager.OPEN_CLOSE_SOUND, Sound.class);
-        register(GameAssetManager.EQUIP_SOUND, Sound.class);
-        register(GameAssetManager.HURT_SOUND, Sound.class);
-        register(GameAssetManager.KILLED_SOUND, Sound.class);
-        register(GameAssetManager.WEAPON_SWING_SOUND, Sound.class);
-        register(GameAssetManager.WEAPON_HIT_SOUND, Sound.class);
-        register(GameAssetManager.ITEM_PICKEDUP_SOUND, Sound.class);
-        register(GameAssetManager.JUMP_SOUND, Sound.class);
-        register(GameAssetManager.UI_CLICK_SOUND, Sound.class);
+        register(HUD_ATLAS, TextureAtlas.class);
+        register(BANDIT_ATLAS, TextureAtlas.class);
+        register(KNIGHT_ATLAS, TextureAtlas.class);
+
+        register(TEXTURE_DUST, Texture.class);
+        register(TEXTURE_BAT, Texture.class);
+        register(EMPTY_ITEM, Texture.class);
+        register(TEXTURE_AXE, Texture.class);
+        register(MAIN_MENU_MUSIC, Music.class);
+        register(WATER_DRIPPING, Music.class);
+        register(VILLAGE_MUSIC, Music.class);
+        register(OPEN_CLOSE_SOUND, Sound.class);
+        register(EQUIP_SOUND, Sound.class);
+        register(HURT_SOUND, Sound.class);
+        register(KILLED_SOUND, Sound.class);
+        register(WEAPON_SWING_SOUND, Sound.class);
+        register(WEAPON_HIT_SOUND, Sound.class);
+        register(ITEM_PICKEDUP_SOUND, Sound.class);
+        register(JUMP_SOUND, Sound.class);
+        register(UI_CLICK_SOUND, Sound.class);
     }
 
 

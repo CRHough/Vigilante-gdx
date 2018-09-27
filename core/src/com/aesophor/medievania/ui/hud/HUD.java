@@ -1,4 +1,4 @@
-package com.aesophor.medievania.ui;
+package com.aesophor.medievania.ui.hud;
 
 import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.component.Mappers;
@@ -13,34 +13,29 @@ import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.character.ItemEquippedEvent;
 import com.aesophor.medievania.event.character.ItemUnequippedEvent;
 import com.aesophor.medievania.util.Constants;
-import com.aesophor.medievania.ui.theme.Font;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class StatusBars extends Stage {
+public class HUD extends Stage {
 
     private static int barLength = 75; // pixel
 
     private StatsComponent playerStats;
-    
-    private Texture hudTexture;
-    private TextureRegion barsBackground;
-    private TextureRegion barsPadRight;
-    private TextureRegion healthBar;
-    private TextureRegion staminaBar;
-    private TextureRegion magickaBar;
-    private TextureRegion extraItem;
+    private int lastUpdatedHealth;
+    private int lastUpdatedStamina;
+    private int lastUpdatedMagicka;
 
+    private final StatusBar healthBar;
+    private final StatusBar staminaBar;
+    private final StatusBar magickaBar;
+
+    private final Slot equippedWeaponSlot;
+
+    /*
     private Image healthBarImage;
     private Image healthBarPadImage;
     private Image staminaBarImage;
@@ -48,8 +43,6 @@ public class StatusBars extends Stage {
     private Image magickaBarImage;
     private Image magickaBarPadImage;
 
-    private Image extraItemImageOne;
-    private Image extraItemImageTwo;
 
     private Texture weaponIconTexture;
     private Image weaponIconImage;
@@ -59,78 +52,74 @@ public class StatusBars extends Stage {
     private Table barTable;
     private Table extraTable;
     private Table textTable;
+    */
 
-    private int lastUpdatedHealth;
-    private int lastUpdatedStamina;
-    private int lastUpdatedMagicka;
-
-    public StatusBars(AssetManager assets, Batch batch) {
+    public HUD(AssetManager assets, Batch batch) {
         this(assets, batch, null);
     }
     
-    public StatusBars(AssetManager assets, Batch batch, Player player) {
+    public HUD(AssetManager assets, Batch batch, Player player) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), batch);
+
+        // Extract regions from the texture atlas.
+        TextureAtlas atlas = assets.get(GameAssetManager.HUD_ATLAS);
+        TextureAtlas.AtlasRegion barPadLeftRegion = atlas.findRegion("bar_padding_left");
+        TextureAtlas.AtlasRegion barPadRightRegion = atlas.findRegion("bar_padding_right");
+        TextureAtlas.AtlasRegion healthBarRegion = atlas.findRegion("health_bar");
+        TextureAtlas.AtlasRegion staminaBarRegion = atlas.findRegion("stamina_bar");
+        TextureAtlas.AtlasRegion magickaBarRegion = atlas.findRegion("magicka_bar");
+        TextureAtlas.AtlasRegion equippedWeaponSlotRegion = atlas.findRegion("equipped_weapon_slot");
+        TextureAtlas.AtlasRegion itemDescRegion = atlas.findRegion("item_desc");
 
         if (player != null) {
             playerStats = Mappers.STATS.get(player);
         }
         
         // Initializes player hud Texture and TextureRegions.
-        hudTexture = assets.get(GameAssetManager.HUD_TEXTURE);
-        barsBackground = new TextureRegion(hudTexture, 0, 4, 135, 50);
-        barsPadRight = new TextureRegion(hudTexture, 3, 0, 1, 4);
-        healthBar = new TextureRegion(hudTexture, 0, 0, 1, 4);
-        staminaBar = new TextureRegion(hudTexture, 1, 0, 1, 4);
-        magickaBar = new TextureRegion(hudTexture, 2, 0, 1, 4);
-        extraItem = new TextureRegion(hudTexture, 0, 54, 65, 15);
         
-        
+
+        /*
         hudTable = new Table();
         hudTable.top().left();
         hudTable.setFillParent(true);
+        //hudTable.add(new Image(barsBackground)).padTop(12f).padLeft(20f);
+        */
         
-        hudTable.add(new Image(barsBackground)).padTop(12f).padLeft(20f);
-        
-        
-        barTable = new Table();
+        Table barTable = new Table();
         barTable.top().left();
         barTable.setFillParent(true);
         barTable.padTop(15f).padLeft(27f);
+        barTable.defaults().padTop(2f);
 
-        healthBarPadImage = new Image(barsPadRight);
-        healthBarImage = new Image(healthBar);
-        staminaBarPadImage = new Image(barsPadRight);
-        staminaBarImage = new Image(staminaBar);
-        magickaBarPadImage = new Image(barsPadRight);
-        magickaBarImage = new Image(magickaBar);
-        
-        healthBarImage.setScaleX(barLength);
-        staminaBarImage.setScaleX(barLength);
-        magickaBarImage.setScaleX(barLength);
+        healthBar = new StatusBar(barPadLeftRegion, barPadRightRegion, healthBarRegion, 75f);
+        staminaBar = new StatusBar(barPadLeftRegion, barPadRightRegion, staminaBarRegion, 75f);
+        magickaBar = new StatusBar(barPadLeftRegion, barPadRightRegion, magickaBarRegion, 75f);
 
-        barTable.add(healthBarImage);
-        barTable.add(healthBarPadImage);
-        barTable.row().padTop(2f);
-        barTable.add(staminaBarImage);
-        barTable.add(staminaBarPadImage);
-        barTable.row().padTop(2f);
-        //barTable.add(magickaBarImage);
-        //barTable.add(magickaBarPadImage);
+        barTable.add(healthBar).row();
+        barTable.add(staminaBar).row();
+        barTable.add(magickaBar).row();
 
 
+
+        equippedWeaponSlot = new Slot(equippedWeaponSlotRegion, itemDescRegion, 28f, -45f);
+
+        /*
         extraTable = new Table();
         extraTable.top().right();
         extraTable.setFillParent(true);
         extraTable.padTop(20f).padRight(27f);
+        */
 
+        /*
         extraItemImageOne = new Image(extraItem);
         extraItemImageTwo = new Image(extraItem);
 
         extraTable.add(extraItemImageOne);
         extraTable.row().padTop(5f);
         extraTable.add(extraItemImageTwo);
+        */
 
-
+        /*
         textTable = new Table();
         textTable.top().left();
         textTable.setFillParent(true);
@@ -144,11 +133,13 @@ public class StatusBars extends Stage {
 
         textTable.add(weaponIconImage).padTop(11f).padLeft(9f).padRight(17f);
         textTable.add(weaponNameLabel).padTop(25f);
+        */
         
-        addActor(hudTable);
+        //addActor(hudTable);
         addActor(barTable);
-        addActor(extraTable);
-        addActor(textTable);
+        addActor(equippedWeaponSlot);
+        //addActor(extraTable);
+        //addActor(textTable);
 
 
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_EQUIPPED, (ItemEquippedEvent e) -> {
@@ -156,11 +147,8 @@ public class StatusBars extends Stage {
                 EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
 
                 if (equipmentData.getType() == EquipmentType.WEAPON) {
-                    ItemDataComponent itemData = Mappers.ITEM_DATA.get(e.getItem());
-
-                    weaponIconTexture = assets.get(itemData.getImage());
-                    weaponIconImage.setDrawable(new TextureRegionDrawable(new TextureRegion(weaponIconTexture)));
-                    weaponNameLabel.setText(itemData.getName());
+                    e.getItem().reloadTexture();
+                    equippedWeaponSlot.update(e.getItem());
                 }
             }
         });
@@ -171,11 +159,11 @@ public class StatusBars extends Stage {
 
                 if (equipmentData.getType() == EquipmentType.WEAPON) {
                     assets.unload(Mappers.ITEM_DATA.get(e.getItem()).getImage());
-                    weaponIconImage.setDrawable(null);
-                    weaponNameLabel.setText("");
+                    equippedWeaponSlot.update(null);
                 }
             }
         });
+
     }
 
 
@@ -183,35 +171,10 @@ public class StatusBars extends Stage {
         playerStats = Mappers.STATS.get(player);
     }
 
-    public void updateHealth() {
-        int currentHealth = playerStats.getHealth();
-        int fullHealth = playerStats.getFullHealth();
-        lastUpdatedHealth = currentHealth;
-        healthBarImage.setScaleX(barLength * currentHealth / fullHealth);
-        healthBarPadImage.setX(healthBarImage.getX() + barLength * currentHealth / fullHealth);
-    }
-
-    public void updateStamina() {
-        int currentStamina = playerStats.getStamina();
-        int fullStamina = playerStats.getFullStamina();
-        lastUpdatedStamina = currentStamina;
-        staminaBarImage.setScaleX(barLength * currentStamina / fullStamina);
-        staminaBarPadImage.setX(staminaBarImage.getX() + staminaBarImage.getScaleX());
-    }
-
-    public void updateMagicka() {
-        int currentMagicka = playerStats.getMagicka();
-        int fullMagicka = playerStats.getFullMagicka();
-        lastUpdatedMagicka = currentMagicka;
-        magickaBarImage.setScaleX(barLength * currentMagicka / fullMagicka);
-        magickaBarPadImage.setX(magickaBarImage.getX() + magickaBarImage.getScaleX());
-
-    }
-
     public void update(float delta) {
-        updateHealth();
-        updateStamina();
-        updateMagicka();
+        healthBar.update(playerStats.getHealth(), playerStats.getFullHealth());
+        staminaBar.update(playerStats.getStamina(), playerStats.getFullStamina());
+        magickaBar.update(playerStats.getMagicka(), playerStats.getFullMagicka());
     }
     
 }
