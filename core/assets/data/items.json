@@ -1,9 +1,0 @@
-{
-  "Rusty Axe": {
-    "class": "com.aesophor.medievania.component.item.ItemDataComponent",
-    "type": 0,
-    "image": "item/RustyAxe.png",
-    "name": "Rusty Axe",
-    "desc": "An old yet reliable war axe. Looks Rusty."
-  }
-}

@@ -89,11 +89,9 @@ public class EquipmentPane extends Table implements MenuPagePane {
     private int currentItemIdx;
 
     private final Player player;
-    private final MenuDialog menuDialog;
 
-    public EquipmentPane(AssetManager assets, Player player, MenuDialog menuDialog) {
+    public EquipmentPane(AssetManager assets, Player player) {
         this.player = player;
-        this.menuDialog = menuDialog;
 
         regularItemTexture = assets.get(Asset.ITEM_REGULAR);
         selectedItemTexture = assets.get(Asset.ITEM_HIGHLIGHTED);

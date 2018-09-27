@@ -1,5 +1,6 @@
 package com.aesophor.medievania.screen;
 
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.Medievania;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.ui.theme.Font;
@@ -15,10 +16,6 @@ import com.badlogic.gdx.utils.Align;
 
 public class MainMenuScreen extends AbstractScreen {
 
-    private static final String BACKGROUND_TEXTURE_FILE = "interface/mainmenu_bg.png";
-    private static final String BACKGROUND_MUSIC_FILE = "music/main_menu.wav";
-    private static final String KEY_PRESS_SOUND_FILE = "sfx/ui/click.wav";
-
     private static final String COPYRIGHT_NOTICE = "Aesophor Softworks - Build: 9/10/2018 (pre-alpha)";
 
     private Texture backgroundTexture;
@@ -33,9 +30,9 @@ public class MainMenuScreen extends AbstractScreen {
     public MainMenuScreen(Medievania gsm) {
         super(gsm);
 
-        backgroundMusic = gsm.getAssets().get(BACKGROUND_MUSIC_FILE);
-        backgroundTexture = gsm.getAssets().get(BACKGROUND_TEXTURE_FILE);
-        keyPressSound = gsm.getAssets().get(KEY_PRESS_SOUND_FILE);
+        backgroundMusic = gsm.getAssets().get(Asset.MAIN_MENU_MUSIC);
+        backgroundTexture = gsm.getAssets().get(Asset.MAIN_MENU_BG);
+        keyPressSound = gsm.getAssets().get(Asset.UI_CLICK_SOUND);
 
         
         Table labelTable = new Table();

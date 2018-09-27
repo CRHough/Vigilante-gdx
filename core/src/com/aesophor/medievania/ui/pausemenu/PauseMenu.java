@@ -45,7 +45,7 @@ public class PauseMenu extends Stage {
 
         // Initialize pages.
         MenuPage.INVENTORY.addTable(new InventoryTabPane(gsm.getAssets(), player, menuDialog));
-        MenuPage.EQUIPMENT.addTable(new EquipmentPane(gsm.getAssets(), player, menuDialog));
+        MenuPage.EQUIPMENT.addTable(new EquipmentPane(gsm.getAssets(), player));
 
         //MenuPage.SKILLS.setTables();
         //MenuPage.JOURNAL.setTables();

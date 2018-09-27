@@ -22,9 +22,9 @@ public class Medievania extends Game implements GameStateManager {
         this.batch = new SpriteBatch();
         this.assets = new Asset();
 
-        ItemDataManager.getInstance().load("data/items.json");
-        EquipmentDataManager.getInstance().load("data/equipment.json");
-        CharacterDataManager.getInstance().load("data/characters.json");
+        ItemDataManager.getInstance().load("Database/items.json");
+        EquipmentDataManager.getInstance().load("Database/equipment.json");
+        CharacterDataManager.getInstance().load("Database/characters.json");
         ((Asset) assets).loadAllAssets();
         assets.finishLoading();
         

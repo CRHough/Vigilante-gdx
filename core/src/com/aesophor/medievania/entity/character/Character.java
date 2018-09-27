@@ -1,5 +1,6 @@
 package com.aesophor.medievania.entity.character;
 
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.component.equipment.EquipmentType;
@@ -364,7 +365,7 @@ public abstract class Character extends Entity implements Disposable {
 
             CharacterAnimationComponent animations = getComponent(CharacterAnimationComponent.class);
 
-            Texture texture = assets.get("texture/bat.png");
+            Texture texture = assets.get(Asset.TEXTURE_BAT);
             animations.put(State.SKILL, Utils.createAnimation(texture, 12f / Constants.PPM, 0, 2, 0, 0, 42, 42));
             sprite.setBounds(0, 0, 56f / 100, 56f / 100);
             state.setUsingSkill(true);
@@ -376,6 +377,7 @@ public abstract class Character extends Entity implements Disposable {
                     b2body.getBodyFixture().setSensor(false);
                     sprite.setBounds(0, 0, 115 / 100, 115 / 100);
                     state.setUsingSkill(false);
+                    assets.unload(Asset.TEXTURE_BAT);
                 }
             }, .5f);
         }

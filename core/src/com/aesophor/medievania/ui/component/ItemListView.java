@@ -15,6 +15,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Array;
 
@@ -23,19 +24,19 @@ public class ItemListView extends ScrollPane {
     private class InventoryItem extends Stack {
 
         private Item item;
-        //private Image icon;
+        private Image icon;
         private Label nameLabel;
         private Image selectionImage;
 
         public InventoryItem(Item item, Texture selectionTexture, Label.LabelStyle labelStyle) {
             this.item = item;
-            //this.icon = new Image((item == null) ? Mappers.SPRITE.get(item) : null);
+            this.icon = new Image((item != null) ? Mappers.SPRITE.get(item) : new Sprite(emptyItemTexture));
             this.nameLabel = new Label(" " + ((item != null) ? Mappers.ITEM_DATA.get(item).getName() : "----"), labelStyle);
             this.selectionImage = new Image(selectionTexture);
 
             HorizontalGroup group = new HorizontalGroup();
             group.padLeft(5f);
-            //group.addActor(icon);
+            group.addActor(icon);
             group.padRight(5f);
             group.addActor(nameLabel);
 
@@ -59,6 +60,7 @@ public class ItemListView extends ScrollPane {
 
 
     private final Texture selectionTexture;
+    private final Texture emptyItemTexture;
     private final Sound clickSound;
 
     private final Table contentTable;
@@ -71,6 +73,7 @@ public class ItemListView extends ScrollPane {
     public ItemListView(AssetManager assets) {
         super(new Table());
         selectionTexture = assets.get(Asset.ITEM_HIGHLIGHTED);
+        emptyItemTexture = assets.get(Asset.EMPTY_ITEM);
         clickSound = assets.get(Asset.UI_CLICK_SOUND, Sound.class);
 
         setScrollingDisabled(true, false);

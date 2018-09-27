@@ -1,0 +1,61 @@
+
+Knight.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+ATTACKING
+  rotate: false
+  xy: 1, 45
+  size: 420, 42
+  orig: 420, 42
+  offset: 0, 0
+  index: -1
+KILLED
+  rotate: false
+  xy: 1, 1
+  size: 378, 42
+  orig: 378, 42
+  offset: 0, 0
+  index: -1
+RUNNING
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+JUMPING
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+FALLING
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+CROUCHING
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+IDLE
+  rotate: false
+  xy: 423, 45
+  size: 168, 42
+  orig: 168, 42
+  offset: 0, 0
+  index: -1
+SKILL
+  rotate: false
+  xy: 423, 45
+  size: 168, 42
+  orig: 168, 42
+  offset: 0, 0
+  index: -1

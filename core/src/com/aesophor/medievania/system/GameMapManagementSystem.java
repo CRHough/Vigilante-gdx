@@ -109,7 +109,7 @@ public class GameMapManagementSystem extends EntitySystem {
             currentMap.getBackgroundMusic().play();
         });
 
-        setGameMap("map/starting_point.tmx");
+        setGameMap("Map/starting_point.tmx");
     }
 
     public void registerPlayer(Player player) {

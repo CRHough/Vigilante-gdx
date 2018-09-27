@@ -1,0 +1,180 @@
+{
+  "Player": {
+    "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
+    "atlas": "Texture/Character/bandit/Bandit.pack",
+    "textureOffsetX": 0.0,
+    "textureOffsetY": 6.0,
+    "frameWidth": 80,
+    "frameHeight": 80,
+    "frameData": {
+      "IDLE": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 22.0,
+        "frameEndCount": 5
+      },
+      "RUNNING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 17.0,
+        "frameEndCount": 7
+      },
+      "JUMPING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 10.0,
+        "frameEndCount": 3
+      },
+      "FALLING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 10.0,
+        "frameStartCount": 4,
+        "frameEndCount": 4
+      },
+      "CROUCHING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 10.0,
+        "frameStartCount": 4,
+        "frameEndCount": 5
+      },
+      "ATTACKING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 20.0,
+        "frameEndCount": 6
+      },
+      "SKILL": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 30.0,
+        "frameEndCount": 5
+      },
+      "KILLED": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 30.0,
+        "frameEndCount": 5
+      }
+    },
+    "soundData": {
+      "JUMP": "Sfx/Player/jump.wav",
+      "HURT": "Sfx/Player/hurt.wav",
+      "KILLED": "Sfx/Player/death.mp3",
+      "WEAPON_SWING": "Sfx/Player/weapon_swing.ogg",
+      "WEAPON_HIT": "Sfx/Player/weapon_hit.ogg",
+      "ITEM_PICKEDUP": "Sfx/Player/pickup_item.mp3",
+      "EQUIPMENT_CHANGED": "Sfx/Player/equip.wav"
+    },
+    "stats": {
+      "class": "com.aesophor.medievania.component.character.StatsComponent",
+      "name": "Aesophor",
+      "level": 1,
+      "exp": 0,
+      "fullHealth": 100,
+      "fullStamina": 100,
+      "fullMagicka": 100,
+      "_str": 5,
+      "_dex": 5,
+      "_int": 5,
+      "_luk": 5,
+      "bodyHeight": 34,
+      "bodyWidth": 10,
+      "movementSpeed": 0.3,
+      "jumpHeight": 3.0,
+      "attackForce": 1.0,
+      "attackTime": 1.8,
+      "attackRange": 15,
+      "basePhysicalDamage": 50
+    },
+    "statsRegen": {
+      "class": "com.aesophor.medievania.component.character.StatsRegenerationComponent"
+      "healthRegenRate": 1,
+      "staminaRegenRate": 5,
+      "magickaRegenRate": 5
+    }
+  },
+
+  "Castle Guard": {
+    "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
+    "atlas": "Texture/Character/knight/Knight.pack",
+    "textureOffsetX": 0.0,
+    "textureOffsetY": 0.0,
+    "frameWidth": 42,
+    "frameHeight": 44,
+    "frameData": {
+      "IDLE": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 30.0,
+        "frameEndCount": 3
+      },
+      "RUNNING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 24.0,
+        "frameEndCount": 7
+      },
+      "JUMPING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 12.0,
+        "frameEndCount": 7
+      },
+      "FALLING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 12.0,
+        "frameEndCount": 7
+      },
+      "CROUCHING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 12.0,
+        "frameEndCount": 7
+      },
+      "ATTACKING": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 24.0,
+        "frameEndCount": 9
+      },
+      "SKILL": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 30.0,
+        "frameEndCount": 5
+      },
+      "KILLED": {
+        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
+        "frameDuration": 32.0,
+        "frameEndCount": 8
+      }
+    },
+    "soundData": {
+      "JUMP": "Sfx/Player/jump.wav",
+      "HURT": "Sfx/Player/hurt.wav",
+      "KILLED": "Sfx/Player/death.mp3",
+      "WEAPON_SWING": "Sfx/Player/weapon_swing.ogg",
+      "WEAPON_HIT": "Sfx/Player/weapon_hit.ogg",
+      "ITEM_PICKEDUP": "Sfx/Player/pickup_item.mp3",
+      "EQUIPMENT_CHANGED": "Sfx/Player/equip.wav"
+    },
+    "stats": {
+      "class": "com.aesophor.medievania.component.character.StatsComponent",
+      "name": "Castle Guard",
+      "level": 1,
+      "exp": 10,
+      "fullHealth": 100,
+      "fullStamina": 100,
+      "fullMagicka": 100,
+      "_str": 15,
+      "_dex": 8,
+      "_int": 5,
+      "_luk": 6,
+      "bodyHeight": 34,
+      "bodyWidth": 10,
+      "movementSpeed": 0.15,
+      "jumpHeight": 3.5,
+      "attackForce": 1.2,
+      "attackTime": 2.4,
+      "attackRange": 14,
+      "basePhysicalDamage": 10
+    },
+    "statsRegen": {
+      "class": "com.aesophor.medievania.component.character.StatsRegenerationComponent"
+      "healthRegenRate": 1,
+      "staminaRegenRate": 5,
+      "magickaRegenRate": 5
+    },
+    "items": {
+      "Rusty Axe": 1
+    }
+  }
+}
