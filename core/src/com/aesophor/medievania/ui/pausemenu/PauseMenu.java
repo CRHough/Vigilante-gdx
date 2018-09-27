@@ -38,13 +38,13 @@ public class PauseMenu extends Stage {
         MenuPage.buildLabels().forEach(menuItemHeaderTable::add);
 
         // Initialize stats UI and menu dialog.
-        statsPane = new StatsPane(gsm.getAssets(), player);
-        menuDialog = new MenuDialog(gsm.getAssets());
+        statsPane = new StatsPane(gsm.getAssets(), player, 60, 40);
+        menuDialog = new MenuDialog(gsm.getAssets(), 65, 20);
         //equipmentSelectionPane = new EquipmentSelectionPane(gsm.getAssets(), player, menuDialog);
         //equipmentSelectionPane.setEquipmentPane(equipmentPane);
 
         // Initialize pages.
-        MenuPage.INVENTORY.addTable(new InventoryTabPane(gsm.getAssets(), player, menuDialog));
+        MenuPage.INVENTORY.addTable(new InventoryTabPane(gsm.getAssets(), player, menuDialog, 230, 41));
         MenuPage.EQUIPMENT.addTable(new EquipmentPane(gsm.getAssets(), player));
 
         //MenuPage.SKILLS.setTables();
@@ -91,10 +91,15 @@ public class PauseMenu extends Stage {
 
         gsm.getBatch().begin();
         gsm.getBatch().draw(background, 0, 0, Constants.V_WIDTH, Constants.V_HEIGHT);
-        gsm.getBatch().draw(statsPane.getBackgroundTexture(), 380, 40);
-        if (MenuPage.current().getTables().size > 0 && MenuPage.current().getBackgroundTexture() != null) {
-            gsm.getBatch().draw(MenuPage.current().getBackgroundTexture(), 50, 40);
-        }
+        gsm.getBatch().draw(statsPane.getBackgroundTexture(), statsPane.getX(), statsPane.getY());
+
+        MenuPage.current().getTables().forEach(t -> {
+            Texture backgroundTexture = ((MenuPagePane) t).getBackgroundTexture();
+            if (backgroundTexture != null) {
+                gsm.getBatch().draw(backgroundTexture, t.getX(), t.getY());
+            }
+        });
+
         gsm.getBatch().end();
 
         MenuPage.updateLabelColors();

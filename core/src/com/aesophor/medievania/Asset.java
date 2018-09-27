@@ -10,6 +10,10 @@ import java.util.Map;
 
 public class Asset extends AssetManager {
 
+    public static final String CHARACTER_DATABASE = "Database/characters.json";
+    public static final String ITEM_DATABASE = "Database/items.json";
+    public static final String EQUIPMENT_DATABASE = "Database/equipment.json";
+
     // UI Textures
     public static final String HEADER_FONT = "Font/MatchupPro.ttf";
     public static final String REGULAR_FONT = "Font/HeartbitXX.ttf";
@@ -29,6 +33,8 @@ public class Asset extends AssetManager {
     // Item
     public static final String ITEM_REGULAR = "Texture/UI/item_regular.png";
     public static final String ITEM_HIGHLIGHTED = "Texture/UI/item_highlighted.png";
+    public static final String EQUIPMENT_REGULAR = "Texture/UI/equipment_regular.png";
+    public static final String EQUIPMENT_HIGHLIGHTED = "Texture/UI/equipment_highlighted.png";
 
     public static final String UI_CLICK_SOUND = "Sfx/UI/click.wav";
     public static final String OPEN_CLOSE_SOUND = "Sfx/Inventory/open_and_close.wav";
@@ -69,6 +75,8 @@ public class Asset extends AssetManager {
         register(Asset.TAB_HIGHLIGHTED, Texture.class);
         register(Asset.ITEM_REGULAR, Texture.class);
         register(Asset.ITEM_HIGHLIGHTED, Texture.class);
+        register(Asset.EQUIPMENT_REGULAR, Texture.class);
+        register(Asset.EQUIPMENT_HIGHLIGHTED, Texture.class);
         register(Asset.TRIANGLE, Texture.class);
 
         register(Asset.BANDIT_ATLAS, TextureAtlas.class);

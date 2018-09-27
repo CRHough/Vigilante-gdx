@@ -7,6 +7,7 @@ public enum EquipmentType {
     ARMOR,      // 2
     GAUNTLETS,  // 3
     BOOTS,      // 4
-    CAPE;       // 5
+    CAPE,       // 5
+    RING;       // 6
 
 }

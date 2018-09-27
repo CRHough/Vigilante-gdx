@@ -3,7 +3,7 @@
     "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
     "atlas": "Texture/Character/bandit/Bandit.pack",
     "textureOffsetX": 0.0,
-    "textureOffsetY": 6.0,
+    "textureOffsetY": 4.0,
     "frameWidth": 80,
     "frameHeight": 80,
     "frameData": {
@@ -151,7 +151,7 @@
       "name": "Castle Guard",
       "level": 1,
       "exp": 10,
-      "fullHealth": 100,
+      "fullHealth": 90,
       "fullStamina": 100,
       "fullMagicka": 100,
       "_str": 15,

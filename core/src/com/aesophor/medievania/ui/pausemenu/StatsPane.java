@@ -39,13 +39,14 @@ public class StatsPane extends Table implements MenuPagePane {
     private Label intLabel;
     private Label lukLabel;
 
-    public StatsPane(AssetManager assets, Player player) {
+    public StatsPane(AssetManager assets, Player player, float x, float y) {
         statsBackground = assets.get(Asset.STATS_BG);
 
-        top().right().padLeft(8f);
-        setPosition(-statsBackground.getWidth() / 2 - 8, -(300 - statsBackground.getHeight()) / 2 + 5);
+        setPosition(x, y);
         setFillParent(true);
-        columnDefaults(0).width(80f);
+
+        bottom().left().padLeft(10f).padBottom(4f);
+        columnDefaults(0).width(85f);
         defaults().height(16f);
 
         StatsComponent stats = Mappers.STATS.get(player);

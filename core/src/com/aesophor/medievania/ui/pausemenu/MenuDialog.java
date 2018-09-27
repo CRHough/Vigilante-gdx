@@ -61,30 +61,23 @@ public class MenuDialog extends Table implements MenuPagePane {
     private final Array<DialogOption> options;
     private int currentItemIdx;
 
-    public MenuDialog(AssetManager assets) {
+    public MenuDialog(AssetManager assets, float x, float y) {
         Texture triangleTexture = assets.get(Asset.TRIANGLE);
 
-        bottom().left();
-        setPosition(55, 20);
+        bottom().right();
+        setPosition(-x, y);
         setFillParent(true);
 
-        defaults().padRight(20f);
+        defaults().padRight(3f);
         message = new Label("", LabelStyles.WHITE_REGULAR);
         add(message);
-
-        Table optionTable = new Table();
-        optionTable.bottom().right();
-        optionTable.setFillParent(true);
-        optionTable.defaults().padRight(2f);
-        optionTable.setPosition(-125, 0);
 
         options = new Array<>(2);
         options.add(new DialogOption(triangleTexture, ""));
         options.add(new DialogOption(triangleTexture, ""));
         options.first().setSelected(true);
-        options.forEach(optionTable::add);
+        options.forEach(this::add);
 
-        addActor(optionTable);
         setVisible(false);
     }
 

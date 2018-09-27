@@ -26,8 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class InventoryTabPane extends Table implements MenuPagePane {
 
-    private static final float TAB_PANE_X = 50 + 2;
-    private static final float TAB_PANE_Y = -45;
+    private static final float TAB_PADDING_X = 5f;
 
     private final Texture inventoryBackground;
 
@@ -42,21 +41,22 @@ public class InventoryTabPane extends Table implements MenuPagePane {
     private EquipmentType equipmentType;
     private final GameEventListener<DialogOptionEvent> promptDiscardItemEvLstnr;
 
-    public InventoryTabPane(AssetManager assets, Player player, MenuDialog menuDialog) {
+    public InventoryTabPane(AssetManager assets, Player player, MenuDialog menuDialog, float x, float y) {
         this.inventoryTabs = new InventoryTabs(assets);
         this.itemListView = new ItemListView(assets);
         this.menuDialog = menuDialog;
         this.player = player;
+
 
         inventoryBackground = assets.get(Asset.INVENTORY_BG);
 
         itemDesc = new Label("", LabelStyles.WHITE_REGULAR);
         itemDesc.setWrap(true);
 
-        top().left();
+        setPosition(x, y);
         setFillParent(true);
-        setPosition(TAB_PANE_X, TAB_PANE_Y);
 
+        bottom().left().padLeft(3f).padBottom(50f);
         defaults().padLeft(5f);
         add(inventoryTabs).padLeft(0).left().row();
         add(itemListView).width(270f).height(120f).row();
@@ -131,22 +131,24 @@ public class InventoryTabPane extends Table implements MenuPagePane {
                 isSelectingEquipment = false;
                 MenuPage.show(MenuPage.EQUIPMENT);
             } else {
-                switch (itemListView.getSelectedItem().getType()) {
-                    case EQUIP:
-                        menuDialog.show("", "Equip", "Discard", (DialogOptionEvent equipItem) -> {
-                            Item selectedItem = itemListView.getSelectedItem();
-                            player.equip(selectedItem);
-                        }, promptDiscardItemEvLstnr);
-                        break;
+                if (itemListView.getSelectedItem() != null) {
+                    switch (itemListView.getSelectedItem().getType()) {
+                        case EQUIP:
+                            menuDialog.show("", "Equip", "Discard", (DialogOptionEvent equipItem) -> {
+                                Item selectedItem = itemListView.getSelectedItem();
+                                player.equip(selectedItem);
+                            }, promptDiscardItemEvLstnr);
+                            break;
 
-                    case USE:
-                        //menuDialog.show("", "Use", "Discard", new UseItemEvent(player, itemListView.getSelectedItem()), promptDiscardItemEvLstnr);
-                        break;
+                        case USE:
+                            //menuDialog.show("", "Use", "Discard", new UseItemEvent(player, itemListView.getSelectedItem()), promptDiscardItemEvLstnr);
+                            break;
 
-                    case MISC:
-                    default:
-                        //menuDialog.show("", "Use", "Discard", null, promptDiscardItemEvLstnr);
-                        break;
+                        case MISC:
+                        default:
+                            //menuDialog.show("", "Use", "Discard", null, promptDiscardItemEvLstnr);
+                            break;
+                    }
                 }
             }
         }
@@ -156,5 +158,6 @@ public class InventoryTabPane extends Table implements MenuPagePane {
     public Texture getBackgroundTexture() {
         return inventoryBackground;
     }
+
 
 }

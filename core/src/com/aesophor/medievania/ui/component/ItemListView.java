@@ -21,35 +21,44 @@ import com.badlogic.gdx.utils.Array;
 
 public class ItemListView extends ScrollPane {
 
-    private class InventoryItem extends Stack {
+    private class ListViewItem extends Stack {
 
-        private Item item;
-        private Image icon;
-        private Label nameLabel;
-        private Image selectionImage;
+        private static final String EMPTY_ITEM_TEXT = "----"; // The name to display on empty item's label.
+        private static final float PADDING = 5f; // Left / right padding.
+        private static final float SPACING = 5f; // Space between each of its content (icon and label).
+        private final Image highlightedItemImage;
 
-        public InventoryItem(Item item, Texture selectionTexture, Label.LabelStyle labelStyle) {
+        private final Item item;
+        private final Image icon;
+        private final Label name;
+
+        public ListViewItem(Item item, Label.LabelStyle labelStyle) {
+            this.highlightedItemImage = new Image(highlightedItemTexture);
+
             this.item = item;
-            this.icon = new Image((item != null) ? Mappers.SPRITE.get(item) : new Sprite(emptyItemTexture));
-            this.nameLabel = new Label(" " + ((item != null) ? Mappers.ITEM_DATA.get(item).getName() : "----"), labelStyle);
-            this.selectionImage = new Image(selectionTexture);
+            this.icon = new Image((item != null) ? Mappers.SPRITE.get(item) : new Sprite(emptyItemIconTexture));
+            this.name = new Label(((item != null) ? Mappers.ITEM_DATA.get(item).getName() : EMPTY_ITEM_TEXT), labelStyle);
 
             HorizontalGroup group = new HorizontalGroup();
-            group.padLeft(5f);
-            group.addActor(icon);
-            group.padRight(5f);
-            group.addActor(nameLabel);
+            group.padLeft(PADDING);
+            group.padRight(PADDING);
+            group.space(SPACING);
 
-            this.add(this.selectionImage);
+            group.addActor(icon);
+            group.addActor(name);
+
+            this.add(highlightedItemImage);
             this.add(group);
             this.setSelected(false);
         }
 
 
-        public void setSelected(boolean selected) {
-            selectionImage.setVisible(selected);
-            if (selected) {
+        public void setSelected(boolean isSelected) {
+            highlightedItemImage.setVisible(isSelected);
+
+            if (isSelected) {
                 GameEventManager.getInstance().fireEvent(new InventoryItemChangedEvent(item));
+                clickSound.play();
             }
         }
 
@@ -59,12 +68,12 @@ public class ItemListView extends ScrollPane {
     }
 
 
-    private final Texture selectionTexture;
-    private final Texture emptyItemTexture;
+    private final Texture highlightedItemTexture;
+    private final Texture emptyItemIconTexture;
     private final Sound clickSound;
 
     private final Table contentTable;
-    private final Array<InventoryItem> items;
+    private final Array<ListViewItem> items;
 
     private int currentItemIdx;
     private int navigateUpCounter;
@@ -72,12 +81,15 @@ public class ItemListView extends ScrollPane {
 
     public ItemListView(AssetManager assets) {
         super(new Table());
-        selectionTexture = assets.get(Asset.ITEM_HIGHLIGHTED);
-        emptyItemTexture = assets.get(Asset.EMPTY_ITEM);
+
+        // Initialize assets.
+        highlightedItemTexture = assets.get(Asset.ITEM_HIGHLIGHTED);
+        emptyItemIconTexture = assets.get(Asset.EMPTY_ITEM);
         clickSound = assets.get(Asset.UI_CLICK_SOUND, Sound.class);
 
-        setScrollingDisabled(true, false);
+        // Disable overscroll effects and X coordinate scrolling.
         setOverscroll(false, false);
+        setScrollingDisabled(true, false);
 
         contentTable = (Table) this.getActor();
         contentTable.top().left();
@@ -122,7 +134,7 @@ public class ItemListView extends ScrollPane {
     public ItemListView filter(EquipmentType type) {
         contentTable.clearChildren();
 
-        for (InventoryItem i : items) {
+        for (ListViewItem i : items) {
             if (i.getItem() == null) {
                 contentTable.add(i).row();
                 continue;
@@ -148,7 +160,7 @@ public class ItemListView extends ScrollPane {
      * @param item item to add.
      */
     public void add(Item item) {
-        InventoryItem i = new InventoryItem(item, selectionTexture, LabelStyles.WHITE_REGULAR);
+        ListViewItem i = new ListViewItem(item, LabelStyles.WHITE_REGULAR);
         items.add(i);
         contentTable.add(i).row();
 
@@ -161,7 +173,7 @@ public class ItemListView extends ScrollPane {
      * @return selected item.
      */
     public Item getSelectedItem() {
-        return (currentItemIdx >= 0) ? items.get(currentItemIdx).getItem() : null;
+        return (items.size > 0) ? items.get(currentItemIdx).getItem() : null;
     }
 
     public void handleInput(float delta) {
@@ -183,8 +195,6 @@ public class ItemListView extends ScrollPane {
                     setScrollY(getScrollY() - 24f);
                     navigateUpCounter--;
                 }
-
-                clickSound.play();
             }
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)) {
             if (currentItemIdx < items.size - 1) {
@@ -205,8 +215,6 @@ public class ItemListView extends ScrollPane {
                     setScrollY(getScrollY() + 24f);
                     navigateDownCounter--;
                 }
-
-                clickSound.play();
             }
         }
     }

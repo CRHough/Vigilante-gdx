@@ -17,7 +17,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
@@ -25,34 +27,46 @@ public class EquipmentPane extends Table implements MenuPagePane {
 
     private class EquipmentItem extends Stack {
 
+        private static final String EMPTY_ITEM_TEXT = "----"; // The name to display on empty item's label.
+        private static final float PADDING = 5f; // Left / right padding.
+        private static final float SPACING = 7f; // Space between each of its content (icon and label).
+        private final Image regularItemImage;
+        private final Image highlightedItemImage;
         private final EquipmentType type;
+
         private Item item;
-        private Image regularImage;
-        private Image selectedImage;
-        private Label slotNameLabel;
-        private Label equipmentNameLabel;
-        private HorizontalGroup labelGroup;
+        private final Label slotNameLabel;
+        private final Image equipmentIconImage;
+        private final Label equipmentNameLabel;
 
-        public EquipmentItem(EquipmentType type, Texture regularTexture, Texture selectedTexture, Label.LabelStyle labelStyle) {
+        public EquipmentItem(EquipmentType type, Label.LabelStyle labelStyle) {
             this.type = type;
-            this.regularImage = new Image(regularTexture);
-            this.selectedImage = new Image(selectedTexture);
-            this.labelGroup = new HorizontalGroup();
+            this.regularItemImage = new Image(regularEquipmentItemTexture);
+            this.highlightedItemImage = new Image(highlightedEquipmentItemTexture);
 
-            this.slotNameLabel = new Label("  " + type.name(), labelStyle);
-            this.equipmentNameLabel = new Label("----" + "  " , LabelStyles.WHITE_REGULAR); // clean this up later.
+            this.slotNameLabel = new Label(type.name(), labelStyle);
+            this.equipmentNameLabel = new Label(EMPTY_ITEM_TEXT, LabelStyles.WHITE_REGULAR); // clean this up later.
+            this.equipmentIconImage = new Image((item != null) ? Mappers.SPRITE.get(item) : new Sprite(emptyItemIconTexture));
             this.slotNameLabel.setAlignment(Align.left);
             this.equipmentNameLabel.setAlignment(Align.right);
 
-            this.labelGroup.addActor(slotNameLabel);
-            this.labelGroup.addActor(equipmentNameLabel);
-            this.labelGroup.padLeft(5f);
-            this.labelGroup.padRight(5f);
+            HorizontalGroup equipmentNameGroup = new HorizontalGroup();
+            equipmentNameGroup.align(Align.left);
+            equipmentNameGroup.padLeft(PADDING);
+            equipmentNameGroup.space(SPACING);
+            equipmentNameGroup.addActor(equipmentIconImage);
+            equipmentNameGroup.addActor(slotNameLabel);
 
-            this.add(regularImage);
-            this.add(selectedImage);
-            this.add(slotNameLabel);
-            this.add(equipmentNameLabel);
+            HorizontalGroup itemNameGroup = new HorizontalGroup();
+            itemNameGroup.align(Align.left);
+            itemNameGroup.padLeft(105 + PADDING);
+            itemNameGroup.padRight(PADDING);
+            itemNameGroup.addActor(equipmentNameLabel);
+
+            this.add(regularItemImage);
+            this.add(highlightedItemImage);
+            this.add(equipmentNameGroup);
+            this.add(itemNameGroup);
 
             this.setSelected(false);
         }
@@ -64,7 +78,8 @@ public class EquipmentPane extends Table implements MenuPagePane {
 
         public void setItem(Item item) {
             this.item = item;
-            this.equipmentNameLabel.setText((item != null) ? Mappers.ITEM_DATA.get(item).getName() + "  " : "----" + "  ");
+            this.equipmentIconImage.setDrawable(new TextureRegionDrawable((item != null) ? Mappers.SPRITE.get(item) : new Sprite(emptyItemIconTexture)));
+            this.equipmentNameLabel.setText((item != null) ? Mappers.ITEM_DATA.get(item).getName() : EMPTY_ITEM_TEXT);
         }
 
         public EquipmentType getType() {
@@ -72,17 +87,18 @@ public class EquipmentPane extends Table implements MenuPagePane {
         }
 
         public void setSelected(boolean selected) {
-            selectedImage.setVisible(selected);
+            highlightedItemImage.setVisible(selected);
         }
 
     }
 
-    private static final float TAB_PANE_X = 50 + 8;
+    private static final float TAB_PANE_X = 230;
     private static final float TAB_PANE_Y = -60;
     private static final float GAP = 11f;
 
-    private final Texture regularItemTexture;
-    private final Texture selectedItemTexture;
+    private final Texture regularEquipmentItemTexture;
+    private final Texture highlightedEquipmentItemTexture;
+    private final Texture emptyItemIconTexture;
     private final Sound clickSound;
 
     private final Array<EquipmentItem> items;
@@ -93,8 +109,9 @@ public class EquipmentPane extends Table implements MenuPagePane {
     public EquipmentPane(AssetManager assets, Player player) {
         this.player = player;
 
-        regularItemTexture = assets.get(Asset.ITEM_REGULAR);
-        selectedItemTexture = assets.get(Asset.ITEM_HIGHLIGHTED);
+        regularEquipmentItemTexture = assets.get(Asset.EQUIPMENT_REGULAR);
+        highlightedEquipmentItemTexture = assets.get(Asset.EQUIPMENT_HIGHLIGHTED);
+        emptyItemIconTexture = assets.get(Asset.EMPTY_ITEM);
         clickSound = assets.get(Asset.UI_CLICK_SOUND, Sound.class);
 
         top().left();
@@ -103,7 +120,7 @@ public class EquipmentPane extends Table implements MenuPagePane {
 
         items = new Array<>(7);
         for (EquipmentType type : EquipmentType.values()) {
-            items.add(new EquipmentItem(type, regularItemTexture, selectedItemTexture, LabelStyles.WHITE_HEADER));
+            items.add(new EquipmentItem(type, LabelStyles.WHITE_HEADER));
         }
 
         defaults().spaceTop(GAP);
