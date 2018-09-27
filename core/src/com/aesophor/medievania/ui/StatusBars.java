@@ -1,5 +1,6 @@
 package com.aesophor.medievania.ui;
 
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
@@ -7,15 +8,16 @@ import com.aesophor.medievania.component.equipment.EquipmentType;
 import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.entity.character.Player;
-import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.character.ItemEquippedEvent;
 import com.aesophor.medievania.event.character.ItemUnequippedEvent;
 import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.ui.theme.Font;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -62,19 +64,19 @@ public class StatusBars extends Stage {
     private int lastUpdatedStamina;
     private int lastUpdatedMagicka;
 
-    public StatusBars(GameStateManager gsm) {
-        this(gsm, null);
+    public StatusBars(AssetManager assets, Batch batch) {
+        this(assets, batch, null);
     }
     
-    public StatusBars(GameStateManager gsm, Player player) {
-        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
+    public StatusBars(AssetManager assets, Batch batch, Player player) {
+        super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), batch);
 
         if (player != null) {
             playerStats = Mappers.STATS.get(player);
         }
         
         // Initializes player hud Texture and TextureRegions.
-        hudTexture = gsm.getAssets().get("interface/hud/hud.png");
+        hudTexture = assets.get(Asset.HUD_TEXTURE);
         barsBackground = new TextureRegion(hudTexture, 0, 4, 135, 50);
         barsPadRight = new TextureRegion(hudTexture, 3, 0, 1, 4);
         healthBar = new TextureRegion(hudTexture, 0, 0, 1, 4);
@@ -156,11 +158,7 @@ public class StatusBars extends Stage {
                 if (equipmentData.getType() == EquipmentType.WEAPON) {
                     ItemDataComponent itemData = Mappers.ITEM_DATA.get(e.getItem());
 
-                    if (weaponIconTexture != null) {
-                        weaponIconTexture.dispose();
-                    }
-
-                    weaponIconTexture = new Texture(itemData.getImage());
+                    weaponIconTexture = assets.get(itemData.getImage());
                     weaponIconImage.setDrawable(new TextureRegionDrawable(new TextureRegion(weaponIconTexture)));
                     weaponNameLabel.setText(itemData.getName());
                 }
@@ -172,7 +170,7 @@ public class StatusBars extends Stage {
                 EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
 
                 if (equipmentData.getType() == EquipmentType.WEAPON) {
-                    weaponIconTexture.dispose();
+                    assets.unload(Mappers.ITEM_DATA.get(e.getItem()).getImage());
                     weaponIconImage.setDrawable(null);
                     weaponNameLabel.setText("");
                 }

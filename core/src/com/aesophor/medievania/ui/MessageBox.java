@@ -1,6 +1,7 @@
 package com.aesophor.medievania.ui;
 
 import com.aesophor.medievania.GameStateManager;
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,7 +22,7 @@ public class MessageBox extends Stage {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
         this.gsm = gsm;
 
-        background = gsm.getAssets().get("interface/messagebox.png");
+        background = gsm.getAssets().get(Asset.MESSAGE_BOX_BG);
 
         currentSpeakerName = new Label("Dracula", LabelStyles.WHITE_HEADER);
         message = new Label("You pathetic mortal!", LabelStyles.WHITE_REGULAR);

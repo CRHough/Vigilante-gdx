@@ -1,6 +1,7 @@
 package com.aesophor.medievania.screen;
 
 import com.aesophor.medievania.GameStateManager;
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.screen.GamePausedEvent;
@@ -47,7 +48,7 @@ public class MainGameScreen extends AbstractScreen {
         player = new Player(gsm.getAssets(), world, 0.3f, 1f);
 
         // Initialize damage indicators and notificationFactory area.
-        StatusBars statusBars = new StatusBars(gsm);
+        StatusBars statusBars = new StatusBars(gsm.getAssets(), gsm.getBatch());
         MessageBox messageBox = new MessageBox(gsm);
         PauseMenu pauseMenu = new PauseMenu(gsm, player);
         DamageIndicatorFactory damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), Font.REGULAR, getCamera(), 1.2f);
@@ -55,11 +56,10 @@ public class MainGameScreen extends AbstractScreen {
 
         // Here I employ Entity-Component-System because it makes the layout of my code cleaner.
         // Tasks are independently spread into different systems/layers and can be added/removed on demand.
-
         engine.addSystem(new PhysicsSystem(world));
         engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera()));     // Renders TiledMap textures.
         engine.addSystem(new CharacterRendererSystem(getBatch(), getCamera(), world));      // Renders player / npc entities.
-        engine.addSystem(new AnimatedSpriteRendererSystem(engine, getBatch(), getCamera(), world)); // Renders dust entities.
+        engine.addSystem(new AnimatedSpriteRendererSystem(engine, gsm.getAssets(), getBatch(), world, getCamera())); // Renders dust entities.
         engine.addSystem(new StaticSpriteRendererSystem(getBatch(), getCamera(), world));   // Renders item entities
         engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                    // Renders physics debug profiles.
         engine.addSystem(new B2LightsSystem(world, getCamera()));                           // Renders Dynamic box2d lights.
@@ -85,11 +85,13 @@ public class MainGameScreen extends AbstractScreen {
         engine.getSystem(PauseMenuSystem.class).setProcessing(false);
         engine.getSystem(MessageBoxSystem.class).setProcessing(false);
 
-        pauseSound = gsm.getAssets().get("sfx/inventory/open_and_close.wav");
+        pauseSound = gsm.getAssets().get(Asset.OPEN_CLOSE_SOUND);
     }
 
 
     public void update(float delta) {
+        //Gdx.app.log("INFO", "Java Heap: " + (Gdx.app.getJavaHeap() / 1048576f));
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             if (!paused) {
                 pause();

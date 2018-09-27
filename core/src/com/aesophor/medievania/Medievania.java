@@ -9,12 +9,8 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 public class Medievania extends Game implements GameStateManager {
     
@@ -24,44 +20,12 @@ public class Medievania extends Game implements GameStateManager {
     @Override
     public void create () {
         this.batch = new SpriteBatch();
-        this.assets = new AssetManager();
+        this.assets = new Asset();
 
         ItemDataManager.getInstance().load("data/items.json");
         EquipmentDataManager.getInstance().load("data/equipment.json");
         CharacterDataManager.getInstance().load("data/characters.json");
-
-        assets.load("interface/mainmenu_bg.png", Texture.class);
-        assets.load("interface/hud/hud.png", Texture.class);
-        assets.load("interface/messagebox.png", Texture.class);
-        assets.load("interface/pause.png", Texture.class);
-        assets.load("interface/stats_bg.png", Texture.class);
-        assets.load("interface/inventory_bg.png", Texture.class);
-        assets.load("interface/tab_normal.png", Texture.class);
-        assets.load("interface/tab_selected.png", Texture.class);
-        assets.load("interface/item_regular.png", Texture.class);
-        assets.load("interface/selection.png", Texture.class); // rename to item_selected later
-        assets.load("interface/triangle.png", Texture.class);
-
-        assets.load("texture/dust.png", Texture.class);
-        assets.load("texture/bat.png", Texture.class);
-        assets.load("texture/bandit/Bandit.pack", TextureAtlas.class);
-        assets.load("texture/knight/Knight.pack", TextureAtlas.class);
-
-        assets.load("item/RustyAxe.png", Texture.class);
-        assets.load("music/main_menu.wav", Music.class);
-        assets.load("music/village01.mp3", Music.class);
-        assets.load("sfx/inventory/open_and_close.wav", Sound.class);
-        assets.load("sfx/player/equip.wav", Sound.class);
-        assets.load("sfx/player/hurt.wav", Sound.class);
-        assets.load("sfx/player/death.mp3", Sound.class);
-        assets.load("sfx/player/weapon_swing.ogg", Sound.class);
-        assets.load("sfx/player/weapon_hit.ogg", Sound.class);
-        assets.load("sfx/player/pickup_item.mp3", Sound.class);
-        assets.load("sfx/player/jump.wav", Sound.class);
-        assets.load("sfx/player/footstep.mp3", Music.class);
-        assets.load("sfx/knife-slash.mp3", Sound.class);
-        assets.load("sfx/environment/water_dripping.mp3", Music.class);
-        assets.load("sfx/ui/click.wav", Sound.class);
+        ((Asset) assets).loadAllAssets();
         assets.finishLoading();
         
         showScreen(Screens.MAIN_MENU);

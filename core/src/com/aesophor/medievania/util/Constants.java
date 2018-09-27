@@ -10,6 +10,7 @@ public final class Constants {
     // Physics constants
     public static final int GRAVITY = -10;
     public static final int GROUND_FRICTION = 2;
+    public static final int WALL_FRICTION = 1;
     
     
     private Constants() {

@@ -1,5 +1,6 @@
 package com.aesophor.medievania.ui.component;
 
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.InventoryComponent;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
@@ -22,16 +23,24 @@ public class ItemListView extends ScrollPane {
     private class InventoryItem extends Stack {
 
         private Item item;
+        //private Image icon;
         private Label nameLabel;
         private Image selectionImage;
 
         public InventoryItem(Item item, Texture selectionTexture, Label.LabelStyle labelStyle) {
             this.item = item;
+            //this.icon = new Image((item == null) ? Mappers.SPRITE.get(item) : null);
             this.nameLabel = new Label(" " + ((item != null) ? Mappers.ITEM_DATA.get(item).getName() : "----"), labelStyle);
             this.selectionImage = new Image(selectionTexture);
 
+            HorizontalGroup group = new HorizontalGroup();
+            group.padLeft(5f);
+            //group.addActor(icon);
+            group.padRight(5f);
+            group.addActor(nameLabel);
+
             this.add(this.selectionImage);
-            this.add(nameLabel);
+            this.add(group);
             this.setSelected(false);
         }
 
@@ -61,8 +70,8 @@ public class ItemListView extends ScrollPane {
 
     public ItemListView(AssetManager assets) {
         super(new Table());
-        selectionTexture = assets.get("interface/selection.png");
-        clickSound = assets.get("sfx/ui/click.wav", Sound.class);
+        selectionTexture = assets.get(Asset.ITEM_HIGHLIGHTED);
+        clickSound = assets.get(Asset.UI_CLICK_SOUND, Sound.class);
 
         setScrollingDisabled(true, false);
         setOverscroll(false, false);

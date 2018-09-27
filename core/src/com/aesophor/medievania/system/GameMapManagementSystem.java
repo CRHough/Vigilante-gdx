@@ -78,8 +78,10 @@ public class GameMapManagementSystem extends EntitySystem {
 
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_DISCARDED, (ItemDiscardedEvent e) -> {
             B2BodyComponent b2body = Mappers.B2BODY.get(player);
-
             Item item = e.getItem();
+
+            // The item's b2body and texture are destroyed/unloaded upon being picked up.
+            // So here we have to reconstruct the b2body and reload its texture.
             item.constructBody();
             item.reloadTexture();
 
@@ -91,8 +93,12 @@ public class GameMapManagementSystem extends EntitySystem {
 
         // Remove the item entity from the engine once it has been picked up.
         GameEventManager.getInstance().addEventListener(GameEventType.ITEM_PICKED_UP, (ItemPickedUpEvent e) -> {
+            // Remove the item entity from engine so that it will no longer be rendered by StaticSpriteRendererSystem.
             engine.removeEntity(e.getItem());
-            e.getItem().dispose();
+
+            // Now destroy the item's b2body and unload the texture.
+            world.destroyBody(Mappers.B2BODY.get(e.getItem()).getBody());
+            assets.unload(Mappers.ITEM_DATA.get(e.getItem()).getImage());
         });
 
         GameEventManager.getInstance().addEventListener(GameEventType.GAME_PAUSED, (GamePausedEvent e) -> {
@@ -157,8 +163,8 @@ public class GameMapManagementSystem extends EntitySystem {
 
         try {
             item = (Item) Class.forName("com.aesophor.medievania.entity.item.Item")
-                    .getConstructor(String.class, World.class, Float.class, Float.class)
-                    .newInstance(itemName, world, x, y);
+                    .getConstructor(String.class, AssetManager.class, World.class, Float.class, Float.class)
+                    .newInstance(itemName, assets, world, x, y);
         } catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException | ClassNotFoundException ex) {
             ex.printStackTrace();

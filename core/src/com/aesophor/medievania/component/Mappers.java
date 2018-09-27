@@ -2,14 +2,12 @@ package com.aesophor.medievania.component;
 
 import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
-import com.aesophor.medievania.component.character.CharacterAnimationComponent;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.sound.SoundComponent;
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Mappers {
 

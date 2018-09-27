@@ -117,7 +117,7 @@ public class GameMap implements Disposable {
     @Override
     public void dispose() {
         tiledMap.dispose();
-        backgroundMusic.dispose();
+        assets.unload((String) tiledMap.getProperties().get("backgroundMusic"));
     }
 
 }

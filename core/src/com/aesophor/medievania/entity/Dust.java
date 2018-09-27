@@ -1,5 +1,6 @@
 package com.aesophor.medievania.entity;
 
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.util.Constants;
@@ -15,7 +16,7 @@ public class Dust extends Entity {
     public static final float TEXTURE_HEIGHT = 32.0f;
 
     public Dust(AssetManager assets, float x, float y) {
-        Texture texture = assets.get("texture/dust.png");
+        Texture texture = assets.get(Asset.TEXTURE_DUST);
 
         AnimationComponent<TextureRegion> animation = Utils.createAnimation(texture, 8f / Constants.PPM, 0, 4, 0, 0, 32, 32);
         SpriteComponent sprite = new SpriteComponent(x, y);

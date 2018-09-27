@@ -1,8 +1,6 @@
 package com.aesophor.medievania.map;
 
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.graphics.SpriteComponent;
-import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.entity.Dust;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Enemy;
@@ -12,7 +10,6 @@ import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 

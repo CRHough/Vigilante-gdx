@@ -1,16 +1,16 @@
 package com.aesophor.medievania.entity.item;
 
-import com.aesophor.medievania.component.sound.SoundComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.item.ItemType;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
+import com.aesophor.medievania.component.sound.SoundComponent;
 import com.aesophor.medievania.entity.data.EquipmentDataManager;
 import com.aesophor.medievania.entity.data.ItemDataManager;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -22,15 +22,19 @@ public class Item extends Entity implements Disposable {
     protected static final int itemWidth = 16;
     protected static final int itemHeight = 16;
 
+    protected final AssetManager assets;
+
     protected final ItemDataComponent itemData;
     protected final SpriteComponent sprite;
     protected final B2BodyComponent b2body;
     protected final SoundComponent sounds;
     protected final ItemType type;
 
-    public Item(String itemName, World world, Float x, Float y) {
+    public Item(String itemName, AssetManager assets, World world, Float x, Float y) {
+        this.assets = assets;
+
         itemData = ItemDataManager.getInstance().get(itemName);
-        sprite = new SpriteComponent(new Texture(itemData.getImage()), x * Constants.PPM, y * Constants.PPM);
+        sprite = new SpriteComponent(assets.get(itemData.getImage()), x * Constants.PPM, y * Constants.PPM);
         b2body = new B2BodyComponent(world);
         sounds = new SoundComponent();
         type = itemData.getType();
@@ -49,7 +53,7 @@ public class Item extends Entity implements Disposable {
 
 
     public void reloadTexture() {
-        sprite.setTexture(new Texture(itemData.getImage()));
+        sprite.setTexture(assets.get(itemData.getImage()));
     }
 
     public void constructBody() {
@@ -101,7 +105,7 @@ public class Item extends Entity implements Disposable {
 
     @Override
     public void dispose() {
-        sprite.dispose();
+        //sprite.dispose();
     }
 
 }

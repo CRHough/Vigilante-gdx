@@ -1,5 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.equipment.EquipmentType;
 import com.aesophor.medievania.component.item.ItemDataComponent;
@@ -47,7 +48,7 @@ public class InventoryTabPane extends Table implements MenuPagePane {
         this.menuDialog = menuDialog;
         this.player = player;
 
-        inventoryBackground = assets.get("interface/inventory_bg.png");
+        inventoryBackground = assets.get(Asset.INVENTORY_BG);
 
         itemDesc = new Label("", LabelStyles.WHITE_REGULAR);
         itemDesc.setWrap(true);

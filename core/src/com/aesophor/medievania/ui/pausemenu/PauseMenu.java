@@ -1,6 +1,7 @@
 package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameStateManager;
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.Gdx;
@@ -13,8 +14,6 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 
 public class PauseMenu extends Stage {
 
-    private static final String PAUSE_MENU_BACKGROUND = "interface/pause.png";
-
     private final GameStateManager gsm;
     private final Texture background;
     private final Sound clickSound;
@@ -26,9 +25,9 @@ public class PauseMenu extends Stage {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
         this.gsm = gsm;
 
-        background = gsm.getAssets().get(PAUSE_MENU_BACKGROUND);
-        gsm.getAssets().load("sfx/ui/click.wav", Sound.class); // assets should be loaded elsewhere.
-        clickSound = gsm.getAssets().get("sfx/ui/click.wav", Sound.class);
+        background = gsm.getAssets().get(Asset.PAUSE_MENU_BG);
+        gsm.getAssets().load(Asset.UI_CLICK_SOUND, Sound.class); // assets should be loaded elsewhere.
+        clickSound = gsm.getAssets().get(Asset.UI_CLICK_SOUND, Sound.class);
 
 
         // Initialize header options (Inventory / Equipment / Skills / Quest / Options).

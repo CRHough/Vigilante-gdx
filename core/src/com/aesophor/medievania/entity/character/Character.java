@@ -3,8 +3,6 @@ package com.aesophor.medievania.entity.character;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.component.equipment.EquipmentType;
-import com.aesophor.medievania.component.character.CharacterAnimationComponent;
-import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.sound.SoundComponent;
@@ -24,12 +22,10 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
-
 import java.util.Arrays;
 
 public abstract class Character extends Entity implements Disposable {
@@ -194,12 +190,10 @@ public abstract class Character extends Entity implements Disposable {
      * @param item item to pick up.
      */
     public void pickup(Item item) {
-        B2BodyComponent itemB2Body = Mappers.B2BODY.get(item);
         InventoryComponent inventory = Mappers.INVENTORY.get(this);
         SoundComponent sounds = Mappers.SOUNDS.get(this);
 
         inventory.add(item);
-        itemB2Body.getWorld().destroyBody(itemB2Body.getBody());
         GameEventManager.getInstance().fireEvent(new ItemPickedUpEvent(item));
 
         sounds.get(SoundType.ITEM_PICKEDUP).play();
@@ -365,7 +359,7 @@ public abstract class Character extends Entity implements Disposable {
         SpriteComponent sprite = Mappers.SPRITE.get(this);
 
         if (b2body.getBody().getLinearVelocity().x <= stats.getMovementSpeed() * 2 && b2body.getBody().getLinearVelocity().x >= -stats.getMovementSpeed() * 2) {
-            float rushForce = (state.isFacingRight()) ? stats.getMovementSpeed() * 10 : -stats.getMovementSpeed() * 10;
+            float rushForce = (state.isFacingRight()) ? stats.getMovementSpeed() * 12 : -stats.getMovementSpeed() * 12;
             b2body.getBodyFixture().setSensor(true);
 
             CharacterAnimationComponent animations = getComponent(CharacterAnimationComponent.class);
@@ -402,6 +396,7 @@ public abstract class Character extends Entity implements Disposable {
 
     @Override
     public void dispose() {
+        // use unload()
         Mappers.SPRITE.get(this).dispose();
         //Mappers.SOUNDS.get(this).values().forEach(Sound::dispose);
     }

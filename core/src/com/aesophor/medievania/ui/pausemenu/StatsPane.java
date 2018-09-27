@@ -1,5 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.StatsComponent;
 import com.aesophor.medievania.entity.character.Player;
@@ -39,7 +40,7 @@ public class StatsPane extends Table implements MenuPagePane {
     private Label lukLabel;
 
     public StatsPane(AssetManager assets, Player player) {
-        statsBackground = assets.get("interface/stats_bg.png");
+        statsBackground = assets.get(Asset.STATS_BG);
 
         top().right().padLeft(8f);
         setPosition(-statsBackground.getWidth() / 2 - 8, -(300 - statsBackground.getHeight()) / 2 + 5);

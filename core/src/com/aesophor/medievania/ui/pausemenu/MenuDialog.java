@@ -1,5 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.event.*;
 import com.aesophor.medievania.event.ui.DialogOptionEvent;
 import com.aesophor.medievania.ui.theme.LabelStyles;
@@ -61,7 +62,7 @@ public class MenuDialog extends Table implements MenuPagePane {
     private int currentItemIdx;
 
     public MenuDialog(AssetManager assets) {
-        Texture triangleTexture = assets.get("interface/triangle.png");
+        Texture triangleTexture = assets.get(Asset.TRIANGLE);
 
         bottom().left();
         setPosition(55, 20);

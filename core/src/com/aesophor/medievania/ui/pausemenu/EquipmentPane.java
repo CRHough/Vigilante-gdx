@@ -1,5 +1,6 @@
 package com.aesophor.medievania.ui.pausemenu;
 
+import com.aesophor.medievania.Asset;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
 import com.aesophor.medievania.component.equipment.EquipmentType;
@@ -94,9 +95,9 @@ public class EquipmentPane extends Table implements MenuPagePane {
         this.player = player;
         this.menuDialog = menuDialog;
 
-        regularItemTexture = assets.get("interface/item_regular.png");
-        selectedItemTexture = assets.get("interface/selection.png");
-        clickSound = assets.get("sfx/ui/click.wav", Sound.class);
+        regularItemTexture = assets.get(Asset.ITEM_REGULAR);
+        selectedItemTexture = assets.get(Asset.ITEM_HIGHLIGHTED);
+        clickSound = assets.get(Asset.UI_CLICK_SOUND, Sound.class);
 
         top().left();
         setFillParent(true);
