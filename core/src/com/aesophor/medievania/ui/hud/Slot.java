@@ -5,6 +5,7 @@ import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -19,16 +20,16 @@ public class Slot extends Table {
     public Slot(TextureRegion slotBackground, float x, float y) {
         this.slotBackgroundImage = new Image(slotBackground);
         this.itemIconImage = new Image();
+        itemIconImage.setScale(1.5f);
 
         top().left();
         setPosition(x, y);
         setFillParent(true);
 
-        HorizontalGroup itemIcon = new HorizontalGroup();
-        //itemIcon.pad(2f);
-        itemIcon.setSize(32f, 32f);
-        itemIcon.addActor(itemIconImage);
-        add(new Stack(slotBackgroundImage, itemIcon));
+        HorizontalGroup group = new HorizontalGroup();
+        group.padTop(6f).padLeft(4f);
+        group.addActor(itemIconImage);
+        add(new Stack(slotBackgroundImage, group));
     }
 
     public Slot(TextureRegion slotBackground, TextureRegion descBackground, float x, float y) {

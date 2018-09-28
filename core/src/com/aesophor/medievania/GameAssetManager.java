@@ -1,11 +1,11 @@
 package com.aesophor.medievania;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +17,7 @@ public class GameAssetManager extends AssetManager {
 
     // UI Textures
     public static final String HEADER_FONT = "Font/MatchupPro.ttf";
-    public static final String REGULAR_FONT = "Font/HeartbitXX.ttf";
+    public static final String REGULAR_FONT = "Font/HeartbitXX2Px.ttf";
 
     public static final String MAIN_MENU_BG = "Texture/UI/mainmenu_bg.png";
     public static final String PAUSE_MENU_BG = "Texture/UI/pause.png";

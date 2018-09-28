@@ -3,7 +3,7 @@
     "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
     "atlas": "Texture/Character/bandit/Bandit.pack",
     "textureOffsetX": 0.0,
-    "textureOffsetY": 4.0,
+    "textureOffsetY": 5.0,
     "frameWidth": 80,
     "frameHeight": 80,
     "frameData": {
