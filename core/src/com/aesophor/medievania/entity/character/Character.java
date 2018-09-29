@@ -375,7 +375,7 @@ public abstract class Character extends Entity implements Disposable {
                 @Override
                 public void run() {
                     b2body.getBodyFixture().setSensor(false);
-                    sprite.setBounds(0, 0, 115 / 100, 115 / 100);
+                    sprite.setBounds(0, 0, 105f / 100, 105f / 100);
                     state.setUsingSkill(false);
                     assets.unload(GameAssetManager.TEXTURE_BAT);
                 }

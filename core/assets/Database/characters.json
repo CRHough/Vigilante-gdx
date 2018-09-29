@@ -3,7 +3,7 @@
     "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
     "atlas": "Texture/Character/bandit/Bandit.pack",
     "textureOffsetX": 0.0,
-    "textureOffsetY": 5.0,
+    "textureOffsetY": 4.0,
     "frameWidth": 80,
     "frameHeight": 80,
     "frameData": {
@@ -20,29 +20,27 @@
       "JUMPING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
         "frameDuration": 10.0,
-        "frameEndCount": 3
+        "frameEndCount": 4
       },
       "FALLING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
         "frameDuration": 10.0,
-        "frameStartCount": 4,
-        "frameEndCount": 4
+        "frameEndCount": 0
       },
       "CROUCHING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
         "frameDuration": 10.0,
-        "frameStartCount": 4,
-        "frameEndCount": 5
+        "frameEndCount": 2
       },
       "ATTACKING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
-        "frameDuration": 20.0,
+        "frameDuration": 13.0,
         "frameEndCount": 6
       },
       "SKILL": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
         "frameDuration": 30.0,
-        "frameEndCount": 5
+        "frameEndCount": 0
       },
       "KILLED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$FrameData",
@@ -76,7 +74,7 @@
       "movementSpeed": 0.3,
       "jumpHeight": 3.0,
       "attackForce": 1.0,
-      "attackTime": 1.8,
+      "attackTime": 1.2,
       "attackRange": 15,
       "basePhysicalDamage": 50
     },

@@ -32,7 +32,7 @@ public class Player extends Character {
         short weaponMaskBits = CategoryBits.ENEMY | CategoryBits.OBJECT;
         defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
-        Mappers.SPRITE.get(this).setBounds(0, 0, 120 / Constants.PPM, 120 / Constants.PPM);
+        Mappers.SPRITE.get(this).setBounds(0, 0, 105f / Constants.PPM, 105f / Constants.PPM);
     }
 
 

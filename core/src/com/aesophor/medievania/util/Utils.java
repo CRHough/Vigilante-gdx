@@ -57,6 +57,7 @@ public class Utils {
      * @return Extracted animations.
      */
     public static AnimationComponent<TextureRegion> createAnimation(TextureAtlas atlas, CharacterDataComponent characterData, String frameName, float ppm) {
+        System.out.println("processing... " + frameName);
         TextureAtlas.AtlasRegion region = atlas.findRegion(frameName);
         CharacterDataComponent.FrameData frameData = characterData.getFrameData().get(frameName);
 
