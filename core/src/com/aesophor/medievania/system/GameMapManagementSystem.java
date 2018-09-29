@@ -154,8 +154,8 @@ public class GameMapManagementSystem extends EntitySystem {
         GameEventManager.getInstance().fireEvent(new MapChangedEvent(currentMap));
 
         // TODO: Don't respawn enemies whenever a map loads.
-        npcs = currentMap.spawnNPCs();
-        npcs.forEach(engine::addEntity);
+        //npcs = currentMap.spawnNPCs();
+        //npcs.forEach(engine::addEntity);
     }
 
     private Item spawnItem(String itemName, World world, float x, float y) {

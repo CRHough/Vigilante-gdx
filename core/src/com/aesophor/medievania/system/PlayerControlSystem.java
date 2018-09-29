@@ -40,7 +40,13 @@ public class PlayerControlSystem extends IteratingSystem {
 
         // When player is attacking, movement is disabled.
         if (!state.isAttacking()) {
-            if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+                if (state.isSheathed()) {
+                    player.unsheathWeapon();
+                } else {
+                    player.sheathWeapon();
+                }
+            } else if (Gdx.input.isKeyJustPressed(Input.Keys.ALT_LEFT)) {
                 if (state.isCrouching()) {
                     player.jumpDown();
                 } else {

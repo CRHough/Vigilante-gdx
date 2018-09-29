@@ -19,6 +19,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+/**
+ * CharacterRendererSystem is responsible for rendering characters based on their states,
+ * and it will determine which state should a character should be in at any moment.
+ * TODO: Define state precedence.
+ */
 public class CharacterRendererSystem extends IteratingSystem {
 
     private Batch batch;
@@ -78,6 +83,18 @@ public class CharacterRendererSystem extends IteratingSystem {
                     state.setAttacking(false);
                     state.resetTime();
                 }
+
+                if (state.isSheathing() && state.getStateTimer() >= 1.5f) {
+                    state.setSheathed(true);
+                    state.setSheathing(false);
+                    state.resetTime();
+                }
+
+                if (state.isUnsheathing() && state.getStateTimer() >= 1.5f) {
+                    state.setSheathed(false);
+                    state.setUnsheathing(false);
+                    state.resetTime();
+                }
             }
 
             float textureOffsetX = characterData.getTextureOffsetX();
@@ -102,8 +119,11 @@ public class CharacterRendererSystem extends IteratingSystem {
 
         TextureRegion textureRegion;
         switch (state.getCurrentState()) {
-            case RUNNING:
-                textureRegion = animations.get(State.RUNNING).getKeyFrame(state.getStateTimer(), true);
+            case RUNNING_UNSHEATHED:
+                textureRegion = animations.get(State.RUNNING_UNSHEATHED).getKeyFrame(state.getStateTimer(), true);
+                break;
+            case RUNNING_SHEATHED:
+                textureRegion = animations.get(State.RUNNING_SHEATHED).getKeyFrame(state.getStateTimer(), true);
                 break;
             case JUMPING:
                 textureRegion = animations.get(State.JUMPING).getKeyFrame(state.getStateTimer(), false);
@@ -117,15 +137,24 @@ public class CharacterRendererSystem extends IteratingSystem {
             case ATTACKING:
                 textureRegion = animations.get(State.ATTACKING).getKeyFrame(state.getStateTimer(), false);
                 break;
+            case WEAPON_SHEATHING:
+                textureRegion = animations.get(State.WEAPON_SHEATHING).getKeyFrame(state.getStateTimer(), false);
+                break;
+            case WEAPON_UNSHEATHING:
+                textureRegion = animations.get(State.WEAPON_UNSHEATHING).getKeyFrame(state.getStateTimer(), false);
+                break;
             case SKILL:
                 textureRegion = animations.get(State.SKILL).getKeyFrame(state.getStateTimer(), true);
                 break;
             case KILLED:
                 textureRegion = animations.get(State.KILLED).getKeyFrame(state.getStateTimer(), false);
                 break;
-            case IDLE:
+            case IDLE_SHEATHED:
+                textureRegion = animations.get(State.IDLE_SHEATHED).getKeyFrame(state.getStateTimer(), true);
+                break;
+            case IDLE_UNSHEATHED: // fall through.
             default:
-                textureRegion = animations.get(State.IDLE).getKeyFrame(state.getStateTimer(), true);
+                textureRegion = animations.get(State.IDLE_UNSHEATHED).getKeyFrame(state.getStateTimer(), true);
                 break;
         }
 
@@ -159,6 +188,10 @@ public class CharacterRendererSystem extends IteratingSystem {
             return State.SKILL;
         } else if (state.isAttacking()) {
             return State.ATTACKING;
+        } else if (state.isSheathing()) {
+            return State.WEAPON_SHEATHING;
+        } else if (state.isUnsheathing()) {
+            return State.WEAPON_UNSHEATHING;
         } else if (state.isJumping()) {
             return State.JUMPING;
         } else if (b2body.getBody().getLinearVelocity().y < -.5f) {
@@ -166,9 +199,9 @@ public class CharacterRendererSystem extends IteratingSystem {
         } else if (state.isCrouching()) {
             return State.CROUCHING;
         } else if (b2body.getBody().getLinearVelocity().x > .01f || b2body.getBody().getLinearVelocity().x < -.01f) {
-            return State.RUNNING;
+            return (state.isSheathed()) ? State.RUNNING_SHEATHED : State.RUNNING_UNSHEATHED;
         } else {
-            return State.IDLE;
+            return (state.isSheathed()) ? State.IDLE_SHEATHED : State.IDLE_UNSHEATHED;
         }
     }
 

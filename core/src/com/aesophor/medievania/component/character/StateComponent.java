@@ -8,14 +8,17 @@ public class StateComponent implements Component {
     private State currentState;
     private float stateTimer;
 
-    private boolean isAlerted;
     private boolean isFacingRight;
+    private boolean isSheathed;
+    private boolean isSheathing;
+    private boolean isUnsheathing;
     private boolean isJumping;
     private boolean isOnPlatform;
     private boolean isAttacking;
     private boolean isCrouching;
     private boolean isUsingSkill;
     private boolean isInvincible;
+    private boolean isAlerted;
     private boolean isKilled;
     private boolean isSetToKill;
 
@@ -51,12 +54,28 @@ public class StateComponent implements Component {
     }
 
 
-    public boolean isAlerted() {
-        return isAlerted;
-    }
-
     public boolean isFacingRight() {
         return isFacingRight;
+    }
+
+    public boolean isSheathed() {
+        return isSheathed;
+    }
+
+    public boolean isSheathing() {
+        return isSheathing;
+    }
+
+    public boolean isUnsheathing() {
+        return isUnsheathing;
+    }
+
+    public boolean isJumping() {
+        return isJumping;
+    }
+
+    public boolean isOnPlatform() {
+        return isOnPlatform;
     }
 
     public boolean isAttacking() {
@@ -75,29 +94,33 @@ public class StateComponent implements Component {
         return isInvincible;
     }
 
-    public boolean isSetToKill() {
-        return isSetToKill;
+    public boolean isAlerted() {
+        return isAlerted;
     }
 
     public boolean isKilled() {
         return isKilled;
     }
 
-    public boolean isJumping() {
-        return isJumping;
+    public boolean isSetToKill() {
+        return isSetToKill;
     }
 
-    public boolean isOnPlatform() {
-        return isOnPlatform;
-    }
-
-
-    public void setAlerted(boolean isAlerted) {
-        this.isAlerted = isAlerted;
-    }
 
     public void setFacingRight(boolean isFacingRight) {
         this.isFacingRight = isFacingRight;
+    }
+
+    public void setSheathed(boolean isSheathed) {
+        this.isSheathed = isSheathed;
+    }
+
+    public void setSheathing(boolean isSheathing) {
+        this.isSheathing = isSheathing;
+    }
+
+    public void setUnsheathing(boolean isUnsheathing) {
+        this.isUnsheathing = isUnsheathing;
     }
 
     public void setJumping(boolean isJumping) {
@@ -124,6 +147,10 @@ public class StateComponent implements Component {
         this.isInvincible = isInvincible;
     }
 
+    public void setAlerted(boolean isAlerted) {
+        this.isAlerted = isAlerted;
+    }
+
     public void setKilled(boolean isKilled) {
         this.isKilled = isKilled;
     }
@@ -131,4 +158,5 @@ public class StateComponent implements Component {
     public void setSetToKill(boolean isSetToKill) {
         this.isSetToKill = isSetToKill;
     }
+
 }

@@ -48,7 +48,7 @@ public abstract class Character extends Entity implements Disposable {
         add(new StatsComponent(characterData.getStats()));
         add(new B2BodyComponent(world));
         add(new SpriteComponent(x * Constants.PPM, y * Constants.PPM));
-        add(new StateComponent(State.IDLE));
+        add(new StateComponent(State.IDLE_SHEATHED));
         add(new CombatTargetComponent());
         add(new InventoryComponent());
         add(new EquipmentSlotsComponent());
@@ -280,13 +280,27 @@ public abstract class Character extends Entity implements Disposable {
     }
 
 
+    public void sheathWeapon() {
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+
+        state.setSheathing(true);
+    }
+
+    public void unsheathWeapon() {
+        StateComponent state = Mappers.STATE.get(this);
+        StatsComponent stats = Mappers.STATS.get(this);
+
+        state.setUnsheathing(true);
+    }
+
     public void swingWeapon() {
         StateComponent state = Mappers.STATE.get(this);
         StatsComponent stats = Mappers.STATS.get(this);
         CombatTargetComponent targets = Mappers.COMBAT_TARGETS.get(this);
         SoundComponent sounds = Mappers.SOUNDS.get(this);
 
-        if (!state.isAttacking()) {
+        if (!state.isSheathed() && !state.isAttacking()) {
             state.setAttacking(true);
 
             stats.modStamina(-10);

@@ -33,6 +33,7 @@ public class Player extends Character {
         defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
         Mappers.SPRITE.get(this).setBounds(0, 0, 105f / Constants.PPM, 105f / Constants.PPM);
+        Mappers.STATE.get(this).setSheathed(true);
     }
 
 
