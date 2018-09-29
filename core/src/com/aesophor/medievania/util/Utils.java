@@ -1,7 +1,9 @@
 package com.aesophor.medievania.util;
 
 import com.aesophor.medievania.component.character.CharacterDataComponent;
+import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
+import com.aesophor.medievania.component.graphics.FrameData;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -57,9 +59,8 @@ public class Utils {
      * @return Extracted animations.
      */
     public static AnimationComponent<TextureRegion> createAnimation(TextureAtlas atlas, CharacterDataComponent characterData, String frameName, float ppm) {
-        System.out.println("processing... " + frameName);
         TextureAtlas.AtlasRegion region = atlas.findRegion(frameName);
-        CharacterDataComponent.FrameData frameData = characterData.getFrameData().get(frameName);
+        FrameData frameData = characterData.getFrameData().get(frameName);
 
         float frameDuration = frameData.getFrameDuration();
         int firstFrameCount = frameData.getFrameStartCount();
@@ -73,6 +74,25 @@ public class Utils {
         }
         return new AnimationComponent<>(frameDuration / ppm, frames);
     }
+
+
+    public static AnimationComponent<TextureRegion> createAnimation(TextureAtlas atlas, EquipmentDataComponent equipmentData, String frameName, float ppm) {
+        TextureAtlas.AtlasRegion region = atlas.findRegion(frameName);
+        FrameData frameData = equipmentData.getFrameData().get(frameName);
+
+        float frameDuration = frameData.getFrameDuration();
+        int firstFrameCount = frameData.getFrameStartCount();
+        int lastFrameCount = frameData.getFrameEndCount();
+        int frameWidth = equipmentData.getFrameWidth();
+        int frameHeight = equipmentData.getFrameHeight();
+
+        frames.clear();
+        for (int i = firstFrameCount; i <= lastFrameCount; i++) {
+            frames.add(new TextureRegion(region, i * frameWidth, 0, frameWidth, frameHeight));
+        }
+        return new AnimationComponent<>(frameDuration / ppm, frames);
+    }
+
 
     public static AnimationComponent<TextureRegion> createAnimation(Texture region, float frameDuration,
                                                            int firstFrameCount, int lastFrameCount, int offsetX, int offsetY, int width, int height) {

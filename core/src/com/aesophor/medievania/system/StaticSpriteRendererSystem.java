@@ -1,6 +1,7 @@
 package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.component.character.CharacterAnimationComponent;
+import com.aesophor.medievania.component.character.StateComponent;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.component.Mappers;
@@ -19,7 +20,7 @@ public class StaticSpriteRendererSystem extends IteratingSystem {
     private final World world;
 
     public StaticSpriteRendererSystem(Batch batch, Camera camera, World world) {
-        super(Family.all(SpriteComponent.class).exclude(CharacterAnimationComponent.class, AnimationComponent.class).get());
+        super(Family.all(SpriteComponent.class).exclude(StateComponent.class, AnimationComponent.class).get());
 
         this.batch = batch;
         this.camera = camera;

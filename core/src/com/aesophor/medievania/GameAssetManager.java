@@ -53,6 +53,7 @@ public class GameAssetManager extends AssetManager {
     public static final String HUD_ATLAS = "Texture/UI/HUD/HUD.pack";
     public static final String BANDIT_ATLAS = "Texture/Character/bandit/Bandit.pack";
     public static final String KNIGHT_ATLAS = "Texture/Character/knight/Knight.pack";
+    public static final String RUSTY_AXE_ATLAS = "Texture/Item/RustyAxe/RustyAxe.pack";
 
     public static final String TEXTURE_DUST = "Texture/FX/dust.png";
     public static final String TEXTURE_BAT = "Texture/Skill/bat.png";
@@ -82,6 +83,7 @@ public class GameAssetManager extends AssetManager {
         register(HUD_ATLAS, TextureAtlas.class);
         register(BANDIT_ATLAS, TextureAtlas.class);
         register(KNIGHT_ATLAS, TextureAtlas.class);
+        register(RUSTY_AXE_ATLAS, TextureAtlas.class);
 
         register(TEXTURE_DUST, Texture.class);
         register(TEXTURE_BAT, Texture.class);

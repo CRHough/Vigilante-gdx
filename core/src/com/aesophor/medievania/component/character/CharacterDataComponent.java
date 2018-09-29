@@ -1,28 +1,10 @@
 package com.aesophor.medievania.component.character;
 
+import com.aesophor.medievania.component.graphics.FrameData;
 import com.badlogic.ashley.core.Component;
-
 import java.util.HashMap;
 
 public class CharacterDataComponent implements Component {
-
-    public static class FrameData {
-        private float frameDuration;
-        private int frameStartCount;
-        private int frameEndCount;
-
-        public float getFrameDuration() {
-            return frameDuration;
-        }
-
-        public int getFrameStartCount() {
-            return frameStartCount;
-        }
-
-        public int getFrameEndCount() {
-            return frameEndCount;
-        }
-    }
 
     private String atlas;
     private int textureOffsetX;

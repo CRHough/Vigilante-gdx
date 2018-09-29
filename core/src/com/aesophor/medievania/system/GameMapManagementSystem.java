@@ -110,6 +110,10 @@ public class GameMapManagementSystem extends EntitySystem {
         });
 
         setGameMap("Map/starting_point.tmx");
+
+
+        Item item = new Item("Rusty Axe", assets, world, 1f, 1f);
+        engine.addEntity(item);
     }
 
     public void registerPlayer(Player player) {

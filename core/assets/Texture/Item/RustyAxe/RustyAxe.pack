@@ -1,0 +1,89 @@
+
+RustyAxe.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+RUNNING_UNSHEATHED
+  rotate: false
+  xy: 1, 411
+  size: 640, 80
+  orig: 640, 80
+  offset: 0, 0
+  index: -1
+RUNNING_SHEATHED
+  rotate: false
+  xy: 1, 329
+  size: 640, 80
+  orig: 640, 80
+  offset: 0, 0
+  index: -1
+ATTACKING
+  rotate: false
+  xy: 1, 247
+  size: 560, 80
+  orig: 560, 80
+  offset: 0, 0
+  index: -1
+IDLE_SHEATHED
+  rotate: false
+  xy: 1, 165
+  size: 480, 80
+  orig: 480, 80
+  offset: 0, 0
+  index: -1
+WEAPON_UNSHEATHING
+  rotate: false
+  xy: 1, 83
+  size: 480, 80
+  orig: 480, 80
+  offset: 0, 0
+  index: -1
+WEAPON_SHEATHING
+  rotate: false
+  xy: 1, 1
+  size: 480, 80
+  orig: 480, 80
+  offset: 0, 0
+  index: -1
+CROUCHING
+  rotate: false
+  xy: 643, 411
+  size: 240, 80
+  orig: 240, 80
+  offset: 0, 0
+  index: -1
+SKILL
+  rotate: false
+  xy: 885, 411
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+FALLING
+  rotate: false
+  xy: 643, 329
+  size: 80, 80
+  orig: 80, 80
+  offset: 0, 0
+  index: -1
+JUMPING
+  rotate: false
+  xy: 563, 247
+  size: 400, 80
+  orig: 400, 80
+  offset: 0, 0
+  index: -1
+KILLED
+  rotate: false
+  xy: 483, 165
+  size: 480, 80
+  orig: 480, 80
+  offset: 0, 0
+  index: -1
+IDLE_UNSHEATHED
+  rotate: false
+  xy: 483, 83
+  size: 480, 80
+  orig: 480, 80
+  offset: 0, 0
+  index: -1

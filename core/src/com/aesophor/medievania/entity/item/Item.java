@@ -1,5 +1,9 @@
 package com.aesophor.medievania.entity.item;
 
+import com.aesophor.medievania.component.character.CharacterAnimationComponent;
+import com.aesophor.medievania.component.character.State;
+import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
+import com.aesophor.medievania.component.graphics.AnimationComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.item.ItemType;
@@ -9,13 +13,18 @@ import com.aesophor.medievania.entity.data.EquipmentDataManager;
 import com.aesophor.medievania.entity.data.ItemDataManager;
 import com.aesophor.medievania.util.CategoryBits;
 import com.aesophor.medievania.util.Constants;
+import com.aesophor.medievania.util.Utils;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Disposable;
+
+import java.util.Arrays;
 
 public class Item extends Entity implements Disposable {
 
@@ -40,9 +49,21 @@ public class Item extends Entity implements Disposable {
         type = itemData.getType();
 
         add(itemData);
+
         if (type == ItemType.EQUIP) {
-            add(EquipmentDataManager.getInstance().get(itemName));
+            EquipmentDataComponent equipmentData = EquipmentDataManager.getInstance().get(itemName);
+            add(equipmentData);
+
+            CharacterAnimationComponent animations = new CharacterAnimationComponent();
+
+            TextureAtlas atlas = assets.get(equipmentData.getAtlas());
+            Arrays.stream(State.values()).forEach(s -> {
+                animations.put(s, Utils.createAnimation(atlas, equipmentData, s.name(), Constants.PPM));
+            });
+
+            add(animations);
         }
+
         add(sprite);
         add(b2body);
         add(sounds);

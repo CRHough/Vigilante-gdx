@@ -1,11 +1,7 @@
 package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.component.*;
-import com.aesophor.medievania.component.character.CharacterDataComponent;
-import com.aesophor.medievania.component.character.State;
-import com.aesophor.medievania.component.character.StateComponent;
-import com.aesophor.medievania.component.character.StatsComponent;
-import com.aesophor.medievania.component.character.CharacterAnimationComponent;
+import com.aesophor.medievania.component.character.*;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.util.Constants;
@@ -63,6 +59,7 @@ public class CharacterRendererSystem extends IteratingSystem {
         animations = Mappers.CHARACTER_ANIMATIONS.get(entity);
         state = Mappers.STATE.get(entity);
 
+
         if (!state.isKilled()) {
             // If the character's health has reached zero but hasn't die yet,
             // it means that the killedAnimation is not fully played.
@@ -107,6 +104,76 @@ public class CharacterRendererSystem extends IteratingSystem {
 
         sprite.setRegion(getFrame(delta));
         sprite.draw(batch);
+
+        // Clean up this pile of dog shit......... =~=
+        EquipmentSlotsComponent slots = Mappers.EQUIPMENT_SLOTS.get(entity);
+        slots.getEquipment().forEach(((equipmentType, item) -> {
+            if (item != null) {
+                CharacterAnimationComponent equipAni = Mappers.CHARACTER_ANIMATIONS.get(item);
+                TextureRegion textureRegion;
+                switch (state.getCurrentState()) {
+                    case RUNNING_UNSHEATHED:
+                        textureRegion = equipAni.get(State.RUNNING_UNSHEATHED).getKeyFrame(state.getStateTimer(), true);
+                        break;
+                    case RUNNING_SHEATHED:
+                        textureRegion = equipAni.get(State.RUNNING_SHEATHED).getKeyFrame(state.getStateTimer(), true);
+                        break;
+                    case JUMPING:
+                        textureRegion = equipAni.get(State.JUMPING).getKeyFrame(state.getStateTimer(), false);
+                        break;
+                    case FALLING:
+                        textureRegion = equipAni.get(State.FALLING).getKeyFrame(state.getStateTimer(), false);
+                        break;
+                    case CROUCHING:
+                        textureRegion = equipAni.get(State.CROUCHING).getKeyFrame(state.getStateTimer(), false);
+                        break;
+                    case ATTACKING:
+                        textureRegion = equipAni.get(State.ATTACKING).getKeyFrame(state.getStateTimer(), false);
+                        break;
+                    case WEAPON_SHEATHING:
+                        textureRegion = equipAni.get(State.WEAPON_SHEATHING).getKeyFrame(state.getStateTimer(), false);
+                        break;
+                    case WEAPON_UNSHEATHING:
+                        textureRegion = equipAni.get(State.WEAPON_UNSHEATHING).getKeyFrame(state.getStateTimer(), false);
+                        break;
+                    case SKILL:
+                        textureRegion = equipAni.get(State.SKILL).getKeyFrame(state.getStateTimer(), true);
+                        break;
+                    case KILLED:
+                        textureRegion = equipAni.get(State.KILLED).getKeyFrame(state.getStateTimer(), false);
+                        break;
+                    case IDLE_SHEATHED:
+                        textureRegion = equipAni.get(State.IDLE_SHEATHED).getKeyFrame(state.getStateTimer(), true);
+                        break;
+                    case IDLE_UNSHEATHED: // fall through.
+                    default:
+                        textureRegion = equipAni.get(State.IDLE_UNSHEATHED).getKeyFrame(state.getStateTimer(), true);
+                        break;
+                }
+
+                if (!state.isFacingRight() && !textureRegion.isFlipX()) {
+                    textureRegion.flip(true, false);
+                    CircleShape shape = (CircleShape) b2body.getMeleeWeaponFixture().getShape();
+                    shape.setPosition(new Vector2(-stats.getAttackRange() / Constants.PPM, 0));
+                } else if (state.isFacingRight() && textureRegion.isFlipX()) {
+                    textureRegion.flip(true, false);
+                    CircleShape shape = (CircleShape) b2body.getMeleeWeaponFixture().getShape();
+                    shape.setPosition(new Vector2(stats.getAttackRange() / Constants.PPM, 0));
+                }
+
+                float textureOffsetX = characterData.getTextureOffsetX();
+                float textureOffsetY = characterData.getTextureOffsetY();
+
+                float textureX = b2body.getBody().getPosition().x - sprite.getWidth() / 2 + (textureOffsetX / Constants.PPM);
+                float textureY = b2body.getBody().getPosition().y - sprite.getHeight() / 2 + (textureOffsetY / Constants.PPM);
+
+                Mappers.SPRITE.get(item).setRegion(textureRegion);
+                Mappers.SPRITE.get(item).setBounds(0, 0, 105f / Constants.PPM, 105f / Constants.PPM);
+                Mappers.SPRITE.get(item).setPosition(textureX, textureY);
+
+                Mappers.SPRITE.get(item).draw(batch);
+            }
+        }));
     }
 
     /**

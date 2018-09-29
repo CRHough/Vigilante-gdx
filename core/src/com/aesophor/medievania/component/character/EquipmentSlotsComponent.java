@@ -20,6 +20,10 @@ public class EquipmentSlotsComponent implements Component {
     }
 
 
+    public Map<EquipmentType, Item> getEquipment() {
+        return equipment;
+    }
+
     public Item get(EquipmentType type) {
         return equipment.get(type);
     }
