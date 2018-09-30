@@ -6,20 +6,20 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CharacterAnimationComponent implements Component {
+public class CharacterAnimationsComponent implements Component {
 
-    private final Map<State, AnimationComponent<TextureRegion>> animations;
+    private final Map<CharacterState, AnimationComponent<TextureRegion>> animations;
 
-    public CharacterAnimationComponent() {
+    public CharacterAnimationsComponent() {
         animations = new HashMap<>();
     }
 
 
-    public AnimationComponent<TextureRegion> get(State state) {
+    public AnimationComponent<TextureRegion> get(CharacterState state) {
         return animations.get(state);
     }
 
-    public void put(State state, AnimationComponent<TextureRegion> animation) {
+    public void put(CharacterState state, AnimationComponent<TextureRegion> animation) {
         animations.put(state, animation);
     }
 

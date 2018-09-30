@@ -2,7 +2,7 @@ package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.character.StatsComponent;
+import com.aesophor.medievania.component.character.CharacterStatsComponent;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.assets.AssetManager;
@@ -44,7 +44,7 @@ public class StatsPane extends Pane {
         columnDefaults(0).width(85f);
         defaults().height(16f);
 
-        StatsComponent stats = Mappers.STATS.get(player);
+        CharacterStatsComponent stats = Mappers.STATS.get(player);
         nameLabel = new Label(stats.getName().toUpperCase(), LabelStyles.WHITE_REGULAR);
         levelLabel = new Label(String.format("Level %d", stats.getLevel()), LabelStyles.RED_REGULAR);
 

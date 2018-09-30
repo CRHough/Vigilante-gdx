@@ -24,11 +24,11 @@ public class BodyRendererSystem extends CharacterRendererSystem {
     @Override
     protected void processEntity(Entity entity, float delta) {
         CharacterDataComponent characterData = Mappers.CHARACTER_DATA.get(entity);
-        StatsComponent stats = Mappers.STATS.get(entity);
+        CharacterStatsComponent stats = Mappers.STATS.get(entity);
         B2BodyComponent b2body = Mappers.B2BODY.get(entity);
         SpriteComponent sprite = Mappers.SPRITE.get(entity);
-        CharacterAnimationComponent bodyAnimations = Mappers.CHARACTER_ANIMATIONS.get(entity);
-        StateComponent state = Mappers.STATE.get(entity);
+        CharacterAnimationsComponent bodyAnimations = Mappers.CHARACTER_ANIMATIONS.get(entity);
+        CharacterStateComponent state = Mappers.STATE.get(entity);
 
 
         // Fetch and set the latest state of the character.
@@ -48,7 +48,7 @@ public class BodyRendererSystem extends CharacterRendererSystem {
             // So here we'll play it until it's finished.
             if (state.isSetToKill()) {
                 // Set killed to true to prevent further rendering updates.
-                if (bodyAnimations.get(State.KILLED).isAnimationFinished(state.getStateTimer())) {
+                if (bodyAnimations.get(CharacterState.KILLED).isAnimationFinished(state.getStateTimer())) {
                     world.destroyBody(b2body.getBody());
                     state.setKilled(true);
                 }

@@ -2,7 +2,7 @@ package com.aesophor.medievania.ui.hud;
 
 import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.character.StatsComponent;
+import com.aesophor.medievania.component.character.CharacterStatsComponent;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
 import com.aesophor.medievania.component.equipment.EquipmentType;
 import com.aesophor.medievania.component.item.ItemType;
@@ -99,7 +99,7 @@ public class HUD extends Stage {
     }
 
     public void update(float delta) {
-        StatsComponent playerStats = Mappers.STATS.get(player);
+        CharacterStatsComponent playerStats = Mappers.STATS.get(player);
         healthBar.update(playerStats.getHealth(), playerStats.getFullHealth());
         staminaBar.update(playerStats.getStamina(), playerStats.getFullStamina());
         magickaBar.update(playerStats.getMagicka(), playerStats.getFullMagicka());

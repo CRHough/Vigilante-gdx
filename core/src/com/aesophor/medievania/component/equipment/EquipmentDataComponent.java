@@ -1,19 +1,10 @@
 package com.aesophor.medievania.component.equipment;
 
-import com.aesophor.medievania.component.graphics.FrameData;
 import com.badlogic.ashley.core.Component;
-
-import java.util.HashMap;
 
 public class EquipmentDataComponent implements Component {
 
     private String atlas;
-    private int textureOffsetX;
-    private int textureOffsetY;
-    private int frameWidth;
-    private int frameHeight;
-    private HashMap<String, FrameData> frameData;
-
     private Integer type;
     private Integer bonusPhysicalDamage;
     private Integer bonusMagicalDamage;
@@ -26,27 +17,6 @@ public class EquipmentDataComponent implements Component {
     public String getAtlas() {
         return atlas;
     }
-
-    public int getTextureOffsetX() {
-        return textureOffsetX;
-    }
-
-    public int getTextureOffsetY() {
-        return textureOffsetY;
-    }
-
-    public int getFrameWidth() {
-        return frameWidth;
-    }
-
-    public int getFrameHeight() {
-        return frameHeight;
-    }
-
-    public HashMap<String, FrameData> getFrameData() {
-        return frameData;
-    }
-
 
     public EquipmentType getType() {
         return EquipmentType.values()[type];

@@ -1,19 +1,19 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.component.character.StatsComponent;
+import com.aesophor.medievania.component.character.CharacterStatsComponent;
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.character.StatsRegenerationComponent;
+import com.aesophor.medievania.component.character.CharacterStatsRegenComponent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
 
 public class StatsRegenerationSystem extends IteratingSystem {
 
-    private StatsComponent charStats;
-    private StatsRegenerationComponent regeneration;
+    private CharacterStatsComponent charStats;
+    private CharacterStatsRegenComponent regeneration;
 
     public StatsRegenerationSystem() {
-        super(Family.all(StatsRegenerationComponent.class).get());
+        super(Family.all(CharacterStatsRegenComponent.class).get());
     }
 
 

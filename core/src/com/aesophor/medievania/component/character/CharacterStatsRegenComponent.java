@@ -2,7 +2,7 @@ package com.aesophor.medievania.component.character;
 
 import com.badlogic.ashley.core.Component;
 
-public class StatsRegenerationComponent implements Component {
+public class CharacterStatsRegenComponent implements Component {
 
     private static final float REGEN_INTERVAL = 3;
 
@@ -11,11 +11,11 @@ public class StatsRegenerationComponent implements Component {
     private int magickaRegenRate; // regen z points of magicka every n secs.
     private float timer;
 
-    public StatsRegenerationComponent() {
+    public CharacterStatsRegenComponent() {
 
     }
 
-    public StatsRegenerationComponent(StatsRegenerationComponent statsRegen) {
+    public CharacterStatsRegenComponent(CharacterStatsRegenComponent statsRegen) {
         this.healthRegenRate = statsRegen.getHealthRegenRate();
         this.staminaRegenRate = statsRegen.getStaminaRegenRate();
         this.magickaRegenRate = statsRegen.getMagickaRegenRate();

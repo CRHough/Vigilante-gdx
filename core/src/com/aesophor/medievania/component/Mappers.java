@@ -12,17 +12,17 @@ import com.badlogic.ashley.core.ComponentMapper;
 
 public class Mappers {
 
-    public static final ComponentMapper<StatsComponent> STATS;
-    public static final ComponentMapper<CharacterAnimationComponent> CHARACTER_ANIMATIONS;
+    public static final ComponentMapper<CharacterStatsComponent> STATS;
+    public static final ComponentMapper<CharacterAnimationsComponent> CHARACTER_ANIMATIONS;
     public static final ComponentMapper<B2BodyComponent> B2BODY;
     public static final ComponentMapper<SpriteComponent> SPRITE;
     public static final ComponentMapper<IconComponent> ICON;
-    public static final ComponentMapper<StateComponent> STATE;
+    public static final ComponentMapper<CharacterStateComponent> STATE;
     public static final ComponentMapper<CombatTargetComponent> COMBAT_TARGETS;
     public static final ComponentMapper<PickupItemTargetComponent> PICKUP_ITEM_TARGETS;
     public static final ComponentMapper<PortalTargetComponent> PORTAL_TARGET;
     public static final ComponentMapper<CharacterAIComponent> CHARACTER_AI;
-    public static final ComponentMapper<StatsRegenerationComponent> REGENERATION;
+    public static final ComponentMapper<CharacterStatsRegenComponent> REGENERATION;
     public static final ComponentMapper<InventoryComponent> INVENTORY;
     public static final ComponentMapper<EquipmentSlotsComponent> EQUIPMENT_SLOTS;
     public static final ComponentMapper<DroppableItemsComponent> DROP_ITEMS;
@@ -33,17 +33,17 @@ public class Mappers {
     public static final ComponentMapper<AnimationComponent> ANIMATION;
 
     static {
-        STATS = ComponentMapper.getFor(StatsComponent.class);
-        CHARACTER_ANIMATIONS = ComponentMapper.getFor(CharacterAnimationComponent.class);
+        STATS = ComponentMapper.getFor(CharacterStatsComponent.class);
+        CHARACTER_ANIMATIONS = ComponentMapper.getFor(CharacterAnimationsComponent.class);
         B2BODY = ComponentMapper.getFor(B2BodyComponent.class);
         SPRITE = ComponentMapper.getFor(SpriteComponent.class);
         ICON = ComponentMapper.getFor(IconComponent.class);
-        STATE = ComponentMapper.getFor(StateComponent.class);
+        STATE = ComponentMapper.getFor(CharacterStateComponent.class);
         COMBAT_TARGETS = ComponentMapper.getFor(CombatTargetComponent.class);
         PICKUP_ITEM_TARGETS = ComponentMapper.getFor(PickupItemTargetComponent.class);
         PORTAL_TARGET = ComponentMapper.getFor(PortalTargetComponent.class);
         CHARACTER_AI = ComponentMapper.getFor(CharacterAIComponent.class);
-        REGENERATION = ComponentMapper.getFor(StatsRegenerationComponent.class);
+        REGENERATION = ComponentMapper.getFor(CharacterStatsRegenComponent.class);
         INVENTORY = ComponentMapper.getFor(InventoryComponent.class);
         EQUIPMENT_SLOTS = ComponentMapper.getFor(EquipmentSlotsComponent.class);
         DROP_ITEMS = ComponentMapper.getFor(DroppableItemsComponent.class);

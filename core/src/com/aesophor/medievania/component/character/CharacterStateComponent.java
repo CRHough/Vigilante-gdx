@@ -2,10 +2,10 @@ package com.aesophor.medievania.component.character;
 
 import com.badlogic.ashley.core.Component;
 
-public class StateComponent implements Component {
+public class CharacterStateComponent implements Component {
 
-    private State previousState;
-    private State currentState;
+    private CharacterState previousState;
+    private CharacterState currentState;
     private float stateTimer;
 
     private boolean isFacingRight;
@@ -22,21 +22,21 @@ public class StateComponent implements Component {
     private boolean isKilled;
     private boolean isSetToKill;
 
-    public StateComponent(State defaultState) {
+    public CharacterStateComponent(CharacterState defaultState) {
         this.currentState = defaultState;
         isFacingRight = true;
     }
 
 
-    public State getPreviousState() {
+    public CharacterState getPreviousState() {
         return previousState;
     }
 
-    public State getCurrentState() {
+    public CharacterState getCurrentState() {
         return currentState;
     }
 
-    public void setCurrentState(State newState) {
+    public void setCurrentState(CharacterState newState) {
         this.previousState = this.currentState;
         this.currentState = newState;
     }

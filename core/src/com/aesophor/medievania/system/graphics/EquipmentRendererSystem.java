@@ -1,7 +1,7 @@
 package com.aesophor.medievania.system.graphics;
 
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.character.CharacterAnimationComponent;
+import com.aesophor.medievania.component.character.CharacterAnimationsComponent;
 import com.aesophor.medievania.component.character.CharacterDataComponent;
 import com.aesophor.medievania.component.character.EquipmentSlotsComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
@@ -32,7 +32,7 @@ public class EquipmentRendererSystem extends CharacterRendererSystem {
         EquipmentSlotsComponent slots = Mappers.EQUIPMENT_SLOTS.get(entity);
         slots.getEquipment().forEach(((equipmentType, item) -> {
             if (item != null) {
-                CharacterAnimationComponent equipmentAnimations = Mappers.CHARACTER_ANIMATIONS.get(item);
+                CharacterAnimationsComponent equipmentAnimations = Mappers.CHARACTER_ANIMATIONS.get(item);
                 SpriteComponent sp = Mappers.SPRITE.get(item);
 
                 float textureOffsetX = characterData.getTextureOffsetX();

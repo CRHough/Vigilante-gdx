@@ -1,11 +1,12 @@
 package com.aesophor.medievania.system;
 
-import com.aesophor.medievania.component.character.PickupItemTargetComponent;
-import com.aesophor.medievania.component.character.PortalTargetComponent;
-import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.ControllableComponent;
-import com.aesophor.medievania.component.character.StateComponent;
+import com.aesophor.medievania.component.character.PickupItemTargetComponent;
+import com.aesophor.medievania.component.character.PortalTargetComponent;
+import com.aesophor.medievania.component.character.CharacterStateComponent;
+import com.aesophor.medievania.component.equipment.EquipmentType;
+import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.badlogic.ashley.core.Entity;
@@ -25,7 +26,7 @@ public class PlayerControlSystem extends IteratingSystem {
     }
 
 
-    private void handleInput(Player player, StateComponent state) {
+    private void handleInput(Player player, CharacterStateComponent state) {
         if (state.isSetToKill()) {
             return;
         }
@@ -42,7 +43,9 @@ public class PlayerControlSystem extends IteratingSystem {
         if (!state.isAttacking()) {
             if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
                 if (state.isSheathed()) {
-                    player.unsheathWeapon();
+                    if (Mappers.EQUIPMENT_SLOTS.get(player).has(EquipmentType.WEAPON)) {
+                        player.unsheathWeapon();
+                    }
                 } else {
                     player.sheathWeapon();
                 }

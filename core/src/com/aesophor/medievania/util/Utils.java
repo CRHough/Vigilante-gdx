@@ -1,9 +1,7 @@
 package com.aesophor.medievania.util;
 
 import com.aesophor.medievania.component.character.CharacterDataComponent;
-import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
-import com.aesophor.medievania.component.graphics.FrameData;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Utils {
@@ -53,37 +52,19 @@ public class Utils {
      * Note that the all sprites must be on the same row.
      * @param atlas source texture atlas.
      * @param characterData target character data component.
-     * @param frameName name of the animation (idle/run/jump... etc).
+     * @param animationName name of the animation (idle/run/jump... etc).
      * @param ppm frame duration scale factor.
      * @return Extracted animations.
      */
-    public static AnimationComponent<TextureRegion> createAnimation(TextureAtlas atlas, CharacterDataComponent characterData, String frameName, float ppm) {
-        TextureAtlas.AtlasRegion region = atlas.findRegion(frameName);
-        FrameData frameData = characterData.getFrameData().get(frameName);
+    public static AnimationComponent<TextureRegion> createAnimation(TextureAtlas atlas, CharacterDataComponent characterData, String animationName, float ppm) {
+        TextureAtlas.AtlasRegion region = atlas.findRegion(animationName);
+        CharacterDataComponent.AnimationData animationData = characterData.getAnimationData().get(animationName);
 
-        float frameDuration = frameData.getFrameDuration();
-        int firstFrameCount = frameData.getFrameStartCount();
-        int lastFrameCount = frameData.getFrameEndCount();
+        float frameDuration = animationData.getFrameDuration();
+        int firstFrameCount = animationData.getFrameStartCount();
+        int lastFrameCount = animationData.getFrameEndCount();
         int frameWidth = characterData.getFrameWidth();
         int frameHeight = characterData.getFrameHeight();
-
-        frames.clear();
-        for (int i = firstFrameCount; i <= lastFrameCount; i++) {
-            frames.add(new TextureRegion(region, i * frameWidth, 0, frameWidth, frameHeight));
-        }
-        return new AnimationComponent<>(frameDuration / ppm, frames);
-    }
-
-
-    public static AnimationComponent<TextureRegion> createAnimation(TextureAtlas atlas, EquipmentDataComponent equipmentData, String frameName, float ppm) {
-        TextureAtlas.AtlasRegion region = atlas.findRegion(frameName);
-        FrameData frameData = equipmentData.getFrameData().get(frameName);
-
-        float frameDuration = frameData.getFrameDuration();
-        int firstFrameCount = frameData.getFrameStartCount();
-        int lastFrameCount = frameData.getFrameEndCount();
-        int frameWidth = equipmentData.getFrameWidth();
-        int frameHeight = equipmentData.getFrameHeight();
 
         frames.clear();
         for (int i = firstFrameCount; i <= lastFrameCount; i++) {

@@ -1,10 +1,10 @@
 package com.aesophor.medievania.system.graphics;
 
 import com.aesophor.medievania.component.Mappers;
-import com.aesophor.medievania.component.character.CharacterAnimationComponent;
-import com.aesophor.medievania.component.character.State;
-import com.aesophor.medievania.component.character.StateComponent;
-import com.aesophor.medievania.component.character.StatsComponent;
+import com.aesophor.medievania.component.character.CharacterAnimationsComponent;
+import com.aesophor.medievania.component.character.CharacterState;
+import com.aesophor.medievania.component.character.CharacterStateComponent;
+import com.aesophor.medievania.component.character.CharacterStatsComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.Entity;
@@ -24,7 +24,7 @@ public abstract class CharacterRendererSystem extends IteratingSystem {
     protected final World world;
 
     public CharacterRendererSystem(Batch batch, Camera camera, World world) {
-        super(Family.all(CharacterAnimationComponent.class, StateComponent.class).get());
+        super(Family.all(CharacterAnimationsComponent.class, CharacterStateComponent.class).get());
         this.batch = batch;
         this.camera = camera;
         this.world = world;
@@ -47,49 +47,58 @@ public abstract class CharacterRendererSystem extends IteratingSystem {
      * @param delta delta time.
      * @return the current frame for the character.
      */
-    protected TextureRegion getFrame(Entity entity, CharacterAnimationComponent animations, float delta) {
-        StateComponent state = Mappers.STATE.get(entity);
-        StatsComponent stats = Mappers.STATS.get(entity);
+    protected TextureRegion getFrame(Entity entity, CharacterAnimationsComponent animations, float delta) {
+        CharacterStateComponent state = Mappers.STATE.get(entity);
+        CharacterStatsComponent stats = Mappers.STATS.get(entity);
         B2BodyComponent b2body = Mappers.B2BODY.get(entity);
 
         TextureRegion textureRegion;
         switch (state.getCurrentState()) {
             case RUNNING_UNSHEATHED:
-                textureRegion = animations.get(State.RUNNING_UNSHEATHED).getKeyFrame(state.getStateTimer(), true);
+                textureRegion = animations.get(CharacterState.RUNNING_UNSHEATHED).getKeyFrame(state.getStateTimer(), true);
                 break;
             case RUNNING_SHEATHED:
-                textureRegion = animations.get(State.RUNNING_SHEATHED).getKeyFrame(state.getStateTimer(), true);
+                textureRegion = animations.get(CharacterState.RUNNING_SHEATHED).getKeyFrame(state.getStateTimer(), true);
                 break;
-            case JUMPING:
-                textureRegion = animations.get(State.JUMPING).getKeyFrame(state.getStateTimer(), false);
+            case JUMPING_UNSHEATHED:
+                textureRegion = animations.get(CharacterState.JUMPING_UNSHEATHED).getKeyFrame(state.getStateTimer(), false);
                 break;
-            case FALLING:
-                textureRegion = animations.get(State.FALLING).getKeyFrame(state.getStateTimer(), false);
+            case JUMPING_SHEATHED:
+                textureRegion = animations.get(CharacterState.JUMPING_SHEATHED).getKeyFrame(state.getStateTimer(), false);
                 break;
-            case CROUCHING:
-                textureRegion = animations.get(State.CROUCHING).getKeyFrame(state.getStateTimer(), false);
+            case FALLING_UNSHEATHED:
+                textureRegion = animations.get(CharacterState.FALLING_UNSHEATHED).getKeyFrame(state.getStateTimer(), false);
+                break;
+            case FALLING_SHEATHED:
+                textureRegion = animations.get(CharacterState.FALLING_SHEATHED).getKeyFrame(state.getStateTimer(), false);
+                break;
+            case CROUCHING_UNSHEATHED:
+                textureRegion = animations.get(CharacterState.CROUCHING_UNSHEATHED).getKeyFrame(state.getStateTimer(), false);
+                break;
+            case CROUCHING_SHEATHED:
+                textureRegion = animations.get(CharacterState.CROUCHING_SHEATHED).getKeyFrame(state.getStateTimer(), false);
                 break;
             case ATTACKING:
-                textureRegion = animations.get(State.ATTACKING).getKeyFrame(state.getStateTimer(), false);
+                textureRegion = animations.get(CharacterState.ATTACKING).getKeyFrame(state.getStateTimer(), false);
                 break;
             case WEAPON_SHEATHING:
-                textureRegion = animations.get(State.WEAPON_SHEATHING).getKeyFrame(state.getStateTimer(), false);
+                textureRegion = animations.get(CharacterState.WEAPON_SHEATHING).getKeyFrame(state.getStateTimer(), false);
                 break;
             case WEAPON_UNSHEATHING:
-                textureRegion = animations.get(State.WEAPON_UNSHEATHING).getKeyFrame(state.getStateTimer(), false);
+                textureRegion = animations.get(CharacterState.WEAPON_UNSHEATHING).getKeyFrame(state.getStateTimer(), false);
                 break;
             case SKILL:
-                textureRegion = animations.get(State.SKILL).getKeyFrame(state.getStateTimer(), true);
+                textureRegion = animations.get(CharacterState.SKILL).getKeyFrame(state.getStateTimer(), true);
                 break;
             case KILLED:
-                textureRegion = animations.get(State.KILLED).getKeyFrame(state.getStateTimer(), false);
+                textureRegion = animations.get(CharacterState.KILLED).getKeyFrame(state.getStateTimer(), false);
                 break;
             case IDLE_SHEATHED:
-                textureRegion = animations.get(State.IDLE_SHEATHED).getKeyFrame(state.getStateTimer(), true);
+                textureRegion = animations.get(CharacterState.IDLE_SHEATHED).getKeyFrame(state.getStateTimer(), true);
                 break;
             case IDLE_UNSHEATHED: // fall through.
             default:
-                textureRegion = animations.get(State.IDLE_UNSHEATHED).getKeyFrame(state.getStateTimer(), true);
+                textureRegion = animations.get(CharacterState.IDLE_UNSHEATHED).getKeyFrame(state.getStateTimer(), true);
                 break;
         }
 
@@ -111,30 +120,30 @@ public abstract class CharacterRendererSystem extends IteratingSystem {
      * @param entity character entity.
      * @return character's current state.
      */
-    protected State getState(Entity entity) {
-        StateComponent state = Mappers.STATE.get(entity);
+    protected CharacterState getState(Entity entity) {
+        CharacterStateComponent state = Mappers.STATE.get(entity);
         B2BodyComponent b2body = Mappers.B2BODY.get(entity);
 
         if (state.isSetToKill()) {
-            return State.KILLED;
+            return CharacterState.KILLED;
         } else if (state.isUsingSkill()) {
-            return State.SKILL;
+            return CharacterState.SKILL;
         } else if (state.isAttacking()) {
-            return State.ATTACKING;
+            return CharacterState.ATTACKING;
         } else if (state.isSheathing()) {
-            return State.WEAPON_SHEATHING;
+            return CharacterState.WEAPON_SHEATHING;
         } else if (state.isUnsheathing()) {
-            return State.WEAPON_UNSHEATHING;
+            return CharacterState.WEAPON_UNSHEATHING;
         } else if (state.isJumping()) {
-            return State.JUMPING;
+            return (state.isSheathed()) ? CharacterState.JUMPING_SHEATHED : CharacterState.JUMPING_UNSHEATHED;
         } else if (b2body.getBody().getLinearVelocity().y < -.5f) {
-            return State.FALLING;
+            return (state.isSheathed()) ? CharacterState.FALLING_SHEATHED : CharacterState.FALLING_UNSHEATHED;
         } else if (state.isCrouching()) {
-            return State.CROUCHING;
+            return (state.isSheathed()) ? CharacterState.CROUCHING_SHEATHED : CharacterState.CROUCHING_UNSHEATHED;
         } else if (b2body.getBody().getLinearVelocity().x > .01f || b2body.getBody().getLinearVelocity().x < -.01f) {
-            return (state.isSheathed()) ? State.RUNNING_SHEATHED : State.RUNNING_UNSHEATHED;
+            return (state.isSheathed()) ? CharacterState.RUNNING_SHEATHED : CharacterState.RUNNING_UNSHEATHED;
         } else {
-            return (state.isSheathed()) ? State.IDLE_SHEATHED : State.IDLE_UNSHEATHED;
+            return (state.isSheathed()) ? CharacterState.IDLE_SHEATHED : CharacterState.IDLE_UNSHEATHED;
         }
     }
 

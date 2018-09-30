@@ -2,8 +2,8 @@ package com.aesophor.medievania.system;
 
 import com.aesophor.medievania.component.character.CharacterAIComponent;
 import com.aesophor.medievania.component.character.CombatTargetComponent;
-import com.aesophor.medievania.component.character.StateComponent;
-import com.aesophor.medievania.component.character.StatsComponent;
+import com.aesophor.medievania.component.character.CharacterStateComponent;
+import com.aesophor.medievania.component.character.CharacterStatsComponent;
 import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.component.*;
@@ -15,9 +15,9 @@ import com.badlogic.ashley.systems.IteratingSystem;
 
 public class EnemyAISystem extends IteratingSystem {
 
-    private StateComponent state;
+    private CharacterStateComponent state;
     private B2BodyComponent b2body;
-    private StatsComponent stats;
+    private CharacterStatsComponent stats;
     private CombatTargetComponent targets;
 
     public EnemyAISystem() {
@@ -45,7 +45,7 @@ public class EnemyAISystem extends IteratingSystem {
                 c.swingWeapon();
 
                 // If the target's heath reaches zero, unset lockedOnTarget and it will stop attacking.
-                if (targets.getLockedOnTarget().getComponent(StateComponent.class).isSetToKill()) {
+                if (targets.getLockedOnTarget().getComponent(CharacterStateComponent.class).isSetToKill()) {
                     if (targets.hasInRangeTarget()) {
                         targets.setLockedOnTarget(targets.getInRangeTargets().first());
                     } else {

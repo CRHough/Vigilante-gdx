@@ -2,7 +2,7 @@ package com.aesophor.medievania.component.character;
 
 import com.badlogic.ashley.core.Component;
 
-public class StatsComponent implements Component {
+public class CharacterStatsComponent implements Component {
 
     private String name;
     private int level;
@@ -31,11 +31,11 @@ public class StatsComponent implements Component {
     private int attackRange;
     private int basePhysicalDamage;
 
-    public StatsComponent() {
+    public CharacterStatsComponent() {
         level = 1;
     }
 
-    public StatsComponent(StatsComponent s) {
+    public CharacterStatsComponent(CharacterStatsComponent s) {
         name = s.getName();
         level = s.getLevel();
         exp = s.getExp();

@@ -56,7 +56,7 @@ public class Player extends Character {
 
     @Override
     public void receiveDamage(Character source, int damage) {
-        StateComponent state = Mappers.STATE.get(this);
+        CharacterStateComponent state = Mappers.STATE.get(this);
 
         super.receiveDamage(source, damage);
         state.setInvincible(true);
