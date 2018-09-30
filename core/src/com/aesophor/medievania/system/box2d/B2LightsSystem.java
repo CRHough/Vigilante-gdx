@@ -1,4 +1,4 @@
-package com.aesophor.medievania.system;
+package com.aesophor.medievania.system.box2d;
 
 import box2dLight.RayHandler;
 import com.aesophor.medievania.event.GameEventManager;

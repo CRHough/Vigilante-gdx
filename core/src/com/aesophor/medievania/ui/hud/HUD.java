@@ -74,7 +74,7 @@ public class HUD extends Stage {
                 EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(e.getItem());
 
                 if (equipmentData.getType() == EquipmentType.WEAPON) {
-                    e.getItem().reloadTexture();
+                    e.getItem().reloadIconTexture();
                     equippedWeaponSlot.update(e.getItem());
                 }
             }

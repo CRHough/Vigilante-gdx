@@ -1,4 +1,4 @@
-package com.aesophor.medievania.system;
+package com.aesophor.medievania.system.ui;
 
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.ui.hud.HUD;

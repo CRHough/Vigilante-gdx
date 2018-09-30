@@ -7,6 +7,10 @@ import com.badlogic.gdx.utils.Disposable;
 
 public class SpriteComponent extends Sprite implements Component, Disposable {
 
+    public SpriteComponent() {
+
+    }
+
     public SpriteComponent(float x, float y) {
         setPosition(x, y);
     }

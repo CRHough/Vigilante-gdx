@@ -281,12 +281,12 @@ public abstract class Character extends Entity implements Disposable {
 
 
     public void sheathWeapon() {
-        Mappers.STATE.get(this).resetStateTimer();
+        //Mappers.STATE.get(this).resetStateTimer();
         Mappers.STATE.get(this).setSheathing(true);
     }
 
     public void unsheathWeapon() {
-        Mappers.STATE.get(this).resetStateTimer();
+        //Mappers.STATE.get(this).resetStateTimer();
         Mappers.STATE.get(this).setUnsheathing(true);
     }
 
@@ -297,7 +297,6 @@ public abstract class Character extends Entity implements Disposable {
         SoundComponent sounds = Mappers.SOUNDS.get(this);
 
         if (!state.isSheathed() && !state.isAttacking()) {
-            state.resetStateTimer();
             state.setAttacking(true);
 
             stats.modStamina(-10);

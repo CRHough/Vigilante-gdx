@@ -53,6 +53,10 @@ public class StateComponent implements Component {
         stateTimer = 0;
     }
 
+    public void setStateTimer(float stateTimer) {
+        this.stateTimer = stateTimer;
+    }
+
 
     public boolean isFacingRight() {
         return isFacingRight;

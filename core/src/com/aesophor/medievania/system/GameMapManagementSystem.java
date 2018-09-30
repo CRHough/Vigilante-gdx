@@ -16,6 +16,7 @@ import com.aesophor.medievania.event.map.PortalUsedEvent;
 import com.aesophor.medievania.event.screen.GamePausedEvent;
 import com.aesophor.medievania.event.screen.GameResumedEvent;
 import com.aesophor.medievania.map.GameMap;
+import com.aesophor.medievania.system.ui.ScreenFadeSystem;
 import com.aesophor.medievania.util.Utils;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
@@ -82,8 +83,8 @@ public class GameMapManagementSystem extends EntitySystem {
 
             // The item's b2body and texture are destroyed/unloaded upon being picked up.
             // So here we have to reconstruct the b2body and reload its texture.
-            item.constructBody();
-            item.reloadTexture();
+            item.constructIconBody();
+            item.reloadIconTexture();
 
             Mappers.B2BODY.get(item).getBody().setTransform(b2body.getBody().getPosition().x, b2body.getBody().getPosition().y, 0);
             Body body = Mappers.B2BODY.get(item).getBody();

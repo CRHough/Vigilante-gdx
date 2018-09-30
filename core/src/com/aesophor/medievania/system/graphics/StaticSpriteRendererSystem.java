@@ -1,11 +1,11 @@
-package com.aesophor.medievania.system;
+package com.aesophor.medievania.system.graphics;
 
-import com.aesophor.medievania.component.character.CharacterAnimationComponent;
+import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.StateComponent;
 import com.aesophor.medievania.component.graphics.AnimationComponent;
-import com.aesophor.medievania.component.physics.B2BodyComponent;
-import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.graphics.IconComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
+import com.aesophor.medievania.component.physics.B2BodyComponent;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -38,13 +38,13 @@ public class StaticSpriteRendererSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        SpriteComponent sprite = Mappers.SPRITE.get(entity);
+        IconComponent icon = Mappers.ICON.get(entity);
         B2BodyComponent b2body = Mappers.B2BODY.get(entity);
 
-        float textureX = b2body.getBody().getPosition().x - sprite.getWidth() / 2;
-        float textureY = b2body.getBody().getPosition().y - sprite.getHeight() / 2;
-        sprite.setPosition(textureX, textureY);
-        sprite.draw(batch);
+        float textureX = b2body.getBody().getPosition().x - icon.getWidth() / 2;
+        float textureY = b2body.getBody().getPosition().y - icon.getHeight() / 2;
+        icon.setPosition(textureX, textureY);
+        icon.draw(batch);
     }
 
 }

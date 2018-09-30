@@ -46,7 +46,7 @@ public class EquipmentPane extends Pane {
 
             this.slotNameLabel = new Label(type.name(), labelStyle);
             this.equipmentNameLabel = new Label(EMPTY_ITEM_TEXT, LabelStyles.WHITE_REGULAR); // clean this up later.
-            this.equipmentIconImage = new Image((item != null) ? Mappers.SPRITE.get(item) : new Sprite(emptyItemIconTexture));
+            this.equipmentIconImage = new Image((item != null) ? Mappers.ICON.get(item) : new Sprite(emptyItemIconTexture));
             this.slotNameLabel.setAlignment(Align.left);
             this.equipmentNameLabel.setAlignment(Align.right);
 
@@ -78,7 +78,7 @@ public class EquipmentPane extends Pane {
 
         public void setItem(Item item) {
             this.item = item;
-            this.equipmentIconImage.setDrawable(new TextureRegionDrawable((item != null) ? Mappers.SPRITE.get(item) : new Sprite(emptyItemIconTexture)));
+            this.equipmentIconImage.setDrawable(new TextureRegionDrawable((item != null) ? Mappers.ICON.get(item) : new Sprite(emptyItemIconTexture)));
             this.equipmentNameLabel.setText((item != null) ? Mappers.ITEM_DATA.get(item).getName() : EMPTY_ITEM_TEXT);
         }
 

@@ -9,6 +9,14 @@ import com.aesophor.medievania.event.screen.GameResumedEvent;
 import com.aesophor.medievania.event.screen.MainGameScreenResizeEvent;
 import com.aesophor.medievania.map.WorldContactListener;
 import com.aesophor.medievania.system.*;
+import com.aesophor.medievania.system.box2d.B2DebugRendererSystem;
+import com.aesophor.medievania.system.box2d.B2LightsSystem;
+import com.aesophor.medievania.system.box2d.PhysicsSystem;
+import com.aesophor.medievania.system.graphics.AnimatedSpriteRendererSystem;
+import com.aesophor.medievania.system.graphics.BodyRendererSystem;
+import com.aesophor.medievania.system.graphics.EquipmentRendererSystem;
+import com.aesophor.medievania.system.graphics.StaticSpriteRendererSystem;
+import com.aesophor.medievania.system.ui.*;
 import com.aesophor.medievania.ui.*;
 import com.aesophor.medievania.ui.hud.HUD;
 import com.aesophor.medievania.ui.pausemenu.PauseMenu;
@@ -59,7 +67,8 @@ public class MainGameScreen extends AbstractScreen {
         // Tasks are independently spread into different systems/layers and can be added/removed on demand.
         engine.addSystem(new PhysicsSystem(world));
         engine.addSystem(new TiledMapRendererSystem((OrthographicCamera) getCamera()));     // Renders TiledMap textures.
-        engine.addSystem(new CharacterRendererSystem(getBatch(), getCamera(), world));      // Renders player / npc entities.
+        engine.addSystem(new BodyRendererSystem(getBatch(), getCamera(), world));           // Renders bodies of all characters.
+        engine.addSystem(new EquipmentRendererSystem(getBatch(), getCamera(), world));      // Renders equipment of all characters.
         engine.addSystem(new AnimatedSpriteRendererSystem(engine, gsm.getAssets(), getBatch(), getCamera())); // Renders dust entities.
         engine.addSystem(new StaticSpriteRendererSystem(getBatch(), getCamera(), world));   // Renders item entities
         engine.addSystem(new B2DebugRendererSystem(world, getCamera()));                    // Renders physics debug profiles.

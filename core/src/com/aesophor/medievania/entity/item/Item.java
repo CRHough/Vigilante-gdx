@@ -3,7 +3,7 @@ package com.aesophor.medievania.entity.item;
 import com.aesophor.medievania.component.character.CharacterAnimationComponent;
 import com.aesophor.medievania.component.character.State;
 import com.aesophor.medievania.component.equipment.EquipmentDataComponent;
-import com.aesophor.medievania.component.graphics.AnimationComponent;
+import com.aesophor.medievania.component.graphics.IconComponent;
 import com.aesophor.medievania.component.graphics.SpriteComponent;
 import com.aesophor.medievania.component.item.ItemDataComponent;
 import com.aesophor.medievania.component.item.ItemType;
@@ -17,7 +17,6 @@ import com.aesophor.medievania.util.Utils;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -28,32 +27,38 @@ import java.util.Arrays;
 
 public class Item extends Entity implements Disposable {
 
-    protected static final int itemWidth = 16;
-    protected static final int itemHeight = 16;
+    private static final int itemWidth = 16;
+    private static final int itemHeight = 16;
 
-    protected final AssetManager assets;
+    private final AssetManager assets;
 
-    protected final ItemDataComponent itemData;
-    protected final SpriteComponent sprite;
-    protected final B2BodyComponent b2body;
-    protected final SoundComponent sounds;
-    protected final ItemType type;
+    private final ItemType type;
+    private final ItemDataComponent itemData;
+    private final IconComponent icon;
+    private final B2BodyComponent b2body;
+    private final SoundComponent sounds;
 
     public Item(String itemName, AssetManager assets, World world, Float x, Float y) {
         this.assets = assets;
 
         itemData = ItemDataManager.getInstance().get(itemName);
-        sprite = new SpriteComponent(assets.get(itemData.getImage()), x * Constants.PPM, y * Constants.PPM);
+        icon = new IconComponent(assets.get(itemData.getImage()), x * Constants.PPM, y * Constants.PPM);
         b2body = new B2BodyComponent(world);
         sounds = new SoundComponent();
         type = itemData.getType();
 
         add(itemData);
+        add(icon);
+        add(b2body);
+        add(sounds);
 
+        // If this item is an equipment, then it should have animations for characters which
+        // will be layered atop character's body sprite.
         if (type == ItemType.EQUIP) {
             EquipmentDataComponent equipmentData = EquipmentDataManager.getInstance().get(itemName);
             add(equipmentData);
 
+            // Animation overlay
             CharacterAnimationComponent animations = new CharacterAnimationComponent();
 
             TextureAtlas atlas = assets.get(equipmentData.getAtlas());
@@ -62,30 +67,33 @@ public class Item extends Entity implements Disposable {
             });
 
             add(animations);
+
+            SpriteComponent sprite = new SpriteComponent();
+            add(sprite);
+
+            sprite.setBounds(0, 0, 105f / Constants.PPM, 105f / Constants.PPM);
         }
 
-        add(sprite);
-        add(b2body);
-        add(sounds);
+        constructIconBody();
 
-        constructBody();
-        sprite.setBounds(0, 0, itemWidth / Constants.PPM, itemHeight / Constants.PPM);
+        // Separate icon sprite and overlay sprite. (rename this motherfucker)
+        icon.setBounds(0, 0, itemWidth / Constants.PPM, itemHeight / Constants.PPM);
     }
 
 
-    public void reloadTexture() {
-        sprite.setTexture(assets.get(itemData.getImage()));
+    public void reloadIconTexture() {
+        icon.setTexture(assets.get(itemData.getImage()));
     }
 
-    public void constructBody() {
+    public void constructIconBody() {
         short bodyCategoryBits = CategoryBits.ITEM;
         short bodyMaskBits = CategoryBits.GROUND | CategoryBits.PLATFORM;
         defineBody(bodyCategoryBits, bodyMaskBits);
     }
 
-    protected void defineBody(short bodyCategoryBits, short bodyMaskBits) {
+    private void defineBody(short bodyCategoryBits, short bodyMaskBits) {
         Body body = b2body.getBodyBuilder().type(BodyDef.BodyType.DynamicBody)
-                .position(sprite.getX(), sprite.getY(), Constants.PPM)
+                .position(icon.getX(), icon.getY(), Constants.PPM)
                 .buildBody();
 
         b2body.setBody(body);
@@ -97,7 +105,7 @@ public class Item extends Entity implements Disposable {
      * @param categoryBits category bits of body fixture.
      * @param maskBits defines which objects the body fixture can collide with.
      */
-    protected void createBodyFixture(short categoryBits, short maskBits) {
+    private void createBodyFixture(short categoryBits, short maskBits) {
         Fixture bodyFixture = b2body.getBodyBuilder().newRectangleFixture(b2body.getBody().getPosition(), itemWidth / 2, itemHeight / 2, Constants.PPM)
                 .categoryBits(categoryBits)
                 .maskBits((short) (maskBits | CategoryBits.PLAYER))

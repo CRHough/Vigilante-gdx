@@ -5,7 +5,6 @@ import com.aesophor.medievania.entity.item.Item;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -47,8 +46,8 @@ public class Slot extends Table {
     public void update(Item item) {
         // Update item icon.
         if (item != null) {
-            Texture texture = Mappers.SPRITE.get(item).getTexture();
-            item.reloadTexture();
+            Texture texture = Mappers.ICON.get(item).getTexture();
+            item.reloadIconTexture();
             itemIconImage.setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
         } else {
             itemIconImage.setDrawable(null);

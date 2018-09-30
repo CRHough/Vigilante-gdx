@@ -29,12 +29,12 @@
       },
       "WEAPON_UNSHEATHING": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 15.0,
+        "frameDuration": 13.0,
         "frameEndCount": 5
       },
       "WEAPON_SHEATHING": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 15.0,
+        "frameDuration": 13.0,
         "frameEndCount": 5
       },
       "JUMPING": {

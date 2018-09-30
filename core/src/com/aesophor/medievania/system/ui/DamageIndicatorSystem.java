@@ -1,4 +1,4 @@
-package com.aesophor.medievania.system;
+package com.aesophor.medievania.system.ui;
 
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;

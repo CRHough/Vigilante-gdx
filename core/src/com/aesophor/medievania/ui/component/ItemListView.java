@@ -36,7 +36,7 @@ public class ItemListView extends ScrollPane {
             this.highlightedItemImage = new Image(highlightedItemTexture);
 
             this.item = item;
-            this.icon = new Image((item != null) ? Mappers.SPRITE.get(item) : new Sprite(emptyItemIconTexture));
+            this.icon = new Image((item != null) ? Mappers.ICON.get(item) : new Sprite(emptyItemIconTexture));
             this.name = new Label(((item != null) ? Mappers.ITEM_DATA.get(item).getName() : EMPTY_ITEM_TEXT), labelStyle);
 
             HorizontalGroup group = new HorizontalGroup();
