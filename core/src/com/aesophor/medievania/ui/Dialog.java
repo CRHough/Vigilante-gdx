@@ -3,11 +3,11 @@ package com.aesophor.medievania.ui;
 public class Dialog {
 
     private final String speakerName;
-    private final String message;
+    private final String dialog;
 
-    public Dialog(String speakerName, String message) {
+    public Dialog(String speakerName, String dialog) {
         this.speakerName = speakerName;
-        this.message = message;
+        this.dialog = dialog;
     }
 
 
@@ -15,8 +15,8 @@ public class Dialog {
         return speakerName;
     }
 
-    public String getMessage() {
-        return message;
+    public String getDialog() {
+        return dialog;
     }
 
 }

@@ -83,7 +83,7 @@ public class MainGameScreen extends AbstractScreen {
         engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorManager));    // Renders damage indicators.
         engine.addSystem(new NotificationSystem(getBatch(), notificationManager));          // Renders Notifications.
         engine.addSystem(new HUDSystem(getBatch(), hud));                                   // Renders heads up display.
-        engine.addSystem(new MessageBoxSystem(getBatch(), dialogBox));                      // Renders DialogBox (dialogues).
+        engine.addSystem(new DialogSystem(this, getBatch(), dialogBox));       // Renders DialogBox (dialogues).
         engine.addSystem(new PauseMenuSystem(getBatch(), pauseMenu));                       // Pause Menu.
         engine.addSystem(new ScreenFadeSystem(getBatch()));                                 // Renders screen fade effects.
 
@@ -95,7 +95,7 @@ public class MainGameScreen extends AbstractScreen {
 
         engine.getSystem(B2DebugRendererSystem.class).setProcessing(false);
         engine.getSystem(PauseMenuSystem.class).setProcessing(false);
-        //engine.getSystem(MessageBoxSystem.class).setProcessing(false);
+        //engine.getSystem(DialogSystem.class).setProcessing(false);
 
         pauseSound = gsm.getAssets().get(GameAssetManager.OPEN_CLOSE_SOUND);
 
@@ -146,15 +146,9 @@ public class MainGameScreen extends AbstractScreen {
     public void pause() {
         super.pause();
 
+        freeze();
         EntitySystem pauseMenuSys = engine.getSystem(PauseMenuSystem.class);
-        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
-        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
-        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
-
         pauseMenuSys.setProcessing(true);
-        aiSys.setProcessing(false);
-        playerControlSys.setProcessing(false);
-        physicsSys.setProcessing(false);
 
         GameEventManager.getInstance().fireEvent(new GamePausedEvent());
         pauseSound.play();
@@ -164,15 +158,9 @@ public class MainGameScreen extends AbstractScreen {
     public void resume() {
         super.resume();
 
+        unfreeze();
         EntitySystem pauseMenuSys = engine.getSystem(PauseMenuSystem.class);
-        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
-        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
-        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
-
         pauseMenuSys.setProcessing(false);
-        aiSys.setProcessing(true);
-        playerControlSys.setProcessing(true);
-        physicsSys.setProcessing(true);
 
         GameEventManager.getInstance().fireEvent(new GameResumedEvent());
         pauseSound.play();
@@ -187,6 +175,28 @@ public class MainGameScreen extends AbstractScreen {
         world.dispose();
         player.dispose();
         //npcs.forEach((Character c) -> c.dispose());
+    }
+
+
+    // TODO: Better method naming...?
+    public void freeze() {
+        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
+        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
+        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
+
+        aiSys.setProcessing(false);
+        playerControlSys.setProcessing(false);
+        physicsSys.setProcessing(false);
+    }
+
+    public void unfreeze() {
+        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
+        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
+        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
+
+        aiSys.setProcessing(true);
+        playerControlSys.setProcessing(true);
+        physicsSys.setProcessing(true);
     }
 
 }

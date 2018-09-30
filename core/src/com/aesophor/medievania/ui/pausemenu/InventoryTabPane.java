@@ -11,7 +11,7 @@ import com.aesophor.medievania.event.GameEventListener;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.GameEventType;
 import com.aesophor.medievania.event.character.InventoryChangedEvent;
-import com.aesophor.medievania.event.ui.DialogOptionEvent;
+import com.aesophor.medievania.event.ui.MenuDialogOptionEvent;
 import com.aesophor.medievania.event.ui.InventoryItemChangedEvent;
 import com.aesophor.medievania.event.ui.InventoryTabChangedEvent;
 import com.aesophor.medievania.ui.component.InventoryTabs;
@@ -37,7 +37,7 @@ public class InventoryTabPane extends Pane {
     private boolean isEquipmentSelector;
     private EquipmentType selectingEquipmentType;
 
-    private final GameEventListener<DialogOptionEvent> promptDiscardItemEvLstnr;
+    private final GameEventListener<MenuDialogOptionEvent> promptDiscardItemEvLstnr;
 
     public InventoryTabPane(AssetManager assets, Player player, MenuDialog menuDialog, float x, float y, float width, float height) {
         super(assets, player, menuDialog, x, y);
@@ -60,8 +60,8 @@ public class InventoryTabPane extends Pane {
         itemListView.populate(Mappers.INVENTORY.get(player), ItemType.EQUIP);
 
 
-        promptDiscardItemEvLstnr = (DialogOptionEvent e) -> {
-            menuDialog.show("Do you want to discard this item?", "Yes", "No", (DialogOptionEvent discardItem) -> {
+        promptDiscardItemEvLstnr = (MenuDialogOptionEvent e) -> {
+            menuDialog.show("Do you want to discard this item?", "Yes", "No", (MenuDialogOptionEvent discardItem) -> {
                 Item selectedItem = itemListView.getSelectedItem();
                 player.discard(selectedItem);
             }, null);
@@ -127,7 +127,7 @@ public class InventoryTabPane extends Pane {
                 if (itemListView.getSelectedItem() != null) {
                     switch (itemListView.getSelectedItem().getType()) {
                         case EQUIP:
-                            menuDialog.show("", "Equip", "Discard", (DialogOptionEvent equipItem) -> {
+                            menuDialog.show("", "Equip", "Discard", (MenuDialogOptionEvent equipItem) -> {
                                 Item selectedItem = itemListView.getSelectedItem();
                                 player.equip(selectedItem);
                             }, promptDiscardItemEvLstnr);

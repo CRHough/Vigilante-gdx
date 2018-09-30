@@ -2,7 +2,7 @@ package com.aesophor.medievania.ui.pausemenu;
 
 import com.aesophor.medievania.GameAssetManager;
 import com.aesophor.medievania.event.GameEventListener;
-import com.aesophor.medievania.event.ui.DialogOptionEvent;
+import com.aesophor.medievania.event.ui.MenuDialogOptionEvent;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -19,13 +19,13 @@ public class MenuDialog extends Pane {
 
         private final Image image;
         private final Label text;
-        private GameEventListener<DialogOptionEvent> optionEvLstnr;
+        private GameEventListener<MenuDialogOptionEvent> optionEvLstnr;
 
         public DialogOption(Texture texture, String text) {
             this(texture, text, null);
         }
 
-        public DialogOption(Texture texture, String text, GameEventListener<DialogOptionEvent> optionEvLstnr) {
+        public DialogOption(Texture texture, String text, GameEventListener<MenuDialogOptionEvent> optionEvLstnr) {
             this.image = new Image(texture);
             this.text = new Label(text, LabelStyles.WHITE_REGULAR);
             this.optionEvLstnr = optionEvLstnr;
@@ -38,11 +38,11 @@ public class MenuDialog extends Pane {
         }
 
 
-        public GameEventListener<DialogOptionEvent> getOptionEvLstnr() {
+        public GameEventListener<MenuDialogOptionEvent> getOptionEvLstnr() {
             return optionEvLstnr;
         }
 
-        public void setOptionEvLstnr(GameEventListener<DialogOptionEvent> optionEvLstnr) {
+        public void setOptionEvLstnr(GameEventListener<MenuDialogOptionEvent> optionEvLstnr) {
             this.optionEvLstnr = optionEvLstnr;
         }
 
@@ -84,7 +84,7 @@ public class MenuDialog extends Pane {
     }
 
 
-    public void show(String message, String option1, String option2, GameEventListener<DialogOptionEvent> option1EvLstnr, GameEventListener<DialogOptionEvent> option2EvLstnr) {
+    public void show(String message, String option1, String option2, GameEventListener<MenuDialogOptionEvent> option1EvLstnr, GameEventListener<MenuDialogOptionEvent> option2EvLstnr) {
         this.message.setText(message);
         this.options.get(0).setText(option1);
         this.options.get(1).setText(option2);
@@ -114,11 +114,11 @@ public class MenuDialog extends Pane {
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
             setVisible(false);
 
-            // Handle the GameEventListener<DialogOptionEvent> here.
-            GameEventListener<DialogOptionEvent> selectedOptionEvLstnr = getSelectedItem().getOptionEvLstnr();
+            // Handle the GameEventListener<MenuDialogOptionEvent> here.
+            GameEventListener<MenuDialogOptionEvent> selectedOptionEvLstnr = getSelectedItem().getOptionEvLstnr();
 
             if (selectedOptionEvLstnr != null) {
-                selectedOptionEvLstnr.handle(new DialogOptionEvent() {});
+                selectedOptionEvLstnr.handle(new MenuDialogOptionEvent() {});
             }
 
         } else if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
