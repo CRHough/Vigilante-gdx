@@ -102,15 +102,6 @@ public class ItemListView extends ScrollPane {
 
 
     /**
-     * Inserts an empty item.
-     * @return this ItemListView instance.
-     */
-    public ItemListView insertEmptyItem() {
-        add(null);
-        return this;
-    }
-
-    /**
      * Populates the list view with the specified type of items from the specified inventory.
      * @param inventory target inventory to display.
      * @param type type of items to display.
@@ -149,11 +140,21 @@ public class ItemListView extends ScrollPane {
     }
 
     /**
-     * Clears the list view.
+     * Inserts an empty item.
+     * @return this ItemListView instance.
      */
-    public void clear() {
-        contentTable.clearChildren();
-        items.clear();
+    public ItemListView insertEmptyItem() {
+        add(null);
+        return this;
+    }
+
+    /**
+     * Inserts the specified item.
+     * @return this ItemListView instance.
+     */
+    public ItemListView insertItem(Item item) {
+        add(item);
+        return this;
     }
 
     /**
@@ -167,6 +168,14 @@ public class ItemListView extends ScrollPane {
 
         currentItemIdx = 0;
         items.first().setSelected(true);
+    }
+
+    /**
+     * Clears the list view.
+     */
+    public void clear() {
+        contentTable.clearChildren();
+        items.clear();
     }
 
     /**

@@ -28,7 +28,7 @@ public class CharacterDataManager {
      */
     public void load(String filename) {
         enemyDataComponents = JSON.fromJson(HashMap.class, CharacterDataComponent.class, Gdx.files.internal(filename).readString());
-        Gdx.app.log("CharacterDataManager", "finished loading" + filename);
+        Gdx.app.log("INFO", "Character data has finished loading" + filename);
     }
 
     /**

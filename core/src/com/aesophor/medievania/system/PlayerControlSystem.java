@@ -32,7 +32,11 @@ public class PlayerControlSystem extends IteratingSystem {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.CONTROL_LEFT)) {
-            player.swingWeapon();
+            if (!state.isSheathed()) {
+                player.swingWeapon();
+            } else {
+                player.unsheathWeapon();
+            }
         }
 
         if (state.isCrouching() && !Gdx.input.isKeyPressed(Input.Keys.DOWN)) {

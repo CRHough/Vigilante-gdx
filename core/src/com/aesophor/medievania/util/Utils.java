@@ -61,8 +61,8 @@ public class Utils {
         CharacterDataComponent.AnimationData animationData = characterData.getAnimationData().get(animationName);
 
         float frameDuration = animationData.getFrameDuration();
-        int firstFrameCount = animationData.getFrameStartCount();
-        int lastFrameCount = animationData.getFrameEndCount();
+        int firstFrameCount = animationData.getFirstFrameCount();
+        int lastFrameCount = animationData.getLastFrameCount();
         int frameWidth = characterData.getFrameWidth();
         int frameHeight = characterData.getFrameHeight();
 

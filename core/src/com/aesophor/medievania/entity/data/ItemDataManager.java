@@ -28,7 +28,7 @@ public class ItemDataManager {
      */
     public void load(String filename) {
         itemDataComponents = JSON.fromJson(HashMap.class, ItemDataComponent.class, Gdx.files.internal(filename).readString());
-        Gdx.app.log("ItemDataManager", "finished loading" + filename);
+        Gdx.app.log("INFO", "Item data has finished loading" + filename);
     }
 
     /**

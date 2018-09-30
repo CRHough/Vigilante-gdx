@@ -28,7 +28,7 @@ public class EquipmentDataManager {
      */
     public void load(String filename) {
         equipmentDataComponents = JSON.fromJson(HashMap.class, EquipmentDataComponent.class, Gdx.files.internal(filename).readString());
-        Gdx.app.log("EquipmentDataManager", "finished loading" + filename);
+        Gdx.app.log("INFO", "Equipment data has finished loading" + filename);
     }
 
     /**

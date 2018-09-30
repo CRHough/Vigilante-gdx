@@ -30,6 +30,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 
 public class MainGameScreen extends AbstractScreen {
 
@@ -56,12 +57,12 @@ public class MainGameScreen extends AbstractScreen {
         world.setContactListener(new WorldContactListener(engine, gsm.getAssets()));
         player = new Player(gsm.getAssets(), world, 0.3f, 1f);
 
-        // Initialize damage indicators and notificationFactory area.
+        // Initialize damage indicators and notificationManager area.
         HUD hud = new HUD(gsm.getAssets(), gsm.getBatch());
-        MessageBox messageBox = new MessageBox(gsm);
+        DialogBox dialogBox = new DialogBox(gsm);
         PauseMenu pauseMenu = new PauseMenu(gsm, player);
-        DamageIndicatorFactory damageIndicatorFactory = new DamageIndicatorFactory(getBatch(), Font.REGULAR, getCamera(), 1.2f);
-        NotificationFactory notificationFactory = new NotificationFactory(getBatch(), Font.REGULAR, 6, 4f);
+        DamageIndicatorManager damageIndicatorManager = new DamageIndicatorManager(getBatch(), Font.REGULAR, getCamera(), 1.2f);
+        NotificationManager notificationManager = new NotificationManager(getBatch(), Font.REGULAR, 6, 4f);
 
         // Here I employ Entity-Component-System because it makes the layout of my code cleaner.
         // Tasks are independently spread into different systems/layers and can be added/removed on demand.
@@ -79,10 +80,10 @@ public class MainGameScreen extends AbstractScreen {
         engine.addSystem(new StatsRegenerationSystem());                                    // Stats regeneration (health...etc)
         engine.addSystem(new EnemyAISystem());                                              // Handles NPC behaviors.
         engine.addSystem(new GameMapManagementSystem(engine, gsm.getAssets(), world));      // Used to set current GameMap.
-        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorFactory));    // Renders damage indicators.
-        engine.addSystem(new NotificationSystem(getBatch(), notificationFactory));          // Renders Notifications.
+        engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorManager));    // Renders damage indicators.
+        engine.addSystem(new NotificationSystem(getBatch(), notificationManager));          // Renders Notifications.
         engine.addSystem(new HUDSystem(getBatch(), hud));                                   // Renders heads up display.
-        engine.addSystem(new MessageBoxSystem(getBatch(), messageBox));                     // Renders MessageBox (dialogues).
+        engine.addSystem(new MessageBoxSystem(getBatch(), dialogBox));                      // Renders DialogBox (dialogues).
         engine.addSystem(new PauseMenuSystem(getBatch(), pauseMenu));                       // Pause Menu.
         engine.addSystem(new ScreenFadeSystem(getBatch()));                                 // Renders screen fade effects.
 
@@ -92,10 +93,16 @@ public class MainGameScreen extends AbstractScreen {
         engine.getSystem(GameMapManagementSystem.class).registerPlayer(player);
         engine.getSystem(HUDSystem.class).registerPlayer(player);
 
+        engine.getSystem(B2DebugRendererSystem.class).setProcessing(false);
         engine.getSystem(PauseMenuSystem.class).setProcessing(false);
-        engine.getSystem(MessageBoxSystem.class).setProcessing(false);
+        //engine.getSystem(MessageBoxSystem.class).setProcessing(false);
 
         pauseSound = gsm.getAssets().get(GameAssetManager.OPEN_CLOSE_SOUND);
+
+        Array<Dialog> dialogs = new Array<>();
+        dialogs.add(new Dialog("Castle Guard", "How dare you trespass here!"));
+        dialogs.add(new Dialog("Aesophor", "Get out of my way..."));
+        dialogBox.show(dialogs);
     }
 
 
@@ -127,7 +134,7 @@ public class MainGameScreen extends AbstractScreen {
     public void resize(int width, int height) {
         super.resize(width, height);
 
-        // Fire a screen-resize event to update the viewport of DamageIndicatorFactory and RayHandler.
+        // Fire a screen-resize event to update the viewport of DamageIndicatorManager and RayHandler.
         int viewportX = getViewport().getScreenX();
         int viewportY = getViewport().getScreenY();
         int viewportWidth = getViewport().getScreenWidth();

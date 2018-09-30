@@ -10,77 +10,77 @@
       "IDLE_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 11.0,
-        "frameEndCount": 5
+        "lastFrameCount": 5
       },
       "IDLE_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 11.0,
-        "frameEndCount": 5
+        "lastFrameCount": 5
       },
       "RUNNING_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 8.5,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "RUNNING_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 8.5,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "WEAPON_UNSHEATHING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 13.0,
-        "frameEndCount": 5
+        "lastFrameCount": 5
       },
       "WEAPON_SHEATHING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 13.0,
-        "frameEndCount": 5
+        "lastFrameCount": 5
       },
       "JUMPING_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
-        "frameEndCount": 4
+        "lastFrameCount": 4
       },
       "JUMPING_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
-        "frameEndCount": 4
+        "lastFrameCount": 4
       },
       "FALLING_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
-        "frameEndCount": 0
+        "lastFrameCount": 0
       },
       "FALLING_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
-        "frameEndCount": 0
+        "lastFrameCount": 0
       },
       "CROUCHING_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
-        "frameEndCount": 1
+        "lastFrameCount": 1
       },
       "CROUCHING_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
-        "frameEndCount": 1
+        "lastFrameCount": 1
       },
       "ATTACKING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.5,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "SKILL": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
-        "frameEndCount": 0
+        "lastFrameCount": 0
       },
       "KILLED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
-        "frameEndCount": 5
+        "lastFrameCount": 5
       }
     },
     "soundData": {
@@ -132,77 +132,77 @@
       "IDLE_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
-        "frameEndCount": 3
+        "lastFrameCount": 3
       },
       "IDLE_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
-        "frameEndCount": 3
+        "lastFrameCount": 3
       },
       "RUNNING_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 12.0,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "RUNNING_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 12.0,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "WEAPON_UNSHEATHING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 8.5,
-        "frameEndCount": 5
+        "lastFrameCount": 5
       },
       "WEAPON_SHEATHING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 8.5,
-        "frameEndCount": 5
+        "lastFrameCount": 5
       },
       "JUMPING_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "JUMPING_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "FALLING_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "FALLING_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "CROUCHING_SHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "CROUCHING_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
-        "frameEndCount": 7
+        "lastFrameCount": 7
       },
       "ATTACKING": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 12.0,
-        "frameEndCount": 9
+        "lastFrameCount": 9
       },
       "SKILL": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
-        "frameEndCount": 5
+        "lastFrameCount": 5
       },
       "KILLED": {
         "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 16.0,
-        "frameEndCount": 8
+        "lastFrameCount": 8
       }
     },
     "soundData": {
@@ -231,7 +231,7 @@
       "movementSpeed": 0.15,
       "jumpHeight": 3.5,
       "attackForce": 1.2,
-      "attackTime": 2.4,
+      "attackTime": 1.2,
       "attackRange": 14,
       "basePhysicalDamage": 10
     },

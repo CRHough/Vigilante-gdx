@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class DamageIndicatorFactory extends Stage {
+public class DamageIndicatorManager extends Stage {
 
     private static final float DELTA_X = 0f;
     private static final float DELTA_Y = 10f;
@@ -34,7 +34,7 @@ public class DamageIndicatorFactory extends Stage {
     private float damageTextLifetime;
     private Map<Character, Array<DamageIndicator>> damageIndicators;
 
-    public DamageIndicatorFactory(Batch batch, BitmapFont font, Camera gameScreenCamera, float damageIndicatorLifetime) {
+    public DamageIndicatorManager(Batch batch, BitmapFont font, Camera gameScreenCamera, float damageIndicatorLifetime) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), batch);
 
         this.font = font;

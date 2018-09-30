@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Medievania";
 		config.width = 1280;
-		config.height = 800;
+		config.height = 700;
 		//config.fullscreen = true;
 		new LwjglApplication(new Medievania(), config);
 	}

@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class NotificationFactory extends Stage {
+public class NotificationManager extends Stage {
 
     private static final float NOTIFICATION_STARTING_X = 10f;
     private static final float NOTIFICATION_STARTING_Y = 0f;
@@ -26,7 +26,7 @@ public class NotificationFactory extends Stage {
     private int notificationQueueSize;
     private float notificationLifetime;
 
-    public NotificationFactory(Batch batch, BitmapFont font, int notificationQueueSize, float notificationLifetime) {
+    public NotificationManager(Batch batch, BitmapFont font, int notificationQueueSize, float notificationLifetime) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), batch);
 
         this.font = font;
@@ -35,6 +35,10 @@ public class NotificationFactory extends Stage {
     }
 
 
+    /**
+     * Shows a notification.
+     * @param content notification content.
+     */
     public void show(String content) {
         // If the number of notifications being displayed has surpassed notificationQueueSize,
         // then remove the earliest notification.
@@ -51,6 +55,18 @@ public class NotificationFactory extends Stage {
         Notification notification = new Notification(content, new Label.LabelStyle(font, Color.WHITE), notificationLifetime);
         notification.setPosition(NOTIFICATION_STARTING_X, NOTIFICATION_STARTING_Y);
         notification.addAction(Actions.moveBy(DELTA_X, DELTA_Y, MOVE_UP_DURATION));
+        addActor(notification);
+    }
+
+    /**
+     * Shows a notificatiion as a hint at the upper center of the screen.
+     * @param content notification/hint content.
+     */
+    public void showAsHint(String content) {
+        // TODO: Show as hint is still buggy...
+        // Display the new notification.
+        Notification notification = new Notification(content, new Label.LabelStyle(font, Color.WHITE), notificationLifetime);
+        notification.setPosition(getWidth() / 2 - notification.getWidth() / 2, getHeight() / 2 + 50);
         addActor(notification);
     }
 

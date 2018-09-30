@@ -6,19 +6,19 @@ import java.util.HashMap;
 
 public class CharacterDataComponent implements Component {
 
-    public static class AnimationData {
+    static public class AnimationData {
         private float frameDuration;
-        private int frameStartCount;
-        private int frameEndCount;
+        private int firstFrameCount;
+        private int lastFrameCount;
 
         public float getFrameDuration() {
             return frameDuration;
         }
-        public int getFrameStartCount() {
-            return frameStartCount;
+        public int getFirstFrameCount() {
+            return firstFrameCount;
         }
-        public int getFrameEndCount() {
-            return frameEndCount;
+        public int getLastFrameCount() {
+            return lastFrameCount;
         }
     }
 

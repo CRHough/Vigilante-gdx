@@ -28,7 +28,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Timer;
-
 import java.util.Arrays;
 
 public abstract class Character extends Entity implements Disposable {
@@ -173,8 +172,8 @@ public abstract class Character extends Entity implements Disposable {
         CharacterAnimationsComponent equipmentAnimations = Mappers.CHARACTER_ANIMATIONS.get(item);
         EquipmentDataComponent equipmentData = Mappers.EQUIPMENT_DATA.get(item);
         CharacterDataComponent characterData = Mappers.CHARACTER_DATA.get(this);
-        TextureAtlas atlas = assets.get(equipmentData.getAtlas());
 
+        TextureAtlas atlas = assets.get(equipmentData.getAtlas());
         Arrays.stream(CharacterState.values()).forEach((s -> {
             equipmentAnimations.put(s, Utils.createAnimation(atlas, characterData, s.name(), Constants.PPM));
         }));

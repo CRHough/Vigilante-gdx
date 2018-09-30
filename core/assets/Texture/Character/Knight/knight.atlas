@@ -17,42 +17,91 @@ KILLED
   orig: 378, 42
   offset: 0, 0
   index: -1
-RUNNING
+RUNNING_UNSHEATHED
   rotate: false
   xy: 381, 1
   size: 336, 42
   orig: 336, 42
   offset: 0, 0
   index: -1
-JUMPING
+CROUCHING_SHEATHED
   rotate: false
   xy: 381, 1
   size: 336, 42
   orig: 336, 42
   offset: 0, 0
   index: -1
-FALLING
+CROUCHING_UNSHEATHED
   rotate: false
   xy: 381, 1
   size: 336, 42
   orig: 336, 42
   offset: 0, 0
   index: -1
-CROUCHING
+JUMPING_SHEATHED
   rotate: false
   xy: 381, 1
   size: 336, 42
   orig: 336, 42
   offset: 0, 0
   index: -1
-IDLE
+FALLING_UNSHEATHED
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+RUNNING_SHEATHED
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+WEAPON_UNSHEATHING
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+JUMPING_UNSHEATHED
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+SKILL
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+FALLING_SHEATHED
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+WEAPON_SHEATHING
+  rotate: false
+  xy: 381, 1
+  size: 336, 42
+  orig: 336, 42
+  offset: 0, 0
+  index: -1
+IDLE_SHEATHED
   rotate: false
   xy: 423, 45
   size: 168, 42
   orig: 168, 42
   offset: 0, 0
   index: -1
-SKILL
+IDLE_UNSHEATHED
   rotate: false
   xy: 423, 45
   size: 168, 42

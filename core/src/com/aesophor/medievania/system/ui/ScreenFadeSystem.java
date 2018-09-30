@@ -21,7 +21,7 @@ public class ScreenFadeSystem extends EntitySystem {
         this.batch = batch;
         this.shade = new Shade(batch);
 
-        // Update shade size to make fade in/out cover entire GameMap, and then fade in and out.
+        // Fade in/out effects during map transitions.
         GameEventManager.getInstance().addEventListener(GameEventType.PORTAL_USED, (PortalUsedEvent e) -> {
             shade.addAction(Actions.fadeIn(FADEIN_DURATION));
         });
