@@ -1,7 +1,7 @@
 {
   "Player": {
     "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
-    "atlas": "Texture/Character/bandit/Bandit.pack",
+    "atlas": "Texture/Character/Player/player.atlas",
     "textureOffsetX": 0.0,
     "textureOffsetY": 4.0,
     "frameWidth": 80,
@@ -123,7 +123,7 @@
 
   "Castle Guard": {
     "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
-    "atlas": "Texture/Character/knight/Knight.pack",
+    "atlas": "Texture/Character/Knight/knight.atlas",
     "textureOffsetX": 0.0,
     "textureOffsetY": 0.0,
     "frameWidth": 42,

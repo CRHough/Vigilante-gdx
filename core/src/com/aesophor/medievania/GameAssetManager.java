@@ -20,20 +20,18 @@ public class GameAssetManager extends AssetManager {
     public static final String REGULAR_FONT = "Font/HeartbitXX2Px.ttf";
 
     public static final String MAIN_MENU_BG = "Texture/UI/mainmenu_bg.png";
-    public static final String PAUSE_MENU_BG = "Texture/UI/pause.png";
     public static final String MESSAGE_BOX_BG = "Texture/UI/messagebox.png";
-    public static final String STATS_BG = "Texture/UI/stats_bg.png";
-    public static final String INVENTORY_BG = "Texture/UI/inventory_bg.png";
-    public static final String TRIANGLE = "Texture/UI/triangle.png";
 
-    public static final String TAB_REGULAR = "Texture/UI/tab_regular.png";
-    public static final String TAB_HIGHLIGHTED = "Texture/UI/tab_highlighted.png";
-
-    // Item
-    public static final String ITEM_REGULAR = "Texture/UI/item_regular.png";
-    public static final String ITEM_HIGHLIGHTED = "Texture/UI/item_highlighted.png";
-    public static final String EQUIPMENT_REGULAR = "Texture/UI/equipment_regular.png";
-    public static final String EQUIPMENT_HIGHLIGHTED = "Texture/UI/equipment_highlighted.png";
+    public static final String PAUSE_MENU_BG = "Texture/UI/PauseMenu/pause.png";
+    public static final String STATS_BG = "Texture/UI/PauseMenu/stats_bg.png";
+    public static final String INVENTORY_BG = "Texture/UI/PauseMenu/inventory_bg.png";
+    public static final String TRIANGLE = "Texture/UI/PauseMenu/triangle.png";
+    public static final String TAB_REGULAR = "Texture/UI/PauseMenu/tab_regular.png";
+    public static final String TAB_HIGHLIGHTED = "Texture/UI/PauseMenu/tab_highlighted.png";
+    public static final String ITEM_REGULAR = "Texture/UI/PauseMenu/item_regular.png";
+    public static final String ITEM_HIGHLIGHTED = "Texture/UI/PauseMenu/item_highlighted.png";
+    public static final String EQUIPMENT_REGULAR = "Texture/UI/PauseMenu/equipment_regular.png";
+    public static final String EQUIPMENT_HIGHLIGHTED = "Texture/UI/PauseMenu/equipment_highlighted.png";
 
     public static final String UI_CLICK_SOUND = "Sfx/UI/click.wav";
     public static final String OPEN_CLOSE_SOUND = "Sfx/Inventory/open_and_close.wav";
@@ -45,20 +43,19 @@ public class GameAssetManager extends AssetManager {
     public static final String ITEM_PICKEDUP_SOUND = "Sfx/Player/pickup_item.mp3";
     public static final String JUMP_SOUND = "Sfx/Player/jump.wav";
 
-
     public static final String MAIN_MENU_MUSIC = "Music/main_menu.wav";
     public static final String WATER_DRIPPING = "Sfx/Environment/water_dripping.mp3";
     public static final String VILLAGE_MUSIC = "Music/village01.mp3";
 
-    public static final String HUD_ATLAS = "Texture/UI/HUD/HUD.pack";
-    public static final String BANDIT_ATLAS = "Texture/Character/bandit/Bandit.pack";
-    public static final String KNIGHT_ATLAS = "Texture/Character/knight/Knight.pack";
-    public static final String RUSTY_AXE_ATLAS = "Texture/Item/RustyAxe/RustyAxe.pack";
+    public static final String HUD_ATLAS = "Texture/UI/HUD/hud.atlas";
+    public static final String BANDIT_ATLAS = "Texture/Character/Player/player.atlas";
+    public static final String KNIGHT_ATLAS = "Texture/Character/Knight/knight.atlas";
+    public static final String RUSTY_AXE_ATLAS = "Texture/Item/RustyAxe/rusty_axe.atlas";
 
     public static final String TEXTURE_DUST = "Texture/FX/dust.png";
     public static final String TEXTURE_BAT = "Texture/Skill/bat.png";
-    public static final String EMPTY_ITEM = "Texture/Item/empty.png";
-    public static final String TEXTURE_AXE = "Texture/Item/rusty_axe.png";
+    public static final String EMPTY_ITEM = "Texture/Item/Empty/icon.png";
+    public static final String TEXTURE_AXE = "Texture/Item/RustyAxe/icon.png";
 
 
     private final Map<String, Class<?>> assets;

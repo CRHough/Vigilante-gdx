@@ -1,7 +1,7 @@
 {
   "Rusty Axe": {
     "class": "com.aesophor.medievania.component.equipment.EquipmentDataComponent",
-    "atlas": "Texture/Item/RustyAxe/RustyAxe.pack",
+    "atlas": "Texture/Item/RustyAxe/rusty_axe.atlas",
     "type": 0,
     "bonusPhysicalDamage": 25,
     "bonusMagicalDamage": 0,

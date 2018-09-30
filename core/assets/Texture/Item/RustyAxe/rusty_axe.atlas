@@ -1,5 +1,5 @@
 
-Bandit.png
+rusty_axe.png
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -61,7 +61,7 @@ CROUCHING_SHEATHED
   index: -1
 CROUCHING_UNSHEATHED
   rotate: false
-  xy: 643, 493
+  xy: 805, 493
   size: 160, 80
   orig: 160, 80
   offset: 0, 0
@@ -73,16 +73,9 @@ FALLING_UNSHEATHED
   orig: 80, 80
   offset: 0, 0
   index: -1
-FALLING_SHEATHED
-  rotate: false
-  xy: 643, 411
-  size: 80, 80
-  orig: 80, 80
-  offset: 0, 0
-  index: -1
 SKILL
   rotate: false
-  xy: 805, 493
+  xy: 643, 329
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
@@ -106,5 +99,12 @@ IDLE_UNSHEATHED
   xy: 483, 83
   size: 480, 80
   orig: 480, 80
+  offset: 0, 0
+  index: -1
+FALLING_SHEATHED
+  rotate: false
+  xy: 725, 411
+  size: 80, 80
+  orig: 80, 80
   offset: 0, 0
   index: -1
