@@ -49,7 +49,7 @@ public class StateComponent implements Component {
         stateTimer += delta;
     }
 
-    public void resetTime() {
+    public void resetStateTimer() {
         stateTimer = 0;
     }
 

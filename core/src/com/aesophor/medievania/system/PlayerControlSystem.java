@@ -60,9 +60,13 @@ public class PlayerControlSystem extends IteratingSystem {
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.X)) {
                 player.batPower();
             } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                player.moveRight();
+                if (!Mappers.STATE.get(player).isSheathing() && !Mappers.STATE.get(player).isUnsheathing()) {
+                    player.moveRight();
+                }
             } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                player.moveLeft();
+                if (!Mappers.STATE.get(player).isSheathing() && !Mappers.STATE.get(player).isUnsheathing()) {
+                    player.moveLeft();
+                }
             } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 player.crouch();
             } else if (Gdx.input.isKeyJustPressed(Input.Keys.UP)) {

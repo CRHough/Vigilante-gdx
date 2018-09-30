@@ -65,7 +65,7 @@ public class CharacterRendererSystem extends IteratingSystem {
             // it means that the killedAnimation is not fully played.
             // So here we'll play it until it's finished.
             if (state.isSetToKill()) {
-                sprite.setRegion(getFrame(delta));
+                //sprite.setRegion(getFrame(delta));
 
                 // Set killed to true to prevent further rendering updates.
                 if (animations.get(State.KILLED).isAnimationFinished(state.getStateTimer())) {
@@ -73,24 +73,24 @@ public class CharacterRendererSystem extends IteratingSystem {
                     state.setKilled(true);
                 }
             } else {
-                sprite.setRegion(getFrame(delta));
+                //sprite.setRegion(getFrame(delta));
 
                 // Set attacking back to false, implying the attack has completed.
                 if (state.isAttacking() && state.getStateTimer() >= stats.getAttackTime()) {
                     state.setAttacking(false);
-                    state.resetTime();
+                    state.resetStateTimer();
                 }
 
-                if (state.isSheathing() && state.getStateTimer() >= 1.5f) {
-                    state.setSheathed(true);
+                if (state.isSheathing() && state.getStateTimer() >= .9f) {
+                    System.out.println("sheath finished: " + state.getStateTimer());
                     state.setSheathing(false);
-                    state.resetTime();
+                    state.setSheathed(true);
                 }
 
-                if (state.isUnsheathing() && state.getStateTimer() >= 1.5f) {
-                    state.setSheathed(false);
+                if (state.isUnsheathing() && state.getStateTimer() >= .9f) {
+                    System.out.println("unsheath finished: " + state.getStateTimer());
                     state.setUnsheathing(false);
-                    state.resetTime();
+                    state.setSheathed(false);
                 }
             }
 
@@ -104,6 +104,7 @@ public class CharacterRendererSystem extends IteratingSystem {
 
         sprite.setRegion(getFrame(delta));
         sprite.draw(batch);
+
 
         // Clean up this pile of dog shit......... =~=
         EquipmentSlotsComponent slots = Mappers.EQUIPMENT_SLOTS.get(entity);
@@ -236,7 +237,7 @@ public class CharacterRendererSystem extends IteratingSystem {
         }
 
         if (state.getCurrentState() != state.getPreviousState()) {
-            state.resetTime();
+            state.resetStateTimer();
         } else {
             state.update(delta);
         }

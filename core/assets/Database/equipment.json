@@ -9,62 +9,62 @@
     "frameData": {
       "IDLE_SHEATHED": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 22.0,
+        "frameDuration": 11.0,
         "frameEndCount": 5
       },
       "IDLE_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 22.0,
+        "frameDuration": 11.0,
         "frameEndCount": 5
       },
       "RUNNING_SHEATHED": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 17.0,
+        "frameDuration": 8.5,
         "frameEndCount": 7
       },
       "RUNNING_UNSHEATHED": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 17.0,
+        "frameDuration": 8.5,
         "frameEndCount": 7
       },
       "WEAPON_UNSHEATHING": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 30.0,
+        "frameDuration": 15.0,
         "frameEndCount": 5
       },
       "WEAPON_SHEATHING": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 30.0,
+        "frameDuration": 15.0,
         "frameEndCount": 5
       },
       "JUMPING": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 10.0,
+        "frameDuration": 5.0,
         "frameEndCount": 4
       },
       "FALLING": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 10.0,
+        "frameDuration": 5.0,
         "frameEndCount": 0
       },
       "CROUCHING": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 10.0,
+        "frameDuration": 5.0,
         "frameEndCount": 2
       },
       "ATTACKING": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 13.0,
-        "frameEndCount": 6
+        "frameDuration": 8.0,
+        "frameEndCount": 7
       },
       "SKILL": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 30.0,
+        "frameDuration": 15.0,
         "frameEndCount": 0
       },
       "KILLED": {
         "class": "com.aesophor.medievania.component.graphics.FrameData",
-        "frameDuration": 30.0,
+        "frameDuration": 15.0,
         "frameEndCount": 5
       }
     },
