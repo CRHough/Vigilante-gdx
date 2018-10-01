@@ -4,6 +4,8 @@ import com.aesophor.medievania.component.skill.SkillType;
 import com.aesophor.medievania.entity.skill.Skill;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,9 +16,9 @@ public class SkillComponent implements Component {
     public SkillComponent() {
         skills = new HashMap<>();
 
-        for (SkillType skillType : SkillType.values()) {
+        Arrays.stream(SkillType.values()).forEach(skillType -> {
             skills.put(skillType, new Array<>());
-        }
+        });
     }
 
 

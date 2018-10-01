@@ -2,6 +2,10 @@ package com.aesophor.medievania.component.character;
 
 import com.badlogic.ashley.core.Component;
 
+/**
+ * Contains the regeneration rate of health, stamina and magicka.
+ * This component can be added to any character to enable its stats regeneration.
+ */
 public class CharacterStatsRegenComponent implements Component {
 
     private static final float REGEN_INTERVAL = 3;

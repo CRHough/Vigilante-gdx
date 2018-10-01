@@ -42,9 +42,9 @@ public class EnemyAISystem extends IteratingSystem {
             // Is the target within melee attack range?
             if (targets.hasInRangeTarget()) {
                 // If yes, swing its weapon.
-                c.swingWeapon();
+                c.attack();
 
-                // If the target's heath reaches zero, unset lockedOnTarget and it will stop attacking.
+                // If the locked on target's heath reaches zero, unset lockedOnTarget and it will stop attacking.
                 if (targets.getLockedOnTarget().getComponent(CharacterStateComponent.class).isSetToKill()) {
                     if (targets.hasInRangeTarget()) {
                         targets.setLockedOnTarget(targets.getInRangeTargets().first());

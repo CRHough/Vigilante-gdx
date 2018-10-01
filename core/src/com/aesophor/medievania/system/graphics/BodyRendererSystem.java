@@ -59,6 +59,7 @@ public class BodyRendererSystem extends CharacterRendererSystem {
                     state.resetStateTimer();
                 }
 
+                // TODO: Serialize shealth/unshealth time.
                 if (state.isSheathing() && state.getStateTimer() >= .8f) {
                     state.setSheathing(false);
                     state.setSheathed(true);
@@ -70,12 +71,12 @@ public class BodyRendererSystem extends CharacterRendererSystem {
                 }
             }
 
-            float textureOffsetX = characterData.getTextureOffsetX();
-            float textureOffsetY = characterData.getTextureOffsetY();
+            float spriteOffsetX = characterData.getSpriteOffsetX();
+            float spriteOffsetY = characterData.getSpriteOffsetY();
 
-            float textureX = b2body.getBody().getPosition().x - sprite.getWidth() / 2 + (textureOffsetX / Constants.PPM);
-            float textureY = b2body.getBody().getPosition().y - sprite.getHeight() / 2 + (textureOffsetY / Constants.PPM);
-            sprite.setPosition(textureX, textureY);
+            float spriteX = b2body.getBody().getPosition().x - sprite.getWidth() / 2 + (spriteOffsetX / Constants.PPM);
+            float spriteY = b2body.getBody().getPosition().y - sprite.getHeight() / 2 + (spriteOffsetY / Constants.PPM);
+            sprite.setPosition(spriteX, spriteY);
         }
 
         sprite.draw(batch);

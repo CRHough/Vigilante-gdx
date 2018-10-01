@@ -4,7 +4,6 @@ import com.aesophor.medievania.component.Mappers;
 import com.aesophor.medievania.component.character.CharacterAIComponent;
 import com.aesophor.medievania.component.character.DroppableItemsComponent;
 import com.aesophor.medievania.util.CategoryBits;
-import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
@@ -24,7 +23,6 @@ public class Enemy extends Character {
         short weaponMaskBits = CategoryBits.PLAYER | CategoryBits.OBJECT;
         defineBody(BodyDef.BodyType.DynamicBody, bodyCategoryBits, bodyMaskBits, feetMaskBits, weaponMaskBits);
 
-        Mappers.SPRITE.get(this).setBounds(0, 0, 50 / Constants.PPM, 50 / Constants.PPM);
         Mappers.STATE.get(this).setFacingRight(false);
     }
 

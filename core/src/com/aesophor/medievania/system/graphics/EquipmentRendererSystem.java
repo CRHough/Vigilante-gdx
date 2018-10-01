@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- * EquipmentRendererSystem is responsible for rendering character's equipment atop their bodies,
+ * EquipmentRendererSystem is responsible for rendering character's equipment atop their bodies.
  */
 public class EquipmentRendererSystem extends CharacterRendererSystem {
 
@@ -35,14 +35,13 @@ public class EquipmentRendererSystem extends CharacterRendererSystem {
                 CharacterAnimationsComponent equipmentAnimations = Mappers.CHARACTER_ANIMATIONS.get(item);
                 SpriteComponent sp = Mappers.SPRITE.get(item);
 
-                float textureOffsetX = characterData.getTextureOffsetX();
-                float textureOffsetY = characterData.getTextureOffsetY();
+                float textureOffsetX = characterData.getSpriteOffsetX();
+                float textureOffsetY = characterData.getSpriteOffsetY();
 
                 float textureX = b2body.getBody().getPosition().x - sprite.getWidth() / 2 + (textureOffsetX / Constants.PPM);
                 float textureY = b2body.getBody().getPosition().y - sprite.getHeight() / 2 + (textureOffsetY / Constants.PPM);
 
                 sp.setRegion(getFrame(entity, equipmentAnimations, delta));
-                sp.setBounds(0, 0, 105f / Constants.PPM, 105f / Constants.PPM); // move it brother
                 sp.setPosition(textureX, textureY);
                 sp.draw(batch);
             }

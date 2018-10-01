@@ -17,6 +17,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.World;
 
+/**
+ * CharacterRendererSystem contains base method to generate body/equipment
+ * key frames (animations) for a character.
+ *
+ * Bodies will be rendered first, and then equipment will be rendered on top of them.
+ * See BodyRendererSystem and EquipmentRendererSystem.
+ */
 public abstract class CharacterRendererSystem extends IteratingSystem {
 
     protected final Batch batch;
@@ -24,7 +31,7 @@ public abstract class CharacterRendererSystem extends IteratingSystem {
     protected final World world;
 
     public CharacterRendererSystem(Batch batch, Camera camera, World world) {
-        super(Family.all(CharacterAnimationsComponent.class, CharacterStateComponent.class).get());
+        super(Family.all(CharacterStateComponent.class, CharacterAnimationsComponent.class).get());
         this.batch = batch;
         this.camera = camera;
         this.world = world;

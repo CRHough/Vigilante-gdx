@@ -1,6 +1,8 @@
 package com.aesophor.medievania.map;
 
 import com.aesophor.medievania.component.Mappers;
+import com.aesophor.medievania.component.character.CharacterStateComponent;
+import com.aesophor.medievania.component.character.CharacterStatsComponent;
 import com.aesophor.medievania.entity.Dust;
 import com.aesophor.medievania.entity.character.Character;
 import com.aesophor.medievania.entity.character.Enemy;
@@ -60,12 +62,19 @@ public class WorldContactListener implements ContactListener {
                 break;
 
 
-            // When a player bumps into an enemy, the enemy will inflict damage and knockback to the player.
+            // When a player bumps into an enemy, the enemy will inflict damage to the player and knock it back.
             case CategoryBits.PLAYER | CategoryBits.ENEMY:
                 player = (Player) getTargetFixture(CategoryBits.PLAYER, fixtureA, fixtureB).getUserData();
                 enemy = (Enemy) getTargetFixture(CategoryBits.ENEMY, fixtureA, fixtureB).getUserData();
                 if (!fixtureA.isSensor() && !fixtureB.isSensor()) {
                     enemy.inflictDamage(player, 25);
+
+                    CharacterStateComponent playerState = Mappers.STATE.get(player);
+                    CharacterStatsComponent enemyStats = Mappers.STATS.get(enemy);
+
+                    float knockBackForceX = (playerState.isFacingRight()) ? -enemyStats.getAttackForce() : enemyStats.getAttackForce();
+                    float knockBackForceY = 1f; // temporary.
+                    enemy.knockBack(player, knockBackForceX, knockBackForceY);
                 }
                 break;
 

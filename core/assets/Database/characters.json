@@ -2,8 +2,10 @@
   "Player": {
     "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
     "atlas": "Texture/Character/Player/player.atlas",
-    "textureOffsetX": 0.0,
-    "textureOffsetY": 4.0,
+    "spriteOffsetX": 0.0,
+    "spriteOffsetY": 4.0,
+    "spriteScaleX": 1.32,
+    "spriteScaleY": 1.32,
     "frameWidth": 80,
     "frameHeight": 80,
     "animationData": {
@@ -124,8 +126,10 @@
   "Castle Guard": {
     "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
     "atlas": "Texture/Character/Knight/knight.atlas",
-    "textureOffsetX": 0.0,
-    "textureOffsetY": 0.0,
+    "spriteOffsetX": 0.0,
+    "spriteOffsetY": 0.0,
+    "spriteScaleX": 1.19,
+    "spriteScaleY": 1.13,
     "frameWidth": 42,
     "frameHeight": 44,
     "animationData": {

@@ -65,6 +65,12 @@ public abstract class Character extends Entity implements Disposable {
         Arrays.stream(SoundType.values()).forEach(s -> {
             sounds.put(s, assets.get(characterData.getSoundData().get(s.name())));
         });
+
+        // Currently sprite sizes are variable, so here we will scale the sprite
+        // according to scale factor defined in characters.json.
+        float spriteWidth = characterData.getFrameWidth() * characterData.getSpriteScaleX();
+        float spriteHeight = characterData.getFrameHeight() * characterData.getSpriteScaleY();
+        Mappers.SPRITE.get(this).setSize(spriteWidth / Constants.PPM, spriteHeight / Constants.PPM);
     }
 
 
@@ -145,6 +151,18 @@ public abstract class Character extends Entity implements Disposable {
         b2body.setMeleeWeaponFixture(meleeWeaponFixture);
     }
 
+    /**
+     * Repositions the character at the specified position.
+     * @param position target position.
+     */
+    public void reposition(Vector2 position) {
+        Mappers.B2BODY.get(this).getBody().setTransform(position, 0);
+    }
+
+    public void reposition(float x, float y) {
+        Mappers.B2BODY.get(this).getBody().setTransform(x, y, 0);
+    }
+
 
     /**
      * Removes the specified item from character's inventory and equips the specified item.
@@ -177,6 +195,11 @@ public abstract class Character extends Entity implements Disposable {
         Arrays.stream(CharacterState.values()).forEach((s -> {
             equipmentAnimations.put(s, Utils.createAnimation(atlas, characterData, s.name(), Constants.PPM));
         }));
+
+        // Resize the item sprite to match the size of character's body sprite.
+        float spriteWidth = characterData.getFrameWidth() * characterData.getSpriteScaleX();
+        float spriteHeight = characterData.getFrameHeight() * characterData.getSpriteScaleY();
+        Mappers.SPRITE.get(item).setSize(spriteWidth / Constants.PPM, spriteHeight / Constants.PPM);
     }
 
     /**
@@ -291,86 +314,109 @@ public abstract class Character extends Entity implements Disposable {
         }
     }
 
-
     public void sheathWeapon() {
-        //Mappers.STATE.get(this).resetStateTimer();
         Mappers.STATE.get(this).setSheathing(true);
     }
 
     public void unsheathWeapon() {
-        //Mappers.STATE.get(this).resetStateTimer();
         Mappers.STATE.get(this).setUnsheathing(true);
     }
 
-    public void swingWeapon() {
+    /**
+     * Performs an attack.
+     * The attack will not be launched if the previous attack has not completed.
+     */
+    public void attack() {
         CharacterStateComponent state = Mappers.STATE.get(this);
         CharacterStatsComponent stats = Mappers.STATS.get(this);
         CombatTargetComponent targets = Mappers.COMBAT_TARGETS.get(this);
         SoundComponent sounds = Mappers.SOUNDS.get(this);
 
-        if (!state.isSheathed() && !state.isAttacking()) {
-            state.setAttacking(true);
+        // If the character has not unsheathed its weapon, or is already attacking, stop here.
+        if (state.isSheathed() || state.isAttacking()) {
+            return;
+        }
 
-            stats.modStamina(-10);
+        // If everything is alright, let the character attack.
+        state.setAttacking(true);
+        stats.modStamina(-10);
+        sounds.get(SoundType.WEAPON_SWING).play();
 
-            // A character can have multiple inRangeTargets which are stored as an array.
-            // When an inRangeTarget dies, the target will be removed from the array.
-            if (targets.hasInRangeTarget()) {
-                Character currentTarget = targets.getInRangeTargets().first();
-                CharacterStateComponent targetState = Mappers.STATE.get(currentTarget);
-                CombatTargetComponent targetsTarget = Mappers.COMBAT_TARGETS.get(currentTarget); // lol...
+        // A character can have multiple inRangeTargets which are stored as an array.
+        // When an inRangeTarget dies, the target will be removed from the array.
+        if (targets.hasInRangeTarget()) {
+            // First in range target will be the current target.
+            Character currentTarget = targets.getInRangeTargets().first();
+            CharacterStateComponent targetState = Mappers.STATE.get(currentTarget); // target character's state.
+            CombatTargetComponent targetsTarget = Mappers.COMBAT_TARGETS.get(currentTarget); // target character's combat targets.
 
-                if (!targetState.isInvincible() && !targetState.isSetToKill()) {
-                    targets.setLockedOnTarget(targets.getInRangeTargets().first());
-                    targetsTarget.setLockedOnTarget(this);
+            // Only inflict damage to the target if it's not invincible or not set to kill.
+            if (!targetState.isInvincible() && !targetState.isSetToKill()) {
+                targets.setLockedOnTarget(currentTarget);
+                targetsTarget.setLockedOnTarget(this);
 
-                    inflictDamage(targets.getInRangeTargets().first(), stats.getBasePhysicalDamage());
+                inflictDamage(currentTarget, stats.getBasePhysicalDamage());
+                float knockBackForceX = (state.isFacingRight()) ? stats.getAttackForce() : -stats.getAttackForce();
+                float knockBackForceY = 1f; // temporary.
+                knockBack(currentTarget, knockBackForceX, knockBackForceY);
+                sounds.get(SoundType.WEAPON_HIT).play();
 
-                    if (targets.getInRangeTargets().first().getComponent(CharacterStateComponent.class).isSetToKill()) {
-                        targets.getInRangeTargets().removeValue(targets.getInRangeTargets().first(), false);
-                    }
-
-                    sounds.get(SoundType.WEAPON_HIT).play();
+                // If current target dies, remove it from this character's in range targets array.
+                if (currentTarget.getComponent(CharacterStateComponent.class).isSetToKill()) {
+                    targets.getInRangeTargets().removeValue(currentTarget, false);
                 }
             }
-
-            sounds.get(SoundType.WEAPON_SWING).play();
-            return;
         }
     }
 
-    public void inflictDamage(Character target, int damage) {
-        CharacterStateComponent state = Mappers.STATE.get(this);
-        CharacterStatsComponent stats = Mappers.STATS.get(this);
-
-        target.receiveDamage(this, damage);
-        target.knockedBack((state.isFacingRight()) ? stats.getAttackForce() : -stats.getAttackForce());
+    /**
+     * Knocks back the target character with the specified force.
+     * @param target character receiving knockback.
+     * @param forceX knockback force in X coordinate.
+     * @param forceY knockback force in Y coordinate.
+     */
+    public void knockBack(Character target, float forceX, float forceY) {
+        B2BodyComponent b2body = Mappers.B2BODY.get(target);
+        b2body.getBody().applyLinearImpulse(new Vector2(forceX, forceY), b2body.getBody().getWorldCenter(), true);
     }
 
+    /**
+     * Inflicts damage to the specified target character.
+     * @param target target character.
+     * @param damage damage.
+     */
+    public void inflictDamage(Character target, int damage) {
+        target.receiveDamage(this, damage);
+    }
+
+    /**
+     * Receives damage from the specified source character.
+     * @param source source character.
+     * @param damage damage.
+     */
     public void receiveDamage(Character source, int damage) {
         B2BodyComponent b2body = Mappers.B2BODY.get(this);
         CharacterStateComponent state = Mappers.STATE.get(this);
         CharacterStatsComponent stats = Mappers.STATS.get(this);
         SoundComponent sounds = Mappers.SOUNDS.get(this);
 
-        if (!state.isInvincible()) {
-            stats.modHealth(-damage);
-
-            GameEventManager.getInstance().fireEvent(new InflictDamageEvent(source, this, damage));
-
-            if (stats.getHealth() == 0) {
-                setCategoryBits(b2body.getBodyFixture(), CategoryBits.DESTROYED);
-                state.setSetToKill(true);
-                sounds.get(SoundType.KILLED).play();
-            } else {
-                sounds.get(SoundType.HURT).play();
-            }
+        // If the character is currently invincible, don't receive the damage.
+        if (state.isInvincible()) {
+            return;
         }
-    }
 
-    public void knockedBack(float force) {
-        B2BodyComponent b2body = Mappers.B2BODY.get(this);
-        b2body.getBody().applyLinearImpulse(new Vector2(force, 1f), b2body.getBody().getWorldCenter(), true);
+        // If everything is alright, then proceed.
+        stats.modHealth(-damage);
+
+        if (stats.getHealth() == 0) {
+            setCategoryBits(b2body.getBodyFixture(), CategoryBits.DESTROYED);
+            state.setSetToKill(true);
+            sounds.get(SoundType.KILLED).play();
+        } else {
+            sounds.get(SoundType.HURT).play();
+        }
+
+        GameEventManager.getInstance().fireEvent(new InflictDamageEvent(source, this, damage));
     }
 
 
@@ -407,13 +453,21 @@ public abstract class Character extends Entity implements Disposable {
     // -----------------------------------------------
 
 
+    /**
+     * Sets the category bit of the specified fixture with the given bits.
+     * @param f fixture to modify.
+     * @param bits new category bits for the fixture.
+     */
     public static void setCategoryBits(Fixture f, short bits) {
         Filter filter = new Filter();
         filter.categoryBits = bits;
         f.setFilterData(filter);
     }
 
-
+    /**
+     * Gets the AI actions.
+     * @return AI actions.
+     */
     public AIActions getAIActions() {
         return AIActions;
     }

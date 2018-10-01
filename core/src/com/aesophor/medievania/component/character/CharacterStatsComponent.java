@@ -2,6 +2,9 @@ package com.aesophor.medievania.component.character;
 
 import com.badlogic.ashley.core.Component;
 
+/**
+ * Contains the stats of a character. (Health/Stamina/Magicka/Exp... etc).
+ */
 public class CharacterStatsComponent implements Component {
 
     private String name;

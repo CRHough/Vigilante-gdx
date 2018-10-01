@@ -1,9 +1,13 @@
 package com.aesophor.medievania.component.character;
 
 import com.badlogic.ashley.core.Component;
-
 import java.util.HashMap;
 
+/**
+ * A data container to load all data for a character from character.json.
+ * It contains animation data (each frame's duration, frame positions in texture atlas...etc),
+ * character texture atlas, sounds, stats, regen, and the items it can drop.
+ */
 public class CharacterDataComponent implements Component {
 
     static public class AnimationData {
@@ -23,8 +27,10 @@ public class CharacterDataComponent implements Component {
     }
 
     private String atlas;
-    private int textureOffsetX;
-    private int textureOffsetY;
+    private int spriteOffsetX;
+    private int spriteOffsetY;
+    private float spriteScaleX;
+    private float spriteScaleY;
     private int frameWidth;
     private int frameHeight;
     private HashMap<String, AnimationData> animationData;
@@ -38,12 +44,20 @@ public class CharacterDataComponent implements Component {
         return atlas;
     }
 
-    public int getTextureOffsetX() {
-        return textureOffsetX;
+    public int getSpriteOffsetX() {
+        return spriteOffsetX;
     }
 
-    public int getTextureOffsetY() {
-        return textureOffsetY;
+    public int getSpriteOffsetY() {
+        return spriteOffsetY;
+    }
+
+    public float getSpriteScaleX() {
+        return spriteScaleX;
+    }
+
+    public float getSpriteScaleY() {
+        return spriteScaleY;
     }
 
     public int getFrameWidth() {

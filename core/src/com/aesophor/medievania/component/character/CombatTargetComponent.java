@@ -4,6 +4,10 @@ import com.aesophor.medievania.entity.character.Character;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Contains combat targets of a character.
+ * com.aesophor.medievania.system.EnemyAISystem is responsible for handling AI combat behaviors.
+ */
 public class CombatTargetComponent implements Component {
 
     private Character lockedOnTarget;

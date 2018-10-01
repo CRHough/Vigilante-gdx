@@ -5,6 +5,7 @@ import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.ui.DialogEndedEvent;
 import com.aesophor.medievania.event.ui.DialogStartedEvent;
+import com.aesophor.medievania.ui.component.Dialog;
 import com.aesophor.medievania.ui.theme.LabelStyles;
 import com.aesophor.medievania.util.Constants;
 import com.badlogic.gdx.Gdx;
@@ -18,9 +19,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class DialogBox extends Stage {
+public class DialogManager extends Stage {
 
-    private static final float SHOW_NEXT_CHARACTER_INTERVAL = .05f;
+    private static final float SHOW_NEXT_CHARACTER_INTERVAL = .02f;
 
     private Array<Dialog> pendingDialogs;
     private Dialog currentDialog;
@@ -30,7 +31,7 @@ public class DialogBox extends Stage {
     private final Label message;
     private final Table dialogTable;
 
-    public DialogBox(GameStateManager gsm) {
+    public DialogManager(GameStateManager gsm) {
         super(new FitViewport(Constants.V_WIDTH, Constants.V_HEIGHT), gsm.getBatch());
 
         Texture background = gsm.getAssets().get(GameAssetManager.MESSAGE_BOX_BG);

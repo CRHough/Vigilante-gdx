@@ -1,7 +1,7 @@
 package com.aesophor.medievania.screen;
 
-import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.GameAssetManager;
+import com.aesophor.medievania.GameStateManager;
 import com.aesophor.medievania.entity.character.Player;
 import com.aesophor.medievania.event.GameEventManager;
 import com.aesophor.medievania.event.screen.GamePausedEvent;
@@ -17,11 +17,14 @@ import com.aesophor.medievania.system.graphics.BodyRendererSystem;
 import com.aesophor.medievania.system.graphics.EquipmentRendererSystem;
 import com.aesophor.medievania.system.graphics.StaticSpriteRendererSystem;
 import com.aesophor.medievania.system.ui.*;
-import com.aesophor.medievania.ui.*;
+import com.aesophor.medievania.ui.DamageIndicatorManager;
+import com.aesophor.medievania.ui.DialogManager;
+import com.aesophor.medievania.ui.NotificationManager;
+import com.aesophor.medievania.ui.component.Dialog;
 import com.aesophor.medievania.ui.hud.HUD;
 import com.aesophor.medievania.ui.pausemenu.PauseMenu;
-import com.aesophor.medievania.util.Constants;
 import com.aesophor.medievania.ui.theme.Font;
+import com.aesophor.medievania.util.Constants;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
@@ -47,10 +50,11 @@ public class MainGameScreen extends AbstractScreen {
         // Since we will be rendering TiledMaps, we should scale the viewport with PPM.
         getViewport().setWorldSize(Constants.V_WIDTH / Constants.PPM, Constants.V_HEIGHT / Constants.PPM);
 
+        // Initialize pooled engine.
+        engine = new PooledEngine();
+
         // Initialize the GameEventManager.
         gameEventManager = GameEventManager.getInstance();
-
-        engine = new PooledEngine();
 
         // Initialize the world, and register the world contact listener.
         world = new World(new Vector2(0, Constants.GRAVITY), true);
@@ -59,7 +63,7 @@ public class MainGameScreen extends AbstractScreen {
 
         // Initialize damage indicators and notificationManager area.
         HUD hud = new HUD(gsm.getAssets(), gsm.getBatch());
-        DialogBox dialogBox = new DialogBox(gsm);
+        DialogManager dialogManager = new DialogManager(gsm);
         PauseMenu pauseMenu = new PauseMenu(gsm, player);
         DamageIndicatorManager damageIndicatorManager = new DamageIndicatorManager(getBatch(), Font.REGULAR, getCamera(), 1.2f);
         NotificationManager notificationManager = new NotificationManager(getBatch(), Font.REGULAR, 6, 4f);
@@ -83,7 +87,7 @@ public class MainGameScreen extends AbstractScreen {
         engine.addSystem(new DamageIndicatorSystem(getBatch(), damageIndicatorManager));    // Renders damage indicators.
         engine.addSystem(new NotificationSystem(getBatch(), notificationManager));          // Renders Notifications.
         engine.addSystem(new HUDSystem(getBatch(), hud));                                   // Renders heads up display.
-        engine.addSystem(new DialogSystem(this, getBatch(), dialogBox));       // Renders DialogBox (dialogues).
+        engine.addSystem(new DialogSystem(engine, getBatch(), dialogManager));              // Renders DialogManager (dialogues).
         engine.addSystem(new PauseMenuSystem(getBatch(), pauseMenu));                       // Pause Menu.
         engine.addSystem(new ScreenFadeSystem(getBatch()));                                 // Renders screen fade effects.
 
@@ -102,7 +106,7 @@ public class MainGameScreen extends AbstractScreen {
         Array<Dialog> dialogs = new Array<>();
         dialogs.add(new Dialog("Castle Guard", "How dare you trespass here!"));
         dialogs.add(new Dialog("Aesophor", "Get out of my way..."));
-        dialogBox.show(dialogs);
+        dialogManager.show(dialogs);
     }
 
 
@@ -145,25 +149,37 @@ public class MainGameScreen extends AbstractScreen {
     @Override
     public void pause() {
         super.pause();
+        pauseSound.play();
 
-        freeze();
+        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
+        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
+        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
         EntitySystem pauseMenuSys = engine.getSystem(PauseMenuSystem.class);
+
+        aiSys.setProcessing(false);
+        playerControlSys.setProcessing(false);
+        physicsSys.setProcessing(false);
         pauseMenuSys.setProcessing(true);
 
         GameEventManager.getInstance().fireEvent(new GamePausedEvent());
-        pauseSound.play();
     }
 
     @Override
     public void resume() {
         super.resume();
+        pauseSound.play();
 
-        unfreeze();
+        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
+        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
+        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
         EntitySystem pauseMenuSys = engine.getSystem(PauseMenuSystem.class);
+
+        aiSys.setProcessing(true);
+        playerControlSys.setProcessing(true);
+        physicsSys.setProcessing(true);
         pauseMenuSys.setProcessing(false);
 
         GameEventManager.getInstance().fireEvent(new GameResumedEvent());
-        pauseSound.play();
     }
 
     @Override
@@ -175,28 +191,6 @@ public class MainGameScreen extends AbstractScreen {
         world.dispose();
         player.dispose();
         //npcs.forEach((Character c) -> c.dispose());
-    }
-
-
-    // TODO: Better method naming...?
-    public void freeze() {
-        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
-        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
-        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
-
-        aiSys.setProcessing(false);
-        playerControlSys.setProcessing(false);
-        physicsSys.setProcessing(false);
-    }
-
-    public void unfreeze() {
-        EntitySystem aiSys = engine.getSystem(EnemyAISystem.class);
-        EntitySystem playerControlSys = engine.getSystem(PlayerControlSystem.class);
-        EntitySystem physicsSys = engine.getSystem(PhysicsSystem.class);
-
-        aiSys.setProcessing(true);
-        playerControlSys.setProcessing(true);
-        physicsSys.setProcessing(true);
     }
 
 }

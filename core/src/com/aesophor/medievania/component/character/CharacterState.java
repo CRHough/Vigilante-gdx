@@ -1,5 +1,11 @@
 package com.aesophor.medievania.component.character;
 
+/**
+ * All possible character states.
+ *
+ * The system responsible for deciding which state a character currently is in
+ * is com.aesophor.medievania.system.graphics.BodyRendererSystem.
+ */
 public enum CharacterState {
 
     IDLE_SHEATHED,

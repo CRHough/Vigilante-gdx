@@ -2,6 +2,10 @@ package com.aesophor.medievania.component.character;
 
 import com.badlogic.ashley.core.Component;
 
+/**
+ * Contains information about the states of a character. Essential for
+ * com.aesophor.medievania.system.graphics.BodyRendererSystem to handle character state transitions.
+ */
 public class CharacterStateComponent implements Component {
 
     private CharacterState previousState;
