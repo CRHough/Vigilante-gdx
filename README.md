@@ -1,6 +1,6 @@
 <div align="center">
 <h3>VIGILANTE</h3>
-<img src="https://i.imgur.com/vn1MYsK.gif">
+<img src="/Demo.gif">
 </div>
 
 ## Overview
