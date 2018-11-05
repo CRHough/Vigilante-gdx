@@ -2,7 +2,9 @@
 <div align="center">
 <h3>VIGILANTE</h3>
 <img src="/Demo.gif">
+ 
 </div>
+
 
 A ~~not working~~ cross-platform 2D Platformer RPG engine
 written in Java using [LibGDX](https://libgdx.badlogicgames.com/).
