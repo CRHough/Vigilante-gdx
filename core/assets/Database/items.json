@@ -1,6 +1,6 @@
 {
   "Rusty Axe": {
-    "class": "com.aesophor.medievania.component.item.ItemDataComponent",
+    "class": "com.aesophor.vigilante.component.item.ItemDataComponent",
     "type": 0,
     "image": "Texture/Item/RustyAxe/icon.png",
     "name": "Rusty Axe",

@@ -1,6 +1,6 @@
 {
   "Player": {
-    "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
+    "class": "com.aesophor.vigilante.component.character.CharacterDataComponent",
     "atlas": "Texture/Character/Player/player.atlas",
     "spriteOffsetX": 0.0,
     "spriteOffsetY": 4.0,
@@ -10,77 +10,77 @@
     "frameHeight": 80,
     "animationData": {
       "IDLE_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 11.0,
         "lastFrameCount": 5
       },
       "IDLE_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 11.0,
         "lastFrameCount": 5
       },
       "RUNNING_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 8.5,
         "lastFrameCount": 7
       },
       "RUNNING_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 8.5,
         "lastFrameCount": 7
       },
       "WEAPON_UNSHEATHING": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 13.0,
         "lastFrameCount": 5
       },
       "WEAPON_SHEATHING": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 13.0,
         "lastFrameCount": 5
       },
       "JUMPING_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
         "lastFrameCount": 4
       },
       "JUMPING_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
         "lastFrameCount": 4
       },
       "FALLING_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
         "lastFrameCount": 0
       },
       "FALLING_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
         "lastFrameCount": 0
       },
       "CROUCHING_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
         "lastFrameCount": 1
       },
       "CROUCHING_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 5.0,
         "lastFrameCount": 1
       },
       "ATTACKING": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.5,
         "lastFrameCount": 7
       },
       "SKILL": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
         "lastFrameCount": 0
       },
       "KILLED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
         "lastFrameCount": 5
       }
@@ -95,7 +95,7 @@
       "EQUIPMENT_CHANGED": "Sfx/Player/equip.wav"
     },
     "stats": {
-      "class": "com.aesophor.medievania.component.character.CharacterStatsComponent",
+      "class": "com.aesophor.vigilante.component.character.CharacterStatsComponent",
       "name": "Aesophor",
       "level": 1,
       "exp": 0,
@@ -116,7 +116,7 @@
       "basePhysicalDamage": 50
     },
     "statsRegen": {
-      "class": "com.aesophor.medievania.component.character.CharacterStatsRegenComponent",
+      "class": "com.aesophor.vigilante.component.character.CharacterStatsRegenComponent",
       "healthRegenRate": 1,
       "staminaRegenRate": 5,
       "magickaRegenRate": 5
@@ -124,7 +124,7 @@
   },
 
   "Castle Guard": {
-    "class": "com.aesophor.medievania.component.character.CharacterDataComponent",
+    "class": "com.aesophor.vigilante.component.character.CharacterDataComponent",
     "atlas": "Texture/Character/Knight/knight.atlas",
     "spriteOffsetX": 0.0,
     "spriteOffsetY": 0.0,
@@ -134,77 +134,77 @@
     "frameHeight": 44,
     "animationData": {
       "IDLE_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
         "lastFrameCount": 3
       },
       "IDLE_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
         "lastFrameCount": 3
       },
       "RUNNING_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 12.0,
         "lastFrameCount": 7
       },
       "RUNNING_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 12.0,
         "lastFrameCount": 7
       },
       "WEAPON_UNSHEATHING": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 8.5,
         "lastFrameCount": 5
       },
       "WEAPON_SHEATHING": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 8.5,
         "lastFrameCount": 5
       },
       "JUMPING_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
         "lastFrameCount": 7
       },
       "JUMPING_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
         "lastFrameCount": 7
       },
       "FALLING_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
         "lastFrameCount": 7
       },
       "FALLING_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
         "lastFrameCount": 7
       },
       "CROUCHING_SHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
         "lastFrameCount": 7
       },
       "CROUCHING_UNSHEATHED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 6.0,
         "lastFrameCount": 7
       },
       "ATTACKING": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 12.0,
         "lastFrameCount": 9
       },
       "SKILL": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 15.0,
         "lastFrameCount": 5
       },
       "KILLED": {
-        "class": "com.aesophor.medievania.component.character.CharacterDataComponent$AnimationData",
+        "class": "com.aesophor.vigilante.component.character.CharacterDataComponent$AnimationData",
         "frameDuration": 16.0,
         "lastFrameCount": 8
       }
@@ -219,7 +219,7 @@
       "EQUIPMENT_CHANGED": "Sfx/Player/equip.wav"
     },
     "stats": {
-      "class": "com.aesophor.medievania.component.character.CharacterStatsComponent",
+      "class": "com.aesophor.vigilante.component.character.CharacterStatsComponent",
       "name": "Castle Guard",
       "level": 1,
       "exp": 10,
@@ -240,7 +240,7 @@
       "basePhysicalDamage": 10
     },
     "statsRegen": {
-      "class": "com.aesophor.medievania.component.character.CharacterStatsRegenComponent",
+      "class": "com.aesophor.vigilante.component.character.CharacterStatsRegenComponent",
       "healthRegenRate": 1,
       "staminaRegenRate": 5,
       "magickaRegenRate": 5
