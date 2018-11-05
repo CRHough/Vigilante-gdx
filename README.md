@@ -4,7 +4,7 @@
 </div>
 
 ## Overview
-A ~~not working~~ cross-platform 2D Platformer RPG engine
+A ~~not working~~ cross-platform 2D Platformer RPG engine    
 written in Java using [LibGDX](https://libgdx.badlogicgames.com/).
 
 ![lol](https://i.imgur.com/vvfQcw3.png)
