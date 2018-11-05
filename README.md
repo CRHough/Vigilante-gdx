@@ -1,11 +1,9 @@
-
 <div align="center">
 <h3>VIGILANTE</h3>
 <img src="/Demo.gif">
- 
 </div>
 
-
+## Overview
 A ~~not working~~ cross-platform 2D Platformer RPG engine
 written in Java using [LibGDX](https://libgdx.badlogicgames.com/).
 
@@ -61,7 +59,3 @@ I open sourced this game with the aim of helping anyone who wants to learn how t
 However, this is my (very first) personal game project in which I have put a lot of efforts, so **DONT** use it elsewhere please :)
 
 When the game is done, I'll submit it to Steam (maybe).
-
-
-
-
