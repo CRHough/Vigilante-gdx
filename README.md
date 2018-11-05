@@ -1,13 +1,17 @@
+
 <div align="center">
 <h3>VIGILANTE</h3>
 <img src="/Demo.gif">
 </div>
 
-## Overview
-My ~~excellent~~ 2D Platformer Engine written in Java 
-using [LibGDX](https://libgdx.badlogicgames.com/).
+A ~~not working~~ cross-platform 2D Platformer RPG engine
+written in Java using [LibGDX](https://libgdx.badlogicgames.com/).
 
 ![lol](https://i.imgur.com/vvfQcw3.png)
+
+Still in early alpha, hence the code is kinda messy.
+## Story
+Not yet
 
 ## Implemented Features
 * **Characters** (Player / Enemies)
@@ -17,6 +21,8 @@ using [LibGDX](https://libgdx.badlogicgames.com/).
 * **Equipment** (Helmet / Armor / Gauntlets / Boots / Weapon / Cape)
 * **Combat**
   * Basic Enemy AI (They'll start attacking players when attacked)
+* **~~Morality~~**
+* **~~Becoming a Vampire~~**
 * **UI**
   * Main Menu
   * Pause Menu (Inventory, Equipment, ~~Skills~~ ... etc)
@@ -50,9 +56,10 @@ Some assets I've modified:
 ## License
 I open sourced this game with the aim of helping anyone who wants to learn how to code their own games!
 
-However, this is my (very first) personal game project in which I have put a lot of efforts, so DONT use it else where please :)
+However, this is my (very first) personal game project in which I have put a lot of efforts, so **DONT** use it elsewhere please :)
 
 When the game is done, I'll submit it to Steam (maybe).
+
 
 
 
