@@ -56,6 +56,7 @@ Some assets I've modified:
 ## License
 I open sourced this game with the aim of helping anyone who wants to learn how to code their own games!
 
-However, this is my (very first) personal game project in which I have put a lot of efforts, so **DONT** use it elsewhere please :)
+However, this is my (very first) personal game project in which I have put a lot of efforts,    
+so **DONT** use it elsewhere please :)
 
 When the game is done, I'll submit it to Steam (maybe).
